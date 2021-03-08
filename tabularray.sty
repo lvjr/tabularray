@@ -9,19 +9,26 @@
   { \buildtblr { #1 } { #2 } { #3 } } { }
 
 \cs_generate_variant:Nn \tl_if_blank:nTF { xTF }
+\cs_generate_variant:Nn \prop_item:Nn { Ne }
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
 \cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
 %\cs_generate_variant:Nn \seq_map_indexed_function:NN {cN}
 %\cs_generate_variant:Nn \seq_set_split:Nnn { cnn }
 
+\tl_new:N  \l_tblr_i_tl  % for row index
+\tl_new:N  \l_tblr_j_tl  % for column index
+\box_new:N \l_tblr_c_box % for cell box
+
 \seq_new:N \l_tblr_lines_seq
 \int_new:N \l_tblr_row_count_int
 \int_new:N \l_tblr_col_count_int
+\prop_new:N \l_tblr_spec_prop
 
 \cs_new_protected:Npn \buildtblr #1 #2 #3
   {
     \int_zero:N \l_tblr_row_count_int
     \int_zero:N \l_tblr_col_count_int
+    %\prop_clear:N \l_tblr_spec_prop
     \tl_set:Nn \l_tblr_body_tl {#3}
     %\tl_log:N \l_tblr_body_tl
     \tblr_insert_braces:N { \l_tblr_body_tl }
@@ -103,78 +110,77 @@
 %% Calculate the width and height of every cell
 \cs_new_protected:Npn \tblr_calculate_cell_size
   {
-    \int_step_variable:nNn { \l_tblr_row_count_int } \l_tmpa_tl
+    \prop_clear:N \l_tblr_spec_prop
+    \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
       {
-        \prop_clear_new:c { l_tblr_row_ \l_tmpa_tl _prop }
-      }
-    \int_step_variable:nNn { \l_tblr_col_count_int } \l_tmpa_tl
-      {
-        \prop_clear_new:c { l_tblr_col_ \l_tmpa_tl _prop }
-      }
-    \int_step_variable:nNn { \l_tblr_row_count_int } \l_tmpa_tl
-      {
-        \seq_map_indexed_inline:cn { l_tblr_rowtext_ \l_tmpa_tl _seq }
+        \seq_map_indexed_inline:cn { l_tblr_rowtext_ \l_tblr_i_tl _seq }
           {
             %% get natural size
-            \prop_clear_new:c { l_tblr_cell_ \l_tmpa_tl _ ##1 _prop }
-            \hbox_set:Nn \l_tmpa_box { ##2 }
-            \prop_put:cnx { l_tblr_cell_ \l_tmpa_tl _ ##1 _prop }
-              { natural ~ width } { \dim_use:N \box_wd:N \l_tmpa_box }
-            \prop_put:cnx { l_tblr_cell_ \l_tmpa_tl _ ##1 _prop }
-              { natural ~ height } { \dim_use:N \box_ht:N \l_tmpa_box }
-            \prop_put:cnx { l_tblr_cell_ \l_tmpa_tl _ ##1 _prop }
-              { natural ~ depth } { \dim_use:N \box_dp:N \l_tmpa_box }
-            %\prop_log:c { l_tblr_cell_ \l_tmpa_tl _ ##1 _prop }
+            \hbox_set:Nn \l_tblr_c_box { ##2 }
+            \prop_put:Nxx \l_tblr_spec_prop
+              { cell - \l_tblr_i_tl - ##1 / natural-width }
+              { \dim_use:N \box_wd:N \l_tblr_c_box }
+            \prop_put:Nxx \l_tblr_spec_prop
+              { cell - \l_tblr_i_tl - ##1 / natural-height }
+              { \dim_use:N \box_ht:N \l_tblr_c_box }
+            \prop_put:Nxx \l_tblr_spec_prop
+              { cell - \l_tblr_i_tl - ##1 / natural-depth }
+              { \dim_use:N \box_dp:N \l_tblr_c_box }
+            %\prop_log:N \l_tblr_spec_prop
             %% set maximal width for every column
-            \tl_set:Nx \l_tmpb_tl { \prop_item:cn { l_tblr_col_ ##1 _prop } { natural ~ width } }
+            \tl_set:Nx \l_tmpb_tl
+              { \prop_item:Nn \l_tblr_spec_prop { col-##1 / natural-width } }
             \tl_if_empty:NTF \l_tmpb_tl
               {
-                \prop_put:cnx { l_tblr_col_ ##1 _prop }
-                  { natural ~ width } { \dim_use:N \box_wd:N \l_tmpa_box }
+                \prop_put:Nnx \l_tblr_spec_prop
+                  { col-##1 / natural-width }
+                  { \dim_use:N \box_wd:N \l_tblr_c_box }
               }
               {
-                \dim_compare:nNnTF { \dim_use:N \box_wd:N \l_tmpa_box } > { \l_tmpb_tl }
+                \dim_compare:nNnTF { \dim_use:N \box_wd:N \l_tblr_c_box } > { \l_tmpb_tl }
                   {
-                    \prop_put:cnx { l_tblr_col_ ##1 _prop }
-                      { natural ~ width } { \dim_use:N \box_wd:N \l_tmpa_box }
+                    \prop_put:Nnx \l_tblr_spec_prop
+                      { col-##1 / natural-width }
+                      { \dim_use:N \box_wd:N \l_tblr_c_box }
                   } { }
               }
             %% set maximal height for every row
-            \tl_set:Nx \l_tmpb_tl { \prop_item:cn { l_tblr_row_ \l_tmpa_tl _prop } { natural ~ height } }
+            \tl_set:Nx \l_tmpb_tl
+              { \prop_item:Ne \l_tblr_spec_prop { row-\l_tblr_i_tl / natural-height } }
             \tl_if_empty:NTF \l_tmpb_tl
               {
-                \prop_put:cnx { l_tblr_row_ \l_tmpa_tl _prop }
-                  { natural ~ height } { \dim_use:N \box_ht:N \l_tmpa_box }
+                \prop_put:Nxx \l_tblr_spec_prop
+                  { row-\l_tblr_i_tl / natural-height }
+                  { \dim_use:N \box_ht:N \l_tblr_c_box }
               }
               {
-                \dim_compare:nNnTF { \dim_use:N \box_ht:N \l_tmpa_box } > { \l_tmpb_tl }
+                \dim_compare:nNnTF { \dim_use:N \box_ht:N \l_tblr_c_box } > { \l_tmpb_tl }
                   {
-                    \prop_put:cnx { l_tblr_row_ \l_tmpa_tl _prop }
-                      { natural ~ height } { \dim_use:N \box_ht:N \l_tmpa_box }
+                    \prop_put:Nxx \l_tblr_spec_prop
+                      { row-\l_tblr_i_tl / natural-height }
+                      { \dim_use:N \box_ht:N \l_tblr_c_box }
                   } { }
               }
             %% set maximal depth for every row
-            \tl_set:Nx \l_tmpb_tl { \prop_item:cn { l_tblr_row_ \l_tmpa_tl _prop } { natural ~ depth } }
+            \tl_set:Nx \l_tmpb_tl
+              { \prop_item:Ne \l_tblr_spec_prop { row-\l_tblr_i_tl / natural-depth } }
             \tl_if_empty:NTF \l_tmpb_tl
               {
-                \prop_put:cnx { l_tblr_row_ \l_tmpa_tl _prop }
-                  { natural ~ depth } { \dim_use:N \box_dp:N \l_tmpa_box }
+                \prop_put:Nxx \l_tblr_spec_prop
+                  { row-\l_tblr_i_tl / natural-depth }
+                  { \dim_use:N \box_dp:N \l_tblr_c_box }
               }
               {
-                \dim_compare:nNnTF { \dim_use:N \box_dp:N \l_tmpa_box } > { \l_tmpb_tl }
+                \dim_compare:nNnTF { \dim_use:N \box_dp:N \l_tblr_c_box } > { \l_tmpb_tl }
                   {
-                    \prop_put:cnx { l_tblr_row_ \l_tmpa_tl _prop }
-                      { natural ~ depth } { \dim_use:N \box_dp:N \l_tmpa_box }
+                    \prop_put:Nxx \l_tblr_spec_prop
+                      { row-\l_tblr_i_tl / natural-depth }
+                      { \dim_use:N \box_dp:N \l_tblr_c_box }
                   } { }
               }
           }
       }
-    %\prop_log:c { l_tblr_col_ 1 _prop }
-    %\prop_log:c { l_tblr_col_ 2 _prop }
-    %\prop_log:c { l_tblr_col_ 3 _prop }
-    %\prop_log:c { l_tblr_row_ 1 _prop }
-    %\prop_log:c { l_tblr_row_ 2 _prop }
-    %\prop_log:c { l_tblr_row_ 3 _prop }
+    \prop_log:N \l_tblr_spec_prop
   }
 
 %% Build the whole table
@@ -187,27 +193,29 @@
       { $ \m@th \cs:w tlbr_vbox_ #1 :n \cs_end:
           {
             %\offinterlineskip
-            \int_step_variable:nNn { \l_tblr_row_count_int } \l_tmpa_tl
+            \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
               {
                 \tex_hbox:D
                   {
-                    \seq_map_indexed_inline:cn { l_tblr_rowtext_ \l_tmpa_tl _seq }
+                    \seq_map_indexed_inline:cn { l_tblr_rowtext_ \l_tblr_i_tl _seq }
                       {
-                        \hbox_set:Nn \l_tmpa_box {##2}
-                        \box_set_wd:Nn \l_tmpa_box
+                        \hbox_set:Nn \l_tblr_c_box {##2}
+                        \box_set_wd:Nn \l_tblr_c_box
                           {
-                            \prop_item:cn { l_tblr_col_ ##1 _prop } { natural ~ width }
+                            \prop_item:Nn \l_tblr_spec_prop
+                              { col-##1 / natural-width }
                           }
-                        \box_set_ht:Nn \l_tmpa_box
+                        \box_set_ht:Nn \l_tblr_c_box
                           {
-                            \prop_item:cn { l_tblr_row_ \l_tmpa_tl _prop } { natural ~ height }
+                            \prop_item:Ne \l_tblr_spec_prop
+                              { row-\l_tblr_i_tl / natural-height }
                           }
-                        \box_set_dp:Nn \l_tmpa_box
+                        \box_set_dp:Nn \l_tblr_c_box
                           {
-                            \prop_item:cn { l_tblr_row_ \l_tmpa_tl _prop } { natural ~ depth }
+                            \prop_item:Ne \l_tblr_spec_prop
+                              { row-\l_tblr_i_tl / natural-depth }
                           }
-                        \box_use:N \l_tmpa_box
-                        %\fbox{ \box_use:N \l_tmpa_box }
+                        \box_use:N \l_tblr_c_box
                      }
                   }
               }
