@@ -1,0 +1,219 @@
+%% % -*- coding: utf-8 -*-
+
+\RequirePackage{expl3}
+%\RequirePackage{xparse}
+
+\ExplSyntaxOn
+
+\NewDocumentEnvironment { tblr } { O{c} m +b }
+  { \buildtblr { #1 } { #2 } { #3 } } { }
+
+\cs_generate_variant:Nn \tl_if_blank:nTF { xTF }
+\cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
+\cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
+%\cs_generate_variant:Nn \seq_map_indexed_function:NN {cN}
+%\cs_generate_variant:Nn \seq_set_split:Nnn { cnn }
+
+\seq_new:N \l_tblr_lines_seq
+\int_new:N \l_tblr_row_count_int
+\int_new:N \l_tblr_col_count_int
+
+\cs_new_protected:Npn \buildtblr #1 #2 #3
+  {
+    \int_zero:N \l_tblr_row_count_int
+    \int_zero:N \l_tblr_col_count_int
+    \tl_set:Nn \l_tblr_body_tl {#3}
+    %\tl_log:N \l_tblr_body_tl
+    \tblr_insert_braces:N { \l_tblr_body_tl }
+    \seq_set_split:NnV \l_tmpa_seq { \\ } \l_tblr_body_tl
+    %\seq_log:N \l_tmpa_seq
+    \seq_clear:N \l_tblr_lines_seq
+    \seq_map_inline:Nn \l_tmpa_seq
+      {
+        \tl_if_head_eq_meaning:nNTF { ##1 } \hline
+          {
+            \tl_if_blank:xTF { \tl_tail:n { ##1 } } { }
+              {
+                \seq_put_right:Nx \l_tblr_lines_seq { \tl_tail:n {##1} }
+              }
+          }
+          {
+            \seq_put_right:Nx \l_tblr_lines_seq {##1}
+          }
+      }
+    \int_set:Nn \l_tblr_row_count_int { \seq_count:N \l_tblr_lines_seq }
+    %\int_use:N \l_tblr_row_count_int
+    %\seq_log:N \l_tblr_lines_seq
+    \seq_map_indexed_function:NN \l_tblr_lines_seq \tblr_split_line:nn
+    \tblr_calculate_cell_size
+    \tblr_build_whole:n { #1 }
+  }
+
+%% Insert and remove braces for nesting environments inside cells
+%% These make line split and cell split workable
+%% We need to replace N times for N level nestings
+\regex_const:Nn \c_tblr_insert_braces_regex
+  {
+    \c{begin} \cB\{ (\c[^BE].*) \cE\} (.*?) \c{end} \cB\{ (\c[^BE].*) \cE\}
+  }
+\tl_const:Nn \c_tblr_insert_braces_tl
+  {
+    \c{begin} \cB\{ \cB\{ \1 \cE\} \2 \c{end} \cE\} \cB\{ \3 \cE\}
+  }
+\regex_const:Nn \c_tblr_remove_braces_regex
+  {
+    \c{begin} \cB\{ \cB\{ (.*?) \c{end} \cE\}
+  }
+\tl_const:Nn \c_tblr_remove_braces_tl
+  {
+    \c{begin} \cB\{ \1 \c{end}
+  }
+\cs_new_protected:Npn \tblr_insert_braces:N #1
+  {
+    \regex_replace_all:NVN \c_tblr_insert_braces_regex \c_tblr_insert_braces_tl #1
+    \regex_replace_all:NVN \c_tblr_insert_braces_regex \c_tblr_insert_braces_tl #1
+  }
+\cs_new_protected:Npn \tblr_remove_braces:n #1
+  {
+    \tl_set:Nn \l_tmpa_tl { #1 }
+    \regex_replace_all:NVN \c_tblr_remove_braces_regex \c_tblr_remove_braces_tl \l_tmpa_tl
+    \regex_replace_all:NVN \c_tblr_remove_braces_regex \c_tblr_remove_braces_tl \l_tmpa_tl
+  }
+
+%% Split table line and get all the cells as a sequence
+\cs_new_protected:Npn \tblr_split_line:nn #1 #2
+  {
+    \seq_clear_new:c { l_tblr_rowtext_#1_seq }
+    \seq_set_split:Nnn \l_tmpa_seq { & } { #2 }
+    %\seq_log:N \l_tmpa_seq
+    \seq_map_inline:Nn \l_tmpa_seq
+      {
+        \tblr_remove_braces:n { ##1 }
+        \seq_put_right:cV { l_tblr_rowtext_#1_seq } \l_tmpa_tl
+      }
+    %\seq_log:c { l_tblr_rowtext_#1_seq }
+    \int_set:Nn \l_tmpa_int { \seq_count:c { l_tblr_rowtext_#1_seq } }
+    \int_compare:nTF { \l_tmpa_int > \l_tblr_col_count_int }
+      {
+        \int_set:Nn \l_tblr_col_count_int { \l_tmpa_int }
+      } {  }
+    %\int_use:N \l_tblr_col_count_int
+  }
+
+%% Calculate the width and height of every cell
+\cs_new_protected:Npn \tblr_calculate_cell_size
+  {
+    \int_step_variable:nNn { \l_tblr_row_count_int } \l_tmpa_tl
+      {
+        \prop_clear_new:c { l_tblr_row_ \l_tmpa_tl _prop }
+      }
+    \int_step_variable:nNn { \l_tblr_col_count_int } \l_tmpa_tl
+      {
+        \prop_clear_new:c { l_tblr_col_ \l_tmpa_tl _prop }
+      }
+    \int_step_variable:nNn { \l_tblr_row_count_int } \l_tmpa_tl
+      {
+        \seq_map_indexed_inline:cn { l_tblr_rowtext_ \l_tmpa_tl _seq }
+          {
+            %% get natural size
+            \prop_clear_new:c { l_tblr_cell_ \l_tmpa_tl _ ##1 _prop }
+            \hbox_set:Nn \l_tmpa_box { ##2 }
+            \prop_put:cnx { l_tblr_cell_ \l_tmpa_tl _ ##1 _prop }
+              { natural ~ width } { \dim_use:N \box_wd:N \l_tmpa_box }
+            \prop_put:cnx { l_tblr_cell_ \l_tmpa_tl _ ##1 _prop }
+              { natural ~ height } { \dim_use:N \box_ht:N \l_tmpa_box }
+            \prop_put:cnx { l_tblr_cell_ \l_tmpa_tl _ ##1 _prop }
+              { natural ~ depth } { \dim_use:N \box_dp:N \l_tmpa_box }
+            %\prop_log:c { l_tblr_cell_ \l_tmpa_tl _ ##1 _prop }
+            %% set maximal width for every column
+            \tl_set:Nx \l_tmpb_tl { \prop_item:cn { l_tblr_col_ ##1 _prop } { natural ~ width } }
+            \tl_if_empty:NTF \l_tmpb_tl
+              {
+                \prop_put:cnx { l_tblr_col_ ##1 _prop }
+                  { natural ~ width } { \dim_use:N \box_wd:N \l_tmpa_box }
+              }
+              {
+                \dim_compare:nNnTF { \dim_use:N \box_wd:N \l_tmpa_box } > { \l_tmpb_tl }
+                  {
+                    \prop_put:cnx { l_tblr_col_ ##1 _prop }
+                      { natural ~ width } { \dim_use:N \box_wd:N \l_tmpa_box }
+                  } { }
+              }
+            %% set maximal height for every row
+            \tl_set:Nx \l_tmpb_tl { \prop_item:cn { l_tblr_row_ \l_tmpa_tl _prop } { natural ~ height } }
+            \tl_if_empty:NTF \l_tmpb_tl
+              {
+                \prop_put:cnx { l_tblr_row_ \l_tmpa_tl _prop }
+                  { natural ~ height } { \dim_use:N \box_ht:N \l_tmpa_box }
+              }
+              {
+                \dim_compare:nNnTF { \dim_use:N \box_ht:N \l_tmpa_box } > { \l_tmpb_tl }
+                  {
+                    \prop_put:cnx { l_tblr_row_ \l_tmpa_tl _prop }
+                      { natural ~ height } { \dim_use:N \box_ht:N \l_tmpa_box }
+                  } { }
+              }
+            %% set maximal depth for every row
+            \tl_set:Nx \l_tmpb_tl { \prop_item:cn { l_tblr_row_ \l_tmpa_tl _prop } { natural ~ depth } }
+            \tl_if_empty:NTF \l_tmpb_tl
+              {
+                \prop_put:cnx { l_tblr_row_ \l_tmpa_tl _prop }
+                  { natural ~ depth } { \dim_use:N \box_dp:N \l_tmpa_box }
+              }
+              {
+                \dim_compare:nNnTF { \dim_use:N \box_dp:N \l_tmpa_box } > { \l_tmpb_tl }
+                  {
+                    \prop_put:cnx { l_tblr_row_ \l_tmpa_tl _prop }
+                      { natural ~ depth } { \dim_use:N \box_dp:N \l_tmpa_box }
+                  } { }
+              }
+          }
+      }
+    %\prop_log:c { l_tblr_col_ 1 _prop }
+    %\prop_log:c { l_tblr_col_ 2 _prop }
+    %\prop_log:c { l_tblr_col_ 3 _prop }
+    %\prop_log:c { l_tblr_row_ 1 _prop }
+    %\prop_log:c { l_tblr_row_ 2 _prop }
+    %\prop_log:c { l_tblr_row_ 3 _prop }
+  }
+
+%% Build the whole table
+\cs_new_eq:NN \tlbr_vbox_t:n \tex_vtop:D
+\cs_new_eq:NN \tlbr_vbox_c:n \tex_vcenter:D
+\cs_new_eq:NN \tlbr_vbox_b:n \tex_vbox:D
+\cs_new_protected:Npn \tblr_build_whole:n #1
+  {
+    \tex_hbox:D
+      { $ \m@th \cs:w tlbr_vbox_ #1 :n \cs_end:
+          {
+            %\offinterlineskip
+            \int_step_variable:nNn { \l_tblr_row_count_int } \l_tmpa_tl
+              {
+                \tex_hbox:D
+                  {
+                    \seq_map_indexed_inline:cn { l_tblr_rowtext_ \l_tmpa_tl _seq }
+                      {
+                        \hbox_set:Nn \l_tmpa_box {##2}
+                        \box_set_wd:Nn \l_tmpa_box
+                          {
+                            \prop_item:cn { l_tblr_col_ ##1 _prop } { natural ~ width }
+                          }
+                        \box_set_ht:Nn \l_tmpa_box
+                          {
+                            \prop_item:cn { l_tblr_row_ \l_tmpa_tl _prop } { natural ~ height }
+                          }
+                        \box_set_dp:Nn \l_tmpa_box
+                          {
+                            \prop_item:cn { l_tblr_row_ \l_tmpa_tl _prop } { natural ~ depth }
+                          }
+                        \box_use:N \l_tmpa_box
+                        %\fbox{ \box_use:N \l_tmpa_box }
+                     }
+                  }
+              }
+          } $
+      }
+  }
+
+\ExplSyntaxOff
+
