@@ -153,59 +153,47 @@
             %% set maximal width for every column
             \tl_set:Nx \l_tmpb_tl
               { \tblr_prop_item:ne { spec } { col-\l_tblr_j_tl / natural-width } }
-            \tl_if_empty:NTF \l_tmpb_tl
+            \bool_lazy_or:nnT
+              { \tl_if_empty_p:N \l_tmpb_tl }
+              {
+                \dim_compare_p:nNn
+                  { \dim_use:N \box_wd:N \l_tblr_c_box } > { \l_tmpb_tl }
+              }
               {
                 \tblr_prop_gput:nxx
                   { spec }
                   { col-\l_tblr_j_tl / natural-width }
                   { \dim_use:N \box_wd:N \l_tblr_c_box }
               }
-              {
-                \dim_compare:nNnTF { \dim_use:N \box_wd:N \l_tblr_c_box } > { \l_tmpb_tl }
-                  {
-                    \tblr_prop_gput:nxx
-                      { spec }
-                      { col-\l_tblr_j_tl / natural-width }
-                      { \dim_use:N \box_wd:N \l_tblr_c_box }
-                  } { }
-              }
             %% set maximal height for every row
             \tl_set:Nx \l_tmpb_tl
               { \tblr_prop_item:ne { spec } { row-\l_tblr_i_tl / natural-height } }
-            \tl_if_empty:NTF \l_tmpb_tl
+            \bool_lazy_or:nnT
+              { \tl_if_empty_p:N \l_tmpb_tl }
+              {
+                \dim_compare_p:nNn
+                  { \dim_use:N \box_ht:N \l_tblr_c_box } > { \l_tmpb_tl }
+              }
               {
                 \tblr_prop_gput:nxx
                   { spec }
                   { row-\l_tblr_i_tl / natural-height }
                   { \dim_use:N \box_ht:N \l_tblr_c_box }
               }
-              {
-                \dim_compare:nNnTF { \dim_use:N \box_ht:N \l_tblr_c_box } > { \l_tmpb_tl }
-                  {
-                    \tblr_prop_gput:nxx
-                      { spec }
-                      { row-\l_tblr_i_tl / natural-height }
-                      { \dim_use:N \box_ht:N \l_tblr_c_box }
-                  } { }
-              }
             %% set maximal depth for every row
             \tl_set:Nx \l_tmpb_tl
               { \tblr_prop_item:ne { spec } { row-\l_tblr_i_tl / natural-depth } }
-            \tl_if_empty:NTF \l_tmpb_tl
+            \bool_lazy_or:nnT
+              { \tl_if_empty_p:N \l_tmpb_tl }
+              {
+                \dim_compare_p:nNn
+                  { \dim_use:N \box_dp:N \l_tblr_c_box } > { \l_tmpb_tl }
+              }
               {
                 \tblr_prop_gput:nxx
                   { spec }
                   { row-\l_tblr_i_tl / natural-depth }
                   { \dim_use:N \box_dp:N \l_tblr_c_box }
-              }
-              {
-                \dim_compare:nNnTF { \dim_use:N \box_dp:N \l_tblr_c_box } > { \l_tmpb_tl }
-                  {
-                    \tblr_prop_gput:nxx
-                      { spec }
-                      { row-\l_tblr_i_tl / natural-depth }
-                      { \dim_use:N \box_dp:N \l_tblr_c_box }
-                  } { }
               }
           }
       }
