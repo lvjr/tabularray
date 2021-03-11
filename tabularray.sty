@@ -17,18 +17,23 @@
 
 \tl_new:N  \l_tblr_i_tl  % for row index
 \tl_new:N  \l_tblr_j_tl  % for column index
+\int_new:N \l_tblr_r_int % for row number
+\int_new:N \l_tblr_c_int % for column number
 \box_new:N \l_tblr_c_box % for cell box
 
 \seq_new:N \l_tblr_lines_seq
 \int_new:N \l_tblr_row_count_int
 \int_new:N \l_tblr_col_count_int
-\prop_new:N \l_tblr_spec_prop
+\prop_new:N \l_tblr_cell_prop % store table cell text
+\prop_new:N \l_tblr_spec_prop % store table specification
 
+%% Read, split and build the table
 \cs_new_protected:Npn \buildtblr #1 #2 #3
   {
+    \prop_clear:N \l_tblr_cell_prop
+    \prop_clear:N \l_tblr_spec_prop
     \int_zero:N \l_tblr_row_count_int
     \int_zero:N \l_tblr_col_count_int
-    %\prop_clear:N \l_tblr_spec_prop
     \tl_set:Nn \l_tblr_body_tl {#3}
     %\tl_log:N \l_tblr_body_tl
     \tblr_insert_braces:N { \l_tblr_body_tl }
@@ -90,57 +95,58 @@
 %% Split table line and get all the cells as a sequence
 \cs_new_protected:Npn \tblr_split_line:nn #1 #2
   {
-    \seq_clear_new:c { l_tblr_rowtext_#1_seq }
     \seq_set_split:Nnn \l_tmpa_seq { & } { #2 }
     %\seq_log:N \l_tmpa_seq
-    \seq_map_inline:Nn \l_tmpa_seq
+    \int_zero:N \l_tblr_c_int
+    \seq_map_indexed_inline:Nn \l_tmpa_seq
       {
-        \tblr_remove_braces:n { ##1 }
-        \seq_put_right:cV { l_tblr_rowtext_#1_seq } \l_tmpa_tl
+        \tblr_remove_braces:n { ##2 }
+        \prop_put:NnV \l_tblr_cell_prop { ( #1, ##1 ) } \l_tmpa_tl
+        \int_incr:N \l_tblr_c_int
       }
-    %\seq_log:c { l_tblr_rowtext_#1_seq }
-    \int_set:Nn \l_tmpa_int { \seq_count:c { l_tblr_rowtext_#1_seq } }
-    \int_compare:nTF { \l_tmpa_int > \l_tblr_col_count_int }
+    \int_compare:nT { \l_tblr_c_int > \l_tblr_col_count_int }
       {
-        \int_set:Nn \l_tblr_col_count_int { \l_tmpa_int }
-      } {  }
-    %\int_use:N \l_tblr_col_count_int
+        \int_set_eq:NN \l_tblr_col_count_int \l_tblr_c_int
+      }
+    %\prop_log:N \l_tblr_cell_prop
   }
 
 %% Calculate the width and height of every cell
 \cs_new_protected:Npn \tblr_calculate_cell_size
   {
-    \prop_clear:N \l_tblr_spec_prop
     \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
       {
-        \seq_map_indexed_inline:cn { l_tblr_rowtext_ \l_tblr_i_tl _seq }
+        \int_step_variable:nNn { \l_tblr_col_count_int } \l_tblr_j_tl
           {
             %% get natural size
-            \hbox_set:Nn \l_tblr_c_box { ##2 }
+            \hbox_set:Nn \l_tblr_c_box
+              {
+                \prop_item:Ne \l_tblr_cell_prop { (\l_tblr_i_tl,\l_tblr_j_tl) }
+              }
             \prop_put:Nxx \l_tblr_spec_prop
-              { cell - \l_tblr_i_tl - ##1 / natural-width }
+              { cell - \l_tblr_i_tl - \l_tblr_j_tl / natural-width }
               { \dim_use:N \box_wd:N \l_tblr_c_box }
             \prop_put:Nxx \l_tblr_spec_prop
-              { cell - \l_tblr_i_tl - ##1 / natural-height }
+              { cell - \l_tblr_i_tl - \l_tblr_j_tl / natural-height }
               { \dim_use:N \box_ht:N \l_tblr_c_box }
             \prop_put:Nxx \l_tblr_spec_prop
-              { cell - \l_tblr_i_tl - ##1 / natural-depth }
+              { cell - \l_tblr_i_tl - \l_tblr_j_tl / natural-depth }
               { \dim_use:N \box_dp:N \l_tblr_c_box }
             %\prop_log:N \l_tblr_spec_prop
             %% set maximal width for every column
             \tl_set:Nx \l_tmpb_tl
-              { \prop_item:Nn \l_tblr_spec_prop { col-##1 / natural-width } }
+              { \prop_item:Nn \l_tblr_spec_prop { col-\l_tblr_j_tl / natural-width } }
             \tl_if_empty:NTF \l_tmpb_tl
               {
-                \prop_put:Nnx \l_tblr_spec_prop
-                  { col-##1 / natural-width }
+                \prop_put:Nxx \l_tblr_spec_prop
+                  { col-\l_tblr_j_tl / natural-width }
                   { \dim_use:N \box_wd:N \l_tblr_c_box }
               }
               {
                 \dim_compare:nNnTF { \dim_use:N \box_wd:N \l_tblr_c_box } > { \l_tmpb_tl }
                   {
-                    \prop_put:Nnx \l_tblr_spec_prop
-                      { col-##1 / natural-width }
+                    \prop_put:Nxx \l_tblr_spec_prop
+                      { col-\l_tblr_j_tl / natural-width }
                       { \dim_use:N \box_wd:N \l_tblr_c_box }
                   } { }
               }
@@ -197,13 +203,17 @@
               {
                 \tex_hbox:D
                   {
-                    \seq_map_indexed_inline:cn { l_tblr_rowtext_ \l_tblr_i_tl _seq }
+                    \int_step_variable:nNn { \l_tblr_col_count_int } \l_tblr_j_tl
                       {
-                        \hbox_set:Nn \l_tblr_c_box {##2}
+                        \hbox_set:Nn \l_tblr_c_box
+                          {
+                            \prop_item:Ne \l_tblr_cell_prop
+                              { (\l_tblr_i_tl,\l_tblr_j_tl) }
+                          }
                         \box_set_wd:Nn \l_tblr_c_box
                           {
-                            \prop_item:Nn \l_tblr_spec_prop
-                              { col-##1 / natural-width }
+                            \prop_item:Ne \l_tblr_spec_prop
+                              { col-\l_tblr_j_tl / natural-width }
                           }
                         \box_set_ht:Nn \l_tblr_c_box
                           {
