@@ -14,6 +14,7 @@
 \cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
 %\cs_generate_variant:Nn \seq_map_indexed_function:NN {cN}
 %\cs_generate_variant:Nn \seq_set_split:Nnn { cnn }
+\prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
 
 \tl_new:N  \l_tblr_i_tl  % for row index
 \tl_new:N  \l_tblr_j_tl  % for column index
@@ -28,16 +29,29 @@
 \prop_new:c { g_tblr_cell_1_prop } % store table cell text of level 1
 \prop_new:c { g_tblr_spec_1_prop } % store table specification of level 1
 
-\cs_new_protected:Npn \tblr_prop_gput:nnn #1 #2 #3 {
-  \prop_gput:cnn
-    { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
-}
+\cs_new_protected:Npn \tblr_prop_gput:nnn #1 #2 #3
+  {
+    \prop_gput:cnn
+      { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
+  }
 \cs_generate_variant:Nn \tblr_prop_gput:nnn { nnV, nxx }
 
-\cs_new:Npn \tblr_prop_item:nn #1 #2 {
-  \prop_item:cn { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 }
-}
+\cs_new:Npn \tblr_prop_item:nn #1 #2
+  {
+    \prop_item:cn { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 }
+  }
 \cs_generate_variant:Nn \tblr_prop_item:nn { ne }
+
+\cs_new_protected:Npn \tblr_prop_if_in:nnT #1
+  {
+    \prop_if_in:cnT { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+  }
+\prg_generate_conditional_variant:Nnn \tblr_prop_if_in:nn { nx } { T }
+
+\cs_new_protected:Npn \tblr_prop_log:n #1
+  {
+    \prop_log:c { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+  }
 
 %% Read, split and build the table
 \cs_new_protected:Npn \buildtblr #1 #2 #3
@@ -55,21 +69,17 @@
     \seq_clear:N \l_tblr_lines_seq
     \seq_map_inline:Nn \l_tmpa_seq
       {
-        \tl_if_head_eq_meaning:nNTF { ##1 } \hline
-          {
-            \tl_if_blank:xTF { \tl_tail:n { ##1 } } { }
-              {
-                \seq_put_right:Nx \l_tblr_lines_seq { \tl_tail:n {##1} }
-              }
-          }
-          {
-            \seq_put_right:Nx \l_tblr_lines_seq {##1}
-          }
+        \bool_lazy_or:nnTF
+          { \tl_if_head_eq_meaning_p:nN { ##1 } * }
+          { \tl_if_head_eq_meaning_p:nN { ##1 } [ }
+          { \seq_put_right:Nn \l_tblr_lines_seq { \tblr_newline_skip ##1 } }
+          { \seq_put_right:Nn \l_tblr_lines_seq { ##1 } }
       }
     \int_set:Nn \l_tblr_row_count_int { \seq_count:N \l_tblr_lines_seq }
-    %\int_use:N \l_tblr_row_count_int
     %\seq_log:N \l_tblr_lines_seq
     \seq_map_indexed_function:NN \l_tblr_lines_seq \tblr_split_line:nn
+    \tblr_prop_log:n { cell }
+    \tblr_initial_table
     \tblr_calculate_cell_size
     \tblr_build_whole:n { #1 }
     \int_gdecr:N \g_tblr_level_int
@@ -122,14 +132,66 @@
       {
         \int_set_eq:NN \l_tblr_col_count_int \l_tblr_c_int
       }
-    %\prop_log:N \l_tblr_cell_prop
   }
+
+\NewDocumentCommand { \settblr } { m }
+  { \tblr_setup:n { #1 } }
+
+%% Setup the table
+\cs_new_protected:Npn \tblr_setup:n #1
+  {
+    \keys_set:nn { tblr } { #1 }
+  }
+
+\keys_define:nn { tblr }
+  {
+    hline .code:n = \tblr_spec_hline:n{ #1 },
+  }
+
+%% Treat \\*[dimen] command
+\NewDocumentCommand \tblr_newline_skip { s o }
+  {
+    \IfBooleanT { #1 }
+      {
+        \tblr_prop_gput:nxx
+          { spec }
+          { pagebreak - \int_eval:n { \rownum - 1 } }
+          { none }
+      }
+    \IfValueT { #2 }
+      {
+        \tblr_prop_gput:nxx
+          { spec }
+          { row - \int_eval:n { \rownum - 1 } / extra-rowsep-below }
+          { #2 }
+      }
+  }
+
+\cs_new_protected:Npn \tblr_spec_hline:n #1
+  {
+    \tblr_prop_gput:nxx
+      { spec }
+      { hline - \int_use:N \rownum / style }
+      { solid }
+  }
+
+\cs_new_protected:Npn \tblr_initial_table
+  {
+    \cs_set_protected:Npn \hline
+      { \tblr_setup:n { hline } }
+  }
+
+\int_new:N \rownum
+\int_new:N \colnum
 
 %% Calculate the width and height of every cell
 \cs_new_protected:Npn \tblr_calculate_cell_size
   {
+    \int_zero:N \rownum
+    \int_zero:N \colnum
     \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
       {
+        \int_incr:N \rownum
         \int_step_variable:nNn { \l_tblr_col_count_int } \l_tblr_j_tl
           {
             %% get natural size
@@ -197,7 +259,7 @@
               }
           }
       }
-    \prop_log:c { g_tblr_spec_ \int_use:N \g_tblr_level_int _prop }
+    \tblr_prop_log:n {spec }
   }
 
 %% Build the whole table
@@ -212,6 +274,10 @@
             %\offinterlineskip
             \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
               {
+                \tblr_prop_if_in:nxT { spec } { hline-\l_tblr_i_tl/style }
+                  {
+                    \hrule
+                  }
                 \tex_hbox:D
                   {
                     \int_step_variable:nNn { \l_tblr_col_count_int } \l_tblr_j_tl
