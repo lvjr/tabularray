@@ -156,16 +156,16 @@
     \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
       {
         \tblr_prop_gput:nxn
-          { spec } { row-\l_tblr_i_tl / rowsep-above } { 0.2em }
+          { spec } { row[\l_tblr_i_tl] / rowsep-above } { 0.2em }
         \tblr_prop_gput:nxn
-          { spec } { row-\l_tblr_i_tl / rowsep-below } { 0.2em }
+          { spec } { row[\l_tblr_i_tl] / rowsep-below } { 0.2em }
       }
     \int_step_variable:nNn { \l_tblr_col_count_int } \l_tblr_j_tl
       {
         \tblr_prop_gput:nxn
-          { spec } { col-\l_tblr_j_tl / colsep-left } { 0.6em }
+          { spec } { col[\l_tblr_j_tl] / colsep-left } { 0.6em }
         \tblr_prop_gput:nxn
-          { spec } { col-\l_tblr_j_tl / colsep-right } { 0.6em }
+          { spec } { col[\l_tblr_j_tl] / colsep-right } { 0.6em }
       }
   }
 
@@ -190,14 +190,14 @@
       {
         \tblr_prop_gput:nxx
           { spec }
-          { pagebreak - \int_eval:n { \rownum - 1 } }
+          { row[\int_eval:n {\rownum - 1}] / pagebreak }
           { none }
       }
     \IfValueT { #2 }
       {
         \tblr_prop_gput:nxx
           { spec }
-          { row - \int_eval:n { \rownum - 1 } / extra-rowsep-below }
+          { row[\int_eval:n {\rownum - 1}] / extra-rowsep-below }
           { #2 }
       }
   }
@@ -206,7 +206,7 @@
   {
     \tblr_prop_gput:nxx
       { spec }
-      { hline - \int_use:N \rownum / style }
+      { hline[\int_use:N \rownum] / style }
       { solid }
   }
 
@@ -238,7 +238,7 @@
   {
     \tblr_prop_gput:nxx
       { spec }
-      { vline - \int_eval:n{ \colnum + 1 } / style }
+      { vline[\int_eval:n {\colnum + 1}] / style }
       { solid }
   }
 
@@ -262,11 +262,11 @@
     %% remove the last row when it has only \hline
     \tl_set:Nx \l_tblr_h_tl
       {
-        \tblr_prop_item:ne { spec } { row-\l_tblr_row_count_int / natural-height }
+        \tblr_prop_item:ne { spec } { row[\l_tblr_row_count_int] / natural-height }
       }
     \tl_set:Nx \l_tblr_d_tl
       {
-        \tblr_prop_item:ne { spec } { row-\l_tblr_row_count_int / natural-depth }
+        \tblr_prop_item:ne { spec } { row[\l_tblr_row_count_int] / natural-depth }
       }
     \bool_lazy_and:nnT
       { \dim_compare_p:nNn { \l_tmpb_tl } = { 0pt } }
@@ -284,15 +284,15 @@
       }
     \tblr_prop_gput:nxx
       { spec }
-      { cell - \int_use:N \rownum - \int_use:N \colnum / natural-width }
+      { cell[\int_use:N \rownum][\int_use:N \colnum] / natural-width }
       { \dim_use:N \box_wd:N \l_tblr_c_box }
     \tblr_prop_gput:nxx
       { spec }
-      { cell - \int_use:N \rownum - \int_use:N \colnum / natural-height }
+      { cell[\int_use:N \rownum][\int_use:N \colnum] / natural-height }
       { \dim_use:N \box_ht:N \l_tblr_c_box }
     \tblr_prop_gput:nxx
       { spec }
-      { cell - \int_use:N \rownum - \int_use:N \colnum / natural-depth }
+      { cell[\int_use:N \rownum][\int_use:N \colnum] / natural-depth }
       { \dim_use:N \box_dp:N \l_tblr_c_box }
   }
 
@@ -301,7 +301,7 @@
   {
     %% Update natural width for every column
     \tl_set:Nx \l_tmpb_tl
-      { \tblr_prop_item:ne { spec } { col-\int_use:N \colnum / natural-width } }
+      { \tblr_prop_item:ne { spec } { col[\int_use:N \colnum] / natural-width } }
     \bool_lazy_or:nnT
       { \tl_if_empty_p:N \l_tmpb_tl }
       {
@@ -311,12 +311,12 @@
       {
         \tblr_prop_gput:nxx
           { spec }
-          { col-\int_use:N \colnum/ natural-width }
+          { col[\int_use:N \colnum]/ natural-width }
           { \dim_use:N \box_wd:N \l_tblr_c_box }
       }
     %% Update natural height for every row
     \tl_set:Nx \l_tmpb_tl
-      { \tblr_prop_item:ne { spec } { row-\int_use:N \rownum / natural-height } }
+      { \tblr_prop_item:ne { spec } { row[\int_use:N \rownum] / natural-height } }
     \bool_lazy_or:nnT
       { \tl_if_empty_p:N \l_tmpb_tl }
       {
@@ -326,12 +326,12 @@
       {
         \tblr_prop_gput:nxx
           { spec }
-          { row-\int_use:N \rownum / natural-height }
+          { row[\int_use:N \rownum] / natural-height }
           { \dim_use:N \box_ht:N \l_tblr_c_box }
       }
     %% Update natural depth for every row
     \tl_set:Nx \l_tmpb_tl
-      { \tblr_prop_item:ne { spec } { row-\int_use:N \rownum / natural-depth } }
+      { \tblr_prop_item:ne { spec } { row[\int_use:N \rownum] / natural-depth } }
     \bool_lazy_or:nnT
       { \tl_if_empty_p:N \l_tmpb_tl }
       {
@@ -341,7 +341,7 @@
       {
         \tblr_prop_gput:nxx
           { spec }
-          { row-\int_use:N \rownum / natural-depth }
+          { row[\int_use:N \rownum] / natural-depth }
           { \dim_use:N \box_dp:N \l_tblr_c_box }
       }
   }
@@ -357,7 +357,7 @@
           {
             \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
               {
-                \tblr_prop_if_in:nxTF { spec } { hline-\l_tblr_i_tl/style }
+                \tblr_prop_if_in:nxTF { spec } { hline[\l_tblr_i_tl] / style }
                   { \hrule }
                   { \hrule height ~ 0pt } % remove lineskip between two rows
                 \tblr_get_row_inner_height_depth:VNN
@@ -366,21 +366,21 @@
                   {
                     \int_step_variable:nNn { \l_tblr_col_count_int } \l_tblr_j_tl
                       {
-                        \tblr_prop_if_in:nxT { spec } { vline-\l_tblr_j_tl/style }
+                        \tblr_prop_if_in:nxT { spec } { vline[\l_tblr_j_tl]/style }
                           {
                             \vrule height~\l_tblr_h_dim ~ depth~\l_tblr_d_dim
                           }
                         \tblr_build_cell:NN \l_tblr_i_tl \l_tblr_j_tl
                       }
                     \tblr_prop_if_in:nxT { spec }
-                      { vline-\int_eval:n {\l_tblr_col_count_int + 1} / style }
+                      { vline[\int_eval:n {\l_tblr_col_count_int + 1}] / style }
                       {
                         \vrule height~\l_tblr_h_dim ~ depth~\l_tblr_d_dim
                       }
                   }
               }
             \tblr_prop_if_in:nxT { spec }
-              { hline-\int_eval:n {\l_tblr_row_count_int + 1} / style }
+              { hline[\int_eval:n {\l_tblr_row_count_int + 1}] / style }
               { \hrule }
           } $
       }
@@ -389,18 +389,18 @@
 \cs_new_protected:Npn \tblr_build_cell:NN #1 #2
   {
     \skip_horizontal:n
-      { \tblr_prop_item:ne { spec } { col-#2 / colsep-left } }
+      { \tblr_prop_item:ne { spec } { col[#2] / colsep-left } }
     \hbox_set:Nn \l_tblr_c_box
       { \tblr_prop_item:ne { cell } { (#1,#2) } }
     \box_set_wd:Nn \l_tblr_c_box
-      { \tblr_prop_item:ne { spec } { col-#2 / natural-width } }
+      { \tblr_prop_item:ne { spec } { col[#2] / natural-width } }
     \box_set_ht:Nn \l_tblr_c_box
-      { \tblr_prop_item:ne { spec } { row-#1 / natural-height } }
+      { \tblr_prop_item:ne { spec } { row[#1] / natural-height } }
     \box_set_dp:Nn \l_tblr_c_box
-      { \tblr_prop_item:ne { spec } { row-#1 / natural-depth } }
+      { \tblr_prop_item:ne { spec } { row[#1] / natural-depth } }
     \box_use:N \l_tblr_c_box
     \skip_horizontal:n
-      { \tblr_prop_item:ne { spec } { col-#2 / colsep-right } }
+      { \tblr_prop_item:ne { spec } { col[#2] / colsep-right } }
   }
 
 %% Read from table specifications and calculate inner height of row
@@ -410,13 +410,13 @@
 \cs_new_protected:Npn \tblr_get_row_inner_height_depth:nNN #1 #2 #3
   {
     \tl_set:Nx \l_tblr_a
-      { \tblr_prop_item:ne { spec } { row-#1 / rowsep-above } }
+      { \tblr_prop_item:ne { spec } { row[#1] / rowsep-above } }
     \tl_set:Nx \l_tblr_h
-      { \tblr_prop_item:ne { spec } { row-#1 / natural-height } }
+      { \tblr_prop_item:ne { spec } { row[#1] / natural-height } }
     \tl_set:Nx \l_tblr_d
-      { \tblr_prop_item:ne { spec } { row-#1 / natural-depth } }
+      { \tblr_prop_item:ne { spec } { row[#1] / natural-depth } }
     \tl_set:Nx \l_tblr_b
-      { \tblr_prop_item:ne { spec } { row-#1 / rowsep-below } }
+      { \tblr_prop_item:ne { spec } { row[#1] / rowsep-below } }
     \dim_set:Nn #2 { \l_tblr_a + \l_tblr_h}
     \dim_set:Nn #3 { \l_tblr_d + \l_tblr_b }
   }
