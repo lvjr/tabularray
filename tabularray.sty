@@ -22,6 +22,7 @@
 \tl_new:N  \l_tblr_h_tl
 \tl_new:N  \l_tblr_i_tl  % for row index
 \tl_new:N  \l_tblr_j_tl  % for column index
+\tl_new:N  \l_tblr_w_tl
 \int_new:N \l_tblr_c_int % for column number
 \int_new:N \l_tblr_r_int % for row number
 \dim_new:N \l_tblr_d_dim % for row depth
@@ -151,21 +152,53 @@
 \int_new:N \rownum
 \int_new:N \colnum
 
+\prop_const_from_keyval:Nn \c_tblr_default_keyval_row_prop
+  {
+    rowsep-above   = 0.2em,
+    rowsep-below   = 0.2em,
+    valign         = top,
+    natural-height = 0pt,
+    natural-depth  = 0pt,
+  }
+
+\prop_const_from_keyval:Nn \c_tblr_default_keyval_col_prop
+  {
+    colsep-left    = 0.6em,
+    colsep-right   = 0.6em,
+    halign         = left,
+    natural-width  = 0pt,
+  }
+
+\prop_const_from_keyval:Nn \c_tblr_default_keyval_cell_prop
+  {
+    natural-width  = 0pt,
+    natural-height = 0pt,
+    natural-depth  = 0pt,
+  }
+
 \cs_new_protected:Npn \tblr_initial_table_spec
   {
     \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
       {
-        \tblr_prop_gput:nxn
-          { spec } { row[\l_tblr_i_tl] / rowsep-above } { 0.2em }
-        \tblr_prop_gput:nxn
-          { spec } { row[\l_tblr_i_tl] / rowsep-below } { 0.2em }
+        \prop_map_inline:Nn \c_tblr_default_keyval_row_prop
+          {
+            \tblr_prop_gput:nxn { spec } { row[\l_tblr_i_tl] / ##1 } { ##2 }
+          }
+        \int_step_variable:nNn { \l_tblr_col_count_int } \l_tblr_j_tl
+          {
+            \prop_map_inline:Nn \c_tblr_default_keyval_cell_prop
+              {
+                \tblr_prop_gput:nxn { spec }
+                  { cell[\l_tblr_i_tl][\l_tblr_j_tl] / ##1 } { ##2 }
+              }
+          }
       }
     \int_step_variable:nNn { \l_tblr_col_count_int } \l_tblr_j_tl
       {
-        \tblr_prop_gput:nxn
-          { spec } { col[\l_tblr_j_tl] / colsep-left } { 0.6em }
-        \tblr_prop_gput:nxn
-          { spec } { col[\l_tblr_j_tl] / colsep-right } { 0.6em }
+        \prop_map_inline:Nn \c_tblr_default_keyval_col_prop
+          {
+            \tblr_prop_gput:nxn { spec } { col[\l_tblr_j_tl] / ##1 } { ##2 }
+          }
       }
   }
 
@@ -177,6 +210,22 @@
   {
     \keys_set:nn { tblr } { #1 }
   }
+\cs_generate_variant:Nn \tblr_setup:n { x }
+
+%% If the key doesn't exist, create it ahead
+\cs_new_protected:Npn \tblr_keys_define_set:nn #1 #2
+  {
+    \keys_if_exist:nnF { tblr } { #1 }
+      {
+        \keys_define:nn { tblr }
+          { #1 .code:n = \tblr_keys_gput:nn { #1 } { ##1 } }
+      }
+    \keys_set:nn { tblr } { #1 = #2 }
+  }
+\cs_generate_variant:Nn \tblr_keys_define_set:nn { x }
+
+\cs_new_protected:Npn  \tblr_keys_gput:nn #1 #2
+  { \tblr_prop_gput:nnn { spec } { #1 } { #2 } }
 
 \keys_define:nn { tblr }
   {
@@ -229,9 +278,20 @@
     \group_end:
   }
 
+\keys_define:nn { tblr-column-type-Y }
+  {
+    l .code:n = \tblr_keys_define_set:xn
+                  { col[\int_use:N \colnum] / halign } { left },
+    c .code:n = \tblr_keys_define_set:xn
+                  { col[\int_use:N \colnum] / halign } { center },
+    r .code:n = \tblr_keys_define_set:xn
+                  { col[\int_use:N \colnum] / halign } {right },
+  }
+
 \exp_args:Nc \NewDocumentCommand { tblr_column_type_ Y } { O{} }
   {
     \int_incr:N \colnum
+    \keys_set:nn { tblr-column-type-Y } { #1 }
   }
 
 \exp_args:Nc \NewDocumentCommand { tblr_column_type_ | } { O{} }
@@ -388,12 +448,18 @@
 
 \cs_new_protected:Npn \tblr_build_cell:NN #1 #2
   {
+    \tl_set:Nx \l_tblr_w_tl
+      { \tblr_prop_item:ne { spec } { col[#2] / natural-width } }
+    \tl_set:Nx \l_tblr_a_tl
+      { \tblr_prop_item:ne { spec } { col[#2] / halign } }
     \skip_horizontal:n
       { \tblr_prop_item:ne { spec } { col[#2] / colsep-left } }
-    \hbox_set:Nn \l_tblr_c_box
-      { \tblr_prop_item:ne { cell } { (#1,#2) } }
-    \box_set_wd:Nn \l_tblr_c_box
-      { \tblr_prop_item:ne { spec } { col[#2] / natural-width } }
+    \hbox_set_to_wd:Nnn \l_tblr_c_box { \l_tblr_w_tl }
+      {
+        \tl_if_eq:NnF \l_tblr_a_tl { left } { \hfil }
+        \tblr_prop_item:ne { cell } { (#1,#2) }
+        \tl_if_eq:NnT \l_tblr_a_tl { center } { \hfil }
+      }
     \box_set_ht:Nn \l_tblr_c_box
       { \tblr_prop_item:ne { spec } { row[#1] / natural-height } }
     \box_set_dp:Nn \l_tblr_c_box
