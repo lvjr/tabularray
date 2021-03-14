@@ -8,12 +8,11 @@
 \NewDocumentEnvironment { tblr } { O{c} m +b }
   { \buildtblr { #1 } { #2 } { #3 } } { }
 
-\cs_generate_variant:Nn \tl_if_blank:nTF { xTF }
 \cs_generate_variant:Nn \prop_item:Nn { Ne }
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
 \cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
-%\cs_generate_variant:Nn \seq_map_indexed_function:NN {cN}
-%\cs_generate_variant:Nn \seq_set_split:Nnn { cnn }
+\cs_generate_variant:Nn \tl_gput_right:Nn { Ne }
+\cs_generate_variant:Nn \tl_if_blank:nTF { xTF }
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
 
 \tl_new:N  \l_tblr_a_tl
@@ -265,18 +264,18 @@
       { \tblr_setup:n { hline } }
   }
 
-%% Parse column specification
-\cs_new_protected:Npn \tblr_parse_column_spec:n #1
+%% Some predefined column types and \NewColumnType command
+
+\clist_const:Nn \c_tblr_primitive_column_type_clist { Y, | }
+\tl_new:N \g_tblr_expanded_colspec_tl
+
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ Y } { O{} }
   {
-    \group_begin:
-    \int_zero:N \colnum
-    \char_set_catcode_active:N Y
-    \char_set_active_eq:Nc Y { tblr_column_type_ Y }
-    \char_set_catcode_active:N |
-    \char_set_active_eq:Nc | { tblr_column_type_ | }
-    \tex_scantokens:D { #1 }
-    \group_end:
+    \int_incr:N \colnum
+    \keys_set:nn { tblr-column-type-Y } { #1 }
   }
+\exp_args:Nc \NewDocumentCommand { tblr_column_type_ Y } { O{} }
+  { \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { Y[#1] } }
 
 \keys_define:nn { tblr-column-type-Y }
   {
@@ -288,19 +287,86 @@
                   { col[\int_use:N \colnum] / halign } {right },
   }
 
-\exp_args:Nc \NewDocumentCommand { tblr_column_type_ Y } { O{} }
-  {
-    \int_incr:N \colnum
-    \keys_set:nn { tblr-column-type-Y } { #1 }
-  }
-
-\exp_args:Nc \NewDocumentCommand { tblr_column_type_ | } { O{} }
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ | } { O{} }
   {
     \tblr_prop_gput:nxx
       { spec }
       { vline[\int_eval:n {\colnum + 1}] / style }
       { solid }
   }
+\exp_args:Nc \NewDocumentCommand { tblr_column_type_ | } { O{} }
+  { \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { | } }
+
+\clist_new:N \g_tblr_defined_column_type_clist
+
+\msg_new:nnn { tblr } { used-column-type }
+  { Column ~ type ~ #1 ~ is ~ used! }
+
+\NewDocumentCommand \NewColumnType { m O{0} o m }
+  {
+    \clist_gconcat:NNN \g_tmpa_clist
+      \c_tblr_primitive_column_type_clist \g_tblr_defined_column_type_clist
+    \clist_if_in:NnTF \g_tmpa_clist { #1 }
+      {
+        \msg_warning:nnn { tblr } { used-column-type } { #1 }
+        \clist_log:N \g_tmpa_clist
+      }
+      {
+        \tl_clear:N \l_tmpa_tl
+        \int_compare:nNnT { #2 } > { 0 }
+          {
+            \IfValueTF { #3 }
+              { \tl_set:Nn \l_tmpa_tl { O{#3} } }
+              { \tl_set:Nn \l_tmpa_tl { m } }
+            \tl_put_right:Nx \l_tmpa_tl { \prg_replicate:nn { #2 - 1 } { m } }
+          }
+        \exp_args:NcV \NewDocumentCommand { tblr_column_type_ #1 } \l_tmpa_tl
+          { \tl_gput_right:Ne \g_tblr_expanded_colspec_tl { #4 } }
+        \clist_gput_right:Nn \g_tblr_defined_column_type_clist { #1 }
+      }
+  }
+
+\NewColumnType { l } { Y[l] }
+\NewColumnType { c } { Y[c] }
+\NewColumnType { r } { Y[r] }
+
+\cs_new_protected:Npn \tblr_parse_column_spec:n #1
+  {
+    \tblr_expand_column_spec:n { #1 }
+    \tblr_execute_column_spec:V \g_tblr_expanded_colspec_tl
+  }
+
+%% Expand defined column types
+\cs_new_protected:Npn \tblr_expand_column_spec:n #1
+  {
+    \group_begin:
+    \tl_gclear:N \g_tblr_expanded_colspec_tl
+    \clist_gconcat:NNN \g_tmpa_clist
+      \c_tblr_primitive_column_type_clist \g_tblr_defined_column_type_clist
+    \clist_map_inline:Nn \g_tmpa_clist
+      {
+        \char_set_catcode_active:N ##1
+        \char_set_active_eq:Nc ##1 { tblr_column_type_ ##1 }
+      }
+    \tex_scantokens:D { #1 }
+    \tl_log:N \g_tblr_expanded_colspec_tl
+    \group_end:
+  }
+
+%% Execute primitive column types
+\cs_new_protected:Npn \tblr_execute_column_spec:n #1
+  {
+    \group_begin:
+    \int_zero:N \colnum
+    \clist_map_inline:Nn \c_tblr_primitive_column_type_clist
+      {
+        \char_set_catcode_active:N ##1
+        \char_set_active_eq:Nc ##1 { tblr_primitive_column_type_ ##1 }
+      }
+    \tex_scantokens:D { #1 }
+    \group_end:
+  }
+\cs_generate_variant:Nn \tblr_execute_column_spec:n { V }
 
 %% Calculate the width and height of every cell
 \cs_new_protected:Npn \tblr_calculate_cell_size
