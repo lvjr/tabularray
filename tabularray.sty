@@ -276,18 +276,18 @@
 
 %% Some predefined column types and \NewColumnType command
 
-\clist_const:Nn \c_tblr_primitive_column_type_clist { Y, | }
+\clist_const:Nn \c_tblr_primitive_column_type_clist { Q, | }
 \tl_new:N \g_tblr_expanded_colspec_tl
 
-\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ Y } { O{} }
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ Q } { O{} }
   {
     \int_incr:N \colnum
-    \keys_set:nn { tblr-column-type-Y } { #1 }
+    \keys_set:nn { tblr-column-type-Q } { #1 }
   }
-\exp_args:Nc \NewDocumentCommand { tblr_column_type_ Y } { O{} }
-  { \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { Y[#1] } }
+\exp_args:Nc \NewDocumentCommand { tblr_column_type_ Q } { O{} }
+  { \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { Q[#1] } }
 
-\keys_define:nn { tblr-column-type-Y }
+\keys_define:nn { tblr-column-type-Q }
   {
     l .code:n = \tblr_keys_define_set:xn
                   { col[\int_use:N \colnum] / halign } { left },
@@ -336,9 +336,9 @@
       }
   }
 
-\NewColumnType { l } { Y[l] }
-\NewColumnType { c } { Y[c] }
-\NewColumnType { r } { Y[r] }
+\NewColumnType { l } { Q[l] }
+\NewColumnType { c } { Q[c] }
+\NewColumnType { r } { Q[r] }
 
 \cs_new_protected:Npn \tblr_parse_column_spec:n #1
   {
