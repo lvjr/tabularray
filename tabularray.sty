@@ -314,7 +314,7 @@
 
 %% Some primitive column types
 
-\clist_const:Nn \c_tblr_primitive_column_types_clist { Q, |, <, > }
+\str_const:Nn \c_tblr_primitive_column_types_str { Q | < > }
 \tl_new:N \g_tblr_expanded_colspec_tl
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ Q } { O{} }
@@ -432,9 +432,9 @@
 
 %% \NewColumnType command and predefined column types
 
-\clist_new:N \g_tblr_used_column_types_clist
-\clist_gset_eq:NN
-  \g_tblr_used_column_types_clist \c_tblr_primitive_column_types_clist
+\str_new:N \g_tblr_used_column_types_str
+\str_gset_eq:NN
+  \g_tblr_used_column_types_str \c_tblr_primitive_column_types_str
 \bool_new:N \g_tblr_column_spec_expand_stop_bool
 
 \msg_new:nnn { tblr } { used-column-type }
@@ -442,10 +442,10 @@
 
 \NewDocumentCommand \NewColumnType { m O{0} o m }
   {
-    \clist_if_in:NnTF \g_tblr_used_column_types_clist { #1 }
+    \str_if_in:NnTF \g_tblr_used_column_types_str { #1 }
       {
         \msg_warning:nnn { tblr } { used-column-type } { #1 }
-        \clist_log:N \g_tblr_used_column_types_clist
+        \str_log:N \g_tblr_used_column_types_str
       }
       {
         \tl_clear:N \l_tmpa_tl
@@ -462,7 +462,7 @@
             \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { #4 }
             \__tblr_expand_column_spec_next:N
           }
-        \clist_gput_right:Nn \g_tblr_used_column_types_clist { #1 }
+        \str_gput_right:Nn \g_tblr_used_column_types_str { #1 }
       }
   }
 
@@ -502,13 +502,13 @@
   {
     \token_if_eq_meaning:NNF #1 \scan_stop:
       {
-        \clist_if_in:NnTF \g_tblr_used_column_types_clist { #1 }
+        \str_if_in:NnTF \g_tblr_used_column_types_str { #1 }
           {
             \cs:w tblr_column_type_  #1 \cs_end:
           }
           {
             \msg_warning:nnn { tblr } { unknown-column-type } { #1 }
-            \clist_log:N \l_tmpa_clist
+            \str_log:N \l_tmpa_str
           }
       }
   }
