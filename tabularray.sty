@@ -341,16 +341,28 @@
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ | } { O{} }
   {
-    \tblr_prop_gput:nxx
-      { spec }
-      { vline[\int_eval:n {\colnum + 1}] / style }
-      { solid }
+    \tl_if_blank:nTF { #1 }
+      {
+        \tblr_prop_gput:nxx { spec }
+          { vline[\int_eval:n {\colnum + 1}] / style } { solid }
+      }
+      { \keys_set:nn { tblr-column-type-| } { #1 } }
     \__tblr_execute_column_spec_next:N
   }
 \exp_args:Nc \NewDocumentCommand { tblr_column_type_ | } { O{} }
   {
-    \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { | }
+    \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { |[#1] }
     \__tblr_expand_column_spec_next:N
+  }
+
+\keys_define:nn { tblr-column-type-| }
+  {
+    text .code:n = \tblr_prop_gput:nxn { spec }
+                     { vline[\int_eval:n {\colnum + 1}] / text } { #1 },
+    fg .code:n = \tblr_prop_gput:nxn { spec }
+                   { vline[\int_eval:n {\colnum + 1}] / foreground } { #1 },
+    bg .code:n = \tblr_prop_gput:nxn { spec }
+                   { vline[\int_eval:n {\colnum + 1}] / background } { #1 },
   }
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ > } { O{} m }
@@ -447,7 +459,7 @@
         \exp_args:NcV \NewDocumentCommand { tblr_column_type_ #1 } \l_tmpa_tl
           {
             \bool_gset_false:N \g_tblr_column_spec_expand_stop_bool
-            \tl_gput_right:Ne \g_tblr_expanded_colspec_tl { #4 }
+            \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { #4 }
             \__tblr_expand_column_spec_next:N
           }
         \clist_gput_right:Nn \g_tblr_used_column_types_clist { #1 }
@@ -457,6 +469,9 @@
 \NewColumnType { l } { Q[l] }
 \NewColumnType { c } { Q[c] }
 \NewColumnType { r } { Q[r] }
+
+\NewColumnType { ! } [1] { |[text={#1}] }
+\NewColumnType { @ } [1] { <[0pt]{} |[text={#1}] >[0pt]{} }
 
 \cs_new_protected:Npn \__tblr_parse_column_spec:n #1
   {
