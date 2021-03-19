@@ -48,7 +48,7 @@
     \prop_gput:cnn
       { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
   }
-\cs_generate_variant:Nn \tblr_prop_gput:nnn { nnV, nxn, nxx, nxV }
+\cs_generate_variant:Nn \tblr_prop_gput:nnn { nnx, nnV, nxn, nxx, nxV }
 
 \cs_new:Npn \tblr_prop_item:nn #1 #2
   {
@@ -74,8 +74,9 @@
     \int_gincr:N \g_tblr_level_int
     \prop_gclear_new:c { g_tblr_cell_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g_tblr_spec_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_initial_table_command
     \__tblr_split_table:n { #3 }
-    \tblr_initial_table
+    \__tblr_initial_table_spec
     \tblr_parse_column_spec:n { #2 }
     \tblr_calculate_cell_size
     \tblr_build_whole:n { #1 }
@@ -154,6 +155,10 @@
     \tblr_prop_log:n { cell }
   }
 
+%% Two counters for row and column numbering
+\int_new:N \rownum
+\int_new:N \colnum
+
 %% Split one line into cells and store them
 %% #1: row number, #2 the line text
 \cs_new_protected:Npn \tblr_split_one_line:nn #1 #2
@@ -167,20 +172,32 @@
         \tblr_prop_gput:nnV { cell } { ( #1, ##1 ) } \l_tmpa_tl
         \int_incr:N \l_tblr_c_int
       }
-    \int_compare:nT { \l_tblr_c_int > \l_tblr_col_count_int }
+    %% Measure the last row with single cell and parse \hline at the same time
+    %% Decrease row count by 1 when it's an empty cell (has only \hline)
+    %% We need to do it here since the > or < column type may add text to cells
+    \bool_set_false:N \l_tmpa_bool
+    \int_compare:nNnT { \l_tblr_c_int } = { 1 }
       {
-        \int_set_eq:NN \l_tblr_col_count_int \l_tblr_c_int
+        \int_set:Nn \rownum { #1 }
+        \int_set:Nn \colnum { 1 }
+        \__tblr_measure_cell_size:nnNNN
+          { #1 } { 1 } \l_tblr_w_dim \l_tblr_h_dim \l_tblr_d_dim
+        \bool_lazy_and:nnT
+          { \dim_compare_p:nNn { \l_tblr_h_dim } = { 0pt } }
+          { \dim_compare_p:nNn { \l_tblr_d_dim } = { 0pt } }
+          { \bool_set_true:N \l_tmpa_bool }
+      }
+    \bool_if:NTF \l_tmpa_bool
+      { \int_decr:N \l_tblr_row_count_int }
+      {
+        \tblr_prop_gput:nnx
+          { spec } { row[#1] / cell-number } { \int_use:N \l_tblr_c_int }
+        \int_compare:nT { \l_tblr_c_int > \l_tblr_col_count_int }
+          {
+            \int_set_eq:NN \l_tblr_col_count_int \l_tblr_c_int
+          }
       }
   }
-
-\cs_new_protected:Npn \tblr_initial_table
-  {
-    \tblr_initial_table_spec
-    \tblr_initial_table_command
-  }
-
-\int_new:N \rownum
-\int_new:N \colnum
 
 \prop_const_from_keyval:Nn \c_tblr_default_keyval_row_prop
   {
@@ -206,7 +223,7 @@
     natural-depth  = 0pt,
   }
 
-\cs_new_protected:Npn \tblr_initial_table_spec
+\cs_new_protected:Npn \__tblr_initial_table_spec
   {
     \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
       {
@@ -289,7 +306,7 @@
       { solid }
   }
 
-\cs_new_protected:Npn \tblr_initial_table_command
+\cs_new_protected:Npn \__tblr_initial_table_command
   {
     \cs_set_protected:Npn \hline
       { \tblr_setup:n { hline } }
@@ -485,6 +502,7 @@
 
 \cs_new_protected:Npn \tblr_execute_column_spec:N #1
   {
+    \int_zero:N \colnum
     \exp_last_unbraced:NV \tblr_execute_column_spec_next:N #1 \scan_stop:
   }
 
@@ -515,19 +533,6 @@
               \l_tblr_d_dim
           }
       }
-    %% remove the last row when it has only \hline
-    \tl_set:Nx \l_tblr_h_tl
-      {
-        \tblr_prop_item:ne { spec } { row[\l_tblr_row_count_int] / natural-height }
-      }
-    \tl_set:Nx \l_tblr_d_tl
-      {
-        \tblr_prop_item:ne { spec } { row[\l_tblr_row_count_int] / natural-depth }
-      }
-    \bool_lazy_and:nnT
-      { \dim_compare_p:nNn { \l_tmpb_tl } = { 0pt } }
-      { \dim_compare_p:nNn { \l_tmpb_tl } = { 0pt } }
-      { \int_decr:N \l_tblr_row_count_int }
     \tblr_prop_log:n {spec }
   }
 
