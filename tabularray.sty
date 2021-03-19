@@ -51,7 +51,7 @@
     \prop_gput:cnn
       { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
   }
-\cs_generate_variant:Nn \tblr_prop_gput:nnn { nnV, nxn, nxx }
+\cs_generate_variant:Nn \tblr_prop_gput:nnn { nnV, nxn, nxx, nxV }
 
 \cs_new:Npn \tblr_prop_item:nn #1 #2
   {
@@ -274,9 +274,9 @@
       { \tblr_setup:n { hline } }
   }
 
-%% Some predefined column types and \NewColumnType command
+%% Some primitive column types
 
-\clist_const:Nn \c_tblr_primitive_column_types_clist { Q, | }
+\clist_const:Nn \c_tblr_primitive_column_types_clist { Q, |, <, > }
 \tl_new:N \g_tblr_expanded_colspec_tl
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ Q } { O{} }
@@ -314,6 +314,73 @@
     \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { | }
     \tblr_expand_column_spec_next:N
   }
+
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ > } { O{} m }
+  {
+    \tl_if_blank:nF { #1 }
+      {
+        \tblr_prop_gput:nxx
+          { spec }
+          { col[\int_eval:n {\colnum + 1}] / colsep-left }
+          { \dim_eval:n { #1 } }
+      }
+    \tl_if_blank:nF { #2 }
+      {
+        \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
+          {
+            \tl_set:Nx \l_tmpa_tl
+            {
+              \tblr_prop_item:ne { cell }
+                { (\l_tblr_i_tl,\int_eval:n {\colnum + 1}) }
+            }
+            \tl_put_left:Nn \l_tmpa_tl { #2 }
+            \tblr_prop_gput:nxV
+              { cell }
+              { (\l_tblr_i_tl,\int_eval:n {\colnum + 1}) }
+              \l_tmpa_tl
+          }
+      }
+    \tblr_execute_column_spec_next:N
+  }
+\exp_args:Nc \NewDocumentCommand { tblr_column_type_ > } { O{} m }
+  {
+    \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { >[#1]{#2} }
+    \tblr_expand_column_spec_next:N
+  }
+
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ < } { O{} m }
+  {
+    \tl_if_blank:nF { #1 }
+      {
+        \tblr_prop_gput:nxx
+          { spec }
+          { col[\int_use:N \colnum] / colsep-right }
+          { \dim_eval:n { #1 } }
+      }
+    \tl_if_blank:nF { #2 }
+      {
+        \int_step_variable:nNn { \l_tblr_row_count_int } \l_tblr_i_tl
+          {
+            \tl_set:Nx \l_tmpa_tl
+            {
+              \tblr_prop_item:ne { cell } { (\l_tblr_i_tl,\int_use:N \colnum) }
+            }
+            \tl_put_right:Nn \l_tmpa_tl { #2 }
+            \tblr_prop_gput:nxV
+              { cell }
+              { (\l_tblr_i_tl,\int_use:N \colnum) }
+              \l_tmpa_tl
+          }
+      }
+    \tblr_execute_column_spec_next:N
+  }
+\exp_args:Nc \NewDocumentCommand { tblr_column_type_ < } { O{} m }
+  {
+    \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { <[#1]{#2} }
+    \tblr_expand_column_spec_next:N
+  }
+
+%% \NewColumnType command and predefined column types
 
 \clist_new:N \g_tblr_used_column_types_clist
 \clist_gset_eq:NN
