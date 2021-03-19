@@ -34,9 +34,9 @@
 \tl_new:N  \l_tblr_w_tl
 \int_new:N \l_tblr_c_int % for column number
 \int_new:N \l_tblr_r_int % for row number
-\dim_new:N \l_tblr_d_dim % for row depth
-\dim_new:N \l_tblr_h_dim % for row height
-\dim_new:N \l_tblr_w_dim % for column width
+\dim_new:N \l_tblr_d_dim % for depth
+\dim_new:N \l_tblr_h_dim % for height
+\dim_new:N \l_tblr_w_dim % for width
 \box_new:N \l_tblr_c_box % for cell box
 
 \seq_new:N \l_tblr_lines_seq
@@ -486,8 +486,12 @@
         \int_step_inline:nn { \l_tblr_col_count_int }
           {
             \int_incr:N \colnum
-            \tblr_get_cell_size
-            \tblr_update_row_col_size
+            \__tblr_measure_and_update_size:nnNNN
+              { \int_use:N \rownum }
+              { \int_use:N \colnum }
+              \l_tblr_w_dim
+              \l_tblr_h_dim
+              \l_tblr_d_dim
           }
       }
     %% remove the last row when it has only \hline
@@ -506,74 +510,74 @@
     \tblr_prop_log:n {spec }
   }
 
-%% Get natural dimensions of current cell
-\cs_new_protected:Npn \tblr_get_cell_size
+%% Measure and update natural dimensions of the row/column/cell
+%% #1: row number, #2 column number
+%% #3: width dimension, #4: height dimension, $5 depth dimension
+\cs_new_protected:Npn \__tblr_measure_and_update_size:nnNNN #1 #2 #3 #4 #5
+  {
+    \__tblr_measure_cell_size:nnNNN { #1 } { #2 } #3 #4 #5
+    \__tblr_update_cell_size:nnNNN { #1 } { #2 } #3 #4 #5
+    \__tblr_update_row_col_size:nnNNN { #1 } { #2 } #3 #4 #5
+  }
+
+%% Measure natural dimensions of the cell
+%% #1: row number, #2 column number
+%% #3: width dimension, #4: height dimension, $5 depth dimension
+\cs_new_protected:Npn \__tblr_measure_cell_size:nnNNN #1 #2 #3 #4 #5
   {
     \hbox_set:Nn \l_tblr_c_box
       {
-        \tblr_prop_item:ne { cell } { (\int_use:N \rownum, \int_use:N \colnum) }
+        \tblr_prop_item:ne { cell } { ( #1, #2 ) }
       }
-    \tblr_prop_gput:nxx
-      { spec }
-      { cell[\int_use:N \rownum][\int_use:N \colnum] / natural-width }
-      { \dim_use:N \box_wd:N \l_tblr_c_box }
-    \tblr_prop_gput:nxx
-      { spec }
-      { cell[\int_use:N \rownum][\int_use:N \colnum] / natural-height }
-      { \dim_use:N \box_ht:N \l_tblr_c_box }
-    \tblr_prop_gput:nxx
-      { spec }
-      { cell[\int_use:N \rownum][\int_use:N \colnum] / natural-depth }
-      { \dim_use:N \box_dp:N \l_tblr_c_box }
+    \dim_set:Nn #3 { \box_wd:N \l_tblr_c_box }
+    \dim_set:Nn #4 { \box_ht:N \l_tblr_c_box }
+    \dim_set:Nn #5 { \box_dp:N \l_tblr_c_box }
   }
 
-%% Update natural dimensions of current row and current column
-\cs_new_protected:Npn \tblr_update_row_col_size
+%% Update natural dimensions of the cell
+%% #1: row number, #2 column number
+%% #3: width dimension, #4: height dimension, $5 depth dimension
+\cs_new_protected:Npn \__tblr_update_cell_size:nnNNN #1 #2 #3 #4 #5
+  {
+    \tblr_prop_gput:nxx
+      { spec } { cell[#1][#2] / natural-width } { \dim_use:N #3 }
+    \tblr_prop_gput:nxx
+      { spec } { cell[#1][#2] / natural-height } { \dim_use:N #4 }
+    \tblr_prop_gput:nxx
+      { spec } { cell[#1][#2] / natural-depth } { \dim_use:N #5 }
+  }
+
+%% Update natural dimensions of the row and the column
+%% #1: row number, #2 column number
+%% #3: width dimension, #4: height dimension, $5 depth dimension
+\cs_new_protected:Npn \__tblr_update_row_col_size:nnNNN #1 #2 #3 #4 #5
   {
     %% Update natural width for every column
     \tl_set:Nx \l_tmpb_tl
-      { \tblr_prop_item:ne { spec } { col[\int_use:N \colnum] / natural-width } }
+      { \tblr_prop_item:ne { spec } { col[#2] / natural-width } }
     \bool_lazy_or:nnT
       { \tl_if_empty_p:N \l_tmpb_tl }
+      { \dim_compare_p:nNn { \dim_use:N #3 } > { \l_tmpb_tl } }
       {
-        \dim_compare_p:nNn
-          { \dim_use:N \box_wd:N \l_tblr_c_box } > { \l_tmpb_tl }
-      }
-      {
-        \tblr_prop_gput:nxx
-          { spec }
-          { col[\int_use:N \colnum]/ natural-width }
-          { \dim_use:N \box_wd:N \l_tblr_c_box }
+        \tblr_prop_gput:nxx { spec } { col[#2]/ natural-width } { \dim_use:N #3 }
       }
     %% Update natural height for every row
     \tl_set:Nx \l_tmpb_tl
-      { \tblr_prop_item:ne { spec } { row[\int_use:N \rownum] / natural-height } }
+      { \tblr_prop_item:ne { spec } { row[#1] / natural-height } }
     \bool_lazy_or:nnT
       { \tl_if_empty_p:N \l_tmpb_tl }
+      { \dim_compare_p:nNn { \dim_use:N #4 } > { \l_tmpb_tl } }
       {
-        \dim_compare_p:nNn
-          { \dim_use:N \box_ht:N \l_tblr_c_box } > { \l_tmpb_tl }
-      }
-      {
-        \tblr_prop_gput:nxx
-          { spec }
-          { row[\int_use:N \rownum] / natural-height }
-          { \dim_use:N \box_ht:N \l_tblr_c_box }
+        \tblr_prop_gput:nxx { spec } { row[#1] / natural-height } { \dim_use:N #4 }
       }
     %% Update natural depth for every row
     \tl_set:Nx \l_tmpb_tl
-      { \tblr_prop_item:ne { spec } { row[\int_use:N \rownum] / natural-depth } }
+      { \tblr_prop_item:ne { spec } { row[#1] / natural-depth } }
     \bool_lazy_or:nnT
       { \tl_if_empty_p:N \l_tmpb_tl }
+      { \dim_compare_p:nNn { \dim_use:N #5 } > { \l_tmpb_tl } }
       {
-        \dim_compare_p:nNn
-          { \dim_use:N \box_dp:N \l_tblr_c_box } > { \l_tmpb_tl }
-      }
-      {
-        \tblr_prop_gput:nxx
-          { spec }
-          { row[\int_use:N \rownum] / natural-depth }
-          { \dim_use:N \box_dp:N \l_tblr_c_box }
+        \tblr_prop_gput:nxx { spec } { row[#1] / natural-depth } { \dim_use:N #5 }
       }
   }
 
