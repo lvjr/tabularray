@@ -27,10 +27,12 @@
 
 \tl_new:N  \l_tblr_a_tl
 \tl_new:N  \l_tblr_b_tl
+\tl_new:N  \l_tblr_c_tl
 \tl_new:N  \l_tblr_d_tl
 \tl_new:N  \l_tblr_h_tl
 \tl_new:N  \l_tblr_i_tl  % for row index
 \tl_new:N  \l_tblr_j_tl  % for column index
+\tl_new:N  \l_tblr_v_tl
 \tl_new:N  \l_tblr_w_tl
 \int_new:N \l_tblr_c_int % for column number
 \int_new:N \l_tblr_r_int % for row number
@@ -203,7 +205,6 @@
   {
     rowsep-above   = 0.2em,
     rowsep-below   = 0.2em,
-    valign         = top,
     natural-height = 0pt,
     natural-depth  = 0pt,
   }
@@ -213,6 +214,7 @@
     colsep-left    = 0.6em,
     colsep-right   = 0.6em,
     halign         = left,
+    valign         = top,
     natural-width  = 0pt,
   }
 
@@ -269,7 +271,7 @@
       }
     \keys_set:nn { tblr } { #1 = #2 }
   }
-\cs_generate_variant:Nn \tblr_keys_define_set:nn { x }
+\cs_generate_variant:Nn \tblr_keys_define_set:nn { xn, xx }
 
 \cs_new_protected:Npn  \tblr_keys_gput:nn #1 #2
   { \tblr_prop_gput:nnn { spec } { #1 } { #2 } }
@@ -336,7 +338,17 @@
     c .code:n = \tblr_keys_define_set:xn
                   { col[\int_use:N \colnum] / halign } { center },
     r .code:n = \tblr_keys_define_set:xn
-                  { col[\int_use:N \colnum] / halign } {right },
+                  { col[\int_use:N \colnum] / halign } { right },
+    t .code:n = \tblr_keys_define_set:xn
+                  { col[\int_use:N \colnum] / valign } { top },
+    p .code:n = \tblr_keys_define_set:xn
+                  { col[\int_use:N \colnum] / valign } { top },
+    m .code:n = \tblr_keys_define_set:xn
+                  { col[\int_use:N \colnum] / valign } { middle },
+    b .code:n = \tblr_keys_define_set:xn
+                  { col[\int_use:N \colnum] / valign } { bottom },
+    wd .code:n = \tblr_keys_define_set:xx
+                   { col[\int_use:N \colnum] / width } { \dim_eval:n { #1 } },
   }
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ | } { O{} }
@@ -470,6 +482,11 @@
 \NewColumnType { c } { Q[c] }
 \NewColumnType { r } { Q[r] }
 
+\NewColumnType { t } [1] { Q[t,wd=#1] }
+\NewColumnType { p } [1] { Q[p,wd=#1] }
+\NewColumnType { m } [1] { Q[m,wd=#1] }
+\NewColumnType { b } [1] { Q[b,wd=#1] }
+
 \NewColumnType { ! } [1] { |[text={#1}] }
 \NewColumnType { @ } [1] { <[0pt]{} |[text={#1}] >[0pt]{} }
 \NewColumnType { * } [2] { \prg_replicate:nn {#1} {#2} }
@@ -573,12 +590,48 @@
 \cs_new_protected:Npn \__tblr_measure_cell_size:nnNNN #1 #2 #3 #4 #5
   {
     \hbox_set:Nn \l_tblr_c_box
-      {
-        \tblr_prop_item:ne { cell } { ( #1, #2 ) }
-      }
+      { \__tblr_get_cell_text:nn { #1 } { #2 } }
     \dim_set:Nn #3 { \box_wd:N \l_tblr_c_box }
     \dim_set:Nn #4 { \box_ht:N \l_tblr_c_box }
     \dim_set:Nn #5 { \box_dp:N \l_tblr_c_box }
+  }
+
+%% Get cell text, #1: row number, #2: column number
+%% If the width of the cell is set, build a vbox,
+%% else if there is any \\ inside it, treat it as a subtable
+
+\cs_new_eq:NN \__tlbr_vbox_top:n    \tex_vtop:D
+\cs_new_eq:NN \__tlbr_vbox_middle:n \tex_vcenter:D
+\cs_new_eq:NN \__tlbr_vbox_bottom:n \tex_vbox:D
+\cs_new_eq:NN \__tlbr_halign_left:   \raggedright
+\cs_new_eq:NN \__tlbr_halign_center: \center
+\cs_new_eq:NN \__tlbr_halign_right:  \raggedleft
+
+\cs_new_protected:Npn \__tblr_get_cell_text:nn #1 #2
+  {
+    \tl_set:Nx \l_tblr_c_tl { \tblr_prop_item:ne { cell } { ( #1, #2 ) } }
+    \tl_set:Nx \l_tblr_h_tl { \tblr_prop_item:ne { spec } { col[#2] / halign } }
+    \tl_set:Nx \l_tblr_v_tl { \tblr_prop_item:ne { spec } { col[#2] / valign } }
+    \tl_set:Nx \l_tblr_w_tl { \tblr_prop_item:ne { spec } { col[#2] / width } }
+    \tl_if_empty:NTF \l_tblr_w_tl
+      {
+        \tl_set_eq:NN \l_tmpa_tl \l_tblr_c_tl
+        \tblr_insert_braces:N \l_tmpa_tl
+        \seq_set_split:NnV \l_tmpa_seq { \\ } \l_tmpa_tl
+        \int_compare:nNnT { \seq_count:N \l_tmpa_seq } > { 1 }
+          {
+            \tl_put_left:Nn \l_tblr_c_tl { \begin{tblr}{ @{} Q @{} } }
+            \tl_put_right:Nn \l_tblr_c_tl { \end{tblr} }
+          }
+        \l_tblr_c_tl
+      }
+      {
+        $ \m@th \cs:w __tlbr_vbox_ \l_tblr_v_tl :n \cs_end: {
+            \dim_set:Nn \tex_hsize:D { \l_tblr_w_tl }
+            \cs:w __tlbr_halign_ \l_tblr_h_tl : \cs_end:
+            \l_tblr_c_tl
+        } $
+      }
   }
 
 %% Update natural dimensions of the cell
@@ -679,7 +732,7 @@
     \hbox_set_to_wd:Nnn \l_tblr_c_box { \l_tblr_w_tl }
       {
         \tl_if_eq:NnF \l_tblr_a_tl { left } { \hfil }
-        \tblr_prop_item:ne { cell } { (#1,#2) }
+        \__tblr_get_cell_text:nn { #1 } { #2 }
         \tl_if_eq:NnT \l_tblr_a_tl { center } { \hfil }
       }
     \box_set_ht:Nn \l_tblr_c_box
