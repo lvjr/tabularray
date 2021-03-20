@@ -21,7 +21,7 @@
 \cs_generate_variant:Nn \prop_item:Nn { Ne }
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
 \cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
-\cs_generate_variant:Nn \tl_gput_right:Nn { Ne }
+\cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
 \cs_generate_variant:Nn \tl_if_blank:nTF { xTF }
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
 
@@ -459,7 +459,7 @@
         \exp_args:NcV \NewDocumentCommand { tblr_column_type_ #1 } \l_tmpa_tl
           {
             \bool_gset_false:N \g_tblr_column_spec_expand_stop_bool
-            \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { #4 }
+            \tl_gput_right:Nf \g_tblr_expanded_colspec_tl { #4 }
             \__tblr_expand_column_spec_next:N
           }
         \str_gput_right:Nn \g_tblr_used_column_types_str { #1 }
@@ -472,6 +472,7 @@
 
 \NewColumnType { ! } [1] { |[text={#1}] }
 \NewColumnType { @ } [1] { <[0pt]{} |[text={#1}] >[0pt]{} }
+\NewColumnType { * } [2] { \prg_replicate:nn {#1} {#2} }
 
 \cs_new_protected:Npn \__tblr_parse_column_spec:n #1
   {
@@ -495,20 +496,25 @@
       }
   }
 
+\msg_new:nnn { tblr } { unexpandable-column-type }
+  { Unexpandable ~ command ~ #1 inside ~ column ~ type! }
+
 \msg_new:nnn { tblr } { unknown-column-type }
   { Unknown ~ column ~ type ~ #1! }
 
 \cs_new_protected:Npn \__tblr_expand_column_spec_next:N #1
   {
-    \token_if_eq_meaning:NNF #1 \scan_stop:
+    \token_if_eq_catcode:NNTF #1 \scan_stop:
+      {
+        \token_if_eq_meaning:NNF #1 \scan_stop:
+          { \msg_error:nnn { tblr } { unexpandable-column-type } { #1 } }
+      }
       {
         \str_if_in:NnTF \g_tblr_used_column_types_str { #1 }
+          { \cs:w tblr_column_type_  #1 \cs_end: }
           {
-            \cs:w tblr_column_type_  #1 \cs_end:
-          }
-          {
-            \msg_warning:nnn { tblr } { unknown-column-type } { #1 }
-            \str_log:N \l_tmpa_str
+            \msg_error:nnn { tblr } { unknown-column-type } { #1 }
+            \str_log:N \g_tblr_used_column_types_str
           }
       }
   }
