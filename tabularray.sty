@@ -79,7 +79,7 @@
     \__tblr_initial_table_command
     \__tblr_split_table:n { #3 }
     \__tblr_initial_table_spec
-    \__tblr_parse_column_spec:n { #2 }
+    \__tblr_parse_table_spec:n { #2 }
     \__tblr_calculate_cell_size
     \__tblr_build_whole:n { #1 }
     \int_gdecr:N \g_tblr_level_int
@@ -262,22 +262,27 @@
 \cs_generate_variant:Nn \tblr_setup:n { x }
 
 %% If the key doesn't exist, create it ahead
-\cs_new_protected:Npn \tblr_keys_define_set:nn #1 #2
+\cs_new_protected:Npn \__tblr_keys_define_set:nn #1 #2
   {
     \keys_if_exist:nnF { tblr } { #1 }
       {
         \keys_define:nn { tblr }
-          { #1 .code:n = \tblr_keys_gput:nn { #1 } { ##1 } }
+          { #1 .code:n = \__tblr_keys_gput:nn { #1 } { ##1 } }
       }
     \keys_set:nn { tblr } { #1 = #2 }
   }
-\cs_generate_variant:Nn \tblr_keys_define_set:nn { xn, xx }
+\cs_generate_variant:Nn \__tblr_keys_define_set:nn { xn, xx }
 
-\cs_new_protected:Npn  \tblr_keys_gput:nn #1 #2
-  { \tblr_prop_gput:nnn { spec } { #1 } { #2 } }
+\cs_new_protected:Npn  \__tblr_keys_gput:nn #1 #2
+  {
+    \tblr_prop_gput:nnn { spec } { #1 } { #2 }
+  }
+\cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
 
 \keys_define:nn { tblr }
   {
+    width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n { #1 } },
+    colspec .code:n = \__tblr_parse_column_spec:n { #1 },
     hline .code:n = \__tblr_spec_hline:n { #1 },
   }
 
@@ -314,6 +319,17 @@
       { \tblr_setup:n { hline } }
   }
 
+%% Parse table specifications
+
+\regex_const:Nn \c__tblr_long_key_name_regex { [A-Za-z]{3,} \s* = }
+
+\cs_new_protected:Npn \__tblr_parse_table_spec:n #1
+  {
+    \regex_match:NnTF \c__tblr_long_key_name_regex { #1 }
+      { \keys_set:nn { tblr } { #1 } }
+      { \__tblr_parse_column_spec:n { #1 } }
+  }
+
 %% Some primitive column types
 
 \str_const:Nn \c_tblr_primitive_column_types_str { Q | < > }
@@ -333,21 +349,21 @@
 
 \keys_define:nn { tblr-column-type-Q }
   {
-    l .code:n = \tblr_keys_define_set:xn
+    l .code:n = \__tblr_keys_define_set:xn
                   { col[\int_use:N \colnum] / halign } { left },
-    c .code:n = \tblr_keys_define_set:xn
+    c .code:n = \__tblr_keys_define_set:xn
                   { col[\int_use:N \colnum] / halign } { center },
-    r .code:n = \tblr_keys_define_set:xn
+    r .code:n = \__tblr_keys_define_set:xn
                   { col[\int_use:N \colnum] / halign } { right },
-    t .code:n = \tblr_keys_define_set:xn
+    t .code:n = \__tblr_keys_define_set:xn
                   { col[\int_use:N \colnum] / valign } { top },
-    p .code:n = \tblr_keys_define_set:xn
+    p .code:n = \__tblr_keys_define_set:xn
                   { col[\int_use:N \colnum] / valign } { top },
-    m .code:n = \tblr_keys_define_set:xn
+    m .code:n = \__tblr_keys_define_set:xn
                   { col[\int_use:N \colnum] / valign } { middle },
-    b .code:n = \tblr_keys_define_set:xn
+    b .code:n = \__tblr_keys_define_set:xn
                   { col[\int_use:N \colnum] / valign } { bottom },
-    wd .code:n = \tblr_keys_define_set:xx
+    wd .code:n = \__tblr_keys_define_set:xx
                    { col[\int_use:N \colnum] / width } { \dim_eval:n { #1 } },
   }
 
