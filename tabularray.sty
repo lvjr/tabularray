@@ -369,7 +369,26 @@
                   { col[\int_use:N \colnum] / valign } { bottom },
     wd .code:n = \__tblr_prop_gput:nxx { spec }
                    { col[\int_use:N \colnum] / width } { \dim_eval:n {#1} },
+    co .code:n = \__tblr_prop_gput:nxx { spec }
+                   { col[\int_use:N \colnum] / coefficient } { \int_eval:n {#1} },
+    unknown .code:n = \__tblr_column_type_Q_unknown_key:V \l_keys_key_str,
   }
+
+\msg_new:nnn { tblr } { column-type-Q-unknown-key }
+  { Unknown ~ key ~ #1 ~ in ~ column ~ type ~ Q! }
+
+\regex_const:Nn \c__tblr_is_number_key_regex { [\+\-]? \d+ }
+
+\cs_new_protected:Npn \__tblr_column_type_Q_unknown_key:n #1
+  {
+    \regex_match:NnTF \c__tblr_is_number_key_regex { #1 }
+      {
+        \__tblr_prop_gput:nxx { spec }
+          { col[\int_use:N \colnum] / coefficient } { #1 }
+      }
+      { \msg_warning:nnn { tblr } { column-type-Q-unknown-key } { #1 } }
+  }
+\cs_generate_variant:Nn \__tblr_column_type_Q_unknown_key:n { V }
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ | } { O{} }
   {
