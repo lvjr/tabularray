@@ -591,7 +591,15 @@
   }
 
 %% Calculate the width and height of every cell and border
+
 \cs_new_protected:Npn \__tblr_calculate_cell_and_line_size
+  {
+    \__tblr_calculate_cell_and_line_size_once
+    \__tblr_compute_extendable_column_width
+  }
+
+%% Calculate the width and height of every cell and border once
+\cs_new_protected:Npn \__tblr_calculate_cell_and_line_size_once
   {
     %% We need these two counters in executing table commands inside cells
     \int_zero:N \rownum
@@ -740,6 +748,91 @@
       {
         \__tblr_prop_gput:nxx { spec } { row[#1] / natural-depth } { \dim_use:N #5 }
       }
+  }
+
+%% Compute column widths when there are some extendable columns
+
+\dim_new:N \l__column_target_dim
+\prop_new:N \l__column_coefficient_prop
+\prop_new:N \l__column_natural_width_prop
+\prop_new:N \l__column_computed_width_prop
+
+\cs_new_protected:Npn \__tblr_compute_extendable_column_width
+  {
+    \__tblr_collect_extendable_column_width
+    \prop_if_empty:NF \l__column_coefficient_prop
+      { \__tblr_adjust_extendable_column_width }
+  }
+
+\cs_new_protected:Npn \__tblr_collect_extendable_column_width
+  {
+    \tl_set:Nx \l_tmpa_tl { \__tblr_prop_item:nn { spec } { width } }
+    \tl_if_empty:NTF \l_tmpa_tl
+      { \dim_set_eq:NN \l__column_target_dim \linewidth }
+      { \dim_set:Nn \l__column_target_dim { \l_tmpa_tl } }
+    \prop_clear:N \l__column_coefficient_prop
+    \prop_clear:N \l__column_natural_width_prop
+    \prop_clear:N \l__column_computed_width_prop
+    \int_step_variable:nNn { \l_tblr_col_count_int } \l_tblr_j_tl
+      {
+        \tl_set:Nx \l_tblr_a_tl
+          { \__tblr_prop_item:ne { spec } { col[\l_tblr_j_tl] / width } }
+        \tl_set:Nx \l_tblr_b_tl
+          { \__tblr_prop_item:ne { spec } { col[\l_tblr_j_tl] / coefficient } }
+        \tl_set:Nx \l_tblr_c_tl
+          { \__tblr_prop_item:ne { spec } { col[\l_tblr_j_tl] / natural-width } }
+        \tl_if_empty:NTF \l_tblr_a_tl
+          {
+            \tl_if_empty:NTF \l_tblr_b_tl
+              { \dim_sub:Nn \l__column_target_dim { \l_tblr_c_tl } }
+              {
+                \prop_put:Nxx \l__column_coefficient_prop
+                  { \l_tblr_j_tl } { \l_tblr_b_tl }
+                \int_compare:nNnF { \l_tblr_b_tl } > { 0 }
+                  {
+                    \prop_put:Nxx \l__column_natural_width_prop
+                      { \l_tblr_j_tl } { \l_tblr_c_tl }
+                  }
+              }
+          }
+          { \dim_sub:Nn \l__column_target_dim { \l_tblr_a_tl } }
+        \tl_set:Nx \l_tblr_a_tl
+          { \__tblr_prop_item:ne { spec } { vline[\l_tblr_j_tl] / natural-width } }
+        \tl_set:Nx \l_tblr_b_tl
+          { \__tblr_prop_item:ne { spec } { col[\l_tblr_j_tl] / colsep-left } }
+        \tl_set:Nx \l_tblr_c_tl
+          { \__tblr_prop_item:ne { spec } { col[\l_tblr_j_tl] / colsep-right } }
+        \dim_set:Nn \l__column_target_dim
+          { \l__column_target_dim - \l_tblr_a_tl - \l_tblr_b_tl - \l_tblr_c_tl }
+      }
+    \tl_set:Nx \l_tblr_a_tl
+      { \__tblr_prop_item:ne { spec }
+        { vline[\int_eval:n {\l_tblr_col_count_int + 1}] / natural-width } }
+    \tl_if_empty:NF \l_tblr_a_tl
+      { \dim_sub:Nn \l__column_target_dim { \l_tblr_a_tl } }
+    \dim_log:N \l__column_target_dim
+    \prop_log:N \l__column_coefficient_prop
+    \prop_log:N \l__column_natural_width_prop
+  }
+
+\cs_new_protected:Npn \__tblr_adjust_extendable_column_width
+  {
+    \int_zero:N \l_tmpa_int
+    \prop_map_inline:Nn \l__column_coefficient_prop
+      { \int_add:Nn \l_tmpa_int { \int_abs:n { ##2 } } }
+    \int_log:N \l_tmpa_int
+    \dim_set:Nn \l_tmpa_dim { \l__column_target_dim / \l_tmpa_int }
+    \prop_map_inline:Nn \l__column_coefficient_prop
+      {
+        \prop_put:Nnx \l__column_computed_width_prop
+          { ##1 } { \dim_eval:n { \l_tmpa_dim * \int_abs:n { ##2 } } }
+        \__tblr_prop_gput:nnx { spec }
+          { col[##1] / width }
+          { \dim_eval:n { \l_tmpa_dim * \int_abs:n { ##2 } } }
+        \__tblr_prop_gput:nnn { spec } { col[##1] / natural-width } { 0pt }
+      }
+    \prop_log:N \l__column_computed_width_prop
+    \__tblr_calculate_cell_and_line_size_once
   }
 
 %% Build the whole table
