@@ -801,7 +801,7 @@
                   { \l_tblr_j_tl } { \l_tblr_b_tl }
                 \prop_put:Nxn \l__column_computed_width_prop
                   { \l_tblr_j_tl } { 0pt }
-                \int_compare:nNnF { \l_tblr_b_tl } > { 0 }
+                \dim_compare:nNnF { \l_tblr_b_tl pt } > { 0pt }
                   {
                     \prop_put:Nxx \l__column_natural_width_prop
                       { \l_tblr_j_tl } { \l_tblr_c_tl }
@@ -847,20 +847,26 @@
     \__tblr_calculate_cell_and_line_size_once
   }
 
+%% We use dimen register, since the coefficient may be a decimal number
 \cs_new_protected:Npn \__tblr_adjust_extendable_column_width_once
   {
-    \int_zero:N \l_tmpa_int
+    \dim_zero:N \l_tmpa_dim
     \prop_map_inline:Nn \l__column_coefficient_prop
-      { \int_add:Nn \l_tmpa_int { \int_abs:n { ##2 } } }
-    \dim_set:Nn \l_tmpa_dim { \l__column_target_dim / \l_tmpa_int }
+      {
+        \dim_add:Nn \l_tmpa_dim { \dim_abs:n { ##2 pt } }
+      }
+    \dim_log:N \l_tmpa_dim
+    \tl_set:Nx \l_tblr_w_tl
+      { \dim_ratio:nn { \l__column_target_dim } { \l_tmpa_dim } }
+    \tl_log:N \l_tblr_w_tl
     \dim_zero:N \l__column_target_dim
     \prop_map_inline:Nn \l__column_coefficient_prop
       {
         \tl_set:Nx \l_tmpa_tl
-          { \dim_eval:n { \l_tmpa_dim * \int_abs:n { ##2 } } }
+          { \dim_eval:n { \dim_abs:n { ##2 pt } * \l_tblr_w_tl } }
         \tl_set:Nx \l_tmpb_tl
           { \prop_item:Nn \l__column_natural_width_prop { ##1 } }
-        \int_compare:nNnTF { ##2 } > { 0 }
+        \dim_compare:nNnTF { ##2 pt } > { 0pt }
           {
             \__tblr_increase_prop_dimen_value:Nnn
               \l__column_computed_width_prop { ##1 } { \l_tmpa_tl }
