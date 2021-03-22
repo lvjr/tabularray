@@ -19,6 +19,7 @@
   { \buildtblr { #1 } { #2 } { #3 } } { }
 
 \cs_generate_variant:Nn \prop_item:Nn { Ne }
+\cs_generate_variant:Nn \prop_put:Nnn { Nxn }
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
 \cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
@@ -757,11 +758,21 @@
 \prop_new:N \l__column_natural_width_prop
 \prop_new:N \l__column_computed_width_prop
 
+\msg_new:nnn { tblr } { table-width-too-small }
+  { Table ~ width ~ is ~ too ~ small, need ~ #1 ~ more! }
+
 \cs_new_protected:Npn \__tblr_compute_extendable_column_width
   {
     \__tblr_collect_extendable_column_width
-    \prop_if_empty:NF \l__column_coefficient_prop
-      { \__tblr_adjust_extendable_column_width }
+    \dim_compare:nNnTF { \l__column_target_dim } > { 0pt }
+      {
+        \prop_if_empty:NF \l__column_coefficient_prop
+          { \__tblr_adjust_extendable_column_width }
+      }
+      {
+        \msg_warning:nnx { tblr } { table-width-too-small }
+          { \dim_abs:n { \l__column_target_dim } }
+      }
   }
 
 \cs_new_protected:Npn \__tblr_collect_extendable_column_width
@@ -788,6 +799,8 @@
               {
                 \prop_put:Nxx \l__column_coefficient_prop
                   { \l_tblr_j_tl } { \l_tblr_b_tl }
+                \prop_put:Nxn \l__column_computed_width_prop
+                  { \l_tblr_j_tl } { 0pt }
                 \int_compare:nNnF { \l_tblr_b_tl } > { 0 }
                   {
                     \prop_put:Nxx \l__column_natural_width_prop
@@ -815,24 +828,86 @@
     \prop_log:N \l__column_natural_width_prop
   }
 
+%% If all columns have negative coefficients and small natural widths,
+%% \l__column_coefficient_prop will be empty after one or more rounds
 \cs_new_protected:Npn \__tblr_adjust_extendable_column_width
+  {
+    \bool_while_do:nn
+      { \dim_compare_p:nNn { \l__column_target_dim } > { \hfuzz } }
+      {
+        \prop_if_empty:NTF \l__column_coefficient_prop
+          { \__tblr_adjust_extendable_column_width_negative }
+          { \__tblr_adjust_extendable_column_width_once }
+      }
+    \prop_map_inline:Nn \l__column_computed_width_prop
+      {
+        \__tblr_prop_gput:nnx { spec } { col[##1] / width } { ##2 }
+        \__tblr_prop_gput:nnn { spec } { col[##1] / natural-width } { 0pt }
+      }
+    \__tblr_calculate_cell_and_line_size_once
+  }
+
+\cs_new_protected:Npn \__tblr_adjust_extendable_column_width_once
   {
     \int_zero:N \l_tmpa_int
     \prop_map_inline:Nn \l__column_coefficient_prop
       { \int_add:Nn \l_tmpa_int { \int_abs:n { ##2 } } }
-    \int_log:N \l_tmpa_int
     \dim_set:Nn \l_tmpa_dim { \l__column_target_dim / \l_tmpa_int }
+    \dim_zero:N \l__column_target_dim
     \prop_map_inline:Nn \l__column_coefficient_prop
       {
-        \prop_put:Nnx \l__column_computed_width_prop
-          { ##1 } { \dim_eval:n { \l_tmpa_dim * \int_abs:n { ##2 } } }
-        \__tblr_prop_gput:nnx { spec }
-          { col[##1] / width }
+        \tl_set:Nx \l_tmpa_tl
           { \dim_eval:n { \l_tmpa_dim * \int_abs:n { ##2 } } }
-        \__tblr_prop_gput:nnn { spec } { col[##1] / natural-width } { 0pt }
+        \tl_set:Nx \l_tmpb_tl
+          { \prop_item:Nn \l__column_natural_width_prop { ##1 } }
+        \int_compare:nNnTF { ##2 } > { 0 }
+          {
+            \__tblr_increase_prop_dimen_value:Nnn
+              \l__column_computed_width_prop { ##1 } { \l_tmpa_tl }
+          }
+          {
+            \dim_compare:nNnTF { \l_tmpa_tl } > { \l_tmpb_tl }
+              {
+                \prop_put:Nnx \l__column_computed_width_prop
+                  { ##1 } { \l_tmpb_tl }
+                \dim_add:Nn \l__column_target_dim { \l_tmpa_tl - \l_tmpb_tl }
+                \prop_remove:Nn \l__column_coefficient_prop { ##1 }
+              }
+              {
+                \__tblr_increase_prop_dimen_value:Nnn
+                  \l__column_computed_width_prop { ##1 } { \l_tmpa_tl }
+              }
+          }
       }
+    \dim_log:N \l__column_target_dim
+    \prop_log:N \l__column_coefficient_prop
     \prop_log:N \l__column_computed_width_prop
-    \__tblr_calculate_cell_and_line_size_once
+  }
+
+\cs_new_protected:Npn \__tblr_adjust_extendable_column_width_negative
+  {
+    \dim_zero:N \l_tmpa_dim
+    \prop_map_inline:Nn \l__column_natural_width_prop
+      { \dim_add:Nn \l_tmpa_dim { ##2 } }
+    \dim_log:N \l_tmpa_dim
+    \tl_set:Nx \l_tmpa_tl
+      { \dim_ratio:nn { \l__column_target_dim } { \l_tmpa_dim } }
+    \dim_zero:N \l__column_target_dim
+    \prop_map_inline:Nn \l__column_natural_width_prop
+      {
+        \tl_set:Nx \l_tmpb_tl { \dim_eval:n { ##2 * \l_tmpa_tl } }
+        \__tblr_increase_prop_dimen_value:Nnn
+          \l__column_computed_width_prop { ##1 } { \l_tmpb_tl }
+      }
+    \dim_log:N \l__column_target_dim
+    \prop_log:N \l__column_coefficient_prop
+    \prop_log:N \l__column_computed_width_prop
+  }
+
+%% #1: the prop list, #2: the key, #3: the dimen to add
+\cs_new_protected:Npn \__tblr_increase_prop_dimen_value:Nnn #1 #2 #3
+  {
+    \prop_put:Nnx #1 { #2 } { \dim_eval:n { \prop_item:Nn #1 { #2 } + #3 } }
   }
 
 %% Build the whole table
