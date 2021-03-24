@@ -855,33 +855,34 @@
       {
         \dim_add:Nn \l_tmpa_dim { \dim_abs:n { ##2 pt } }
       }
-    \dim_log:N \l_tmpa_dim
     \tl_set:Nx \l_tblr_w_tl
       { \dim_ratio:nn { \l__column_target_dim } { \l_tmpa_dim } }
-    \tl_log:N \l_tblr_w_tl
     \dim_zero:N \l__column_target_dim
     \prop_map_inline:Nn \l__column_coefficient_prop
       {
-        \tl_set:Nx \l_tmpa_tl
+        \tl_set:Nx \l_tblr_a_tl
           { \dim_eval:n { \dim_abs:n { ##2 pt } * \l_tblr_w_tl } }
-        \tl_set:Nx \l_tmpb_tl
-          { \prop_item:Nn \l__column_natural_width_prop { ##1 } }
         \dim_compare:nNnTF { ##2 pt } > { 0pt }
           {
             \__tblr_increase_prop_dimen_value:Nnn
-              \l__column_computed_width_prop { ##1 } { \l_tmpa_tl }
+              \l__column_computed_width_prop { ##1 } { \l_tblr_a_tl }
           }
           {
-            \dim_compare:nNnTF { \l_tmpa_tl } > { \l_tmpb_tl }
+            \tl_set:Nx \l_tblr_b_tl
+              { \prop_item:Nn \l__column_natural_width_prop { ##1 } }
+            \tl_set:Nx \l_tblr_c_tl
+              { \prop_item:Nn \l__column_computed_width_prop { ##1 } }
+            \dim_compare:nNnTF { \l_tblr_a_tl + \l_tblr_c_tl } > { \l_tblr_b_tl }
               {
                 \prop_put:Nnx \l__column_computed_width_prop
-                  { ##1 } { \l_tmpb_tl }
-                \dim_add:Nn \l__column_target_dim { \l_tmpa_tl - \l_tmpb_tl }
+                  { ##1 } { \l_tblr_b_tl }
+                \dim_add:Nn \l__column_target_dim
+                  { \l_tblr_a_tl + \l_tblr_c_tl - \l_tblr_b_tl }
                 \prop_remove:Nn \l__column_coefficient_prop { ##1 }
               }
               {
                 \__tblr_increase_prop_dimen_value:Nnn
-                  \l__column_computed_width_prop { ##1 } { \l_tmpa_tl }
+                  \l__column_computed_width_prop { ##1 } { \l_tblr_a_tl }
               }
           }
       }
@@ -895,7 +896,6 @@
     \dim_zero:N \l_tmpa_dim
     \prop_map_inline:Nn \l__column_natural_width_prop
       { \dim_add:Nn \l_tmpa_dim { ##2 } }
-    \dim_log:N \l_tmpa_dim
     \tl_set:Nx \l_tmpa_tl
       { \dim_ratio:nn { \l__column_target_dim } { \l_tmpa_dim } }
     \dim_zero:N \l__column_target_dim
