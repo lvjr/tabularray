@@ -82,7 +82,7 @@
     \int_gincr:N \g_tblr_level_int
     \prop_gclear_new:c { g_tblr_cell_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g_tblr_spec_ \int_use:N \g_tblr_level_int _prop }
-    \__tblr_initial_table_command
+    \__tblr_enable_table_commands:
     \__tblr_split_table:n { #3 }
     \__tblr_initial_table_spec
     \__tblr_parse_table_spec:n { #2 }
@@ -311,16 +311,57 @@
       }
   }
 
-\cs_new_protected:Npn \__tblr_spec_hline:n #1
+%% We need some commands to modify table/row/column/cell specifications.
+%% These commands must be defined with \NewTableCommand command,
+%% so that we are able to execute them once and then disable them.
+
+\prop_new:N \g__tblr_table_commands_clist
+
+\msg_new:nnn { tabularray } { defined-table-command }
+  { Table ~ commnad ~ #1 has ~ been ~ defined! }
+
+\NewDocumentCommand \NewTableCommand { m O{0} o m }
   {
-    \__tblr_prop_gput:nxx
-      { spec }
-      { hline[\int_use:N \rownum] / style }
-      { solid }
+    \clist_if_in:NnTF \g__tblr_table_commands_clist { #1 }
+      { \msg_error:nnn { tabularray } { defined-table-command } { #1 } }
+      {
+        \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l_tblr_a_tl
+        \exp_args:NcV \NewDocumentCommand
+          { __tblr_table_command_ \cs_to_str:N #1 : } \l_tblr_a_tl { #4 }
+        \exp_args:NcV \NewDocumentCommand
+          { __tblr_table_command_ \cs_to_str:N #1 _gobble : } \l_tblr_a_tl { }
+        \clist_gput_right:Nn \g__tblr_table_commands_clist { #1 }
+      }
+  }
+
+%% #1: argument number, #2: optional argument default, #3: result tl
+\cs_new_protected:Npn \__tblr_make_xparse_arg_spec:nnN #1 #2 #3
+  {
+    \tl_clear:N #3
+    \int_compare:nNnT { #1 } > { 0 }
+      {
+        \IfValueTF { #2 }
+          { \tl_set:Nn #3 { O{#2} } }
+          { \tl_set:Nn #3 { m } }
+        \tl_put_right:Nx #3 { \prg_replicate:nn { #1 - 1 } { m } }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_enable_table_commands:
+  {
+    \clist_map_inline:Nn \g__tblr_table_commands_clist
+      { \cs_set_eq:Nc ##1 { __tblr_table_command_ \cs_to_str:N ##1 : } }
+  }
+
+\cs_new_protected:Npn \__tblr_disable_table_commands:
+  {
+    \clist_map_inline:Nn \g__tblr_table_commands_clist
+      { \cs_set_eq:Nc ##1 { __tblr_table_command_ \cs_to_str:N ##1 _gobble: } }
   }
 
 %% Set cell specifications
-\cs_new_protected:Npn \SetCell #1
+
+\NewTableCommand \SetCell [1]
   {
     \keys_set:nn { tblr-cell } { #1 }
   }
@@ -346,10 +387,19 @@
       }
   }
 
-\cs_new_protected:Npn \__tblr_initial_table_command
+%% Add \hline command
+
+\NewTableCommand \hline
   {
-    \cs_set_protected:Npn \hline
-      { \tblr_setup:n { hline } }
+    \tblr_setup:n { hline }
+  }
+
+\cs_new_protected:Npn \__tblr_spec_hline:n #1
+  {
+    \__tblr_prop_gput:nxx
+      { spec }
+      { hline[\int_use:N \rownum] / style }
+      { solid }
   }
 
 %% Parse table specifications
@@ -533,15 +583,8 @@
         \str_log:N \g_tblr_used_column_types_str
       }
       {
-        \tl_clear:N \l_tmpa_tl
-        \int_compare:nNnT { #2 } > { 0 }
-          {
-            \IfValueTF { #3 }
-              { \tl_set:Nn \l_tmpa_tl { O{#3} } }
-              { \tl_set:Nn \l_tmpa_tl { m } }
-            \tl_put_right:Nx \l_tmpa_tl { \prg_replicate:nn { #2 - 1 } { m } }
-          }
-        \exp_args:NcV \NewDocumentCommand { tblr_column_type_ #1 } \l_tmpa_tl
+        \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_a_tl
+        \exp_args:NcV \NewDocumentCommand { tblr_column_type_ #1 } \l__tblr_a_tl
           {
             \bool_gset_false:N \g_tblr_column_spec_expand_stop_bool
             \tl_gput_right:Nf \g_tblr_expanded_colspec_tl { #4 }
@@ -630,6 +673,7 @@
 \cs_new_protected:Npn \__tblr_calculate_cell_and_line_size
   {
     \__tblr_calculate_cell_and_line_size_once
+    \__tblr_disable_table_commands:
     \__tblr_compute_extendable_column_width
   }
 
