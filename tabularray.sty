@@ -528,6 +528,8 @@
 \NewColumnType { m } [1] { Q[m,wd=#1] }
 \NewColumnType { b } [1] { Q[b,wd=#1] }
 
+\NewColumnType { X } [1][] { Q[co=1,#1] }
+
 \NewColumnType { ! } [1] { |[t={#1}] }
 \NewColumnType { @ } [1] { <[0pt]{} |[t={#1}] >[0pt]{} }
 \NewColumnType { * } [2] { \prg_replicate:nn {#1} {#2} }
