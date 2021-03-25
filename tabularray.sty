@@ -319,6 +319,33 @@
       { solid }
   }
 
+%% Set cell specifications
+\cs_new_protected:Npn \SetCell #1
+  {
+    \keys_set:nn { tblr-cell } { #1 }
+  }
+
+\keys_define:nn { tblr-cell }
+  {
+    colspan .code:n = \__tblr_set_cell_colspan:n { #1 },
+  }
+
+\cs_new_protected:Npn \__tblr_set_cell_colspan:n #1
+  {
+    \int_compare:nNnT { #1 } > { 1 }
+      {
+        \__tblr_prop_gput:nxn { spec }
+          { cell[\int_use:N \rownum][\int_use:N \colnum] / colspan } { #1 }
+        \int_step_inline:nn { #1 - 1 }
+          {
+            \__tblr_prop_gput:nxx { cell }
+              { (\int_use:N \rownum, \int_eval:n {\colnum + ##1}) } { }
+            \__tblr_prop_gput:nxx { spec }
+              { vline[\int_use:N \rownum][\int_eval:n {\colnum + ##1}] / text } { }
+          }
+      }
+  }
+
 \cs_new_protected:Npn \__tblr_initial_table_command
   {
     \cs_set_protected:Npn \hline
@@ -963,10 +990,21 @@
     \vrule width ~ 0pt ~ height ~ \l__tblr_h_dim ~ depth ~ \l__tblr_d_dim
     \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
       {
-        \__tblr_get_vline_text:nn { #1 } { \l__tblr_j_tl }
+        \__tblr_build_vline:nn { #1 } { \l__tblr_j_tl }
         \__tblr_build_cell:NN #1 \l__tblr_j_tl
       }
-    \__tblr_get_vline_text:nn { #1 } { \int_eval:n {\l_tblr_col_count_int + 1} }
+    \__tblr_build_vline:nn { #1 } { \int_eval:n {\l_tblr_col_count_int + 1} }
+  }
+
+\cs_new_protected:Npn \__tblr_build_vline:nn #1 #2
+  {
+    \tl_set:Nx \l__tblr_w_tl
+      { \__tblr_prop_item:ne { spec } { vline[#2] / natural-width } }
+    \hbox_set_to_wd:Nnn \l__tblr_c_box { \l__tblr_w_tl }
+      { \__tblr_get_vline_text:nn { #1 } { #2 } }
+    \box_set_ht:Nn \l__tblr_c_box { \dim_use:N \l__tblr_h_dim }
+    \box_set_dp:Nn \l__tblr_c_box { \dim_use:N \l__tblr_d_dim }
+    \box_use:N \l__tblr_c_box
   }
 
 \cs_new_protected:Npn \__tblr_build_cell:NN #1 #2
