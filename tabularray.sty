@@ -453,7 +453,7 @@
     unknown .code:n = \__tblr_column_type_Q_unknown_key:V \l_keys_key_str,
   }
 
-\msg_new:nnn { tblr } { column-type-Q-unknown-key }
+\msg_new:nnn { tabularray } { column-type-Q-unknown-key }
   { Unknown ~ key ~ #1 ~ in ~ column ~ type ~ Q! }
 
 \regex_const:Nn \c__tblr_is_number_key_regex { [\+\-]? \d+ }
@@ -465,7 +465,7 @@
         \__tblr_prop_gput:nxx { spec }
           { col[\int_use:N \colnum] / coefficient } { #1 }
       }
-      { \msg_warning:nnn { tblr } { column-type-Q-unknown-key } { #1 } }
+      { \msg_warning:nnn { tabularray } { column-type-Q-unknown-key } { #1 } }
   }
 \cs_generate_variant:Nn \__tblr_column_type_Q_unknown_key:n { V }
 
@@ -572,14 +572,14 @@
   \g_tblr_used_column_types_str \c_tblr_primitive_column_types_str
 \bool_new:N \g_tblr_column_spec_expand_stop_bool
 
-\msg_new:nnn { tblr } { used-column-type }
+\msg_new:nnn { tabularray } { used-column-type }
   { Column ~ type ~ name ~ #1 ~ has ~ been ~ used! }
 
 \NewDocumentCommand \NewColumnType { m O{0} o m }
   {
     \str_if_in:NnTF \g_tblr_used_column_types_str { #1 }
       {
-        \msg_warning:nnn { tblr } { used-column-type } { #1 }
+        \msg_warning:nnn { tabularray } { used-column-type } { #1 }
         \str_log:N \g_tblr_used_column_types_str
       }
       {
@@ -631,10 +631,10 @@
       }
   }
 
-\msg_new:nnn { tblr } { unexpandable-column-type }
+\msg_new:nnn { tabularray } { unexpandable-column-type }
   { Unexpandable ~ command ~ #1 inside ~ column ~ type! }
 
-\msg_new:nnn { tblr } { unknown-column-type }
+\msg_new:nnn { tabularray } { unknown-column-type }
   { Unknown ~ column ~ type ~ #1! }
 
 \cs_new_protected:Npn \__tblr_expand_column_spec_next:N #1
@@ -642,13 +642,13 @@
     \token_if_eq_catcode:NNTF #1 \scan_stop:
       {
         \token_if_eq_meaning:NNF #1 \scan_stop:
-          { \msg_error:nnn { tblr } { unexpandable-column-type } { #1 } }
+          { \msg_error:nnn { tabularray } { unexpandable-column-type } { #1 } }
       }
       {
         \str_if_in:NnTF \g_tblr_used_column_types_str { #1 }
           { \cs:w tblr_column_type_  #1 \cs_end: }
           {
-            \msg_error:nnn { tblr } { unknown-column-type } { #1 }
+            \msg_error:nnn { tabularray } { unknown-column-type } { #1 }
             \str_log:N \g_tblr_used_column_types_str
           }
       }
@@ -843,7 +843,7 @@
 \prop_new:N \l__column_natural_width_prop
 \prop_new:N \l__column_computed_width_prop
 
-\msg_new:nnn { tblr } { table-width-too-small }
+\msg_new:nnn { tabularray } { table-width-too-small }
   { Table ~ width ~ is ~ too ~ small, need ~ #1 ~ more! }
 
 \cs_new_protected:Npn \__tblr_compute_extendable_column_width:
@@ -855,7 +855,7 @@
           { \__tblr_adjust_extendable_column_width: }
       }
       {
-        \msg_warning:nnx { tblr } { table-width-too-small }
+        \msg_warning:nnx { tabularray } { table-width-too-small }
           { \dim_abs:n { \l__column_target_dim } }
       }
   }
