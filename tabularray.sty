@@ -395,10 +395,7 @@
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ | } { O{} }
   {
     \tl_if_blank:nTF { #1 }
-      {
-        \__tblr_prop_gput:nxx { spec }
-          { vline[\int_eval:n {\colnum + 1}] / text } { \vrule }
-      }
+      { \keys_set:nn { tblr-column-type-| } { tt = \vrule } }
       { \keys_set:nn { tblr-column-type-| } { #1 } }
     \__tblr_execute_column_spec_next:N
   }
@@ -410,12 +407,20 @@
 
 \keys_define:nn { tblr-column-type-| }
   {
-    t .code:n  = \__tblr_prop_gput:nxn { spec }
-                   { vline[\int_eval:n {\colnum + 1}] / text } { #1 },
+    tt .code:n = \cs:w __tblr_column_type_|_set_vline_text:n \cs_end: { #1 },
     fg .code:n = \__tblr_prop_gput:nxn { spec }
                    { vline[\int_eval:n {\colnum + 1}] / foreground } { #1 },
     bg .code:n = \__tblr_prop_gput:nxn { spec }
                    { vline[\int_eval:n {\colnum + 1}] / background } { #1 },
+  }
+
+\cs_new_protected:cpn { __tblr_column_type_|_set_vline_text:n } #1
+  {
+    \int_step_inline:nn { \l_tblr_row_count_int }
+      {
+        \__tblr_prop_gput:nxn { spec }
+          { vline[##1][\int_eval:n {\colnum + 1}] / text } { #1 }
+      }
   }
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ > } { O{} m }
@@ -530,8 +535,8 @@
 
 \NewColumnType { X } [1][] { Q[co=1,#1] }
 
-\NewColumnType { ! } [1] { |[t={#1}] }
-\NewColumnType { @ } [1] { <[0pt]{} |[t={#1}] >[0pt]{} }
+\NewColumnType { ! } [1] { |[tt={#1}] }
+\NewColumnType { @ } [1] { <[0pt]{} |[tt={#1}] >[0pt]{} }
 \NewColumnType { * } [2] { \prg_replicate:nn {#1} {#2} }
 
 \cs_new_protected:Npn \__tblr_parse_column_spec:n #1
@@ -636,14 +641,21 @@
     \hbox_set:Nn \l__tblr_b_box
       { \__tblr_get_vline_text:nn { #1 } { #2 } }
     \dim_set:Nn #3 { \box_wd:N \l__tblr_b_box }
-    \__tblr_prop_gput:nxx
-      { spec } { vline[#2] / natural-width } { \dim_use:N #3 }
+    \tl_set:Nx \l__tblr_w_tl
+      { \__tblr_prop_item:ne { spec } { vline[#2] / natural-width } }
+    \bool_lazy_or:nnT
+      { \tl_if_empty_p:N \l__tblr_w_tl }
+      { \dim_compare_p:nNn { \dim_use:N #3 } > { \l__tblr_w_tl } }
+      {
+        \__tblr_prop_gput:nxx { spec }
+          { vline[#2]/ natural-width } { \dim_use:N #3 }
+      }
   }
 
 %% Get vline text, #1: row number, #2: column number
 \cs_new_protected:Npn \__tblr_get_vline_text:nn #1 #2
   {
-    \__tblr_prop_item:ne { spec } { vline[#2] / text }
+    \__tblr_prop_item:ne { spec } { vline[#1][#2] / text }
   }
 
 %% Measure and update natural dimensions of the row/column/cell
