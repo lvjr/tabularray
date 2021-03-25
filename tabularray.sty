@@ -84,9 +84,9 @@
     \prop_gclear_new:c { g_tblr_spec_ \int_use:N \g_tblr_level_int _prop }
     \__tblr_enable_table_commands:
     \__tblr_split_table:n { #3 }
-    \__tblr_initial_table_spec
+    \__tblr_initial_table_spec:
     \__tblr_parse_table_spec:n { #2 }
-    \__tblr_calculate_cell_and_line_size
+    \__tblr_calculate_cell_and_line_size:
     \__tblr_build_whole:n { #1 }
     \int_gdecr:N \g_tblr_level_int
   }
@@ -231,7 +231,7 @@
     natural-depth  = 0pt,
   }
 
-\cs_new_protected:Npn \__tblr_initial_table_spec
+\cs_new_protected:Npn \__tblr_initial_table_spec:
   {
     \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
       {
@@ -670,15 +670,15 @@
 
 %% Calculate the width and height of every cell and border
 
-\cs_new_protected:Npn \__tblr_calculate_cell_and_line_size
+\cs_new_protected:Npn \__tblr_calculate_cell_and_line_size:
   {
-    \__tblr_calculate_cell_and_line_size_once
+    \__tblr_calculate_cell_and_line_size_once:
     \__tblr_disable_table_commands:
-    \__tblr_compute_extendable_column_width
+    \__tblr_compute_extendable_column_width:
   }
 
 %% Calculate the width and height of every cell and border once
-\cs_new_protected:Npn \__tblr_calculate_cell_and_line_size_once
+\cs_new_protected:Npn \__tblr_calculate_cell_and_line_size_once:
   {
     %% We need these two counters in executing table commands inside cells
     \int_zero:N \rownum
@@ -846,13 +846,13 @@
 \msg_new:nnn { tblr } { table-width-too-small }
   { Table ~ width ~ is ~ too ~ small, need ~ #1 ~ more! }
 
-\cs_new_protected:Npn \__tblr_compute_extendable_column_width
+\cs_new_protected:Npn \__tblr_compute_extendable_column_width:
   {
-    \__tblr_collect_extendable_column_width
+    \__tblr_collect_extendable_column_width:
     \dim_compare:nNnTF { \l__column_target_dim } > { 0pt }
       {
         \prop_if_empty:NF \l__column_coefficient_prop
-          { \__tblr_adjust_extendable_column_width }
+          { \__tblr_adjust_extendable_column_width: }
       }
       {
         \msg_warning:nnx { tblr } { table-width-too-small }
@@ -860,7 +860,7 @@
       }
   }
 
-\cs_new_protected:Npn \__tblr_collect_extendable_column_width
+\cs_new_protected:Npn \__tblr_collect_extendable_column_width:
   {
     \tl_set:Nx \l_tmpa_tl { \__tblr_prop_item:nn { spec } { width } }
     \tl_if_empty:NTF \l_tmpa_tl
@@ -915,25 +915,25 @@
 
 %% If all columns have negative coefficients and small natural widths,
 %% \l__column_coefficient_prop will be empty after one or more rounds
-\cs_new_protected:Npn \__tblr_adjust_extendable_column_width
+\cs_new_protected:Npn \__tblr_adjust_extendable_column_width:
   {
     \bool_while_do:nn
       { \dim_compare_p:nNn { \l__column_target_dim } > { \hfuzz } }
       {
         \prop_if_empty:NTF \l__column_coefficient_prop
-          { \__tblr_adjust_extendable_column_width_negative }
-          { \__tblr_adjust_extendable_column_width_once }
+          { \__tblr_adjust_extendable_column_width_negative: }
+          { \__tblr_adjust_extendable_column_width_once: }
       }
     \prop_map_inline:Nn \l__column_computed_width_prop
       {
         \__tblr_prop_gput:nnx { spec } { col[##1] / width } { ##2 }
         \__tblr_prop_gput:nnn { spec } { col[##1] / natural-width } { 0pt }
       }
-    \__tblr_calculate_cell_and_line_size_once
+    \__tblr_calculate_cell_and_line_size_once:
   }
 
 %% We use dimen register, since the coefficient may be a decimal number
-\cs_new_protected:Npn \__tblr_adjust_extendable_column_width_once
+\cs_new_protected:Npn \__tblr_adjust_extendable_column_width_once:
   {
     \dim_zero:N \l_tmpa_dim
     \prop_map_inline:Nn \l__column_coefficient_prop
@@ -976,7 +976,7 @@
     \prop_log:N \l__column_computed_width_prop
   }
 
-\cs_new_protected:Npn \__tblr_adjust_extendable_column_width_negative
+\cs_new_protected:Npn \__tblr_adjust_extendable_column_width_negative:
   {
     \dim_zero:N \l_tmpa_dim
     \prop_map_inline:Nn \l__column_natural_width_prop
