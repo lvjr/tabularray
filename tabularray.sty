@@ -1031,12 +1031,15 @@
 
 %% Compute and set widths for spanned columns
 
+\bool_new:N \l__tblr_col_width_to_span_width_bool
 \prop_new:N \l__tblr_col_width_skip_prop
 
 \cs_new_protected:Npn \__tblr_compute_spanned_column_width:
   {
     \__tblr_collect_column_width_skip:
-    \__tblr_set_spanned_column_width:
+    \bool_if:NTF \l__tblr_col_width_to_span_width_bool
+      { \__tblr_set_spanned_column_width: }
+      { \__tblr_set_column_width_from_span_width: }
     \__tblr_prop_log:n { spec }
     \__tblr_calculate_cell_and_line_size_once:
   }
@@ -1113,6 +1116,86 @@
   }
 \cs_generate_variant:Nn \dim_add:Nn {Nx}
 \cs_generate_variant:Nn \__tblr_get_spanned_column_width:nnN { xxN }
+
+%% Compute and set column widths from span widths
+
+\prop_new:N \l__tblr_span_width_prop
+
+\cs_new_protected:Npn \__tblr_set_column_width_from_span_width:
+  {
+    \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+      {
+        \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+          {
+            \tl_set:Nx \l__tblr_a_tl
+              {
+                \__tblr_prop_item:ne { spec }
+                  { cell[\l__tblr_i_tl][\l__tblr_j_tl] / colspan }
+              }
+            \tl_if_empty:NF \l__tblr_a_tl
+              {
+                \prop_put:Nxx \l__tblr_span_width_prop
+                  {
+                    ( \l__tblr_j_tl -
+                      \int_eval:n {\l__tblr_j_tl + \l__tblr_a_tl - 1} )
+                  }
+                  {
+                    \__tblr_prop_item:ne { spec }
+                      { cell[\l__tblr_i_tl][\l__tblr_j_tl] / natural-width }
+                  }
+              }
+          }
+        \__tblr_set_column_width_from_span_width_once:
+      }
+    \prop_log:N \l__tblr_span_width_prop
+    \prop_log:N \l__tblr_col_width_skip_prop
+  }
+
+%% See TeXbook chapter 22, Page 245
+\cs_new_protected:Npn \__tblr_set_column_width_from_span_width_once:
+  {
+    \dim_set:Nn \l__tblr_w_dim
+      {
+        \prop_item:Ne \l__tblr_col_width_skip_prop { col[\l__tblr_j_tl] }
+      }
+    \int_step_inline:nn { \l__tblr_j_tl - 1 }
+      {
+        \tl_set:Nx \l__tblr_a_tl
+          { \prop_item:Ne \l__tblr_span_width_prop { (##1-\l__tblr_j_tl) } }
+        \tl_if_empty:NF \l__tblr_a_tl
+          {
+            \int_step_inline:nnn { ##1 } { \l__tblr_j_tl - 1 }
+              {
+                \tl_log:x { \l__tblr_j_tl : ##1 -> ####1 }
+                \tl_set:Nx \l_tmpa_tl
+                  {
+                    \prop_item:Nn \l__tblr_col_width_skip_prop { colskip[####1] }
+                  }
+                \tl_set:Nx \l__tblr_a_tl
+                  { \dim_eval:n { \l__tblr_a_tl - \l_tmpa_tl } }
+              }
+            \dim_compare:nNnT { \l__tblr_a_tl } > { \dim_use:N \l__tblr_w_dim }
+              {
+                \dim_set:Nn \l__tblr_w_dim { \l__tblr_a_tl }
+              }
+          }
+      }
+    \prop_put:Nxx \l__tblr_col_width_skip_prop
+      { col[\l__tblr_j_tl] } { \dim_use:N \l__tblr_w_dim }
+    \__tblr_prop_gput:nxx { spec }
+      { col[\l__tblr_j_tl] / content-width } { \dim_use:N \l__tblr_w_dim }
+    \int_compare:nNnT { \l__tblr_j_tl } < { \l_tblr_col_count_int }
+      {
+        \tl_set:Nx \l_tmpb_tl
+          {
+            \prop_item:Ne \l__tblr_col_width_skip_prop
+              { skip[\int_eval:n { \l__tblr_j_tl + 1} ] }
+          }
+        \dim_add:Nn \l__tblr_w_dim { \l_tmpb_tl }
+        \prop_put:Nxx \l__tblr_col_width_skip_prop
+          { colskip[\l__tblr_j_tl] } { \dim_use:N \l__tblr_w_dim }
+      }
+  }
 
 %% Build the whole table
 \cs_new_eq:NN \__tlbr_vbox_t:n \tex_vtop:D
