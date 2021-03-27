@@ -359,34 +359,6 @@
       { \cs_set_eq:Nc ##1 { __tblr_table_command_ \cs_to_str:N ##1 _gobble: } }
   }
 
-%% Set cell specifications
-
-\NewTableCommand \SetCell [1]
-  {
-    \keys_set:nn { tblr-cell } { #1 }
-  }
-
-\keys_define:nn { tblr-cell }
-  {
-    colspan .code:n = \__tblr_set_cell_colspan:n { #1 },
-  }
-
-\cs_new_protected:Npn \__tblr_set_cell_colspan:n #1
-  {
-    \int_compare:nNnT { #1 } > { 1 }
-      {
-        \__tblr_prop_gput:nxn { spec }
-          { cell[\int_use:N \rownum][\int_use:N \colnum] / colspan } { #1 }
-        \int_step_inline:nn { #1 - 1 }
-          {
-            \__tblr_prop_gput:nxx { cell }
-              { (\int_use:N \rownum, \int_eval:n {\colnum + ##1}) } { }
-            \__tblr_prop_gput:nxx { spec }
-              { vline[\int_use:N \rownum][\int_eval:n {\colnum + ##1}] / text } { }
-          }
-      }
-  }
-
 %% Add \hline command
 
 \NewTableCommand \hline
@@ -1029,19 +1001,66 @@
     \prop_put:Nnx #1 { #2 } { \dim_eval:n { \prop_item:Nn #1 { #2 } + #3 } }
   }
 
-%% Compute and set widths for spanned columns
+%% \MultiSell and \SetCell commands are for multirow and/or multicolumn cells.
+%% \MultiSell will compute column widths from spancell widths,
+%% while \SetCell will compute spancell widths from column widths.
 
-\bool_new:N \l__tblr_col_width_to_span_width_bool
+\NewTableCommand \MultiCell [2] []
+  {
+    \__tblr_set_cell_span:
+    \bool_gset_false:N \g__tblr_span_widths_from_column_widths_bool
+    \keys_set:nn { tblr-cell } { #1 }
+  }
+
+\NewTableCommand \SetCell [2] []
+  {
+    \__tblr_set_cell_span:
+    \bool_gset_true:N \g__tblr_span_widths_from_column_widths_bool
+    \keys_set:nn { tblr-cell } { #1 }
+  }
+
+\keys_define:nn { tblr-cell }
+  {
+    c .code:n = \__tblr_set_cell_colspan:n { #1 },
+  }
+
+\cs_new_protected:Npn \__tblr_set_cell_span:
+  {
+    \__tblr_prop_gput:nnn { spec } { cellspan } { true }
+  }
+
+\cs_new_protected:Npn \__tblr_set_cell_colspan:n #1
+  {
+    \int_compare:nNnT { #1 } > { 1 }
+      {
+        \__tblr_prop_gput:nxn { spec }
+          { cell[\int_use:N \rownum][\int_use:N \colnum] / colspan } { #1 }
+        \int_step_inline:nn { #1 - 1 }
+          {
+            \__tblr_prop_gput:nxx { cell }
+              { (\int_use:N \rownum, \int_eval:n {\colnum + ##1}) } { }
+            \__tblr_prop_gput:nxx { spec }
+              { vline[\int_use:N \rownum][\int_eval:n {\colnum + ##1}] / text } { }
+          }
+      }
+  }
+
+%% Compute and adjust widths when there are some spancells
+
+\bool_new:N \g__tblr_span_widths_from_column_widths_bool
 \prop_new:N \l__tblr_col_width_skip_prop
 
 \cs_new_protected:Npn \__tblr_compute_spanned_column_width:
   {
-    \__tblr_collect_column_width_skip:
-    \bool_if:NTF \l__tblr_col_width_to_span_width_bool
-      { \__tblr_set_spanned_column_width: }
-      { \__tblr_set_column_width_from_span_width: }
-    \__tblr_prop_log:n { spec }
-    \__tblr_calculate_cell_and_line_size_once:
+    \__tblr_prop_if_in:nnT { spec } { cellspan }
+      {
+        \__tblr_collect_column_width_skip:
+        \bool_if:NTF \g__tblr_span_widths_from_column_widths_bool
+          { \__tblr_set_span_widths_from_column_widths: }
+          { \__tblr_set_column_widths_from_span_widths: }
+        \__tblr_prop_log:n { spec }
+        \__tblr_calculate_cell_and_line_size_once:
+      }
   }
 
 \cs_new_protected:Npn \__tblr_collect_column_width_skip:
@@ -1076,7 +1095,7 @@
     \prop_log:N \l__tblr_col_width_skip_prop
   }
 
-\cs_new_protected:Npn \__tblr_set_spanned_column_width:
+\cs_new_protected:Npn \__tblr_set_span_widths_from_column_widths:
   {
     \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
       {
@@ -1121,7 +1140,7 @@
 
 \prop_new:N \l__tblr_span_width_prop
 
-\cs_new_protected:Npn \__tblr_set_column_width_from_span_width:
+\cs_new_protected:Npn \__tblr_set_column_widths_from_span_widths:
   {
     \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
       {
