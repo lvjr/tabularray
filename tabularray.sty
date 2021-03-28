@@ -760,6 +760,19 @@
 
 \cs_new_protected:Npn \__tblr_get_cell_text:nn #1 #2
   {
+    \__tblr_prop_if_in:nxTF { spec } { cell[#1][#2] / omit }
+      { \__tblr_get_cell_text_omit:nn { #1 } { #2 } }
+      { \__tblr_get_cell_text_real:nn { #1 } { #2 } }
+  }
+
+%% We need to execute hline commands in it, then return empty text
+\cs_new_protected:Npn \__tblr_get_cell_text_omit:nn #1 #2
+  {
+    \hbox_set:Nn \l__tblr_c_box { \__tblr_prop_item:ne { cell } { ( #1, #2 ) } }
+  }
+
+\cs_new_protected:Npn \__tblr_get_cell_text_real:nn #1 #2
+  {
     \tl_set:Nx \l__tblr_c_tl { \__tblr_prop_item:ne { cell } { ( #1, #2 ) } }
     \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne { spec } { col[#2] / halign } }
@@ -1099,8 +1112,9 @@
               { \int_compare_p:nNn { \l__tblr_i_tl } = { \rownum } }
               { \int_compare_p:nNn { \l__tblr_j_tl } = { \colnum } }
               {
-                \__tblr_prop_gput:nxx { cell }
-                  { (\l__tblr_i_tl, \l__tblr_j_tl) } { }
+                %% I can't clear cell text since there may be some \hline's in it
+                \__tblr_prop_gput:nxx { spec }
+                  { cell[\l__tblr_i_tl][\l__tblr_j_tl] / omit } { true }
               }
             \int_compare:nNnF { \l__tblr_i_tl } = { \rownum }
               {
