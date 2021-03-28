@@ -209,8 +209,7 @@
       }
   }
 
-%% Find \multicolumn command and replace it with \MultiCell
-%% We also need to add empty cells after the span cell
+%% Find \multicolumn command and add empty cells after the span cell
 \cs_new_protected:Npn \__tblr_check_multicolumn_and_add_cell:nN #1 #2
   {
     \tl_set:Nx \l__tblr_a_tl { \tl_item:Nn #2 { -4 } }
@@ -726,7 +725,7 @@
 
 %% Measure and update natural dimensions of the row/column/cell
 %% #1: row number, #2 column number
-%% #3: width dimension, #4: height dimension, $5 depth dimension
+%% #3: width dimension, #4: height dimension, #5: depth dimension
 \cs_new_protected:Npn \__tblr_measure_and_update_cell_size:nnNNN #1 #2 #3 #4 #5
   {
     \__tblr_measure_cell_size:nnNNN { #1 } { #2 } #3 #4 #5
@@ -736,7 +735,7 @@
 
 %% Measure natural dimensions of the cell
 %% #1: row number, #2 column number
-%% #3: width dimension, #4: height dimension, $5 depth dimension
+%% #3: width dimension, #4: height dimension, #5: depth dimension
 \cs_new_protected:Npn \__tblr_measure_cell_size:nnNNN #1 #2 #3 #4 #5
   {
     \hbox_set:Nn \l__tblr_c_box
@@ -794,7 +793,7 @@
 
 %% Update natural dimensions of the cell
 %% #1: row number, #2 column number
-%% #3: width dimension, #4: height dimension, $5 depth dimension
+%% #3: width dimension, #4: height dimension, #5: depth dimension
 \cs_new_protected:Npn \__tblr_update_cell_size:nnNNN #1 #2 #3 #4 #5
   {
     \tl_set:Nx \l_tblr_a_tl
@@ -826,7 +825,7 @@
 
 %% Update natural dimensions of the row and the column
 %% #1: row number, #2 column number
-%% #3: width dimension, #4: height dimension, $5 depth dimension
+%% #3: width dimension, #4: height dimension, #5: depth dimension
 \cs_new_protected:Npn \__tblr_update_row_col_size:nnNNN #1 #2 #3 #4 #5
   {
     %% Update natural width for every column
@@ -1041,8 +1040,8 @@
   }
 \NewDocumentCommand \__tblr_table_command_multirow_gobble:w { O{m} m m +m } { #4 }
 
-%% \MultiSell and \SetCell commands are for multirow and/or multicolumn cells.
-%% \MultiSell will compute column widths from spancell widths,
+%% \MultiCell and \SetCell commands are for multirow and/or multicolumn cells.
+%% \MultiCell will compute column widths from spancell widths,
 %% while \SetCell will compute spancell widths from column widths.
 
 \NewTableCommand \MultiCell [2] []
