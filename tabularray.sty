@@ -1046,53 +1046,78 @@
 
 \NewTableCommand \MultiCell [2] []
   {
-    \__tblr_set_cell_span:
     \bool_gset_false:N \g__tblr_span_widths_from_column_widths_bool
-    \keys_set:nn { tblr-cell } { #1 }
+    \__tblr_set_cell_span:nn { #1 } { #2 }
   }
 
 \NewTableCommand \SetCell [2] []
   {
-    \__tblr_set_cell_span:
     \bool_gset_true:N \g__tblr_span_widths_from_column_widths_bool
-    \keys_set:nn { tblr-cell } { #1 }
+    \__tblr_set_cell_span:nn { #1 } { #2 }
   }
+
+\tl_new:N \l__tblr_row_span_num_tl
+\tl_new:N \l__tblr_col_span_num_tl
 
 \keys_define:nn { tblr-cell }
   {
-    c .code:n = \__tblr_set_cell_colspan:n { #1 },
-    r .code:n = \__tblr_set_cell_rowspan:n { #1 },
+    r .tl_set:N = \l__tblr_row_span_num_tl,
+    r .initial:n = 1,
+    c .tl_set:N = \l__tblr_col_span_num_tl,
+    c .initial:n = 1,
   }
 
-\cs_new_protected:Npn \__tblr_set_cell_span:
+\cs_new_protected:Npn \__tblr_set_cell_span:nn #1 #2
   {
     \__tblr_prop_gput:nnn { spec } { cellspan } { true }
+    \keys_set:nn { tblr-cell } { #1 }
+    \__tblr_set_span_spec:VV \l__tblr_row_span_num_tl \l__tblr_col_span_num_tl
   }
 
-\cs_new_protected:Npn \__tblr_set_cell_colspan:n #1
-  {
-    \int_compare:nNnT { #1 } > { 1 }
-      {
-        \__tblr_prop_gput:nxn { spec }
-          { cell[\int_use:N \rownum][\int_use:N \colnum] / colspan } { #1 }
-        \int_step_inline:nn { #1 - 1 }
-          {
-            \__tblr_prop_gput:nxx { cell }
-              { (\int_use:N \rownum, \int_eval:n {\colnum + ##1}) } { }
-            \__tblr_prop_gput:nxx { spec }
-              { vline[\int_use:N \rownum][\int_eval:n {\colnum + ##1}] / text } { }
-          }
-      }
-  }
-
-\cs_new_protected:Npn \__tblr_set_cell_rowspan:n #1
+\cs_new_protected:Npn \__tblr_set_span_spec:nn #1 #2
   {
     \int_compare:nNnT { #1 } > { 1 }
       {
         \__tblr_prop_gput:nxn { spec }
           { cell[\int_use:N \rownum][\int_use:N \colnum] / rowspan } { #1 }
       }
+    \int_compare:nNnT { #2 } > { 1 }
+      {
+        \__tblr_prop_gput:nxn { spec }
+          { cell[\int_use:N \rownum][\int_use:N \colnum] / colspan } { #2 }
+      }
+    \int_step_variable:nnNn
+      { \int_use:N \rownum } { \int_eval:n { \rownum + #1 - 1 } } \l__tblr_i_tl
+      {
+        \int_step_variable:nnNn
+          { \int_use:N \colnum } { \int_eval:n { \colnum + #2 - 1 } }
+          \l__tblr_j_tl
+          {
+            \bool_lazy_and:nnF
+              { \int_compare_p:nNn { \l__tblr_i_tl } = { \rownum } }
+              { \int_compare_p:nNn { \l__tblr_j_tl } = { \colnum } }
+              {
+                \__tblr_prop_gput:nxx { cell }
+                  { (\l__tblr_i_tl, \l__tblr_j_tl) } { }
+              }
+            \int_compare:nNnF { \l__tblr_i_tl } = { \rownum }
+              {
+                \__tblr_prop_gput:nxx { spec }
+                  { hline[\l__tblr_i_tl][\l__tblr_j_tl] / text } { }
+                \__tblr_prop_gput:nxx { spec }
+                  { hline[\l__tblr_i_tl][\l__tblr_j_tl] / omit } { true }
+              }
+            \int_compare:nNnF { \l__tblr_j_tl } = { \colnum }
+              {
+                \__tblr_prop_gput:nxx { spec }
+                  { vline[\l__tblr_i_tl][\l__tblr_j_tl] / text } { }
+                \__tblr_prop_gput:nxx { spec }
+                  { vline[\l__tblr_i_tl][\l__tblr_j_tl] / omit } { true }
+              }
+          }
+      }
   }
+\cs_generate_variant:Nn \__tblr_set_span_spec:nn { VV }
 
 %% Compute and adjust widths when there are some spancells
 
