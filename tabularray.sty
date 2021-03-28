@@ -381,7 +381,7 @@
       { \cs_set_eq:Nc ##1 { __tblr_table_command_ \cs_to_str:N ##1 _gobble:w } }
   }
 
-%% Add \hline command
+%% Add \hline and \cline commands
 
 \NewTableCommand \hline
   {
@@ -396,6 +396,21 @@
           { hline[\int_use:N \rownum][##1] / text } { \hrule }
       }
   }
+
+\NewTableCommand \cline [1]
+  {
+    \__tblr_cline_command_aux:w #1 \scan_stop
+  }
+
+\cs_new_protected_nopar:Npn \__tblr_cline_command_aux:w #1 - #2 \scan_stop
+  {
+    \int_step_inline:nnn { #1 } { #2 }
+      {
+        \__tblr_prop_gput:nxx { spec }
+          { hline[\int_use:N \rownum][##1] / text } { \hrule }
+      }
+  }
+
 
 %% Parse table specifications
 
