@@ -37,6 +37,7 @@
 \tl_new:N  \l__tblr_w_tl
 \int_new:N \l__tblr_c_int % for column number
 \int_new:N \l__tblr_r_int % for row number
+\dim_new:N \l__tblr_b_dim
 \dim_new:N \l__tblr_d_dim % for depth
 \dim_new:N \l__tblr_h_dim % for height
 \dim_new:N \l__tblr_w_dim % for width
@@ -389,10 +390,11 @@
 
 \cs_new_protected:Npn \__tblr_spec_hline:n #1
   {
-    \__tblr_prop_gput:nxx
-      { spec }
-      { hline[\int_use:N \rownum] / style }
-      { solid }
+    \int_step_inline:nn { \l_tblr_col_count_int }
+      {
+        \__tblr_prop_gput:nxx { spec }
+          { hline[\int_use:N \rownum][##1] / text } { \hrule }
+      }
   }
 
 %% Parse table specifications
@@ -1301,19 +1303,61 @@
           {
             \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
               {
-                \__tblr_prop_if_in:nxTF { spec } { hline[\l__tblr_i_tl] / style }
-                  { \hrule }
-                  { \hrule height ~ 0pt } % remove lineskip between two rows
-                \tex_hbox:D
-                  {
-                    \__tblr_build_row:N \l__tblr_i_tl
-                  }
+                \tex_hbox:D { \__tblr_build_hline:V \l__tblr_i_tl }
+                \hrule height ~ 0pt % remove lineskip between hlines and rows
+                \tex_hbox:D { \__tblr_build_row:N \l__tblr_i_tl }
+                \hrule height ~ 0pt
               }
-            \__tblr_prop_if_in:nxT { spec }
-              { hline[\int_eval:n {\l_tblr_row_count_int + 1}] / style }
-              { \hrule }
+            \tex_hbox:D
+              {
+                \__tblr_build_hline:n { \int_eval:n {\l_tblr_row_count_int + 1} }
+              }
           } $
       }
+  }
+
+%% #1: row number
+\cs_new_protected:Npn \__tblr_build_hline:n #1
+  {
+    \int_step_inline:nn { \l_tblr_col_count_int }
+      { \__tblr_build_hline_segment:nn { #1 } { ##1 } }
+  }
+\cs_generate_variant:Nn \__tblr_build_hline:n { x, V }
+
+%% #1: row number, #2: column number
+\cs_new_protected:Npn \__tblr_build_hline_segment:nn #1 #2
+  {
+    \__tblr_get_col_outer_width_border_width:nNN { #2 }
+      \l__tblr_w_dim \l__tblr_b_dim
+    \vbox_set:Nn \l__tblr_c_box
+      {
+        %% add an empty hbox to support vbox width
+        \tex_hbox:D to \l__tblr_w_dim {}
+        \__tblr_prop_item:ne { spec } { hline[#1][#2] / text }
+      }
+    \box_use:N \l__tblr_c_box
+    \skip_horizontal:n { - \l__tblr_b_dim }
+  }
+
+%% Read from table specifications and calculate the widths of row and border
+%% column outer width = content width + colsep width + border width
+%% #1: the column number, #2: outer width, #3: border width
+\cs_new_protected:Npn \__tblr_get_col_outer_width_border_width:nNN #1 #2 #3
+  {
+    \tl_set:Nx \l__tblr_a_tl
+      { \__tblr_prop_item:ne { spec } { vline[#1] / content-width } }
+    \tl_set:Nx \l__tblr_b_tl
+      { \__tblr_prop_item:ne { spec } { col[#1] / colsep-left } }
+    \tl_set:Nx \l__tblr_w_tl
+      { \__tblr_prop_item:ne { spec } { col[#1] / content-width } }
+    \tl_set:Nx \l__tblr_c_tl
+      { \__tblr_prop_item:ne { spec } { col[#1] / colsep-right } }
+    \tl_set:Nx \l__tblr_d_tl
+      { \__tblr_prop_item:ne { spec }
+        { vline[\int_eval:n { #1 + 1 }] / content-width } }
+    \dim_set:Nn #2
+      { \l__tblr_a_tl+\l__tblr_b_tl+\l__tblr_w_tl+\l__tblr_c_tl+\l__tblr_d_tl }
+    \dim_set:Nn #3 { \l__tblr_d_tl  }
   }
 
 %% Build current row, #1: row number
@@ -1369,16 +1413,16 @@
 %% #1: the row number, #2: inner height, #3: inner depth
 \cs_new_protected:Npn \__tblr_get_row_inner_height_depth:nNN #1 #2 #3
   {
-    \tl_set:Nx \l_tblr_a
+    \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { spec } { row[#1] / rowsep-above } }
-    \tl_set:Nx \l_tblr_h
+    \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne { spec } { row[#1] / content-height } }
-    \tl_set:Nx \l_tblr_d
+    \tl_set:Nx \l__tblr_d_tl
       { \__tblr_prop_item:ne { spec } { row[#1] / content-depth } }
-    \tl_set:Nx \l_tblr_b
+    \tl_set:Nx \l__tblr_b_tl
       { \__tblr_prop_item:ne { spec } { row[#1] / rowsep-below } }
-    \dim_set:Nn #2 { \l_tblr_a + \l_tblr_h}
-    \dim_set:Nn #3 { \l_tblr_d + \l_tblr_b }
+    \dim_set:Nn #2 { \l__tblr_a_tl + \l__tblr_h_tl }
+    \dim_set:Nn #3 { \l__tblr_d_tl + \l__tblr_b_tl }
   }
 \cs_generate_variant:Nn \__tblr_get_row_inner_height_depth:nNN { V }
 
