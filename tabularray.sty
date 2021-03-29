@@ -76,6 +76,30 @@
     \prop_log:c { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
   }
 
+%% Put the dimension to the prop list only if it's larger than the old one
+
+\tl_new:N \l__tblr_put_if_larger_tl
+
+\cs_new_protected:Npn \__tblr_put_if_larger:Nnn #1 #2 #3
+  {
+    \tl_set:Nx \l__tblr_put_if_larger_tl { \prop_item:Nn #1 { #2 } }
+    \bool_lazy_or:nnT
+      { \tl_if_empty_p:N \l__tblr_put_if_larger_tl }
+      { \dim_compare_p:nNn { #3 } > { \l__tblr_put_if_larger_tl } }
+      { \prop_put:Nnn #1 { #2 } { #3 }  }
+  }
+\cs_generate_variant:Nn \__tblr_put_if_larger:Nnn { Nnx, Nxn, Nxx }
+
+\cs_new_protected:Npn \__tblr_gput_if_larger:Nnnn #1 #2 #3
+  {
+    \tl_set:Nx \l__tblr_put_if_larger_tl { \prop_item:Nn #1 { #2 } }
+    \bool_lazy_or:nnT
+      { \tl_if_empty_p:N \l__tblr_put_if_larger_tl }
+      { \dim_compare_p:nNn { #3 } > { \l__tblr_put_if_larger_tl } }
+      { \prop_gput:Nnn #1 { #2 } { #3 }  }
+  }
+\cs_generate_variant:Nn \__tblr_gput_if_larger:Nnn { Nnx, Nxn, Nxx }
+
 %% Read, split and build the table
 
 \cs_new_protected:Npn \buildtblr #1 #2 #3
@@ -1258,7 +1282,7 @@
               }
             \tl_if_empty:NF \l__tblr_a_tl
               {
-                \prop_put:Nxx \l__tblr_span_width_prop
+                \__tblr_put_if_larger:Nxx \l__tblr_span_width_prop
                   {
                     ( \l__tblr_j_tl -
                       \int_eval:n {\l__tblr_j_tl + \l__tblr_a_tl - 1} )
