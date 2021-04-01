@@ -1123,7 +1123,6 @@
 
 \cs_new_protected:Npn \__tblr_set_cell_span:nn #1 #2
   {
-    \__tblr_prop_gput:nnn { spec } { cellspan } { true }
     \keys_set:nn { tblr-cell } { #1 }
     \__tblr_set_span_spec:VV \l__tblr_row_span_num_tl \l__tblr_col_span_num_tl
   }
@@ -1132,11 +1131,13 @@
   {
     \int_compare:nNnT { #1 } > { 1 }
       {
+        \__tblr_prop_gput:nnn { spec } { rowspan } { true }
         \__tblr_prop_gput:nxn { spec }
           { cell[\int_use:N \rownum][\int_use:N \colnum] / rowspan } { #1 }
       }
     \int_compare:nNnT { #2 } > { 1 }
       {
+        \__tblr_prop_gput:nnn { spec } { colspan } { true }
         \__tblr_prop_gput:nxn { spec }
           { cell[\int_use:N \rownum][\int_use:N \colnum] / colspan } { #2 }
       }
@@ -1181,7 +1182,7 @@
 
 \cs_new_protected:Npn \__tblr_compute_spanned_column_width:
   {
-    \__tblr_prop_if_in:nnT { spec } { cellspan }
+    \__tblr_prop_if_in:nnT { spec } { colspan }
       {
         \__tblr_collect_column_width_skip:
         \bool_if:NTF \g__tblr_span_widths_from_column_widths_bool
