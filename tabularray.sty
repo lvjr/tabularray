@@ -113,7 +113,7 @@
     \__tblr_split_table:n { #3 }
     \__tblr_initial_table_spec:
     \__tblr_parse_table_spec:n { #2 }
-    \__tblr_calculate_cell_and_line_size:
+    \__tblr_calc_cell_and_line_sizes:
     \__tblr_build_whole:n { #1 }
     \int_gdecr:N \g_tblr_level_int
   }
@@ -705,18 +705,92 @@
       { \cs:w tblr_primitive_column_type_  #1 \cs_end: }
   }
 
-%% Calculate the width and height of every cell and border
+%% Calculate the width and height for every cell and border
 
-\cs_new_protected:Npn \__tblr_calculate_cell_and_line_size:
+\cs_new_protected:Npn \__tblr_calc_cell_and_line_sizes:
   {
-    \__tblr_calculate_cell_and_line_size_once:
+    \__tblr_calculate_line_sizes:
+    \__tblr_calculate_cell_sizes:
     \__tblr_disable_table_commands:
     \__tblr_compute_extendable_column_width:
     \__tblr_adjust_sizes_for_span_cells:
   }
 
-%% Calculate the width and height of every cell and border once
-\cs_new_protected:Npn \__tblr_calculate_cell_and_line_size_once:
+%% Calculate the thickness for every hline and vline
+\cs_new_protected:Npn \__tblr_calculate_line_sizes:
+  {
+    %% We need these two counters in executing hline and vline commands
+    \int_zero:N \rownum
+    \int_zero:N \colnum
+    \int_step_inline:nn { \l_tblr_row_count_int + 1 }
+      {
+        \int_incr:N \rownum
+        \int_zero:N \colnum
+        \int_step_inline:nn { \l_tblr_col_count_int + 1 }
+          {
+            \int_incr:N \colnum
+            \int_compare:nNnT { ##1 } < { \l_tblr_row_count_int + 1 }
+              {
+                \__tblr_measure_and_update_vline_size:nn { ##1 } { ####1 }
+              }
+            \int_compare:nNnT { ####1 } < { \l_tblr_col_count_int + 1 }
+              {
+                \__tblr_measure_and_update_hline_size:nn { ##1 } { ####1 }
+              }
+          }
+      }
+  }
+
+%% Measure and update thickness of the vline
+%% #1: row number, #2 column number
+\cs_new_protected:Npn \__tblr_measure_and_update_vline_size:nn #1 #2
+  {
+    \hbox_set:Nn \l__tblr_b_box
+      { \__tblr_get_vline_text:nn { #1 } { #2 } }
+    \dim_set:Nn \l__tblr_w_dim { \box_wd:N \l__tblr_b_box }
+    \tl_set:Nx \l__tblr_w_tl
+      { \__tblr_prop_item:ne { spec } { vline[#2] / thickness } }
+    \bool_lazy_or:nnT
+      { \tl_if_empty_p:N \l__tblr_w_tl }
+      { \dim_compare_p:nNn { \dim_use:N \l__tblr_w_dim } > { \l__tblr_w_tl } }
+      {
+        \__tblr_prop_gput:nxx { spec }
+          { vline[#2]/ thickness } { \dim_use:N \l__tblr_w_dim }
+      }
+  }
+
+%% Get vline text, #1: row number, #2: column number
+\cs_new_protected:Npn \__tblr_get_vline_text:nn #1 #2
+  {
+    \__tblr_prop_item:ne { spec } { vline[#1][#2] / text }
+  }
+
+%% Measure and update thickness of the hline
+%% #1: row number, #2 column number
+\cs_new_protected:Npn \__tblr_measure_and_update_hline_size:nn #1 #2
+  {
+    \vbox_set:Nn \l__tblr_b_box
+      { \__tblr_get_hline_text:nn { #1 } { #2 } }
+    \dim_set:Nn \l__tblr_h_dim { \box_ht:N \l__tblr_b_box }
+    \tl_set:Nx \l__tblr_h_tl
+      { \__tblr_prop_item:ne { spec } { hline[#2] / thickness } }
+    \bool_lazy_or:nnT
+      { \tl_if_empty_p:N \l__tblr_h_tl }
+      { \dim_compare_p:nNn { \dim_use:N \l__tblr_h_dim } > { \l__tblr_h_tl } }
+      {
+        \__tblr_prop_gput:nxx { spec }
+          { hline[#2]/ thickness } { \dim_use:N \l__tblr_h_dim }
+      }
+  }
+
+%% Get hline text, #1: row number, #2: column number
+\cs_new_protected:Npn \__tblr_get_hline_text:nn #1 #2
+  {
+    \__tblr_prop_item:ne { spec } { hline[#1][#2] / text }
+  }
+
+%% Calculate the width and height for every cell
+\cs_new_protected:Npn \__tblr_calculate_cell_sizes:
   {
     %% We need these two counters in executing table commands inside cells
     \int_zero:N \rownum
@@ -728,8 +802,6 @@
         \int_step_inline:nn { \l_tblr_col_count_int }
           {
             \int_incr:N \colnum
-            \__tblr_measure_and_update_vline_size:nnN
-              { \int_use:N \rownum } { \int_use:N \colnum } \l__tblr_w_dim
             \__tblr_measure_and_update_cell_size:nnNNN
               { \int_use:N \rownum }
               { \int_use:N \colnum }
@@ -737,34 +809,8 @@
               \l__tblr_h_dim
               \l__tblr_d_dim
           }
-        \__tblr_measure_and_update_vline_size:nnN
-          { \int_use:N \rownum } { \int_eval:n {\colnum + 1} } \l__tblr_w_dim
       }
     \__tblr_prop_log:n {spec }
-  }
-
-%% Measure and update width of the vline
-%% #1: row number, #2 column number, #3: width dimension
-\cs_new_protected:Npn \__tblr_measure_and_update_vline_size:nnN #1 #2 #3
-  {
-    \hbox_set:Nn \l__tblr_b_box
-      { \__tblr_get_vline_text:nn { #1 } { #2 } }
-    \dim_set:Nn #3 { \box_wd:N \l__tblr_b_box }
-    \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { spec } { vline[#2] / content-width } }
-    \bool_lazy_or:nnT
-      { \tl_if_empty_p:N \l__tblr_w_tl }
-      { \dim_compare_p:nNn { \dim_use:N #3 } > { \l__tblr_w_tl } }
-      {
-        \__tblr_prop_gput:nxx { spec }
-          { vline[#2]/ content-width } { \dim_use:N #3 }
-      }
-  }
-
-%% Get vline text, #1: row number, #2: column number
-\cs_new_protected:Npn \__tblr_get_vline_text:nn #1 #2
-  {
-    \__tblr_prop_item:ne { spec } { vline[#1][#2] / text }
   }
 
 %% Measure and update natural dimensions of the row/column/cell
@@ -997,7 +1043,7 @@
           }
           { \dim_sub:Nn \l__column_target_dim { \l__tblr_a_tl } }
         \tl_set:Nx \l__tblr_a_tl
-          { \__tblr_prop_item:ne { spec } { vline[\l__tblr_j_tl] / content-width } }
+          { \__tblr_prop_item:ne { spec } { vline[\l__tblr_j_tl] / thickness } }
         \tl_set:Nx \l__tblr_b_tl
           { \__tblr_prop_item:ne { spec } { col[\l__tblr_j_tl] / colsep-left } }
         \tl_set:Nx \l__tblr_c_tl
@@ -1007,7 +1053,7 @@
       }
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { spec }
-        { vline[\int_eval:n {\l_tblr_col_count_int + 1}] / content-width } }
+        { vline[\int_eval:n {\l_tblr_col_count_int + 1}] / thickness } }
     \tl_if_empty:NF \l__tblr_a_tl
       { \dim_sub:Nn \l__column_target_dim { \l__tblr_a_tl } }
     \dim_log:N \l__column_target_dim
@@ -1031,7 +1077,7 @@
         \__tblr_prop_gput:nnx { spec } { col[##1] / width } { ##2 }
         \__tblr_prop_gput:nnn { spec } { col[##1] / content-width } { 0pt }
       }
-    \__tblr_calculate_cell_and_line_size_once:
+    \__tblr_calculate_cell_sizes:
   }
 
 %% We use dimen register, since the coefficient may be a decimal number
@@ -1214,7 +1260,7 @@
             \__tblr_set_column_widths_from_span_widths:
           }
         \__tblr_prop_log:n { spec }
-        \__tblr_calculate_cell_and_line_size_once:
+        \__tblr_calculate_cell_sizes:
       }
     \__tblr_prop_if_in:nnT { spec } { rowspan }
       {
@@ -1222,7 +1268,7 @@
         \__tblr_collect_span_heights:
         \__tblr_set_row_heights_from_span_heights:
         \__tblr_prop_log:n { spec }
-        \__tblr_calculate_cell_and_line_size_once:
+        \__tblr_calculate_cell_sizes:
       }
   }
 
@@ -1244,7 +1290,7 @@
                       { col[\int_eval:n { \l__tblr_j_tl - 1 }] / colsep-right }
                     +
                     \__tblr_prop_item:ne { spec }
-                      { vline[\l__tblr_j_tl] / content-width }
+                      { vline[\l__tblr_j_tl] / thickness }
                     +
                     \__tblr_prop_item:ne { spec }
                       { col[\l__tblr_j_tl] / colsep-left }
@@ -1276,7 +1322,7 @@
                       { row[\int_eval:n {\l__tblr_i_tl - 1}] / rowsep-below }
                     +
                     \__tblr_prop_item:ne { spec }
-                      { hline[\l__tblr_i_tl] / content-height }
+                      { hline[\l__tblr_i_tl] / thickness }
                     +
                     \__tblr_prop_item:ne { spec }
                       { row[\l__tblr_i_tl] / rowsep-above }
@@ -1577,7 +1623,7 @@
 \cs_new_protected:Npn \__tblr_get_col_outer_width_border_width:nNN #1 #2 #3
   {
     \tl_set:Nx \l__tblr_a_tl
-      { \__tblr_prop_item:ne { spec } { vline[#1] / content-width } }
+      { \__tblr_prop_item:ne { spec } { vline[#1] / thickness } }
     \tl_set:Nx \l__tblr_b_tl
       { \__tblr_prop_item:ne { spec } { col[#1] / colsep-left } }
     \tl_set:Nx \l__tblr_w_tl
@@ -1586,7 +1632,7 @@
       { \__tblr_prop_item:ne { spec } { col[#1] / colsep-right } }
     \tl_set:Nx \l__tblr_d_tl
       { \__tblr_prop_item:ne { spec }
-        { vline[\int_eval:n { #1 + 1 }] / content-width } }
+        { vline[\int_eval:n { #1 + 1 }] / thickness } }
     \dim_set:Nn #2
       { \l__tblr_a_tl+\l__tblr_b_tl+\l__tblr_w_tl+\l__tblr_c_tl+\l__tblr_d_tl }
     \dim_set:Nn #3 { \l__tblr_d_tl  }
@@ -1608,7 +1654,7 @@
 \cs_new_protected:Npn \__tblr_build_vline:nn #1 #2
   {
     \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { spec } { vline[#2] / content-width } }
+      { \__tblr_prop_item:ne { spec } { vline[#2] / thickness } }
     \hbox_set_to_wd:Nnn \l__tblr_c_box { \l__tblr_w_tl }
       { \__tblr_get_vline_text:nn { #1 } { #2 } }
     \box_set_ht:Nn \l__tblr_c_box { \dim_use:N \l__tblr_h_dim }
