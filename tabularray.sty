@@ -18,6 +18,15 @@
 \NewDocumentEnvironment { tblr } { O{c} m +b }
   { \buildtblr { #1 } { #2 } { #3 } } { }
 
+\cs_if_exist:NF \vbox_set_top_to_ht:Nnn
+  {
+    \cs_new_protected:Npn \vbox_set_top_to_ht:Nnn #1 #2 #3
+      {
+        \tex_setbox:D #1 \tex_vtop:D to \dim_eval:n { #2 }
+          { \color_group_begin: #3 \par \color_group_end: }
+      }
+ }
+
 \cs_generate_variant:Nn \prop_item:Nn { Ne }
 \cs_generate_variant:Nn \prop_put:Nnn { Nxn, Nxx }
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
@@ -36,6 +45,9 @@
 \tl_new:N  \l__tblr_i_tl  % for row index
 \tl_new:N  \l__tblr_j_tl  % for column index
 \tl_new:N  \l__tblr_k_tl
+\tl_new:N  \l__tblr_r_tl
+\tl_new:N  \l__tblr_s_tl
+\tl_new:N  \l__tblr_t_tl
 \tl_new:N  \l__tblr_v_tl
 \tl_new:N  \l__tblr_w_tl
 \int_new:N \l__tblr_c_int % for column number
@@ -43,6 +55,8 @@
 \dim_new:N \l__tblr_b_dim
 \dim_new:N \l__tblr_d_dim % for depth
 \dim_new:N \l__tblr_h_dim % for height
+\dim_new:N \l__tblr_s_dim
+\dim_new:N \l__tblr_v_dim
 \dim_new:N \l__tblr_w_dim % for width
 \box_new:N \l__tblr_a_box
 \box_new:N \l__tblr_b_box
@@ -384,11 +398,11 @@
         \clist_log:N \g__tblr_table_commands_clist
       }
       {
-        \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l_tblr_a_tl
+        \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_a_tl
         \exp_args:NcV \NewDocumentCommand
-          { __tblr_table_command_ \cs_to_str:N #1 :w } \l_tblr_a_tl { #4 }
+          { __tblr_table_command_ \cs_to_str:N #1 :w } \l__tblr_a_tl { #4 }
         \exp_args:NcV \NewDocumentCommand
-          { __tblr_table_command_ \cs_to_str:N #1 _gobble :w } \l_tblr_a_tl { }
+          { __tblr_table_command_ \cs_to_str:N #1 _gobble :w } \l__tblr_a_tl { }
         \clist_gput_right:Nn \g__tblr_table_commands_clist { #1 }
       }
   }
@@ -930,17 +944,17 @@
 
 \cs_new_protected:Npn \__tblr_update_cell_size_legacy:nnNNN #1 #2 #3 #4 #5
   {
-    \tl_set:Nx \l_tblr_a_tl
+    \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { spec } { cell[#1][#2] / colspan } }
-    \tl_set:Nx \l_tblr_b_tl
+    \tl_set:Nx \l__tblr_b_tl
       { \__tblr_prop_item:ne { spec } { cell[#1][#2] / span-width } }
-    \tl_if_empty:NTF \l_tblr_a_tl
+    \tl_if_empty:NTF \l__tblr_a_tl
       {
         \__tblr_prop_gput:nxx
           { spec } { cell[#1][#2] / content-width } { \dim_use:N #3 }
       }
       {
-        \tl_if_empty:NTF \l_tblr_b_tl
+        \tl_if_empty:NTF \l__tblr_b_tl
           {
             \__tblr_prop_gput:nxx
               { spec } { cell[#1][#2] / natural-width } { \dim_use:N #3 }
@@ -951,33 +965,27 @@
           }
         \dim_zero:N #3 % don't affect column width
       }
-    \tl_set:Nx \l_tblr_a_tl
+    \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { spec } { cell[#1][#2] / rowspan } }
-    \tl_set:Nx \l_tblr_b_tl
-      { \__tblr_prop_item:ne { spec } { cell[#1][#2] / span-height } }
-    \tl_if_empty:NTF \l_tblr_a_tl
+    \tl_if_empty:NF \l__tblr_a_tl
       {
-        \__tblr_prop_gput:nxx
-          { spec } { cell[#1][#2] / content-height } { \dim_use:N #4 }
-        \__tblr_prop_gput:nxx
-          { spec } { cell[#1][#2] / content-depth } { \dim_use:N #5 }
-      }
-      {
-        \tl_if_empty:NTF \l_tblr_b_tl
+        \__tblr_prop_gput:nxx { spec }
+          { cell[#1][#2] / span-height } { \dim_use:N #4 }
+        \__tblr_prop_gput:nxx { spec }
+          { cell[#1][#2] / span-depth } { \dim_use:N #5 }
+        %% Don't affect row height
+        \tl_if_eq:NnF \l__tblr_v_tl { top } {
+          \dim_zero:N #4
+        }
+        %% We have to update the depth of the last span row here
+        \tl_if_eq:NnT \l__tblr_v_tl { bottom }
           {
-            \__tblr_prop_gput:nxx
-              { spec } { cell[#1][#2] / natural-height } { \dim_use:N #4 }
-            \__tblr_prop_gput:nxx
-              { spec } { cell[#1][#2] / natural-depth } { \dim_use:N #5 }
+            \__tblr_prop_gput_if_larger:nxx { spec }
+              { row[\int_eval:n { #1 + \l__tblr_a_tl - 1 }] / content-depth }
+              { \dim_use:N #5 }
           }
-          {
-            \__tblr_prop_gput:nxx
-              { spec } { cell[#1][#2] / content-height } { \dim_use:N #4 }
-            \__tblr_prop_gput:nxx
-              { spec } { cell[#1][#2] / content-depth } { \dim_use:N #5 }
-          }
-        \dim_zero:N #4 % don't affect row height
-        \dim_zero:N #5 % don't affect row depth
+        %% Don't affect row depth
+        \dim_zero:N #5
       }
   }
 
@@ -1334,7 +1342,6 @@
         \__tblr_collect_span_heights:
         \__tblr_set_row_heights_from_span_heights:
         \__tblr_prop_log:n { spec }
-        \__tblr_calculate_cell_sizes:
       }
   }
 
@@ -1442,8 +1449,11 @@
     \prop_log:N \l__tblr_span_size_prop
   }
 
+\prop_new:N \l__tblr_span_cell_prop
+
 \cs_new_protected:Npn \__tblr_collect_span_heights:
   {
+    \prop_clear:N \l__tblr_span_cell_prop
     \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
       {
         \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
@@ -1455,6 +1465,36 @@
               }
             \tl_if_empty:NF \l__tblr_a_tl
               {
+                \tl_set:Nx \l__tblr_v_tl
+                  {
+                    \__tblr_prop_item:ne { spec }
+                      { cell[\l__tblr_i_tl][\l__tblr_j_tl] / valign }
+                  }
+                \tl_if_eq:NnT \l__tblr_v_tl { top }
+                  {
+                    \tl_set:Nx \l__tblr_h_tl
+                      {
+                        \__tblr_prop_item:ne { spec }
+                          { row[\l__tblr_i_tl] / content-height }
+                      }
+                    \__tblr_prop_gput:nxV { spec }
+                      { cell[\l__tblr_i_tl][\l__tblr_j_tl] / span-height }
+                      \l__tblr_h_tl
+                  }
+                \tl_if_eq:NnT \l__tblr_v_tl { bottom }
+                  {
+                    \tl_set:Nx \l__tblr_d_tl
+                      {
+                        \__tblr_prop_item:ne { spec }
+                          {
+                            row[\int_eval:n {\l__tblr_i_tl + \l__tblr_a_tl - 1}]
+                            / content-depth
+                          }
+                      }
+                    \__tblr_prop_gput:nxV { spec }
+                      { cell[\l__tblr_i_tl][\l__tblr_j_tl] / span-depth }
+                      \l__tblr_d_tl
+                  }
                 \__tblr_put_if_larger:Nxx \l__tblr_span_size_prop
                   {
                     ( \l__tblr_i_tl -
@@ -1464,15 +1504,19 @@
                     \dim_eval:n
                       {
                         \__tblr_prop_item:ne { spec }
-                          { cell[\l__tblr_i_tl][\l__tblr_j_tl] / natural-height }
+                          { cell[\l__tblr_i_tl][\l__tblr_j_tl] / span-height }
                         +
                         \__tblr_prop_item:ne { spec }
-                          { cell[\l__tblr_i_tl][\l__tblr_j_tl] / natural-depth }
+                          { cell[\l__tblr_i_tl][\l__tblr_j_tl] / span-depth }
                       }
                   }
+                \prop_put:Nxx \l__tblr_span_cell_prop
+                  { [\l__tblr_i_tl][\l__tblr_j_tl] }
+                  { \int_eval:n {\l__tblr_i_tl + \l__tblr_a_tl - 1} }
               }
           }
       }
+    \prop_log:N \l__tblr_span_cell_prop
     \prop_log:N \l__tblr_span_size_prop
   }
 
@@ -1574,25 +1618,44 @@
           {
             \prop_item:Ne \l__tblr_item_skip_size_prop { item[\l__tblr_i_tl] }
           }
-        \__tblr_prop_gput:nxx { spec }
-          { row[\l__tblr_i_tl] / content-height }
+        \tl_set:Nx \l__tblr_b_tl
           {
-            \dim_eval:n
-              {
-                \l__tblr_a_tl *
-                \dim_ratio:nn { \l__tblr_h_tl } { \l__tblr_h_tl + \l__tblr_d_tl }
-              }
+            \dim_eval:n { (\l__tblr_a_tl - \l__tblr_h_tl - \l__tblr_d_tl) / 2 }
           }
         \__tblr_prop_gput:nxx { spec }
+          { row[\l__tblr_i_tl] / content-height }
+          { \dim_eval:n { \l__tblr_h_tl + \l__tblr_b_tl } }
+        \__tblr_prop_gput:nxx { spec }
           { row[\l__tblr_i_tl] / content-depth }
+          { \dim_eval:n { \l__tblr_d_tl + \l__tblr_b_tl } }
+      }
+    %% We need to adjust the depth of the span cell when it's bottom aligned
+    %% The depth of the span cell must be the same as the depth of the last row
+    \prop_map_inline:Nn \l__tblr_span_cell_prop
+      {
+        \__tblr_get_span_key_row_col:w ##1
+        \tl_set:Nx \l__tblr_v_tl
           {
-            \dim_eval:n
+            \__tblr_prop_item:ne { spec }
+              { cell[\l__tblr_i_tl][\l__tblr_j_tl] / valign }
+          }
+        \tl_if_eq:NnT \l__tblr_v_tl { bottom }
+          {
+            \tl_set:Nx \l__tblr_r_tl
+              { \__tblr_prop_item:ne { spec } { cell ##1 / rowspan } }
+            \__tblr_prop_gput:nxx { spec }
+              { cell ##1 / span-depth }
               {
-                \l__tblr_a_tl *
-                \dim_ratio:nn { \l__tblr_d_tl } { \l__tblr_h_tl + \l__tblr_d_tl }
+                \__tblr_prop_item:ne { spec } { row[##2] / content-depth }
               }
           }
       }
+  }
+
+\cs_new_protected:Npn \__tblr_get_span_key_row_col:w [#1][#2]
+  {
+    \tl_set:Nn \l__tblr_i_tl {#1}
+    \tl_set:Nn \l__tblr_j_tl {#2}
   }
 
 %% Compute and set span widths from column widths
@@ -1739,6 +1802,13 @@
 
 \cs_new_protected:Npn \__tblr_build_cell_legacy:NN #1 #2
   {
+    \__tblr_prop_if_in:nxTF { spec } { cell[#1][#2] / rowspan }
+      { \__tblr_build_span_cell_legacy:NN #1 #2 }
+      { \__tblr_build_normal_cell_legacy:NN #1 #2 }
+  }
+
+\cs_new_protected:Npn \__tblr_build_normal_cell_legacy:NN #1 #2
+  {
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { spec } { col[#2] / content-width } }
     \tl_set:Nx \l__tblr_a_tl
@@ -1758,6 +1828,97 @@
     \box_use:N \l__tblr_c_box
     \skip_horizontal:n
       { \__tblr_prop_item:ne { spec } { col[#2] / colsep-right } }
+  }
+
+\tl_const:Nn \l__tblr_valign_top_tl { top }
+\tl_const:Nn \l__tblr_valign_middle_tl { middle }
+\tl_const:Nn \l__tblr_valign_bottom_tl { bottom }
+
+\cs_new_protected:Npn \__tblr_build_span_cell_legacy:NN #1 #2
+  {
+    \tl_set:Nx \l__tblr_w_tl
+      { \__tblr_prop_item:ne { spec } { col[#2] / content-width } }
+    \tl_set:Nx \l__tblr_h_tl
+      { \__tblr_prop_item:ne { spec } { row[#1] / content-height } }
+    \tl_set:Nx \l__tblr_d_tl
+      { \__tblr_prop_item:ne { spec } { row[#1] / content-depth } }
+    \tl_set:Nx \l__tblr_a_tl
+      { \__tblr_prop_item:ne { spec } { cell[#1][#2] / halign } }
+    \tl_set:Nx \l__tblr_v_tl
+      { \__tblr_prop_item:ne { spec } { cell[#1][#2] / valign } }
+    \tl_set:Nx \l__tblr_s_tl
+      { \__tblr_prop_item:ne { spec } { cell[#1][#2] / span-height } }
+    \tl_set:Nx \l__tblr_t_tl
+      { \__tblr_prop_item:ne { spec } { cell[#1][#2] / span-depth } }
+    \__tblr_get_span_total_height:NNN #1 #2 \l__tblr_s_dim
+    \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
+      {
+        \tl_if_eq:NnF \l__tblr_a_tl { left } { \hfil }
+        \__tblr_get_cell_text:nn { #1 } { #2 }
+        \tl_if_eq:NnT \l__tblr_a_tl { center } { \hfil }
+      }
+    \tl_case:Nn \l__tblr_v_tl
+      {
+        \l__tblr_valign_top_tl
+          {
+            \vbox_set_top_to_ht:Nnn \l__tblr_b_box { 0pt }
+              {
+                \box_use:N \l__tblr_a_box
+                \vss
+              }
+          }
+        \l__tblr_valign_middle_tl
+          {
+            \vbox_set_to_ht:Nnn \l__tblr_b_box { 0pt }
+              {
+                \skip_vertical:n
+                  { (\l__tblr_s_dim - \l__tblr_s_tl - \l__tblr_t_tl) / 2 }
+                \box_use:N \l__tblr_a_box
+                \vss
+              }
+            \box_set_ht:Nn \l__tblr_b_box { \l__tblr_h_tl }
+          }
+        \l__tblr_valign_bottom_tl
+          {
+            \box_set_ht:Nn \l__tblr_a_box { \l__tblr_s_tl }
+            \vbox_set_to_ht:Nnn \l__tblr_b_box { 0pt }
+              {
+                \skip_vertical:n { \l__tblr_s_dim - \l__tblr_s_tl - \l__tblr_t_tl }
+                \box_use:N \l__tblr_a_box
+                \vss
+              }
+            \box_set_ht:Nn \l__tblr_b_box { \l__tblr_h_tl }
+          }
+      }
+    \skip_horizontal:n
+      { \__tblr_prop_item:ne { spec } { col[#2] / colsep-left } }
+    \hbox_set_to_wd:Nnn \l__tblr_c_box { \l__tblr_w_tl }
+      {
+        \box_use:N \l__tblr_b_box
+      }
+    \box_use:N \l__tblr_c_box
+    \skip_horizontal:n
+      { \__tblr_prop_item:ne { spec } { col[#2] / colsep-right } }
+  }
+
+%% #1: row number; #2: column number; #3: height dimension with result
+%% We can use \l__tblr_item_skip_size_prop that was made before
+\cs_new_protected:Npn \__tblr_get_span_total_height:NNN #1 #2 #3
+  {
+    \tl_set:Nx \l__tblr_r_tl
+      { \__tblr_prop_item:ne { spec } { cell[#1][#2] / rowspan } }
+    \dim_zero:N #3
+    \int_step_inline:nnn { #1 } { #1 + \l__tblr_r_tl - 2 }
+      {
+        \dim_add:Nn #3
+          { \prop_item:Ne \l__tblr_item_skip_size_prop { itemskip[##1] } }
+      }
+    \dim_add:Nn #3
+      {
+        \prop_item:Ne \l__tblr_item_skip_size_prop
+          { item[\int_eval:n { #1 + \l__tblr_r_tl - 1 }] }
+      }
+    %\tl_log:x { cell[#1][#2] ~:~ height = \dim_use:N #3 }
   }
 
 \cs_new_protected:Npn \__tblr_build_cell_modern:NN #1 #2
