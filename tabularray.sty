@@ -1242,7 +1242,7 @@
 \tl_new:N \l__tblr_row_span_num_tl
 \tl_new:N \l__tblr_col_span_num_tl
 
-\keys_define:nn { tblr-cell }
+\keys_define:nn { tblr-cell-span }
   {
     r .tl_set:N = \l__tblr_row_span_num_tl,
     r .initial:n = 1,
@@ -1250,9 +1250,28 @@
     c .initial:n = 1,
   }
 
+\keys_define:nn { tblr-cell-spec }
+  {
+    l .code:n = \__tblr_prop_gput:nxx { spec }
+                  {cell[\int_use:N \rownum][\int_use:N \colnum] / halign} {left},
+    c .code:n = \__tblr_prop_gput:nxx { spec }
+                  {cell[\int_use:N \rownum][\int_use:N \colnum] / halign} {center},
+    r .code:n = \__tblr_prop_gput:nxx { spec }
+                  {cell[\int_use:N \rownum][\int_use:N \colnum] / halign} {right},
+    t .code:n = \__tblr_prop_gput:nxx { spec }
+                  {cell[\int_use:N \rownum][\int_use:N \colnum] / valign} {top},
+    p .code:n = \__tblr_prop_gput:nxx { spec }
+                  {cell[\int_use:N \rownum][\int_use:N \colnum] / valign} {top},
+    m .code:n = \__tblr_prop_gput:nxx { spec }
+                  {cell[\int_use:N \rownum][\int_use:N \colnum] / valign} {middle},
+    b .code:n = \__tblr_prop_gput:nxx { spec }
+                  {cell[\int_use:N \rownum][\int_use:N \colnum] / valign} {bottom},
+  }
+
 \cs_new_protected:Npn \__tblr_set_cell_span:nn #1 #2
   {
-    \keys_set:nn { tblr-cell } { #1 }
+    \keys_set:nn { tblr-cell-span } { #1 }
+    \keys_set:nn { tblr-cell-spec } { #2 }
     \__tblr_set_span_spec:VV \l__tblr_row_span_num_tl \l__tblr_col_span_num_tl
   }
 
