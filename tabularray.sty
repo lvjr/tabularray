@@ -855,14 +855,14 @@
     \__tblr_measure_cell_size:nnNNN { #1 } { #2 } #3 #4 #5
     \tl_if_eq:enTF
       { \__tblr_prop_item:ne { spec } { vertical-position } }
-      { legacy }
-      {
-        \__tblr_update_cell_size_legacy:nnNNN { #1 } { #2 } #3 #4 #5
-        \__tblr_update_row_size_legacy:nNN { #1 } #4 #5
-      }
+      { modern }
       {
         \__tblr_update_cell_size_modern:nnNNN { #1 } { #2 } #3 #4 #5
         \__tblr_update_row_size_modern:nnNN { #1 } { #2 } #4 #5
+      }
+      {
+        \__tblr_update_cell_size_legacy:nnNNN { #1 } { #2 } #3 #4 #5
+        \__tblr_update_row_size_legacy:nNN { #1 } #4 #5
       }
     \__tblr_update_col_size:nN { #2 } #3
   }
@@ -1442,7 +1442,8 @@
   {
     \tl_if_eq:enTF
       { \__tblr_prop_item:ne { spec } { vertical-position } }
-      { legacy }
+      { modern }
+      { \tl_set:Nx #2 {\__tblr_prop_item:ne { spec } { row[#1] / @row-height } } }
       {
         \tl_set:Nx #2
           {
@@ -1454,7 +1455,6 @@
               }
           }
       }
-      { \tl_set:Nx #2 {\__tblr_prop_item:ne { spec } { row[#1] / @row-height } } }
   }
 
 \cs_new_protected:Npn \__tblr_collect_span_widths:
@@ -1834,9 +1834,9 @@
   {
     \tl_if_eq:enTF
       { \__tblr_prop_item:ne { spec } { vertical-position } }
-      { legacy }
-      { \__tblr_build_cell_legacy:NN #1 #2 }
+      { modern }
       { \__tblr_build_cell_modern:NN #1 #2 }
+      { \__tblr_build_cell_legacy:NN #1 #2 }
   }
 
 \cs_new_protected:Npn \__tblr_build_cell_legacy:NN #1 #2
@@ -2067,17 +2067,17 @@
       { \__tblr_prop_item:ne { spec } { row[#1] / rowsep-above } }
     \tl_if_eq:enTF
       { \__tblr_prop_item:ne { spec } { vertical-position } }
-      { legacy }
+      { modern }
+      {
+        \tl_set:Nx \l__tblr_h_tl
+          { \__tblr_prop_item:ne { spec } { row[#1] / @row-height } }
+        \tl_set:Nn \l__tblr_d_tl { 0pt }
+      }
       {
         \tl_set:Nx \l__tblr_h_tl
           { \__tblr_prop_item:ne { spec } { row[#1] / @row-head } }
         \tl_set:Nx \l__tblr_d_tl
           { \__tblr_prop_item:ne { spec } { row[#1] / @row-foot } }
-      }
-      {
-        \tl_set:Nx \l__tblr_h_tl
-          { \__tblr_prop_item:ne { spec } { row[#1] / @row-height } }
-        \tl_set:Nn \l__tblr_d_tl { 0pt }
       }
     \tl_set:Nx \l__tblr_b_tl
       { \__tblr_prop_item:ne { spec } { row[#1] / rowsep-below } }
