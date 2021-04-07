@@ -853,17 +853,12 @@
 \cs_new_protected:Npn \__tblr_measure_and_update_cell_size:nnNNN #1 #2 #3 #4 #5
   {
     \__tblr_measure_cell_size:nnNNN { #1 } { #2 } #3 #4 #5
+    \__tblr_update_cell_size:nnNNN { #1 } { #2 } #3 #4 #5
     \tl_if_eq:enTF
       { \__tblr_prop_item:ne { spec } { vertical-position } }
       { modern }
-      {
-        \__tblr_update_cell_size_modern:nnNNN { #1 } { #2 } #3 #4 #5
-        \__tblr_update_row_size_modern:nnNN { #1 } { #2 } #4 #5
-      }
-      {
-        \__tblr_update_cell_size_legacy:nnNNN { #1 } { #2 } #3 #4 #5
-        \__tblr_update_row_size_legacy:nNN { #1 } #4 #5
-      }
+      { \__tblr_update_row_size_modern:nnNN { #1 } { #2 } #4 #5 }
+      { \__tblr_update_row_size_legacy:nNN { #1 } #4 #5 }
     \__tblr_update_col_size:nN { #2 } #3
   }
 
@@ -943,7 +938,7 @@
 %% #1: row number, #2 column number
 %% #3: width dimension, #4: height dimension, #5: depth dimension
 
-\cs_new_protected:Npn \__tblr_update_cell_size_legacy:nnNNN #1 #2 #3 #4 #5
+\cs_new_protected:Npn \__tblr_update_cell_size:nnNNN #1 #2 #3 #4 #5
   {
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { spec } { cell[#1][#2] / colspan } }
@@ -966,34 +961,6 @@
           }
         \dim_zero:N #3 % don't affect column width
       }
-    \tl_set:Nx \l__tblr_a_tl
-      { \__tblr_prop_item:ne { spec } { cell[#1][#2] / rowspan } }
-    \tl_set:Nx \l__tblr_v_tl
-      { \__tblr_prop_item:ne { spec } { cell[#1][#2] / valign } }
-    \tl_if_empty:NF \l__tblr_a_tl
-      {
-        \__tblr_prop_gput:nxx { spec }
-          { cell[#1][#2] / span-height } { \dim_use:N #4 }
-        \__tblr_prop_gput:nxx { spec }
-          { cell[#1][#2] / span-depth } { \dim_use:N #5 }
-        %% Don't affect row height
-        \tl_if_eq:NnF \l__tblr_v_tl { top } {
-          \dim_zero:N #4
-        }
-        %% We have to update the depth of the last span row here
-        \tl_if_eq:NnT \l__tblr_v_tl { bottom }
-          {
-            \__tblr_prop_gput_if_larger:nxx { spec }
-              { row[\int_eval:n { #1 + \l__tblr_a_tl - 1 }] / @row-foot }
-              { \dim_use:N #5 }
-          }
-        %% Don't affect row depth
-        \dim_zero:N #5
-      }
-  }
-
-\cs_new_protected:Npn \__tblr_update_cell_size_modern:nnNNN #1 #2 #3 #4 #5
-  {
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { spec } { cell[#1][#2] / rowspan } }
     \tl_set:Nx \l__tblr_v_tl
