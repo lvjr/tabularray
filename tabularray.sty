@@ -288,7 +288,7 @@
   {
     colsep-left    = 0.6em,
     colsep-right   = 0.6em,
-    content-width  = 0pt,
+    @col-width = 0pt,
   }
 
 \prop_const_from_keyval:Nn \c_tblr_default_keyval_cell_prop
@@ -1040,12 +1040,12 @@
 \cs_new_protected:Npn \__tblr_update_col_size:nN #1 #2
   {
     \tl_set:Nx \l_tmpb_tl
-      { \__tblr_prop_item:ne { spec } { col[#1] / content-width } }
+      { \__tblr_prop_item:ne { spec } { col[#1] / @col-width } }
     \bool_lazy_or:nnT
       { \tl_if_empty_p:N \l_tmpb_tl }
       { \dim_compare_p:nNn { \dim_use:N #2 } > { \l_tmpb_tl } }
       {
-        \__tblr_prop_gput:nxx { spec } { col[#1]/ content-width } { \dim_use:N #2 }
+        \__tblr_prop_gput:nxx { spec } { col[#1]/ @col-width } { \dim_use:N #2 }
       }
   }
 
@@ -1089,7 +1089,7 @@
         \tl_set:Nx \l__tblr_b_tl
           { \__tblr_prop_item:ne { spec } { col[\l__tblr_j_tl] / coefficient } }
         \tl_set:Nx \l__tblr_c_tl
-          { \__tblr_prop_item:ne { spec } { col[\l__tblr_j_tl] / content-width } }
+          { \__tblr_prop_item:ne { spec } { col[\l__tblr_j_tl] / @col-width } }
         \tl_if_empty:NTF \l__tblr_a_tl
           {
             \tl_if_empty:NTF \l__tblr_b_tl
@@ -1140,7 +1140,7 @@
     \prop_map_inline:Nn \l__column_computed_width_prop
       {
         \__tblr_prop_gput:nnx { spec } { col[##1] / width } { ##2 }
-        \__tblr_prop_gput:nnn { spec } { col[##1] / content-width } { 0pt }
+        \__tblr_prop_gput:nnn { spec } { col[##1] / @col-width } { 0pt }
       }
     \__tblr_calculate_cell_sizes:
   }
@@ -1366,7 +1366,7 @@
               { 0pt }
           }
         \prop_put:Nxx \l__tblr_item_skip_size_prop { item[\l__tblr_j_tl] }
-          { \__tblr_prop_item:ne { spec } { col[\l__tblr_j_tl] / content-width } }
+          { \__tblr_prop_item:ne { spec } { col[\l__tblr_j_tl] / @col-width } }
       }
     \prop_log:N \l__tblr_item_skip_size_prop
   }
@@ -1600,7 +1600,7 @@
     \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
       {
         \__tblr_prop_gput:nxx { spec }
-          { col[\l__tblr_j_tl] / content-width }
+          { col[\l__tblr_j_tl] / @col-width }
           { \prop_item:Ne \l__tblr_item_skip_size_prop { item[\l__tblr_j_tl] } }
       }
   }
@@ -1762,7 +1762,7 @@
     \tl_set:Nx \l__tblr_b_tl
       { \__tblr_prop_item:ne { spec } { col[#1] / colsep-left } }
     \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { spec } { col[#1] / content-width } }
+      { \__tblr_prop_item:ne { spec } { col[#1] / @col-width } }
     \tl_set:Nx \l__tblr_c_tl
       { \__tblr_prop_item:ne { spec } { col[#1] / colsep-right } }
     \tl_set:Nx \l__tblr_d_tl
@@ -1816,7 +1816,7 @@
 \cs_new_protected:Npn \__tblr_build_normal_cell_legacy:NN #1 #2
   {
     \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { spec } { col[#2] / content-width } }
+      { \__tblr_prop_item:ne { spec } { col[#2] / @col-width } }
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { spec } { cell[#1][#2] / halign } }
     \skip_horizontal:n
@@ -1843,7 +1843,7 @@
 \cs_new_protected:Npn \__tblr_build_span_cell_legacy:NN #1 #2
   {
     \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { spec } { col[#2] / content-width } }
+      { \__tblr_prop_item:ne { spec } { col[#2] / @col-width } }
     \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne { spec } { row[#1] / @row-head } }
     \tl_set:Nx \l__tblr_d_tl
@@ -1937,7 +1937,7 @@
 \cs_new_protected:Npn \__tblr_build_normal_cell_modern:NN #1 #2
   {
     \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { spec } { col[#2] / content-width } }
+      { \__tblr_prop_item:ne { spec } { col[#2] / @col-width } }
     \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne { spec } { row[#1] / @row-height } }
     \tl_set:Nx \l__tblr_a_tl
@@ -1977,7 +1977,7 @@
 \cs_new_protected:Npn \__tblr_build_span_cell_modern:NN #1 #2
   {
     \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { spec } { col[#2] / content-width } }
+      { \__tblr_prop_item:ne { spec } { col[#2] / @col-width } }
     \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne { spec } { row[#1] / @row-height } }
     \tl_set:Nx \l__tblr_a_tl
