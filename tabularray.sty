@@ -1761,16 +1761,26 @@
             \prop_item:Ne \l__tblr_item_skip_size_prop { item[\l__tblr_i_tl] }
           }
         \__tblr_collect_one_row_height:NN \l__tblr_i_tl \l__tblr_t_tl
-        \tl_set:Nx \l__tblr_b_tl
+        \tl_if_eq:enTF
+          { \__tblr_prop_item:ne { spec } { vertical-position } } { legacy }
           {
-            \dim_eval:n { (\l__tblr_a_tl - \l__tblr_t_tl ) / 2 }
+            \tl_set:Nx \l__tblr_b_tl
+              {
+                \dim_eval:n { (\l__tblr_a_tl - \l__tblr_t_tl ) / 2 }
+              }
+            \__tblr_prop_gput:nxx { spec }
+              { row[\l__tblr_i_tl] / @row-head }
+              { \dim_eval:n { \l__tblr_h_tl + \l__tblr_b_tl } }
+            \__tblr_prop_gput:nxx { spec }
+              { row[\l__tblr_i_tl] / @row-foot }
+              { \dim_eval:n { \l__tblr_d_tl + \l__tblr_b_tl } }
           }
-        \__tblr_prop_gput:nxx { spec }
-          { row[\l__tblr_i_tl] / @row-head }
-          { \dim_eval:n { \l__tblr_h_tl + \l__tblr_b_tl } }
-        \__tblr_prop_gput:nxx { spec }
-          { row[\l__tblr_i_tl] / @row-foot }
-          { \dim_eval:n { \l__tblr_d_tl + \l__tblr_b_tl } }
+          {
+            %% We don't need to use @row-body size
+            %\__tblr_prop_gput:nxx { spec }
+            %  { row[\l__tblr_i_tl] / @row-body }
+            %  { \dim_eval:n { \l__tblr_a_tl - \l__tblr_h_tl - \l__tblr_d_tl } }
+          }
         \__tblr_prop_gput:nxx { spec }
           { row[\l__tblr_i_tl] / @row-height } { \l__tblr_a_tl }
       }
