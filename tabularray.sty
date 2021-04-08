@@ -234,7 +234,7 @@
         \__tblr_extract_table_commands:N \l_tmpa_tl
         \__tblr_prop_gput:nxV { cell }
           { ( #1, \int_use:N \colnum ) } \l_tmpa_tl
-        %%\__tblr_check_multicolumn_and_add_cell:nN { #1 } \l_tmpa_tl
+        \__tblr_add_multicolumn_empty_cell:
       }
     %% Decrease row count by 1 if the last row has only one empty cell text
     %% We need to do it here since the > or < column type may add text to cells
@@ -252,24 +252,22 @@
       }
   }
 
-%% Find \multicolumn command and add empty cells after the span cell
-\cs_new_protected:Npn \__tblr_check_multicolumn_and_add_cell:nN #1 #2
+%% Add empty cells after the \multicolumn span cell
+\cs_new_protected:Npn \__tblr_add_multicolumn_empty_cell:
   {
-    \tl_set:Nx \l__tblr_a_tl { \tl_item:Nn #2 { -4 } }
-    \tl_set:Nx \l__tblr_b_tl { \tl_item:Nn #2 { -3 } }
-    \tl_if_eq:NnT \l__tblr_a_tl { \multicolumn }
+    \int_step_inline:nn { \l__multicolumn_cell_number_int - 1 }
       {
-        \prg_replicate:nn { \l__tblr_b_tl - 1 }
-          {
-            \int_incr:N \l__tblr_c_int
-            \__tblr_prop_gput:nxn { cell }
-              { ( #1, \int_use:N \l__tblr_c_int ) } { }
-          }
+        \int_incr:N \colnum
+        \__tblr_prop_gput:nxn { cell }
+          { (\int_use:N \rownum, \int_use:N \colnum) } { }
       }
   }
 
 %% Extract table commands defined with \NewTableCommand from cell text
 
+\clist_set:Nn \g__tblr_table_commands_unbrace_next_clist {\multirow, \multicolumn}
+\bool_new:N \l__tblr_table_command_unbrace_next_bool
+\int_new:N \l__multicolumn_cell_number_int
 \prop_new:N \l__tblr_table_commands_prop
 \tl_new:N \l__tblr_saved_table_commands_before_cell_text_tl
 \tl_new:N \l__tblr_saved_cell_text_after_table_commands_tl
@@ -278,6 +276,7 @@
   {
     \tl_clear:N \l__tblr_saved_table_commands_before_cell_text_tl
     \tl_clear:N \l__tblr_saved_cell_text_after_table_commands_tl
+    \int_set:Nn \l__multicolumn_cell_number_int {1}
     \exp_last_unbraced:NV \__tblr_extract_table_commands_next:N #1 \scan_stop:
     \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
       {
@@ -291,11 +290,24 @@
 \cs_new_protected:Npn \__tblr_extract_table_commands_next:N #1
   {
     \clist_if_in:NnTF \g__tblr_table_commands_clist { #1 }
-      { \__tblr_extract_one_table_command:N #1 }
+      {
+        \clist_if_in:NnTF \g__tblr_table_commands_unbrace_next_clist { #1 }
+          { \bool_set_true:N \l__tblr_table_command_unbrace_next_bool }
+          { \bool_set_false:N \l__tblr_table_command_unbrace_next_bool }
+        \token_if_eq_meaning:NNTF #1 \multicolumn
+          { \__tblr_extract_multicolumn_command:Nn #1 }
+          { \__tblr_extract_one_table_command:N #1 }
+      }
       {
         \token_if_eq_meaning:NNF #1 \scan_stop:
           { \__tblr_save_real_cell_text:w #1 }
       }
+  }
+
+\cs_new_protected:Npn \__tblr_extract_multicolumn_command:Nn #1 #2
+  {
+    \int_set:Nn \l__multicolumn_cell_number_int {#2}
+    \__tblr_extract_one_table_command:N #1 {#2}
   }
 
 \cs_new_protected:Npn \__tblr_extract_one_table_command:N #1
@@ -332,8 +344,14 @@
         \int_decr:N \l__tblr_a_int
         \__tblr_extract_table_command_arg_m:n
       }
-      { \__tblr_extract_table_commands_next:N }
+      {
+        \bool_if:NTF \l__tblr_table_command_unbrace_next_bool
+          { \__tblr_last_unbraced:Nn \__tblr_extract_table_commands_next:N }
+          { \__tblr_extract_table_commands_next:N }
+      }
   }
+
+\cs_new_protected:Npn \__tblr_last_unbraced:Nn #1 #2 { #1 #2 }
 
 \cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \scan_stop:
   {
@@ -1291,6 +1309,9 @@
 %% We can not use \NewTableCommand since the gobble functions are different
 
 \clist_gput_right:Nn \g__tblr_table_commands_clist { \multicolumn, \multirow }
+
+\tl_gset:cn { g__tblr_table_cmd_multicolumn_arg_numb_tl } {2}
+\tl_gset:cn { g__tblr_table_cmd_multirow_arg_numb_tl } {-3}
 
 \cs_new_protected:Npn \__tblr_table_command_multicolumn:w #1 #2 #3
   {
