@@ -138,6 +138,8 @@
     \prop_log:N \l__tblr_table_commands_prop
     \__tblr_initial_table_spec:
     \__tblr_parse_table_spec:n { #2 }
+    \__tblr_execute_table_commands:
+    \__tblr_disable_table_commands:
     \__tblr_calc_cell_and_line_sizes:
     \__tblr_build_whole:n { #1 }
     \int_gdecr:N \g_tblr_level_int
@@ -523,6 +525,22 @@
       { \cs_set_eq:Nc ##1 { __tblr_table_command_ \cs_to_str:N ##1 _gobble:w } }
   }
 
+\cs_new_protected:Npn \__tblr_execute_table_commands:
+  {
+    \prop_map_inline:Nn \l__tblr_table_commands_prop
+      {
+        \__tblr_set_row_col_from_key_name:w ##1
+        ##2
+      }
+    %\__tblr_prop_log:n {spec }
+  }
+
+\cs_new_protected:Npn \__tblr_set_row_col_from_key_name:w [#1][#2]
+  {
+    \int_set:Nn \rownum {#1}
+    \int_set:Nn \colnum {#2}
+  }
+
 %% Add \hline and \cline commands
 
 \NewTableCommand \hline
@@ -835,7 +853,6 @@
   {
     \__tblr_calculate_line_sizes:
     \__tblr_calculate_cell_sizes:
-    \__tblr_disable_table_commands:
     \__tblr_compute_extendable_column_width:
     \__tblr_adjust_sizes_for_span_cells:
   }
@@ -1548,6 +1565,7 @@
 
 \cs_new_protected:Npn \__tblr_collect_span_widths:
   {
+    \prop_clear:N \l__tblr_span_size_prop
     \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
       {
         \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
@@ -1579,6 +1597,7 @@
 \cs_new_protected:Npn \__tblr_collect_span_heights:
   {
     \prop_clear:N \l__tblr_span_cell_prop
+    \prop_clear:N \l__tblr_span_size_prop
     \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
       {
         \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
