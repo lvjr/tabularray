@@ -28,7 +28,7 @@
  }
 
 \cs_generate_variant:Nn \prop_item:Nn { Ne }
-\cs_generate_variant:Nn \prop_put:Nnn { Nxn, Nxx }
+\cs_generate_variant:Nn \prop_put:Nnn { Nxn, Nxx, NxV }
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
 \cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
@@ -50,6 +50,7 @@
 \tl_new:N  \l__tblr_t_tl
 \tl_new:N  \l__tblr_v_tl
 \tl_new:N  \l__tblr_w_tl
+\int_new:N \l__tblr_a_int
 \int_new:N \l__tblr_c_int % for column number
 \int_new:N \l__tblr_r_int % for row number
 \dim_new:N \l__tblr_b_dim
@@ -134,6 +135,7 @@
     \prop_gclear_new:c { g_tblr_spec_ \int_use:N \g_tblr_level_int _prop }
     \__tblr_enable_table_commands:
     \__tblr_split_table:n { #3 }
+    \prop_log:N \l__tblr_table_commands_prop
     \__tblr_initial_table_spec:
     \__tblr_parse_table_spec:n { #2 }
     \__tblr_calc_cell_and_line_sizes:
@@ -222,39 +224,30 @@
 \cs_new_protected:Npn \__tblr_split_one_line:nn #1 #2
   {
     \seq_set_split:Nnn \l_tmpa_seq { & } { #2 }
-    \int_zero:N \l__tblr_c_int
+    \int_set:Nn \rownum {#1}
+    \int_zero:N \colnum
     \seq_map_inline:Nn \l_tmpa_seq
       {
         \tl_set:Nn \l_tmpa_tl { ##1 }
         \__tblr_remove_braces:N \l_tmpa_tl
-        \int_incr:N \l__tblr_c_int
+        \int_incr:N \colnum
+        \__tblr_extract_table_commands:N \l_tmpa_tl
         \__tblr_prop_gput:nxV { cell }
-          { ( #1, \int_use:N \l__tblr_c_int ) } \l_tmpa_tl
-        \__tblr_check_multicolumn_and_add_cell:nN { #1 } \l_tmpa_tl
+          { ( #1, \int_use:N \colnum ) } \l_tmpa_tl
+        %%\__tblr_check_multicolumn_and_add_cell:nN { #1 } \l_tmpa_tl
       }
-    %% Measure the last row with single cell and parse \hline at the same time
-    %% Decrease row count by 1 when it's an empty cell (has only \hline)
+    %% Decrease row count by 1 if the last row has only one empty cell text
     %% We need to do it here since the > or < column type may add text to cells
-    \bool_set_false:N \l_tmpa_bool
-    \int_compare:nNnT { \l__tblr_c_int } = { 1 }
-      {
-        \int_set:Nn \rownum { #1 }
-        \int_set:Nn \colnum { 1 }
-        \__tblr_measure_cell_size:nnNNN
-          { #1 } { 1 } \l__tblr_w_dim \l__tblr_h_dim \l__tblr_d_dim
-        \bool_lazy_and:nnT
-          { \dim_compare_p:nNn { \l__tblr_h_dim } = { 0pt } }
-          { \dim_compare_p:nNn { \l__tblr_d_dim } = { 0pt } }
-          { \bool_set_true:N \l_tmpa_bool }
-      }
-    \bool_if:NTF \l_tmpa_bool
+    \bool_lazy_and:nnTF
+      { \int_compare_p:nNn {\colnum} = {1} }
+      { \tl_if_empty_p:N \l_tmpa_tl }
       { \int_decr:N \l_tblr_row_count_int }
       {
         \__tblr_prop_gput:nnx
-          { spec } { row[#1] / cell-number } { \int_use:N \l__tblr_c_int }
-        \int_compare:nT { \l__tblr_c_int > \l_tblr_col_count_int }
+          { spec } { row[#1] / cell-number } { \int_use:N \colnum }
+        \int_compare:nT { \colnum > \l_tblr_col_count_int }
           {
-            \int_set_eq:NN \l_tblr_col_count_int \l__tblr_c_int
+            \int_set_eq:NN \l_tblr_col_count_int \colnum
           }
       }
   }
@@ -273,6 +266,78 @@
               { ( #1, \int_use:N \l__tblr_c_int ) } { }
           }
       }
+  }
+
+%% Extract table commands defined with \NewTableCommand from cell text
+
+\prop_new:N \l__tblr_table_commands_prop
+\tl_new:N \l__tblr_saved_table_commands_before_cell_text_tl
+\tl_new:N \l__tblr_saved_cell_text_after_table_commands_tl
+
+\cs_new_protected:Npn \__tblr_extract_table_commands:N #1
+  {
+    \tl_clear:N \l__tblr_saved_table_commands_before_cell_text_tl
+    \tl_clear:N \l__tblr_saved_cell_text_after_table_commands_tl
+    \exp_last_unbraced:NV \__tblr_extract_table_commands_next:N #1 \scan_stop:
+    \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
+      {
+        \prop_put:NxV \l__tblr_table_commands_prop
+          {[\int_use:N \rownum][\int_use:N \colnum]}
+          \l__tblr_saved_table_commands_before_cell_text_tl
+      }
+    \tl_set_eq:NN #1 \l__tblr_saved_cell_text_after_table_commands_tl
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_commands_next:N #1
+  {
+    \clist_if_in:NnTF \g__tblr_table_commands_clist { #1 }
+      { \__tblr_extract_one_table_command:N #1 }
+      {
+        \token_if_eq_meaning:NNF #1 \scan_stop:
+          { \__tblr_save_real_cell_text:w #1 }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_extract_one_table_command:N #1
+  {
+    \int_set:Nn \l__tblr_a_int
+      { \cs:w g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl \cs_end: }
+    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl {#1}
+    \int_compare:nNnTF {\l__tblr_a_int} < {0}
+      {
+        \int_set:Nn \l__tblr_a_int { \int_abs:n {\l__tblr_a_int} - 1 }
+        \peek_charcode:NTF [
+          { \__tblr_extract_table_command_arg_o:w }
+          { \__tblr_extract_table_command_arg_next: }
+      }
+      { \__tblr_extract_table_command_arg_next: }
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_command_arg_o:w [#1]
+  {
+    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl { [#1] }
+    \__tblr_extract_table_command_arg_next:
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_command_arg_m:n #1
+  {
+    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl { {#1} }
+    \__tblr_extract_table_command_arg_next:
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_command_arg_next:
+  {
+    \int_compare:nNnTF {\l__tblr_a_int} > {0}
+      {
+        \int_decr:N \l__tblr_a_int
+        \__tblr_extract_table_command_arg_m:n
+      }
+      { \__tblr_extract_table_commands_next:N }
+  }
+
+\cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \scan_stop:
+  {
+    \tl_set:Nn \l__tblr_saved_cell_text_after_table_commands_tl {#1}
   }
 
 \prop_const_from_keyval:Nn \c_tblr_default_keyval_row_prop
@@ -404,6 +469,13 @@
           { __tblr_table_command_ \cs_to_str:N #1 :w } \l__tblr_a_tl { #4 }
         \exp_args:NcV \NewDocumentCommand
           { __tblr_table_command_ \cs_to_str:N #1 _gobble :w } \l__tblr_a_tl { }
+        \IfValueTF { #3 }
+          {
+            \tl_gset:cn { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } {-#2}
+          }
+          {
+            \tl_gset:cn { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } {#2}
+          }
         \clist_gput_right:Nn \g__tblr_table_commands_clist { #1 }
       }
   }
