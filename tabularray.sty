@@ -1305,25 +1305,32 @@
   }
 
 %% Legacy \multicolumn and \multirow commands
-%% Both of them will call \SetCell command in the end
-%% We can not use \NewTableCommand since the gobble functions are different
+%% Both of them could be replaced with \SetCell command
+%% Note that they don't have cell text as the last arguments
 
-\clist_gput_right:Nn \g__tblr_table_commands_clist { \multicolumn, \multirow }
-
-\tl_gset:cn { g__tblr_table_cmd_multicolumn_arg_numb_tl } {2}
-\tl_gset:cn { g__tblr_table_cmd_multirow_arg_numb_tl } {-3}
-
-\cs_new_protected:Npn \__tblr_table_command_multicolumn:w #1 #2 #3
+\NewTableCommand \multicolumn [2]
   {
-    \SetCell[c=#1]{#2} #3
+    \tl_clear:N \l_tmpa_tl
+    \tl_map_inline:nn {#2}
+      {
+        \token_if_eq_charcode:NNF ##1 | { \tl_put_right:Nn \l_tmpa_tl {##1} }
+      }
+    \__tblr_set_cell_span:nV { c = #1 } \l_tmpa_tl
   }
-\cs_new_protected:Npn \__tblr_table_command_multicolumn_gobble:w #1 #2 #3 { #3 }
 
-\NewDocumentCommand \__tblr_table_command_multirow:w { O{m} m m +m }
+\NewTableCommand \multirow [3] [m]
   {
-    \SetCell[r=#2]{#1,#3} #4
+    \token_if_eq_charcode:NNTF #1 c
+      { \tl_set:Nn \l_tmpa_tl {m} }
+      { \tl_set:Nn \l_tmpa_tl {#1} }
+    \bool_lazy_or:nnF
+      { \token_if_eq_charcode_p:NN #3 * }
+      { \token_if_eq_charcode_p:NN #3 = }
+      {
+        \tl_put_right:Nn \l_tmpa_tl {, wd=#3}
+      }
+    \__tblr_set_cell_span:nV { r = #2 } \l_tmpa_tl
   }
-\NewDocumentCommand \__tblr_table_command_multirow_gobble:w { O{m} m m +m } { #4 }
 
 %% \SetCell command for multirow and/or multicolumn cells
 
@@ -1335,12 +1342,20 @@
 \tl_new:N \l__tblr_row_span_num_tl
 \tl_new:N \l__tblr_col_span_num_tl
 
+\cs_new_protected:Npn \__tblr_set_cell_span:nn #1 #2
+  {
+    \tl_set:Nn \l__tblr_row_span_num_tl { 1 }
+    \tl_set:Nn \l__tblr_col_span_num_tl { 1 }
+    \keys_set:nn { tblr-cell-span } { #1 }
+    \keys_set:nn { tblr-cell-spec } { #2 }
+    \__tblr_set_span_spec:VV \l__tblr_row_span_num_tl \l__tblr_col_span_num_tl
+  }
+\cs_generate_variant:Nn \__tblr_set_cell_span:nn { nV }
+
 \keys_define:nn { tblr-cell-span }
   {
     r .tl_set:N = \l__tblr_row_span_num_tl,
-    r .initial:n = 1,
     c .tl_set:N = \l__tblr_col_span_num_tl,
-    c .initial:n = 1,
   }
 
 \keys_define:nn { tblr-cell-spec }
@@ -1359,13 +1374,8 @@
                   {cell[\int_use:N \rownum][\int_use:N \colnum] / valign} {middle},
     b .code:n = \__tblr_prop_gput:nxx { spec }
                   {cell[\int_use:N \rownum][\int_use:N \colnum] / valign} {bottom},
-  }
-
-\cs_new_protected:Npn \__tblr_set_cell_span:nn #1 #2
-  {
-    \keys_set:nn { tblr-cell-span } { #1 }
-    \keys_set:nn { tblr-cell-spec } { #2 }
-    \__tblr_set_span_spec:VV \l__tblr_row_span_num_tl \l__tblr_col_span_num_tl
+    wd .code:n = \__tblr_prop_gput:nxx { spec }
+                  {cell[\int_use:N \rownum][\int_use:N \colnum] / span-width} {#1},
   }
 
 \cs_new_protected:Npn \__tblr_set_span_spec:nn #1 #2
