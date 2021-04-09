@@ -581,21 +581,34 @@
 
 %% Add \hline and \cline commands
 
+\tl_new:N \l__tblr_hline_count_tl
+\tl_new:N \l__tblr_hline_cols_tl
+\tl_new:N \l__tblr_hline_text_tl
+
+\NewTableCommand \cline [1] { \hline[c = {#1}] }
+
 \NewTableCommand \hline [1] []
   {
-    \tl_set:Nx \l__tblr_c_tl
+    \tl_set:Nx \l__tblr_hline_count_tl
       { \__tblr_prop_item:ne { hline } { [\int_use:N \rownum] / @hline-count } }
-    \tl_if_empty:NTF \l__tblr_c_tl
-      { \tl_set:Nx \l__tblr_c_tl { 1 } }
-      { \tl_set:Nx \l__tblr_c_tl { \int_eval:n { \l__tblr_c_tl + 1 } } }
+    \tl_if_empty:NTF \l__tblr_hline_count_tl
+      { \tl_set:Nx \l__tblr_hline_count_tl { 1 } }
+      {
+        \tl_set:Nx \l__tblr_hline_count_tl
+          { \int_eval:n { \l__tblr_hline_count_tl + 1 } }
+      }
     \__tblr_prop_gput:nxx { hline }
-      { [\int_use:N \rownum] / @hline-count } { \l__tblr_c_tl }
-    \keys_set:nn { tblr-hline } { tt=\hrule, #1 }
+      { [\int_use:N \rownum] / @hline-count } { \l__tblr_hline_count_tl }
+    \tl_clear:N \l__tblr_hline_cols_tl
+    \tl_clear:N \l__tblr_hline_text_tl
+    \keys_set:nn { tblr-hline } { c = {-}, tt = \hrule, #1 }
+    \__tblr_spec_cline_cmd:V \l__tblr_hline_cols_tl
   }
 
 \keys_define:nn { tblr-hline }
   {
-    tt .code:n = \__tblr_spec_hline:nn { text } {#1},
+    c .tl_set:N = \l__tblr_hline_cols_tl,
+    tt .tl_set:N = \l__tblr_hline_text_tl,
     tk .code:n = \__tblr_spec_hline:nn { thickness } { \dim_eval:n {#1} },
     fg .code:n = \__tblr_spec_hline:nn { foreground } {#1},
   }
@@ -605,24 +618,35 @@
     \int_step_inline:nn { \l_tblr_col_count_int }
       {
         \__tblr_prop_gput:nxx { hline }
-          { [\int_use:N \rownum][##1][\l__tblr_c_tl] / #1 } {#2}
+          { [\int_use:N \rownum][##1][\l__tblr_hline_count_tl] / #1 } {#2}
       }
   }
+\cs_generate_variant:Nn \__tblr_spec_hline:nn { nV }
 
-\NewTableCommand \cline [1]
+\cs_new_protected_nopar:Npn \__tblr_spec_cline_cmd:n #1
   {
-    \__tblr_cline_command_aux:w #1 \scan_stop
-  }
-
-\cs_new_protected_nopar:Npn \__tblr_cline_command_aux:w #1 - #2 \scan_stop
-  {
-    \int_step_inline:nnn { #1 } { #2 }
+    \tl_if_eq:nnTF {#1} {-}
+      { \__tblr_spec_hline:nV { text } \l__tblr_hline_text_tl }
       {
-        \__tblr_prop_gput:nxx {hline}
-          { [\int_use:N \rownum][##1] / text } { \hrule }
+        \seq_set_split:Nnn \l_tmpa_seq {,} {#1}
+        \seq_map_inline:Nn \l_tmpa_seq
+        { \__tblr_spec_cline_cmd_aux:w ##1 - s \scan_stop }
       }
   }
+\cs_generate_variant:Nn \__tblr_spec_cline_cmd:n { V }
 
+\cs_new_protected_nopar:Npn \__tblr_spec_cline_cmd_aux:w #1 - #2 #3 \scan_stop
+  {
+    \tl_if_eq:nnTF {#2} {s}
+      { \tl_set:Nn \l_tmpa_tl {#1} }
+      { \tl_set:Nn \l_tmpa_tl {#2} }
+    \int_step_inline:nnn {#1} { \l_tmpa_tl }
+      {
+        \__tblr_prop_gput:nxV { hline }
+          { [\int_use:N \rownum][##1][\l__tblr_hline_count_tl] / text }
+          \l__tblr_hline_text_tl
+      }
+  }
 
 %% Parse table specifications
 
