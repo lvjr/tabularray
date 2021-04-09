@@ -735,8 +735,8 @@
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ Q } { O{} }
   {
-    \int_incr:N \colnum
     \keys_set:nn { tblr-column-type-Q } { #1 }
+    \int_incr:N \colnum
     \__tblr_execute_column_spec_next:N
   }
 \exp_args:Nc \NewDocumentCommand { tblr_column_type_ Q } { O{} }
@@ -795,7 +795,7 @@
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ | } { O{} }
   {
-    \vline {#1}
+    \vline [#1]
     \__tblr_execute_column_spec_next:N
   }
 \exp_args:Nc \NewDocumentCommand { tblr_column_type_ | } { O{} }
@@ -810,7 +810,7 @@
       {
         \__tblr_prop_gput:nxx
           { column }
-          { [\int_eval:n {\colnum + 1}] / colsep-left }
+          { [\int_use:N \colnum] / colsep-left }
           { \dim_eval:n { #1 } }
       }
     \tl_if_blank:nF { #2 }
@@ -820,11 +820,11 @@
             \tl_set:Nx \l_tmpa_tl
             {
               \__tblr_prop_item:ne {text}
-                { [\l__tblr_i_tl][\int_eval:n {\colnum + 1}] }
+                { [\l__tblr_i_tl][\int_use:N \colnum] }
             }
             \tl_put_left:Nn \l_tmpa_tl { #2 }
             \__tblr_prop_gput:nxV {text}
-              { [\l__tblr_i_tl][\int_eval:n {\colnum + 1}] } \l_tmpa_tl
+              { [\l__tblr_i_tl][\int_use:N \colnum] } \l_tmpa_tl
           }
       }
     \__tblr_execute_column_spec_next:N
@@ -841,7 +841,7 @@
       {
         \__tblr_prop_gput:nxx
           { column }
-          { [\int_use:N \colnum] / colsep-right }
+          { [\int_eval:n {\colnum - 1}] / colsep-right }
           { \dim_eval:n { #1 } }
       }
     \tl_if_blank:nF { #2 }
@@ -850,11 +850,12 @@
           {
             \tl_set:Nx \l_tmpa_tl
             {
-              \__tblr_prop_item:ne {text} { [\l__tblr_i_tl][\int_use:N \colnum] }
+              \__tblr_prop_item:ne {text}
+                { [\l__tblr_i_tl][\int_eval:n {\colnum - 1}] }
             }
             \tl_put_right:Nn \l_tmpa_tl { #2 }
             \__tblr_prop_gput:nxV {text}
-              { [\l__tblr_i_tl][\int_use:N \colnum] } \l_tmpa_tl
+              { [\l__tblr_i_tl][\int_eval:n {\colnum - 1}] } \l_tmpa_tl
           }
       }
     \__tblr_execute_column_spec_next:N
@@ -958,7 +959,7 @@
 
 \cs_new_protected:Npn \__tblr_execute_column_spec:N #1
   {
-    \int_zero:N \colnum
+    \int_set:Nn \colnum {1}
     \exp_last_unbraced:NV \__tblr_execute_column_spec_next:N #1 \scan_stop:
   }
 
