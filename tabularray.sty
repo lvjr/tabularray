@@ -1050,7 +1050,7 @@
 \cs_new_protected:Npn \__tblr_measure_and_update_hline_size:nn #1 #2
   {
     \vbox_set:Nn \l__tblr_b_box
-      { \__tblr_get_hline_text:nn { #1 } { #2 } }
+      { \__tblr_get_hline_text:nnn {#1} {#2} {1pt} }
     \dim_set:Nn \l__tblr_h_dim { \box_ht:N \l__tblr_b_box }
     \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne { hline } { [#1] / @hline-height } }
@@ -1063,8 +1063,8 @@
       }
   }
 
-%% Get hline text, #1: row number, #2: column number
-\cs_new_protected:Npn \__tblr_get_hline_text:nn #1 #2
+%% Get hline text, #1: row number, #2: column number, #3: line length
+\cs_new_protected:Npn \__tblr_get_hline_text:nnn #1 #2 #3
   {
     \tl_set:Nx \l__tblr_c_tl
       { \__tblr_prop_item:ne { hline } { [#1] / @hline-count } }
@@ -1074,7 +1074,13 @@
       {
         \int_step_inline:nn { \l__tblr_c_tl }
           {
-            \__tblr_prop_item:ne {hline} { [#1][#2][##1] / text }
+            \hrule height ~ 0pt % remove lineskip
+            \hbox_to_wd:nn {#3}
+              {
+                \leaders
+                \__tblr_prop_item:ne { hline } { [#1][#2][##1] / text }
+                \hfil
+              }
             \skip_vertical:n { \l__tblr_s_tl }
           }
         \skip_vertical:n { - \l__tblr_s_tl }
@@ -2043,7 +2049,7 @@
       {
         %% add an empty hbox to support vbox width
         \tex_hbox:D to \l__tblr_w_dim {}
-        \__tblr_get_hline_text:nn {#1} {#2}
+        \__tblr_get_hline_text:nnn {#1} {#2} {\l__tblr_w_dim}
       }
     \box_use:N \l__tblr_c_box
     \skip_horizontal:n { - \l__tblr_b_dim }
