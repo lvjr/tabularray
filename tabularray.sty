@@ -447,7 +447,6 @@
     span-width .code:n = \__tblr_keys_gput:nn { span-width } { #1 },
     vertical-position .code:n = \__tblr_keys_gput:nn { vertical-position } { #1 },
     colspec .code:n = \__tblr_parse_column_spec:n { #1 },
-    hline .code:n = \__tblr_spec_hline:n { #1 },
   }
 
 %% Treat \\*[dimen] command
@@ -545,17 +544,24 @@
 
 %% Add \hline and \cline commands
 
-\NewTableCommand \hline
+\NewTableCommand \hline [1] []
   {
-    \tblr_setup:n { hline }
+    \keys_set:nn {tblr-hline} {tt=\hrule, #1}
   }
 
-\cs_new_protected:Npn \__tblr_spec_hline:n #1
+\keys_define:nn {tblr-hline}
+  {
+    tt .code:n = \__tblr_spec_hline:nn {text} {#1},
+    tk .code:n = \__tblr_spec_hline:nn {thickness} { \dim_eval:n {#1} },
+    fg .code:n = \__tblr_spec_hline:nn {foreground} {#1},
+  }
+
+\cs_new_protected:Npn \__tblr_spec_hline:nn #1 #2
   {
     \int_step_inline:nn { \l_tblr_col_count_int }
       {
         \__tblr_prop_gput:nxx { spec }
-          { hline[\int_use:N \rownum][##1] / text } { \hrule }
+          { hline[\int_use:N \rownum][##1] / #1 } {#2}
       }
   }
 
