@@ -1014,7 +1014,7 @@
 \cs_new_protected:Npn \__tblr_measure_and_update_vline_size:nn #1 #2
   {
     \hbox_set:Nn \l__tblr_b_box
-      { \__tblr_get_vline_text:nn { #1 } { #2 } }
+      { \__tblr_get_vline_text:nnn {#1} {#2} {1pt} }
     \dim_set:Nn \l__tblr_w_dim { \box_wd:N \l__tblr_b_box }
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-width } }
@@ -1027,8 +1027,8 @@
       }
   }
 
-%% Get vline text, #1: row number, #2: column number
-\cs_new_protected:Npn \__tblr_get_vline_text:nn #1 #2
+%% Get vline text, #1: row number, #2: column number, #3: line length
+\cs_new_protected:Npn \__tblr_get_vline_text:nnn #1 #2 #3
   {
     \tl_set:Nx \l__tblr_c_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-count } }
@@ -1038,7 +1038,12 @@
       {
         \int_step_inline:nn { \l__tblr_c_tl }
           {
-            \__tblr_prop_item:ne {vline} { [#1][#2][##1] / text }
+            \vbox_to_ht:nn {#3}
+            {
+              \leaders
+              \__tblr_prop_item:ne {vline} { [#1][#2][##1] / text }
+              \vfil
+            }
             \skip_horizontal:n { \l__tblr_s_tl }
           }
         \skip_horizontal:n { - \l__tblr_s_tl }
@@ -2120,7 +2125,10 @@
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-width } }
     \hbox_set_to_wd:Nnn \l__tblr_c_box { \l__tblr_w_tl }
-      { \__tblr_get_vline_text:nn { #1 } { #2 } }
+      {
+        \__tblr_get_vline_text:nnn {#1} {#2}
+          { \dim_eval:n { \l__tblr_h_dim + \l__tblr_d_dim } }
+      }
     \box_set_ht:Nn \l__tblr_c_box { \dim_use:N \l__tblr_h_dim }
     \box_set_dp:Nn \l__tblr_c_box { \dim_use:N \l__tblr_d_dim }
     \box_use:N \l__tblr_c_box
