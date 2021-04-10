@@ -1038,12 +1038,10 @@
       {
         \int_step_inline:nn { \l__tblr_c_tl }
           {
-            \vbox_to_ht:nn {#3}
-            {
-              \leaders
-              \__tblr_prop_item:ne {vline} { [#1][#2][##1] / text }
-              \vfil
-            }
+            \tl_set:Nx \l__tblr_t_tl
+              { \__tblr_prop_item:ne {vline} { [#1][#2][##1] / text } }
+            \tl_if_empty:NF \l__tblr_t_tl
+              { \vbox_to_ht:nn {#3} { \leaders \l__tblr_t_tl \vfil } }
             \skip_horizontal:n { \l__tblr_s_tl }
           }
         \skip_horizontal:n { - \l__tblr_s_tl }
@@ -1080,12 +1078,10 @@
         \int_step_inline:nn { \l__tblr_c_tl }
           {
             \hrule height ~ 0pt % remove lineskip
-            \hbox_to_wd:nn {#3}
-              {
-                \leaders
-                \__tblr_prop_item:ne { hline } { [#1][#2][##1] / text }
-                \hfil
-              }
+            \tl_set:Nx \l__tblr_t_tl
+              { \__tblr_prop_item:ne {hline} { [#1][#2][##1] / text } }
+            \tl_if_empty:NF \l__tblr_t_tl
+              { \hbox_to_wd:nn {#3} { \leaders \l__tblr_t_tl \hfil } }
             \skip_vertical:n { \l__tblr_s_tl }
           }
         \skip_vertical:n { - \l__tblr_s_tl }
