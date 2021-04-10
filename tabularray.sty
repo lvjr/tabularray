@@ -652,7 +652,7 @@
 
 \tl_new:N \l__tblr_vline_count_tl
 \tl_new:N \l__tblr_vline_rows_tl
-\tl_new:N \l__tblr_vline_text_tl
+\tl_new:N \l__tblr_vline_dash_tl
 
 \NewTableCommand \rline [1] { \vline[r = {#1}] }
 
@@ -669,20 +669,32 @@
     \__tblr_prop_gput:nxx { vline }
       { [\int_use:N \colnum] / @vline-count } { \l__tblr_vline_count_tl }
     \tl_clear:N \l__tblr_vline_rows_tl
-    \tl_clear:N \l__tblr_vline_text_tl
-    \keys_set:nn { tblr-vline } { r = {-}, tt = \vrule, #1 }
+    \tl_clear:N \l__tblr_vline_dash_tl
+    \keys_set:nn { tblr-vline } { r = {-}, ds = \vrule, #1 }
     \__tblr_spec_rline_cmd:V \l__tblr_vline_rows_tl
   }
+
+%% The keys vline-dash and vline-text are mutually exclusive.
+%% We can have several vline-dash, but only one vline text.
 
 \keys_define:nn { tblr-vline }
   {
     r .tl_set:N = \l__tblr_vline_rows_tl,
-    tt .tl_set:N = \l__tblr_vline_text_tl,
-    tk .code:n = \__tblr_spec_vline:nn { thickness } { \dim_eval:n {#1} },
-    fg .code:n = \__tblr_spec_vline:nn { foreground } {#1},
+    ds .tl_set:N = \l__tblr_vline_dash_tl,
+    tt .code:n = \__tblr_vline_spec_main:nn { text } {#1},
+    tk .code:n = \__tblr_vline_spec_sub:nn { thickness } { \dim_eval:n {#1} },
+    fg .code:n = \__tblr_vline_spec_sub:nn { foreground } {#1},
   }
 
-\cs_new_protected:Npn \__tblr_spec_vline:nn #1 #2
+\cs_new_protected:Npn \__tblr_vline_spec_main:nn #1 #2
+  {
+    \int_step_inline:nn { \l_tblr_row_count_int }
+      {
+        \__tblr_prop_gput:nxx { vline } { [##1][\int_use:N \colnum] / #1 } {#2}
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_vline_spec_sub:nn #1 #2
   {
     \int_step_inline:nn { \l_tblr_row_count_int }
       {
@@ -690,12 +702,12 @@
           { [##1][\int_use:N \colnum][\l__tblr_vline_count_tl] / #1 } {#2}
       }
   }
-\cs_generate_variant:Nn \__tblr_spec_vline:nn { nV }
+\cs_generate_variant:Nn \__tblr_vline_spec_sub:nn { nV }
 
 \cs_new_protected_nopar:Npn \__tblr_spec_rline_cmd:n #1
   {
     \tl_if_eq:nnTF {#1} {-}
-      { \__tblr_spec_vline:nV { text } \l__tblr_vline_text_tl }
+      { \__tblr_vline_spec_sub:nV { @dash } \l__tblr_vline_dash_tl }
       {
         \seq_set_split:Nnn \l_tmpa_seq {,} {#1}
         \seq_map_inline:Nn \l_tmpa_seq
@@ -712,8 +724,8 @@
     \int_step_inline:nnn {#1} { \l_tmpa_tl }
       {
         \__tblr_prop_gput:nxV { vline }
-          { [##1][\int_use:N \colnum][\l__tblr_vline_count_tl] / text }
-          \l__tblr_vline_text_tl
+          { [##1][\int_use:N \colnum][\l__tblr_vline_count_tl] / @dash }
+          \l__tblr_vline_dash_tl
       }
   }
 
@@ -1013,8 +1025,14 @@
 %% #1: row number, #2 column number
 \cs_new_protected:Npn \__tblr_measure_and_update_vline_size:nn #1 #2
   {
+    \tl_set:Nx \l__tblr_t_tl
+      { \__tblr_prop_item:ne { vline } { [#1][#2] / text } }
     \hbox_set:Nn \l__tblr_b_box
-      { \__tblr_get_vline_text:nnn {#1} {#2} {1pt} }
+      {
+        \tl_if_empty:NTF \l__tblr_t_tl
+          { \__tblr_get_vline_dash:nnn {#1} {#2} {1pt} }
+          { \l__tblr_t_tl }
+      }
     \dim_set:Nn \l__tblr_w_dim { \box_wd:N \l__tblr_b_box }
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-width } }
@@ -1028,7 +1046,7 @@
   }
 
 %% Get vline text, #1: row number, #2: column number, #3: line length
-\cs_new_protected:Npn \__tblr_get_vline_text:nnn #1 #2 #3
+\cs_new_protected:Npn \__tblr_get_vline_dash:nnn #1 #2 #3
   {
     \tl_set:Nx \l__tblr_c_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-count } }
@@ -1038,10 +1056,10 @@
       {
         \int_step_inline:nn { \l__tblr_c_tl }
           {
-            \tl_set:Nx \l__tblr_t_tl
-              { \__tblr_prop_item:ne {vline} { [#1][#2][##1] / text } }
-            \tl_if_empty:NF \l__tblr_t_tl
-              { \vbox_to_ht:nn {#3} { \leaders \l__tblr_t_tl \vfil } }
+            \tl_set:Nx \l__tblr_d_tl
+              { \__tblr_prop_item:ne { vline } { [#1][#2][##1] / @dash } }
+            \tl_if_empty:NF \l__tblr_d_tl
+              { \vbox_to_ht:nn {#3} { \leaders \l__tblr_d_tl \vfil } }
             \skip_horizontal:n { \l__tblr_s_tl }
           }
         \skip_horizontal:n { - \l__tblr_s_tl }
@@ -2121,9 +2139,18 @@
   {
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-width } }
+    \tl_set:Nx \l__tblr_t_tl
+      { \__tblr_prop_item:ne { vline } { [#1][#2] / text } }
+    \tl_if_empty:NTF \l__tblr_t_tl
+      { \__tblr_build_vline_dash:nn {#1} {#2} }
+      { \hbox_to_wd:nn { \l__tblr_w_tl } { \l__tblr_t_tl } }
+  }
+
+\cs_new_protected:Npn \__tblr_build_vline_dash:nn #1 #2
+  {
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
       {
-        \__tblr_get_vline_text:nnn {#1} {#2}
+        \__tblr_get_vline_dash:nnn {#1} {#2}
           { \dim_eval:n { \l__tblr_h_dim + \l__tblr_d_dim } }
       }
     \vbox_set:Nn \l__tblr_c_box { \box_use:N \l__tblr_a_box }
