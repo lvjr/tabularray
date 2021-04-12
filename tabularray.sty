@@ -6,6 +6,10 @@
 %%% License   : The LaTeX Project Public License 1.3
 %%% ----------------------------------------------------------------------------
 
+%%% --------------------------------------------------------
+%%  \section{Scratch Variables and Data Structures}
+%%% --------------------------------------------------------
+
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3}
 \ProvidesExplPackage{tabularray}{2021-04-07}{2021D}
@@ -14,9 +18,6 @@
 %\RequirePackage{xparse}
 
 \ExplSyntaxOn
-
-\NewDocumentEnvironment { tblr } { O{c} m +b }
-  { \buildtblr { #1 } { #2 } { #3 } } { }
 
 \cs_if_exist:NF \vbox_set_top_to_ht:Nnn
   {
@@ -132,386 +133,17 @@
   }
 \cs_generate_variant:Nn \__tblr_gput_if_larger:Nnn { Nnx, Nxn, Nxx, cnn }
 
-%% Read, split and build the table
-
-\cs_new_protected:Npn \buildtblr #1 #2 #3
-  {
-    \int_gincr:N \g_tblr_level_int
-    \__tblr_clear_prop_lists:
-    \__tblr_enable_table_commands:
-    \__tblr_split_table:n { #3 }
-    \prop_log:N \l__tblr_table_commands_prop
-    \__tblr_initial_table_spec:
-    \__tblr_parse_table_spec:n { #2 }
-    \__tblr_execute_table_commands:
-    \__tblr_disable_table_commands:
-    \__tblr_calc_cell_and_line_sizes:
-    \__tblr_build_whole:n { #1 }
-    \int_gdecr:N \g_tblr_level_int
-  }
-
-\cs_new_protected:Npn \__tblr_clear_prop_lists:
-  {
-    \prop_gclear_new:c { g_tblr_text_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_table_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_row_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_column_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_cell_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_hline_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_vline_ \int_use:N \g_tblr_level_int _prop }
-  }
-
-%% Insert and remove braces for nesting environments inside cells
-%% These make line split and cell split workable
-%% We need to replace N times for N level nestings
-\regex_const:Nn \c__tblr_insert_braces_regex
-  {
-    \c{begin} \cB\{ (\c[^BE].*) \cE\} (.*?) \c{end} \cB\{ (\c[^BE].*) \cE\}
-  }
-\tl_const:Nn \c__tblr_insert_braces_tl
-  {
-    \c{begin} \cB\{ \cB\{ \1 \cE\} \2 \c{end} \cE\} \cB\{ \3 \cE\}
-  }
-\regex_const:Nn \c__tblr_remove_braces_regex
-  {
-    \c{begin} \cB\{ \cB\{ (.*?) \c{end} \cE\}
-  }
-\tl_const:Nn \c__tblr_remove_braces_tl
-  {
-    \c{begin} \cB\{ \1 \c{end}
-  }
-\cs_new_protected:Npn \__tblr_insert_braces:N #1
-  {
-    \regex_replace_all:NVN \c__tblr_insert_braces_regex \c__tblr_insert_braces_tl #1
-    \regex_replace_all:NVN \c__tblr_insert_braces_regex \c__tblr_insert_braces_tl #1
-  }
-\cs_new_protected:Npn \__tblr_remove_braces:N #1
-  {
-    \regex_replace_all:NVN \c__tblr_remove_braces_regex \c__tblr_remove_braces_tl #1
-    \regex_replace_all:NVN \c__tblr_remove_braces_regex \c__tblr_remove_braces_tl #1
-  }
-
-%% Split table content to cells and store them
-%% #1: table content
-
-\seq_new:N \l_tblr_lines_seq
-\int_new:N \l_tblr_row_count_int
-\int_new:N \l_tblr_col_count_int
-
-\cs_new_protected:Npn \__tblr_split_table:n #1
-  {
-    \int_zero:N \l_tblr_row_count_int
-    \int_zero:N \l_tblr_col_count_int
-    \__tblr_split_table_to_lines:nN { #1 } \l_tblr_lines_seq
-    \__tblr_split_lines_to_cells:N \l_tblr_lines_seq
-  }
-
-%% Split table content to a sequence of lines
-%% #1: table content, #2: resulting sequence of lines
-\cs_new_protected:Npn \__tblr_split_table_to_lines:nN #1 #2
-  {
-    \tl_set:Nn \l_tmpa_tl { #1 }
-    \__tblr_insert_braces:N \l_tmpa_tl
-    \seq_set_split:NnV \l_tmpa_seq { \\ } \l_tmpa_tl
-    \seq_clear:N #2
-    \seq_map_inline:Nn \l_tmpa_seq
-      {
-        \bool_lazy_or:nnTF
-          { \tl_if_head_eq_meaning_p:nN { ##1 } * }
-          { \tl_if_head_eq_meaning_p:nN { ##1 } [ }
-          { \seq_put_right:Nn #2 { \__tblr_newline_skip:w ##1 } }
-          { \seq_put_right:Nn #2 { ##1 } }
-      }
-    \int_set:Nn \l_tblr_row_count_int { \seq_count:N #2 }
-  }
-
-%% Split table lines to cells and store them
-%% #1: sequence of lines
-\cs_new_protected:Npn \__tblr_split_lines_to_cells:N #1
-  {
-    \seq_map_indexed_function:NN #1 \__tblr_split_one_line:nn
-    \__tblr_prop_log:n {text}
-  }
-
 %% Two counters for row and column numbering
 \int_new:N \rownum
 \int_new:N \colnum
 
-%% Split one line into cells and store them
-%% #1: row number, #2 the line text
-\cs_new_protected:Npn \__tblr_split_one_line:nn #1 #2
-  {
-    \seq_set_split:Nnn \l_tmpa_seq { & } { #2 }
-    \int_set:Nn \rownum {#1}
-    \int_zero:N \colnum
-    \seq_map_inline:Nn \l_tmpa_seq
-      {
-        \tl_set:Nn \l_tmpa_tl { ##1 }
-        \__tblr_remove_braces:N \l_tmpa_tl
-        \int_incr:N \colnum
-        \__tblr_extract_table_commands:N \l_tmpa_tl
-        \__tblr_prop_gput:nxV {text} { [#1][\int_use:N \colnum] } \l_tmpa_tl
-        \__tblr_add_multicolumn_empty_cell:
-      }
-    %% Decrease row count by 1 if the last row has only one empty cell text
-    %% We need to do it here since the > or < column type may add text to cells
-    \bool_lazy_and:nnTF
-      { \int_compare_p:nNn {\colnum} = {1} }
-      { \tl_if_empty_p:N \l_tmpa_tl }
-      { \int_decr:N \l_tblr_row_count_int }
-      {
-        \__tblr_prop_gput:nnx
-          {row} { [#1] / cell-number } { \int_use:N \colnum }
-        \int_compare:nT { \colnum > \l_tblr_col_count_int }
-          {
-            \int_set_eq:NN \l_tblr_col_count_int \colnum
-          }
-      }
-  }
-
-%% Add empty cells after the \multicolumn span cell
-\cs_new_protected:Npn \__tblr_add_multicolumn_empty_cell:
-  {
-    \int_step_inline:nn { \l__multicolumn_cell_number_int - 1 }
-      {
-        \int_incr:N \colnum
-        \__tblr_prop_gput:nxn {text}
-          { [\int_use:N \rownum][\int_use:N \colnum] } { }
-      }
-  }
-
-%% Extract table commands defined with \NewTableCommand from cell text
-
-\clist_set:Nn \g__tblr_table_commands_unbrace_next_clist {\multirow, \multicolumn}
-\bool_new:N \l__tblr_table_command_unbrace_next_bool
-\int_new:N \l__multicolumn_cell_number_int
-\prop_new:N \l__tblr_table_commands_prop
-\tl_new:N \l__tblr_saved_table_commands_before_cell_text_tl
-\tl_new:N \l__tblr_saved_cell_text_after_table_commands_tl
-
-\cs_new_protected:Npn \__tblr_extract_table_commands:N #1
-  {
-    \tl_clear:N \l__tblr_saved_table_commands_before_cell_text_tl
-    \tl_clear:N \l__tblr_saved_cell_text_after_table_commands_tl
-    \int_set:Nn \l__multicolumn_cell_number_int {1}
-    \exp_last_unbraced:NV \__tblr_extract_table_commands_next:N #1 \scan_stop:
-    \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
-      {
-        \prop_put:NxV \l__tblr_table_commands_prop
-          {[\int_use:N \rownum][\int_use:N \colnum]}
-          \l__tblr_saved_table_commands_before_cell_text_tl
-      }
-    \tl_set_eq:NN #1 \l__tblr_saved_cell_text_after_table_commands_tl
-  }
-
-\cs_new_protected:Npn \__tblr_extract_table_commands_next:N #1
-  {
-    \clist_if_in:NnTF \g__tblr_table_commands_clist { #1 }
-      {
-        \clist_if_in:NnTF \g__tblr_table_commands_unbrace_next_clist { #1 }
-          { \bool_set_true:N \l__tblr_table_command_unbrace_next_bool }
-          { \bool_set_false:N \l__tblr_table_command_unbrace_next_bool }
-        \token_if_eq_meaning:NNTF #1 \multicolumn
-          { \__tblr_extract_multicolumn_command:Nn #1 }
-          { \__tblr_extract_one_table_command:N #1 }
-      }
-      {
-        \token_if_eq_meaning:NNF #1 \scan_stop:
-          { \__tblr_save_real_cell_text:w #1 }
-      }
-  }
-
-\cs_new_protected:Npn \__tblr_extract_multicolumn_command:Nn #1 #2
-  {
-    \int_set:Nn \l__multicolumn_cell_number_int {#2}
-    \__tblr_extract_one_table_command:N #1 {#2}
-  }
-
-\cs_new_protected:Npn \__tblr_extract_one_table_command:N #1
-  {
-    \int_set:Nn \l__tblr_a_int
-      { \cs:w g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl \cs_end: }
-    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl {#1}
-    \int_compare:nNnTF {\l__tblr_a_int} < {0}
-      {
-        \int_set:Nn \l__tblr_a_int { \int_abs:n {\l__tblr_a_int} - 1 }
-        \peek_charcode:NTF [
-          { \__tblr_extract_table_command_arg_o:w }
-          { \__tblr_extract_table_command_arg_next: }
-      }
-      { \__tblr_extract_table_command_arg_next: }
-  }
-
-\cs_new_protected:Npn \__tblr_extract_table_command_arg_o:w [#1]
-  {
-    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl { [#1] }
-    \__tblr_extract_table_command_arg_next:
-  }
-
-\cs_new_protected:Npn \__tblr_extract_table_command_arg_m:n #1
-  {
-    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl { {#1} }
-    \__tblr_extract_table_command_arg_next:
-  }
-
-\cs_new_protected:Npn \__tblr_extract_table_command_arg_next:
-  {
-    \int_compare:nNnTF {\l__tblr_a_int} > {0}
-      {
-        \int_decr:N \l__tblr_a_int
-        \__tblr_extract_table_command_arg_m:n
-      }
-      {
-        \bool_if:NTF \l__tblr_table_command_unbrace_next_bool
-          { \__tblr_last_unbraced:Nn \__tblr_extract_table_commands_next:N }
-          { \__tblr_extract_table_commands_next:N }
-      }
-  }
-
-\cs_new_protected:Npn \__tblr_last_unbraced:Nn #1 #2 { #1 #2 }
-
-\cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \scan_stop:
-  {
-    \tl_set:Nn \l__tblr_saved_cell_text_after_table_commands_tl {#1}
-  }
-
-\prop_const_from_keyval:Nn \c_tblr_default_keyval_row_prop
-  {
-    rowsep-above   = 0.2em,
-    rowsep-below   = 0.2em,
-    @row-head = 0pt,
-    @row-body = 0pt,
-    @row-foot = 0pt,
-  }
-
-\prop_const_from_keyval:Nn \c_tblr_default_keyval_col_prop
-  {
-    colsep-left    = 0.6em,
-    colsep-right   = 0.6em,
-    @col-width = 0pt,
-  }
-
-\prop_const_from_keyval:Nn \c_tblr_default_keyval_cell_prop
-  {
-    halign         = left,
-    valign         = top,
-    content-width  = 0pt,
-    content-height = 0pt,
-    content-depth  = 0pt,
-  }
-
-\prop_const_from_keyval:Nn \c_tblr_default_keyval_hline_prop
-  {
-    rulesep = 2pt,
-  }
-
-\prop_const_from_keyval:Nn \c_tblr_default_keyval_vline_prop
-  {
-    rulesep = 2pt,
-  }
-
-\cs_new_protected:Npn \__tblr_initial_table_spec:
-  {
-    \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
-      {
-        \prop_map_inline:Nn \c_tblr_default_keyval_row_prop
-          {
-            \__tblr_prop_gput:nxn { row } { [\l__tblr_i_tl] / ##1 } {##2}
-          }
-        \prop_map_inline:Nn \c_tblr_default_keyval_hline_prop
-          {
-            \__tblr_prop_gput:nxn { hline } { [\l__tblr_i_tl] / ##1 } {##2}
-          }
-        \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
-          {
-            \prop_map_inline:Nn \c_tblr_default_keyval_cell_prop
-              {
-                \__tblr_prop_gput:nxn { cell }
-                  { [\l__tblr_i_tl][\l__tblr_j_tl] / ##1 } {##2}
-              }
-          }
-      }
-    \prop_map_inline:Nn \c_tblr_default_keyval_hline_prop
-      {
-        \__tblr_prop_gput:nxn { hline }
-          { [\int_eval:n { \l_tblr_row_count_int + 1}] / ##1 } {##2}
-      }
-    \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
-      {
-        \prop_map_inline:Nn \c_tblr_default_keyval_col_prop
-          {
-            \__tblr_prop_gput:nxn { column } { [\l__tblr_j_tl] / ##1 } {##2}
-          }
-        \prop_map_inline:Nn \c_tblr_default_keyval_vline_prop
-          {
-            \__tblr_prop_gput:nxn { vline } { [\l__tblr_j_tl] / ##1 } {##2}
-          }
-      }
-    \prop_map_inline:Nn \c_tblr_default_keyval_vline_prop
-      {
-        \__tblr_prop_gput:nxn { vline }
-          { [\int_eval:n { \l_tblr_col_count_int + 1}] / ##1 } {##2}
-      }
-  }
-
-\NewDocumentCommand { \settblr } { m }
-  { \tblr_setup:n { #1 } }
-
-%% Setup the table
-\cs_new_protected:Npn \tblr_setup:n #1
-  {
-    \keys_set:nn { tblr } { #1 }
-  }
-\cs_generate_variant:Nn \tblr_setup:n { x }
-
-%% If the key doesn't exist, create it ahead
-\cs_new_protected:Npn \__tblr_keys_define_set:nn #1 #2
-  {
-    \keys_if_exist:nnF { tblr } { #1 }
-      {
-        \keys_define:nn { tblr }
-          { #1 .code:n = \__tblr_keys_gput:nn { #1 } { ##1 } }
-      }
-    \keys_set:nn { tblr } { #1 = #2 }
-  }
-\cs_generate_variant:Nn \__tblr_keys_define_set:nn { xn, xx }
-
-\cs_new_protected:Npn  \__tblr_keys_gput:nn #1 #2
-  {
-    \__tblr_prop_gput:nnn { table } { #1 } { #2 }
-  }
-\cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
-
-\keys_define:nn { tblr }
-  {
-    width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n { #1 } },
-    span-width .code:n = \__tblr_keys_gput:nn { span-width } { #1 },
-    vertical-position .code:n = \__tblr_keys_gput:nn { vertical-position } { #1 },
-    colspec .code:n = \__tblr_parse_column_spec:n { #1 },
-  }
-
-%% Treat \\*[dimen] command
-\NewDocumentCommand \__tblr_newline_skip:w { s o }
-  {
-    \IfBooleanT { #1 }
-      {
-        \__tblr_prop_gput:nxx
-          { row }
-          { [\int_eval:n {\rownum - 1}] / pagebreak }
-          { none }
-      }
-    \IfValueT { #2 }
-      {
-        \__tblr_prop_gput:nxx
-          { row }
-          { [\int_eval:n {\rownum - 1}] / extra-rowsep-below }
-          { #2 }
-      }
-  }
+%%% --------------------------------------------------------
+%%  \section{New Table Commands}
+%%% --------------------------------------------------------
 
 %% We need some commands to modify table/row/column/cell specifications.
 %% These commands must be defined with \NewTableCommand command,
-%% so that we are able to execute them once and then disable them.
+%% so that we could extract them, execute them once, then disable them.
 
 \clist_new:N \g__tblr_table_commands_clist
 
@@ -583,6 +215,10 @@
     \int_set:Nn \colnum {#2}
   }
 
+%%% --------------------------------------------------------
+%%  \section{New Dash Styles}
+%%% --------------------------------------------------------
+
 %% \NewDashStyle commands
 
 \prop_gset_from_keyval:Nn \g__tblr_defined_hdash_styles_prop { solid = \hrule }
@@ -624,6 +260,10 @@
 
 \NewDashStyle {dashed} {on ~ 2pt ~ off ~ 2pt}
 \NewDashStyle {dotted} {on ~ 0.4pt ~ off ~ 1pt}
+
+%%% --------------------------------------------------------
+%%  \section{Set Hlines}
+%%% --------------------------------------------------------
 
 %% Add \SetHline, \hline and \cline commands
 
@@ -719,6 +359,10 @@
           \l__tblr_hline_dash_tl
       }
   }
+
+%%% --------------------------------------------------------
+%%  \section{Set Vlines}
+%%% --------------------------------------------------------
 
 %% Add \SetVline, \vline and \rline commands
 
@@ -828,7 +472,470 @@
       }
   }
 
-%% Parse table specifications
+%%% --------------------------------------------------------
+%%  \section{Set Cells}
+%%% --------------------------------------------------------
+
+%% \SetCell command for multirow and/or multicolumn cells
+
+\NewTableCommand \SetCell [2] []
+  {
+    \__tblr_set_cell_span:nn { #1 } { #2 }
+  }
+
+\tl_new:N \l__tblr_row_span_num_tl
+\tl_new:N \l__tblr_col_span_num_tl
+
+\cs_new_protected:Npn \__tblr_set_cell_span:nn #1 #2
+  {
+    \tl_set:Nn \l__tblr_row_span_num_tl { 1 }
+    \tl_set:Nn \l__tblr_col_span_num_tl { 1 }
+    \keys_set:nn { tblr-cell-span } { #1 }
+    \keys_set:nn { tblr-cell-spec } { #2 }
+    \__tblr_set_span_spec:VV \l__tblr_row_span_num_tl \l__tblr_col_span_num_tl
+  }
+\cs_generate_variant:Nn \__tblr_set_cell_span:nn { nV }
+
+\keys_define:nn { tblr-cell-span }
+  {
+    r .tl_set:N = \l__tblr_row_span_num_tl,
+    c .tl_set:N = \l__tblr_col_span_num_tl,
+  }
+
+\keys_define:nn { tblr-cell-spec }
+  {
+    l .code:n = \__tblr_prop_gput:nxx {cell}
+                  {[\int_use:N \rownum][\int_use:N \colnum] / halign} {left},
+    c .code:n = \__tblr_prop_gput:nxx {cell}
+                  {[\int_use:N \rownum][\int_use:N \colnum] / halign} {center},
+    r .code:n = \__tblr_prop_gput:nxx {cell}
+                  {[\int_use:N \rownum][\int_use:N \colnum] / halign} {right},
+    t .code:n = \__tblr_prop_gput:nxx {cell}
+                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {top},
+    p .code:n = \__tblr_prop_gput:nxx {cell}
+                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {top},
+    m .code:n = \__tblr_prop_gput:nxx {cell}
+                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {middle},
+    b .code:n = \__tblr_prop_gput:nxx {cell}
+                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {bottom},
+    wd .code:n = \__tblr_prop_gput:nxx {cell}
+                  {[\int_use:N \rownum][\int_use:N \colnum] / span-width} {#1},
+    bg .code:n = \__tblr_prop_gput:nxx {cell}
+                  {[\int_use:N \rownum][\int_use:N \colnum] / background} {#1},
+  }
+
+\cs_new_protected:Npn \__tblr_set_span_spec:nn #1 #2
+  {
+    \int_compare:nNnT { #1 } > { 1 }
+      {
+        \__tblr_prop_gput:nnn {table} {rowspan} {true}
+        \__tblr_prop_gput:nxn {cell}
+          { [\int_use:N \rownum][\int_use:N \colnum] / rowspan } { #1 }
+      }
+    \int_compare:nNnT { #2 } > { 1 }
+      {
+        \__tblr_prop_gput:nnn {table} {colspan} {true}
+        \__tblr_prop_gput:nxn {cell}
+          { [\int_use:N \rownum][\int_use:N \colnum] / colspan } { #2 }
+      }
+    \int_step_variable:nnNn
+      { \int_use:N \rownum } { \int_eval:n { \rownum + #1 - 1 } } \l__tblr_i_tl
+      {
+        \int_step_variable:nnNn
+          { \int_use:N \colnum } { \int_eval:n { \colnum + #2 - 1 } }
+          \l__tblr_j_tl
+          {
+            \bool_lazy_and:nnF
+              { \int_compare_p:nNn { \l__tblr_i_tl } = { \rownum } }
+              { \int_compare_p:nNn { \l__tblr_j_tl } = { \colnum } }
+              {
+                %% I can't clear cell text since there may be some \hline's in it
+                \__tblr_prop_gput:nxx {cell}
+                  { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
+              }
+            \int_compare:nNnF { \l__tblr_i_tl } = { \rownum }
+              {
+                \__tblr_prop_gput:nxx {hline}
+                  { [\l__tblr_i_tl][\l__tblr_j_tl] / text } { }
+                \__tblr_prop_gput:nxx {hline}
+                  { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
+              }
+            \int_compare:nNnF { \l__tblr_j_tl } = { \colnum }
+              {
+                \__tblr_prop_gput:nxx {vline}
+                  { [\l__tblr_i_tl][\l__tblr_j_tl] / text } { }
+                \__tblr_prop_gput:nxx {vline}
+                  { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
+              }
+          }
+      }
+  }
+\cs_generate_variant:Nn \__tblr_set_span_spec:nn { VV }
+
+%% Legacy \multicolumn and \multirow commands
+%% Both of them could be replaced with \SetCell command
+%% Note that they don't have cell text as the last arguments
+
+\NewTableCommand \multicolumn [2]
+  {
+    \tl_clear:N \l_tmpa_tl
+    \tl_map_inline:nn {#2}
+      {
+        \token_if_eq_charcode:NNF ##1 | { \tl_put_right:Nn \l_tmpa_tl {##1} }
+      }
+    \__tblr_set_cell_span:nV { c = #1 } \l_tmpa_tl
+  }
+
+\NewTableCommand \multirow [3] [m]
+  {
+    \token_if_eq_charcode:NNTF #1 c
+      { \tl_set:Nn \l_tmpa_tl {m} }
+      { \tl_set:Nn \l_tmpa_tl {#1} }
+    \bool_lazy_or:nnF
+      { \token_if_eq_charcode_p:NN #3 * }
+      { \token_if_eq_charcode_p:NN #3 = }
+      {
+        \tl_put_right:Nn \l_tmpa_tl {, wd=#3}
+      }
+    \__tblr_set_cell_span:nV { r = #2 } \l_tmpa_tl
+  }
+
+%%% --------------------------------------------------------
+%%  \section{Tabularray Environments}
+%%% --------------------------------------------------------
+
+\NewDocumentEnvironment { tblr } { O{c} m +b }
+  { \buildtblr { #1 } { #2 } { #3 } } { }
+
+%% Read, split and build the table
+
+\cs_new_protected:Npn \buildtblr #1 #2 #3
+  {
+    \int_gincr:N \g_tblr_level_int
+    \__tblr_clear_prop_lists:
+    \__tblr_enable_table_commands:
+    \__tblr_split_table:n { #3 }
+    \prop_log:N \l__tblr_table_commands_prop
+    \__tblr_initial_table_spec:
+    \__tblr_parse_table_spec:n { #2 }
+    \__tblr_execute_table_commands:
+    \__tblr_disable_table_commands:
+    \__tblr_calc_cell_and_line_sizes:
+    \__tblr_build_whole:n { #1 }
+    \int_gdecr:N \g_tblr_level_int
+  }
+
+\cs_new_protected:Npn \__tblr_clear_prop_lists:
+  {
+    \prop_gclear_new:c { g_tblr_text_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g_tblr_table_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g_tblr_row_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g_tblr_column_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g_tblr_cell_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g_tblr_hline_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g_tblr_vline_ \int_use:N \g_tblr_level_int _prop }
+  }
+
+%% Insert and remove braces for nesting environments inside cells
+%% These make line split and cell split workable
+%% We need to replace N times for N level nestings
+\regex_const:Nn \c__tblr_insert_braces_regex
+  {
+    \c{begin} \cB\{ (\c[^BE].*) \cE\} (.*?) \c{end} \cB\{ (\c[^BE].*) \cE\}
+  }
+\tl_const:Nn \c__tblr_insert_braces_tl
+  {
+    \c{begin} \cB\{ \cB\{ \1 \cE\} \2 \c{end} \cE\} \cB\{ \3 \cE\}
+  }
+\regex_const:Nn \c__tblr_remove_braces_regex
+  {
+    \c{begin} \cB\{ \cB\{ (.*?) \c{end} \cE\}
+  }
+\tl_const:Nn \c__tblr_remove_braces_tl
+  {
+    \c{begin} \cB\{ \1 \c{end}
+  }
+\cs_new_protected:Npn \__tblr_insert_braces:N #1
+  {
+    \regex_replace_all:NVN \c__tblr_insert_braces_regex \c__tblr_insert_braces_tl #1
+    \regex_replace_all:NVN \c__tblr_insert_braces_regex \c__tblr_insert_braces_tl #1
+  }
+\cs_new_protected:Npn \__tblr_remove_braces:N #1
+  {
+    \regex_replace_all:NVN \c__tblr_remove_braces_regex \c__tblr_remove_braces_tl #1
+    \regex_replace_all:NVN \c__tblr_remove_braces_regex \c__tblr_remove_braces_tl #1
+  }
+
+%% Split table content to cells and store them
+%% #1: table content
+
+\seq_new:N \l_tblr_lines_seq
+\int_new:N \l_tblr_row_count_int
+\int_new:N \l_tblr_col_count_int
+
+\cs_new_protected:Npn \__tblr_split_table:n #1
+  {
+    \int_zero:N \l_tblr_row_count_int
+    \int_zero:N \l_tblr_col_count_int
+    \__tblr_split_table_to_lines:nN { #1 } \l_tblr_lines_seq
+    \__tblr_split_lines_to_cells:N \l_tblr_lines_seq
+  }
+
+%% Split table content to a sequence of lines
+%% #1: table content, #2: resulting sequence of lines
+\cs_new_protected:Npn \__tblr_split_table_to_lines:nN #1 #2
+  {
+    \tl_set:Nn \l_tmpa_tl { #1 }
+    \__tblr_insert_braces:N \l_tmpa_tl
+    \seq_set_split:NnV \l_tmpa_seq { \\ } \l_tmpa_tl
+    \seq_clear:N #2
+    \seq_map_inline:Nn \l_tmpa_seq
+      {
+        \bool_lazy_or:nnTF
+          { \tl_if_head_eq_meaning_p:nN { ##1 } * }
+          { \tl_if_head_eq_meaning_p:nN { ##1 } [ }
+          { \seq_put_right:Nn #2 { \__tblr_newline_skip:w ##1 } }
+          { \seq_put_right:Nn #2 { ##1 } }
+      }
+    \int_set:Nn \l_tblr_row_count_int { \seq_count:N #2 }
+  }
+
+%% Split table lines to cells and store them
+%% #1: sequence of lines
+\cs_new_protected:Npn \__tblr_split_lines_to_cells:N #1
+  {
+    \seq_map_indexed_function:NN #1 \__tblr_split_one_line:nn
+    \__tblr_prop_log:n {text}
+  }
+
+%% Split one line into cells and store them
+%% #1: row number, #2 the line text
+\cs_new_protected:Npn \__tblr_split_one_line:nn #1 #2
+  {
+    \seq_set_split:Nnn \l_tmpa_seq { & } { #2 }
+    \int_set:Nn \rownum {#1}
+    \int_zero:N \colnum
+    \seq_map_inline:Nn \l_tmpa_seq
+      {
+        \tl_set:Nn \l_tmpa_tl { ##1 }
+        \__tblr_remove_braces:N \l_tmpa_tl
+        \int_incr:N \colnum
+        \__tblr_extract_table_commands:N \l_tmpa_tl
+        \__tblr_prop_gput:nxV {text} { [#1][\int_use:N \colnum] } \l_tmpa_tl
+        \__tblr_add_multicolumn_empty_cell:
+      }
+    %% Decrease row count by 1 if the last row has only one empty cell text
+    %% We need to do it here since the > or < column type may add text to cells
+    \bool_lazy_and:nnTF
+      { \int_compare_p:nNn {\colnum} = {1} }
+      { \tl_if_empty_p:N \l_tmpa_tl }
+      { \int_decr:N \l_tblr_row_count_int }
+      {
+        \__tblr_prop_gput:nnx
+          {row} { [#1] / cell-number } { \int_use:N \colnum }
+        \int_compare:nT { \colnum > \l_tblr_col_count_int }
+          {
+            \int_set_eq:NN \l_tblr_col_count_int \colnum
+          }
+      }
+  }
+
+%% Add empty cells after the \multicolumn span cell
+\cs_new_protected:Npn \__tblr_add_multicolumn_empty_cell:
+  {
+    \int_step_inline:nn { \l__multicolumn_cell_number_int - 1 }
+      {
+        \int_incr:N \colnum
+        \__tblr_prop_gput:nxn {text}
+          { [\int_use:N \rownum][\int_use:N \colnum] } { }
+      }
+  }
+
+%%% --------------------------------------------------------
+%%  \section{Extract Table Commands from Cell Text}
+%%% --------------------------------------------------------
+
+%% Extract table commands defined with \NewTableCommand from cell text
+
+\clist_gset:Nn \g__tblr_table_commands_unbrace_next_clist {\multirow, \multicolumn}
+\bool_new:N \l__tblr_table_command_unbrace_next_bool
+\int_new:N \l__multicolumn_cell_number_int
+\prop_new:N \l__tblr_table_commands_prop
+\tl_new:N \l__tblr_saved_table_commands_before_cell_text_tl
+\tl_new:N \l__tblr_saved_cell_text_after_table_commands_tl
+
+\cs_new_protected:Npn \__tblr_extract_table_commands:N #1
+  {
+    \tl_clear:N \l__tblr_saved_table_commands_before_cell_text_tl
+    \tl_clear:N \l__tblr_saved_cell_text_after_table_commands_tl
+    \int_set:Nn \l__multicolumn_cell_number_int {1}
+    \exp_last_unbraced:NV \__tblr_extract_table_commands_next:N #1 \scan_stop:
+    \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
+      {
+        \prop_put:NxV \l__tblr_table_commands_prop
+          {[\int_use:N \rownum][\int_use:N \colnum]}
+          \l__tblr_saved_table_commands_before_cell_text_tl
+      }
+    \tl_set_eq:NN #1 \l__tblr_saved_cell_text_after_table_commands_tl
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_commands_next:N #1
+  {
+    \clist_if_in:NnTF \g__tblr_table_commands_clist { #1 }
+      {
+        \clist_if_in:NnTF \g__tblr_table_commands_unbrace_next_clist { #1 }
+          { \bool_set_true:N \l__tblr_table_command_unbrace_next_bool }
+          { \bool_set_false:N \l__tblr_table_command_unbrace_next_bool }
+        \token_if_eq_meaning:NNTF #1 \multicolumn
+          { \__tblr_extract_multicolumn_command:Nn #1 }
+          { \__tblr_extract_one_table_command:N #1 }
+      }
+      {
+        \token_if_eq_meaning:NNF #1 \scan_stop:
+          { \__tblr_save_real_cell_text:w #1 }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_extract_multicolumn_command:Nn #1 #2
+  {
+    \int_set:Nn \l__multicolumn_cell_number_int {#2}
+    \__tblr_extract_one_table_command:N #1 {#2}
+  }
+
+\cs_new_protected:Npn \__tblr_extract_one_table_command:N #1
+  {
+    \int_set:Nn \l__tblr_a_int
+      { \cs:w g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl \cs_end: }
+    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl {#1}
+    \int_compare:nNnTF {\l__tblr_a_int} < {0}
+      {
+        \int_set:Nn \l__tblr_a_int { \int_abs:n {\l__tblr_a_int} - 1 }
+        \peek_charcode:NTF [
+          { \__tblr_extract_table_command_arg_o:w }
+          { \__tblr_extract_table_command_arg_next: }
+      }
+      { \__tblr_extract_table_command_arg_next: }
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_command_arg_o:w [#1]
+  {
+    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl { [#1] }
+    \__tblr_extract_table_command_arg_next:
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_command_arg_m:n #1
+  {
+    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl { {#1} }
+    \__tblr_extract_table_command_arg_next:
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_command_arg_next:
+  {
+    \int_compare:nNnTF {\l__tblr_a_int} > {0}
+      {
+        \int_decr:N \l__tblr_a_int
+        \__tblr_extract_table_command_arg_m:n
+      }
+      {
+        \bool_if:NTF \l__tblr_table_command_unbrace_next_bool
+          { \__tblr_last_unbraced:Nn \__tblr_extract_table_commands_next:N }
+          { \__tblr_extract_table_commands_next:N }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_last_unbraced:Nn #1 #2 { #1 #2 }
+
+\cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \scan_stop:
+  {
+    \tl_set:Nn \l__tblr_saved_cell_text_after_table_commands_tl {#1}
+  }
+
+%%% --------------------------------------------------------
+%%  \section{Initial Table Specifications}
+%%% --------------------------------------------------------
+
+\prop_const_from_keyval:Nn \c_tblr_default_keyval_row_prop
+  {
+    rowsep-above   = 0.2em,
+    rowsep-below   = 0.2em,
+    @row-head = 0pt,
+    @row-body = 0pt,
+    @row-foot = 0pt,
+  }
+
+\prop_const_from_keyval:Nn \c_tblr_default_keyval_col_prop
+  {
+    colsep-left    = 0.6em,
+    colsep-right   = 0.6em,
+    @col-width = 0pt,
+  }
+
+\prop_const_from_keyval:Nn \c_tblr_default_keyval_cell_prop
+  {
+    halign         = left,
+    valign         = top,
+    content-width  = 0pt,
+    content-height = 0pt,
+    content-depth  = 0pt,
+  }
+
+\prop_const_from_keyval:Nn \c_tblr_default_keyval_hline_prop
+  {
+    rulesep = 2pt,
+  }
+
+\prop_const_from_keyval:Nn \c_tblr_default_keyval_vline_prop
+  {
+    rulesep = 2pt,
+  }
+
+\cs_new_protected:Npn \__tblr_initial_table_spec:
+  {
+    \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+      {
+        \prop_map_inline:Nn \c_tblr_default_keyval_row_prop
+          {
+            \__tblr_prop_gput:nxn { row } { [\l__tblr_i_tl] / ##1 } {##2}
+          }
+        \prop_map_inline:Nn \c_tblr_default_keyval_hline_prop
+          {
+            \__tblr_prop_gput:nxn { hline } { [\l__tblr_i_tl] / ##1 } {##2}
+          }
+        \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+          {
+            \prop_map_inline:Nn \c_tblr_default_keyval_cell_prop
+              {
+                \__tblr_prop_gput:nxn { cell }
+                  { [\l__tblr_i_tl][\l__tblr_j_tl] / ##1 } {##2}
+              }
+          }
+      }
+    \prop_map_inline:Nn \c_tblr_default_keyval_hline_prop
+      {
+        \__tblr_prop_gput:nxn { hline }
+          { [\int_eval:n { \l_tblr_row_count_int + 1}] / ##1 } {##2}
+      }
+    \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+      {
+        \prop_map_inline:Nn \c_tblr_default_keyval_col_prop
+          {
+            \__tblr_prop_gput:nxn { column } { [\l__tblr_j_tl] / ##1 } {##2}
+          }
+        \prop_map_inline:Nn \c_tblr_default_keyval_vline_prop
+          {
+            \__tblr_prop_gput:nxn { vline } { [\l__tblr_j_tl] / ##1 } {##2}
+          }
+      }
+    \prop_map_inline:Nn \c_tblr_default_keyval_vline_prop
+      {
+        \__tblr_prop_gput:nxn { vline }
+          { [\int_eval:n { \l_tblr_col_count_int + 1}] / ##1 } {##2}
+      }
+  }
+
+%%% --------------------------------------------------------
+%%  \section{Parse Table Specifications}
+%%% --------------------------------------------------------
 
 \regex_const:Nn \c__tblr_long_key_name_regex { [A-Za-z]{3,} \s* = }
 
@@ -838,6 +945,65 @@
       { \keys_set:nn { tblr } { #1 } }
       { \__tblr_parse_column_spec:n { #1 } }
   }
+
+\NewDocumentCommand { \settblr } { m }
+  { \tblr_setup:n { #1 } }
+
+%% Setup the table
+\cs_new_protected:Npn \tblr_setup:n #1
+  {
+    \keys_set:nn { tblr } { #1 }
+  }
+\cs_generate_variant:Nn \tblr_setup:n { x }
+
+%% If the key doesn't exist, create it ahead
+\cs_new_protected:Npn \__tblr_keys_define_set:nn #1 #2
+  {
+    \keys_if_exist:nnF { tblr } { #1 }
+      {
+        \keys_define:nn { tblr }
+          { #1 .code:n = \__tblr_keys_gput:nn { #1 } { ##1 } }
+      }
+    \keys_set:nn { tblr } { #1 = #2 }
+  }
+\cs_generate_variant:Nn \__tblr_keys_define_set:nn { xn, xx }
+
+\cs_new_protected:Npn  \__tblr_keys_gput:nn #1 #2
+  {
+    \__tblr_prop_gput:nnn { table } { #1 } { #2 }
+  }
+\cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
+
+\keys_define:nn { tblr }
+  {
+    width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n { #1 } },
+    span-width .code:n = \__tblr_keys_gput:nn { span-width } { #1 },
+    vertical-position .code:n = \__tblr_keys_gput:nn { vertical-position } { #1 },
+    colspec .code:n = \__tblr_parse_column_spec:n { #1 },
+  }
+
+%% Treat \\*[dimen] command
+\NewDocumentCommand \__tblr_newline_skip:w { s o }
+  {
+    \IfBooleanT { #1 }
+      {
+        \__tblr_prop_gput:nxx
+          { row }
+          { [\int_eval:n {\rownum - 1}] / pagebreak }
+          { none }
+      }
+    \IfValueT { #2 }
+      {
+        \__tblr_prop_gput:nxx
+          { row }
+          { [\int_eval:n {\rownum - 1}] / extra-rowsep-below }
+          { #2 }
+      }
+  }
+
+%%% --------------------------------------------------------
+%%  \section{Parse Column Specifications}
+%%% --------------------------------------------------------
 
 %% Some primitive column types
 
@@ -1079,6 +1245,10 @@
     \token_if_eq_meaning:NNF #1 \scan_stop:
       { \cs:w tblr_primitive_column_type_  #1 \cs_end: }
   }
+
+%%% --------------------------------------------------------
+%%  \section{Typeset and Calculate Sizes}
+%%% --------------------------------------------------------
 
 %% Calculate the width and height for every cell and border
 
@@ -1429,6 +1599,10 @@
       }
   }
 
+%%% --------------------------------------------------------
+%%  \section{Calculate and Adjust Extendable Columns}
+%%% --------------------------------------------------------
+
 %% Compute column widths when there are some extendable columns
 
 \dim_new:N \l__column_target_dim
@@ -1596,129 +1770,9 @@
     \prop_put:Nnx #1 { #2 } { \dim_eval:n { \prop_item:Nn #1 { #2 } + #3 } }
   }
 
-%% Legacy \multicolumn and \multirow commands
-%% Both of them could be replaced with \SetCell command
-%% Note that they don't have cell text as the last arguments
-
-\NewTableCommand \multicolumn [2]
-  {
-    \tl_clear:N \l_tmpa_tl
-    \tl_map_inline:nn {#2}
-      {
-        \token_if_eq_charcode:NNF ##1 | { \tl_put_right:Nn \l_tmpa_tl {##1} }
-      }
-    \__tblr_set_cell_span:nV { c = #1 } \l_tmpa_tl
-  }
-
-\NewTableCommand \multirow [3] [m]
-  {
-    \token_if_eq_charcode:NNTF #1 c
-      { \tl_set:Nn \l_tmpa_tl {m} }
-      { \tl_set:Nn \l_tmpa_tl {#1} }
-    \bool_lazy_or:nnF
-      { \token_if_eq_charcode_p:NN #3 * }
-      { \token_if_eq_charcode_p:NN #3 = }
-      {
-        \tl_put_right:Nn \l_tmpa_tl {, wd=#3}
-      }
-    \__tblr_set_cell_span:nV { r = #2 } \l_tmpa_tl
-  }
-
-%% \SetCell command for multirow and/or multicolumn cells
-
-\NewTableCommand \SetCell [2] []
-  {
-    \__tblr_set_cell_span:nn { #1 } { #2 }
-  }
-
-\tl_new:N \l__tblr_row_span_num_tl
-\tl_new:N \l__tblr_col_span_num_tl
-
-\cs_new_protected:Npn \__tblr_set_cell_span:nn #1 #2
-  {
-    \tl_set:Nn \l__tblr_row_span_num_tl { 1 }
-    \tl_set:Nn \l__tblr_col_span_num_tl { 1 }
-    \keys_set:nn { tblr-cell-span } { #1 }
-    \keys_set:nn { tblr-cell-spec } { #2 }
-    \__tblr_set_span_spec:VV \l__tblr_row_span_num_tl \l__tblr_col_span_num_tl
-  }
-\cs_generate_variant:Nn \__tblr_set_cell_span:nn { nV }
-
-\keys_define:nn { tblr-cell-span }
-  {
-    r .tl_set:N = \l__tblr_row_span_num_tl,
-    c .tl_set:N = \l__tblr_col_span_num_tl,
-  }
-
-\keys_define:nn { tblr-cell-spec }
-  {
-    l .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / halign} {left},
-    c .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / halign} {center},
-    r .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / halign} {right},
-    t .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {top},
-    p .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {top},
-    m .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {middle},
-    b .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {bottom},
-    wd .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / span-width} {#1},
-    bg .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / background} {#1},
-  }
-
-\cs_new_protected:Npn \__tblr_set_span_spec:nn #1 #2
-  {
-    \int_compare:nNnT { #1 } > { 1 }
-      {
-        \__tblr_prop_gput:nnn {table} {rowspan} {true}
-        \__tblr_prop_gput:nxn {cell}
-          { [\int_use:N \rownum][\int_use:N \colnum] / rowspan } { #1 }
-      }
-    \int_compare:nNnT { #2 } > { 1 }
-      {
-        \__tblr_prop_gput:nnn {table} {colspan} {true}
-        \__tblr_prop_gput:nxn {cell}
-          { [\int_use:N \rownum][\int_use:N \colnum] / colspan } { #2 }
-      }
-    \int_step_variable:nnNn
-      { \int_use:N \rownum } { \int_eval:n { \rownum + #1 - 1 } } \l__tblr_i_tl
-      {
-        \int_step_variable:nnNn
-          { \int_use:N \colnum } { \int_eval:n { \colnum + #2 - 1 } }
-          \l__tblr_j_tl
-          {
-            \bool_lazy_and:nnF
-              { \int_compare_p:nNn { \l__tblr_i_tl } = { \rownum } }
-              { \int_compare_p:nNn { \l__tblr_j_tl } = { \colnum } }
-              {
-                %% I can't clear cell text since there may be some \hline's in it
-                \__tblr_prop_gput:nxx {cell}
-                  { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
-              }
-            \int_compare:nNnF { \l__tblr_i_tl } = { \rownum }
-              {
-                \__tblr_prop_gput:nxx {hline}
-                  { [\l__tblr_i_tl][\l__tblr_j_tl] / text } { }
-                \__tblr_prop_gput:nxx {hline}
-                  { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
-              }
-            \int_compare:nNnF { \l__tblr_j_tl } = { \colnum }
-              {
-                \__tblr_prop_gput:nxx {vline}
-                  { [\l__tblr_i_tl][\l__tblr_j_tl] / text } { }
-                \__tblr_prop_gput:nxx {vline}
-                  { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
-              }
-          }
-      }
-  }
-\cs_generate_variant:Nn \__tblr_set_span_spec:nn { VV }
+%%% --------------------------------------------------------
+%%  \section{Calculate and Adjust Multispan Cells}
+%%% --------------------------------------------------------
 
 %% Compute and adjust widths when there are some span cells.
 %% By default, we will compute column widths from span widths;
@@ -2128,7 +2182,10 @@
   }
 \cs_generate_variant:Nn \__tblr_calc_span_widths:nnN { xxN }
 
-%% Build the whole table
+%%% --------------------------------------------------------
+%%  \section{Build the Whole Table}
+%%% --------------------------------------------------------
+
 \cs_new_eq:NN \__tlbr_vbox_t:n \tex_vtop:D
 \cs_new_eq:NN \__tlbr_vbox_c:n \tex_vcenter:D
 \cs_new_eq:NN \__tlbr_vbox_b:n \tex_vbox:D
