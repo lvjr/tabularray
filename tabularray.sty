@@ -71,8 +71,6 @@
 \box_new:N \l__tblr_c_box % for cell box
 
 \int_new:N \g_tblr_level_int % store table nesting level
-\prop_new:c { g_tblr_cell_1_prop } % store table cell text of level 1
-\prop_new:c { g_tblr_spec_1_prop } % store table specification of level 1
 
 \cs_new_protected:Npn \__tblr_prop_gput:nnn #1 #2 #3
   {
@@ -91,11 +89,15 @@
   {
     \prop_if_in:cnT { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
   }
+\cs_new_protected:Npn \__tblr_prop_if_in:nnF #1
+  {
+    \prop_if_in:cnF { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+  }
 \cs_new_protected:Npn \__tblr_prop_if_in:nnTF #1
   {
     \prop_if_in:cnTF { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
   }
-\prg_generate_conditional_variant:Nnn \__tblr_prop_if_in:nn { nx } { T, TF }
+\prg_generate_conditional_variant:Nnn \__tblr_prop_if_in:nn { nx } { T, F, TF }
 
 \cs_new_protected:Npn \__tblr_prop_log:n #1
   {
@@ -235,13 +237,13 @@
       {
         \tl_if_eq:NnT \l__tblr_c_tl { off }
           {
-            \__tblr_dash_style_make_boxs:nxx {#1}
+            \__tblr_dash_style_make_boxes:nxx {#1}
               { \dim_eval:n {\l__tblr_b_tl} } { \dim_eval:n {\l__tblr_d_tl} }
           }
       }
   }
 
-\cs_new_protected:Npn \__tblr_dash_style_make_boxs:nnn #1 #2 #3
+\cs_new_protected:Npn \__tblr_dash_style_make_boxes:nnn #1 #2 #3
   {
     \dim_set:Nn \l_tmpa_dim { #2 + #3 }
     \tl_set:Nn \l__tblr_h_tl { \hbox_to_wd:nn }
@@ -256,7 +258,7 @@
     \prop_gput:NnV \g__tblr_defined_vdash_styles_prop {#1} \l__tblr_v_tl
     \prop_log:N \g__tblr_defined_vdash_styles_prop
   }
-\cs_generate_variant:Nn \__tblr_dash_style_make_boxs:nnn { nxx }
+\cs_generate_variant:Nn \__tblr_dash_style_make_boxes:nnn { nxx }
 
 \NewDashStyle {dashed} {on ~ 2pt ~ off ~ 2pt}
 \NewDashStyle {dotted} {on ~ 0.4pt ~ off ~ 1pt}
@@ -1378,7 +1380,7 @@
 %% Calculate the width and height for every cell
 \cs_new_protected:Npn \__tblr_calculate_cell_sizes:
   {
-    %% We need these two counters in executing table commands inside cells
+    %% You can use these two counters in cell text
     \int_zero:N \rownum
     \int_zero:N \colnum
     \int_step_inline:nn { \l_tblr_row_count_int }
@@ -1437,15 +1439,8 @@
 
 \cs_new_protected:Npn \__tblr_get_cell_text:nn #1 #2
   {
-    \__tblr_prop_if_in:nxTF {cell} { [#1][#2] / omit }
-      { \__tblr_get_cell_text_omit:nn { #1 } { #2 } }
+    \__tblr_prop_if_in:nxF {cell} { [#1][#2] / omit }
       { \__tblr_get_cell_text_real:nn { #1 } { #2 } }
-  }
-
-%% We need to execute hline commands in it, then return empty text
-\cs_new_protected:Npn \__tblr_get_cell_text_omit:nn #1 #2
-  {
-    \hbox_set:Nn \l__tblr_c_box { \__tblr_prop_item:ne {text} {[#1][#2]} }
   }
 
 \cs_new_protected:Npn \__tblr_get_cell_text_real:nn #1 #2
@@ -2265,7 +2260,7 @@
     \__tblr_build_vline:nn { #1 } { \int_eval:n {\l_tblr_col_count_int + 1} }
   }
 
-%% Read from table specifications and calculate inner height of row
+%% Read from table specifications and calculate inner height/depth of the row
 %% inner height = rowsep above + row head
 %% inner depth = row body + row foot + rowsep below
 %% #1: the row number, #2: resulting inner height, #3: resulting inner depth
