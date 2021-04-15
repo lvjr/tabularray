@@ -610,7 +610,7 @@
 
 \NewTableCommand \SetColumn [2] []
   {
-    \keys_set:nn { tblr-column } { #2 }
+    \keys_set:nn { tblr-column } {#2}
   }
 
 \keys_define:nn { tblr-column }
@@ -634,7 +634,7 @@
     wd .code:n = \__tblr_prop_gput:nxx { column }
                    { [\int_use:N \colnum] / width } { \dim_eval:n {#1} },
     co .code:n = \__tblr_prop_gput:nxx { column }
-                   { [\int_use:N \colnum] / coefficient } { \int_eval:n {#1} },
+                   { [\int_use:N \colnum] / coefficient } {#1},
     unknown .code:n = \__tblr_column_unknown_key:V \l_keys_key_str,
   }
 
@@ -643,23 +643,32 @@
   {
     \int_step_inline:nn { \l_tblr_row_count_int }
       {
-        \__tblr_prop_gput:nxn {cell} { [##1][#1] / #2 } { #3 }
+        \__tblr_prop_gput:nxn {cell} { [##1][#1] / #2 } {#3}
       }
   }
 
-\msg_new:nnn { tabularray } { column-unknown-key }
-  { Unknown ~ key ~ #1 ~ for ~ column! }
-
-\regex_const:Nn \c__tblr_is_number_key_regex { [\+\-]? \d+ }
+\regex_const:Nn \c__tblr_is_number_key_regex { ^[\+\-]? (\d+|\d*\.\d+)$ }
+\regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
 
 \cs_new_protected:Npn \__tblr_column_unknown_key:n #1
   {
-    \regex_match:NnTF \c__tblr_is_number_key_regex { #1 }
+    \regex_match:NnTF \c__tblr_is_number_key_regex {#1}
       {
         \__tblr_prop_gput:nxx { column }
-          { [\int_use:N \colnum] / coefficient } { #1 }
+          { [\int_use:N \colnum] / coefficient } {#1}
       }
-      { \msg_warning:nnn { tabularray } { column-unknown-key } { #1 } }
+      {
+        \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+          {
+            \__tblr_set_key_for_every_column_cell:nnn
+              { \int_use:N \colnum } { background } {#1}
+          }
+          {
+          \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
+            \__tblr_prop_gput:nxx { column }
+              { [\int_use:N \colnum] / width } { \dim_eval:n { \l__tblr_v_tl } }
+          }
+      }
   }
 \cs_generate_variant:Nn \__tblr_column_unknown_key:n { V }
 
