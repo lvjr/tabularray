@@ -673,6 +673,73 @@
 \cs_generate_variant:Nn \__tblr_column_unknown_key:n { V }
 
 %%% --------------------------------------------------------
+%%  \section{Set Rows}
+%%% --------------------------------------------------------
+
+%% \SetRow command for current row or each cells in the row
+
+\NewTableCommand \SetRow [2] []
+  {
+    \keys_set:nn { tblr-row } {#2}
+  }
+
+\keys_define:nn { tblr-row }
+  {
+    l .code:n = \__tblr_set_key_for_every_row_cell:nnn
+                  { \int_use:N \rownum } { halign } { left },
+    c .code:n = \__tblr_set_key_for_every_row_cell:nnn
+                  { \int_use:N \rownum } { halign } { center },
+    r .code:n = \__tblr_set_key_for_every_row_cell:nnn
+                  { \int_use:N \rownum } { halign } { right },
+    t .code:n = \__tblr_set_key_for_every_row_cell:nnn
+                  { \int_use:N \rownum } { valign } { top },
+    p .code:n = \__tblr_set_key_for_every_row_cell:nnn
+                  { \int_use:N \rownum } { valign } { top },
+    m .code:n = \__tblr_set_key_for_every_row_cell:nnn
+                  { \int_use:N \rownum } { valign } { middle },
+    b .code:n = \__tblr_set_key_for_every_row_cell:nnn
+                  { \int_use:N \rownum } { valign } { bottom },
+    bg .code:n = \__tblr_set_key_for_every_row_cell:nnn
+                  { \int_use:N \rownum } { background } {#1},
+    ht .code:n = \__tblr_prop_gput:nxx { row }
+                   { [\int_use:N \rownum] / height } { \dim_eval:n {#1} },
+    co .code:n = \__tblr_prop_gput:nxx { row }
+                   { [\int_use:N \rownum] / coefficient } {#1},
+    unknown .code:n = \__tblr_row_unknown_key:V \l_keys_key_str,
+  }
+
+%% #1: row number; #2: key; #3: value
+\cs_new_protected:Npn \__tblr_set_key_for_every_row_cell:nnn #1 #2 #3
+  {
+    \int_step_inline:nn { \l_tblr_col_count_int }
+      {
+        \__tblr_prop_gput:nxn {cell} { [#1][##1] / #2 } {#3}
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_row_unknown_key:n #1
+  {
+    \regex_match:NnTF \c__tblr_is_number_key_regex {#1}
+      {
+        \__tblr_prop_gput:nxx { row }
+          { [\int_use:N \rownum] / coefficient } {#1}
+      }
+      {
+        \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+          {
+            \__tblr_set_key_for_every_row_cell:nnn
+              { \int_use:N \rownum } { background } {#1}
+          }
+          {
+          \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
+            \__tblr_prop_gput:nxx { row }
+              { [\int_use:N \rownum] / height } { \dim_eval:n { \l__tblr_v_tl } }
+          }
+      }
+  }
+\cs_generate_variant:Nn \__tblr_row_unknown_key:n { V }
+
+%%% --------------------------------------------------------
 %%  \section{Tabularray Environments}
 %%% --------------------------------------------------------
 
