@@ -2429,9 +2429,9 @@
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { column } { [#2] / @col-width } }
     \tl_set:Nx \l__tblr_x_tl
-      { \__tblr_prop_item:ne { column } { [#1] / colsep-left } }
+      { \__tblr_prop_item:ne { column } { [#2] / colsep-left } }
     \tl_set:Nx \l__tblr_y_tl
-      { \__tblr_prop_item:ne { column } { [#1] / colsep-right } }
+      { \__tblr_prop_item:ne { column } { [#2] / colsep-right } }
     \__tblr_build_normal_cell_background:nn {#1} {#2}
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / halign } }
@@ -2455,9 +2455,9 @@
     \tl_set:Nx \l__tblr_e_tl
       { \__tblr_prop_item:ne { row } { [#1] / @row-head } }
     \tl_set:Nx \l__tblr_x_tl
-      { \__tblr_prop_item:ne { column } { [#1] / colsep-left } }
+      { \__tblr_prop_item:ne { column } { [#2] / colsep-left } }
     \tl_set:Nx \l__tblr_y_tl
-      { \__tblr_prop_item:ne { column } { [#1] / colsep-right } }
+      { \__tblr_prop_item:ne { column } { [#2] / colsep-right } }
     \__tblr_build_normal_cell_background:nn {#1} {#2}
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / halign } }
@@ -2553,9 +2553,9 @@
     \tl_set:Nx \l__tblr_h_tl
       { \int_eval:n { \l__tblr_e_tl + \l__tblr_f_tl } }
     \tl_set:Nx \l__tblr_x_tl
-      { \__tblr_prop_item:ne { column } { [#1] / colsep-left } }
+      { \__tblr_prop_item:ne { column } { [#2] / colsep-left } }
     \tl_set:Nx \l__tblr_y_tl
-      { \__tblr_prop_item:ne { column } { [#1] / colsep-right } }
+      { \__tblr_prop_item:ne { column } { [#2] / colsep-right } }
     \__tblr_get_span_vertical_sizes:NNNNN #1 #2
       \l__tblr_r_dim \l__tblr_s_dim \l__tblr_t_dim
     \__tblr_build_span_cell_background:nn {#1} {#2}
@@ -2600,9 +2600,9 @@
     \tl_set:Nx \l__tblr_r_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / rowspan } }
     \tl_set:Nx \l__tblr_x_tl
-      { \__tblr_prop_item:ne { column } { [#1] / colsep-left } }
+      { \__tblr_prop_item:ne { column } { [#2] / colsep-left } }
     \tl_set:Nx \l__tblr_y_tl
-      { \__tblr_prop_item:ne { column } { [#1] / colsep-right } }
+      { \__tblr_prop_item:ne { column } { [#2] / colsep-right } }
     \__tblr_get_span_vertical_sizes:NNNNN #1 #2
       \l__tblr_r_dim \l__tblr_s_dim \l__tblr_t_dim
     \__tblr_build_span_cell_background:nn {#1} {#2}
