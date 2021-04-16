@@ -1080,9 +1080,9 @@
 
 \cs_new_protected:Npn \__tblr_parse_table_spec:n #1
   {
-    \regex_match:NnTF \c__tblr_long_key_name_regex { #1 }
-      { \keys_set:nn { tblr } { #1 } }
-      { \__tblr_parse_column_spec:n { #1 } }
+    \regex_match:NnTF \c__tblr_long_key_name_regex {#1}
+      { \keys_set:nn { tblr } {#1} }
+      { \__tblr_parse_colrow_spec:nn { column } {#1} }
   }
 
 \NewDocumentCommand { \settblr } { m }
@@ -1118,7 +1118,7 @@
     width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n { #1 } },
     span-width .code:n = \__tblr_keys_gput:nn { span-width } { #1 },
     vertical-position .code:n = \__tblr_keys_gput:nn { vertical-position } { #1 },
-    colspec .code:n = \__tblr_parse_column_spec:n { #1 },
+    colspec .code:n = \__tblr_parse_colrow_spec:nn { column } {#1} ,
   }
 
 %% Treat \\*[dimen] command
@@ -1147,29 +1147,29 @@
 %% Some primitive column types
 
 \str_const:Nn \c_tblr_primitive_column_types_str { Q | < > }
-\tl_new:N \g_tblr_expanded_colspec_tl
+\tl_new:N \g__tblr_expanded_colrow_spec_tl
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ Q } { O{} }
   {
     \keys_set:nn { tblr-column } { #1 }
     \int_incr:N \colnum
-    \__tblr_execute_column_spec_next:N
+    \__tblr_execute_colrow_spec_next:N
   }
 \exp_args:Nc \NewDocumentCommand { tblr_column_type_ Q } { O{} }
   {
-    \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { Q[#1] }
-    \__tblr_expand_column_spec_next:N
+    \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { Q[#1] }
+    \__tblr_expand_colrow_spec_next:N
   }
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ | } { O{} }
   {
     \vline [#1]
-    \__tblr_execute_column_spec_next:N
+    \__tblr_execute_colrow_spec_next:N
   }
 \exp_args:Nc \NewDocumentCommand { tblr_column_type_ | } { O{} }
   {
-    \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { |[#1] }
-    \__tblr_expand_column_spec_next:N
+    \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { |[#1] }
+    \__tblr_expand_colrow_spec_next:N
   }
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ > } { O{} m }
@@ -1195,12 +1195,12 @@
               { [\l__tblr_i_tl][\int_use:N \colnum] } \l_tmpa_tl
           }
       }
-    \__tblr_execute_column_spec_next:N
+    \__tblr_execute_colrow_spec_next:N
   }
 \exp_args:Nc \NewDocumentCommand { tblr_column_type_ > } { O{} m }
   {
-    \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { >[#1]{#2} }
-    \__tblr_expand_column_spec_next:N
+    \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { >[#1]{#2} }
+    \__tblr_expand_colrow_spec_next:N
   }
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ < } { O{} m }
@@ -1226,12 +1226,12 @@
               { [\l__tblr_i_tl][\int_eval:n {\colnum - 1}] } \l_tmpa_tl
           }
       }
-    \__tblr_execute_column_spec_next:N
+    \__tblr_execute_colrow_spec_next:N
   }
 \exp_args:Nc \NewDocumentCommand { tblr_column_type_ < } { O{} m }
   {
-    \tl_gput_right:Nn \g_tblr_expanded_colspec_tl { <[#1]{#2} }
-    \__tblr_expand_column_spec_next:N
+    \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { <[#1]{#2} }
+    \__tblr_expand_colrow_spec_next:N
   }
 
 %% \NewColumnType command and predefined column types
@@ -1239,27 +1239,39 @@
 \str_new:N \g_tblr_used_column_types_str
 \str_gset_eq:NN
   \g_tblr_used_column_types_str \c_tblr_primitive_column_types_str
-\bool_new:N \g_tblr_column_spec_expand_stop_bool
 
-\msg_new:nnn { tabularray } { used-column-type }
-  { Column ~ type ~ name ~ #1 ~ has ~ been ~ used! }
+\bool_new:N \g__tblr_colrow_spec_expand_stop_bool
+\tl_new:N \g__tblr_column_or_row_tl
+
+\msg_new:nnn { tabularray } { used-colrow-type }
+  { #1 ~ type ~ name ~ #2 ~ has ~ been ~ used! }
 
 \NewDocumentCommand \NewColumnType { m O{0} o m }
   {
-    \str_if_in:NnTF \g_tblr_used_column_types_str { #1 }
+    \tl_set:Nn \g__tblr_column_or_row_tl { column }
+    \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
+  }
+
+\cs_new_protected:Npn \__tblr_new_column_or_row_type:nnnn #1 #2 #3 #4
+  {
+    \str_if_in:cnTF { g_tblr_used_ \g__tblr_column_or_row_tl _types_str } {#1}
       {
-        \msg_warning:nnn { tabularray } { used-column-type } { #1 }
-        \str_log:N \g_tblr_used_column_types_str
+        \tl_if_eq:NnTF \g__tblr_column_or_row_tl { row }
+          { \msg_warning:nnnn { tabularray } { used-colrow-type } { Row } {#1} }
+          { \msg_warning:nnnn { tabularray } { used-colrow-type } { Column } {#1} }
+        \str_log:c { g_tblr_used_ \g__tblr_column_or_row_tl _types_str }
       }
       {
-        \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_a_tl
-        \exp_args:NcV \NewDocumentCommand { tblr_column_type_ #1 } \l__tblr_a_tl
+        \__tblr_make_xparse_arg_spec:nnN {#2} {#3} \l__tblr_a_tl
+        \exp_args:NcV \NewDocumentCommand
+          { tblr_ \g__tblr_column_or_row_tl _type_ #1 } \l__tblr_a_tl
           {
-            \bool_gset_false:N \g_tblr_column_spec_expand_stop_bool
-            \tl_gput_right:Nf \g_tblr_expanded_colspec_tl { #4 }
-            \__tblr_expand_column_spec_next:N
+            \bool_gset_false:N \g__tblr_colrow_spec_expand_stop_bool
+            \tl_gput_right:Nf \g__tblr_expanded_colrow_spec_tl {#4}
+            \__tblr_expand_colrow_spec_next:N
           }
-        \str_gput_right:Nn \g_tblr_used_column_types_str { #1 }
+        \str_gput_right:cn
+          { g_tblr_used_ \g__tblr_column_or_row_tl _types_str } {#1}
       }
   }
 
@@ -1278,25 +1290,26 @@
 \NewColumnType { @ } [1] { <[0pt]{} |[tt={#1}] >[0pt]{} }
 \NewColumnType { * } [2] { \prg_replicate:nn {#1} {#2} }
 
-\cs_new_protected:Npn \__tblr_parse_column_spec:n #1
+\cs_new_protected:Npn \__tblr_parse_colrow_spec:nn #1 #2
   {
-    \tl_gset:Nn \g_tblr_expanded_colspec_tl { #1 }
-    \__tblr_expand_column_spec:N \g_tblr_expanded_colspec_tl
-    \__tblr_execute_column_spec:N \g_tblr_expanded_colspec_tl
+    \tl_gset:Nn \g__tblr_column_or_row_tl {#1}
+    \tl_gset:Nn \g__tblr_expanded_colrow_spec_tl {#2}
+    \__tblr_expand_colrow_spec:N \g__tblr_expanded_colrow_spec_tl
+    \__tblr_execute_colrow_spec:N \g__tblr_expanded_colrow_spec_tl
   }
 
-%% Expand defined column types
+%% Expand defined column/row types
 
-\cs_new_protected:Npn \__tblr_expand_column_spec:N #1
+\cs_new_protected:Npn \__tblr_expand_colrow_spec:N #1
   {
-    \bool_do_until:Nn \g_tblr_column_spec_expand_stop_bool
+    \bool_do_until:Nn \g__tblr_colrow_spec_expand_stop_bool
       {
         \tl_log:N #1
-        \bool_gset_true:N \g_tblr_column_spec_expand_stop_bool
+        \bool_gset_true:N \g__tblr_colrow_spec_expand_stop_bool
         \tl_set_eq:NN \l_tmpa_tl #1
         \tl_gclear:N #1
         \exp_last_unbraced:NV
-          \__tblr_expand_column_spec_next:N \l_tmpa_tl \scan_stop:
+          \__tblr_expand_colrow_spec_next:N \l_tmpa_tl \scan_stop:
       }
   }
 
@@ -1306,7 +1319,7 @@
 \msg_new:nnn { tabularray } { unknown-column-type }
   { Unknown ~ column ~ type ~ #1! }
 
-\cs_new_protected:Npn \__tblr_expand_column_spec_next:N #1
+\cs_new_protected:Npn \__tblr_expand_colrow_spec_next:N #1
   {
     \token_if_eq_catcode:NNTF #1 \scan_stop:
       {
@@ -1323,15 +1336,17 @@
       }
   }
 
-%% Execute primitive column types
+%% Execute primitive column/row types
 
-\cs_new_protected:Npn \__tblr_execute_column_spec:N #1
+\cs_new_protected:Npn \__tblr_execute_colrow_spec:N #1
   {
-    \int_set:Nn \colnum {1}
-    \exp_last_unbraced:NV \__tblr_execute_column_spec_next:N #1 \scan_stop:
+    \tl_if_eq:NnTF \g__tblr_column_or_row_tl { row }
+      { \int_set:Nn \rownum {1} }
+      { \int_set:Nn \colnum {1} }
+    \exp_last_unbraced:NV \__tblr_execute_colrow_spec_next:N #1 \scan_stop:
   }
 
-\cs_new_protected:Npn \__tblr_execute_column_spec_next:N #1
+\cs_new_protected:Npn \__tblr_execute_colrow_spec_next:N #1
   {
     \token_if_eq_meaning:NNF #1 \scan_stop:
       { \cs:w tblr_primitive_column_type_  #1 \cs_end: }
