@@ -315,11 +315,23 @@
       }
   }
 
+%% The keys hline-text and hline-dash are mutually exclusive.
+%% When hline-text is set, hline-dash will be ignored.
+
 \keys_define:nn { tblr-hline }
   {
     ds .tl_set:N = \l__tblr_hline_dash_tl,
+    tt .code:n = \__tblr_hline_spec_main:nn { text } {#1},
     tk .code:n = \__tblr_hline_spec_sub:nn { thickness } { \dim_eval:n {#1} },
     fg .code:n = \__tblr_hline_spec_sub:nn { foreground } {#1},
+  }
+
+\cs_new_protected:Npn \__tblr_hline_spec_main:nn #1 #2
+  {
+    \int_step_inline:nn { \l_tblr_col_count_int }
+      {
+        \__tblr_prop_gput:nxx { hline } { [\int_use:N \rownum][##1] / #1 } {#2}
+      }
   }
 
 \cs_new_protected:Npn \__tblr_hline_spec_sub:nn #1 #2
@@ -414,8 +426,8 @@
       }
   }
 
-%% The keys vline-dash and vline-text are mutually exclusive.
-%% We can have several vline-dash, but only one vline text.
+%% The keys vline-text and vline-dash are mutually exclusive.
+%% When vline-text is set, vline-dash will be ignored.
 
 \keys_define:nn { tblr-vline }
   {
@@ -1557,8 +1569,14 @@
 %% #1: row number, #2 column number
 \cs_new_protected:Npn \__tblr_measure_and_update_hline_size:nn #1 #2
   {
+    \tl_set:Nx \l__tblr_t_tl
+      { \__tblr_prop_item:ne { hline } { [#1][#2] / text } }
     \vbox_set:Nn \l__tblr_b_box
-      { \__tblr_get_hline_dash:nnn {#1} {#2} {1pt} }
+      {
+        \tl_if_empty:NTF \l__tblr_t_tl
+          { \__tblr_get_hline_dash:nnn {#1} {#2} {1pt} }
+          { \l__tblr_t_tl }
+      }
     \dim_set:Nn \l__tblr_h_dim { \box_ht:N \l__tblr_b_box }
     \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne { hline } { [#1] / @hline-height } }
@@ -2433,11 +2451,17 @@
   {
     \__tblr_get_col_outer_width_border_width:nNN {#2}
       \l__tblr_w_dim \l__tblr_b_dim
+    \tl_set:Nx \l__tblr_t_tl
+      { \__tblr_prop_item:ne { hline } { [#1][#2] / text } }
     \vbox_set:Nn \l__tblr_c_box
       {
-        %% add an empty hbox to support vbox width
-        \tex_hbox:D to \l__tblr_w_dim {}
-        \__tblr_get_hline_dash:nnn {#1} {#2} {\l__tblr_w_dim}
+        \tl_if_empty:NTF \l__tblr_t_tl
+          {
+            %% add an empty hbox to support vbox width
+            \tex_hbox:D to \l__tblr_w_dim {}
+            \__tblr_get_hline_dash:nnn {#1} {#2} {\l__tblr_w_dim}
+          }
+          { \hbox_to_wd:nn { \l__tblr_w_dim } { \l__tblr_t_tl } }
       }
     \box_use:N \l__tblr_c_box
     \skip_horizontal:n { - \l__tblr_b_dim }
