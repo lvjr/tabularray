@@ -1522,15 +1522,14 @@
 
 %% Measure and update thickness of the vline
 %% #1: row number, #2 column number
+%% We will use vline text first even if it is empty
 \cs_new_protected:Npn \__tblr_measure_and_update_vline_size:nn #1 #2
   {
-    \tl_set:Nx \l__tblr_t_tl
-      { \__tblr_prop_item:ne { vline } { [#1][#2] / text } }
     \hbox_set:Nn \l__tblr_b_box
       {
-        \tl_if_empty:NTF \l__tblr_t_tl
+        \__tblr_prop_if_in:nxTF { vline } { [#1][#2] / text }
+          { \__tblr_prop_item:ne { vline } { [#1][#2] / text } }
           { \__tblr_get_vline_dash:nnn {#1} {#2} {1pt} }
-          { \l__tblr_t_tl }
       }
     \dim_set:Nn \l__tblr_w_dim { \box_wd:N \l__tblr_b_box }
     \tl_set:Nx \l__tblr_w_tl
@@ -1567,15 +1566,14 @@
 
 %% Measure and update thickness of the hline
 %% #1: row number, #2 column number
+%% We will use hline text first even if it is empty
 \cs_new_protected:Npn \__tblr_measure_and_update_hline_size:nn #1 #2
   {
-    \tl_set:Nx \l__tblr_t_tl
-      { \__tblr_prop_item:ne { hline } { [#1][#2] / text } }
     \vbox_set:Nn \l__tblr_b_box
       {
-        \tl_if_empty:NTF \l__tblr_t_tl
+        \__tblr_prop_if_in:nxTF { hline } { [#1][#2] / text }
+          { \__tblr_prop_item:ne { hline } { [#1][#2] / text } }
           { \__tblr_get_hline_dash:nnn {#1} {#2} {1pt} }
-          { \l__tblr_t_tl }
       }
     \dim_set:Nn \l__tblr_h_dim { \box_ht:N \l__tblr_b_box }
     \tl_set:Nx \l__tblr_h_tl
@@ -2447,21 +2445,23 @@
 \cs_generate_variant:Nn \__tblr_build_hline:n { x, V }
 
 %% #1: row number, #2: column number
+%% We will use hline text first even if it is empty
 \cs_new_protected:Npn \__tblr_build_hline_segment:nn #1 #2
   {
     \__tblr_get_col_outer_width_border_width:nNN {#2}
       \l__tblr_w_dim \l__tblr_b_dim
-    \tl_set:Nx \l__tblr_t_tl
-      { \__tblr_prop_item:ne { hline } { [#1][#2] / text } }
     \vbox_set:Nn \l__tblr_c_box
       {
-        \tl_if_empty:NTF \l__tblr_t_tl
+        \__tblr_prop_if_in:nxTF { hline } { [#1][#2] / text }
+          {
+            \hbox_to_wd:nn { \l__tblr_w_dim }
+              { \__tblr_prop_item:ne { hline } { [#1][#2] / text } }
+          }
           {
             %% add an empty hbox to support vbox width
             \tex_hbox:D to \l__tblr_w_dim {}
             \__tblr_get_hline_dash:nnn {#1} {#2} {\l__tblr_w_dim}
           }
-          { \hbox_to_wd:nn { \l__tblr_w_dim } { \l__tblr_t_tl } }
       }
     \box_use:N \l__tblr_c_box
     \skip_horizontal:n { - \l__tblr_b_dim }
@@ -2528,15 +2528,17 @@
   }
 \cs_generate_variant:Nn \__tblr_get_row_inner_height_depth:nNN { V }
 
+%% We will use vline text first even if it is empty
 \cs_new_protected:Npn \__tblr_build_vline:nn #1 #2
   {
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-width } }
-    \tl_set:Nx \l__tblr_t_tl
-      { \__tblr_prop_item:ne { vline } { [#1][#2] / text } }
-    \tl_if_empty:NTF \l__tblr_t_tl
+    \__tblr_prop_if_in:nxTF { vline } { [#1][#2] / text }
+      {
+        \hbox_to_wd:nn { \l__tblr_w_tl }
+          { \__tblr_prop_item:ne { vline } { [#1][#2] / text } }
+      }
       { \__tblr_build_vline_dash:nn {#1} {#2} }
-      { \hbox_to_wd:nn { \l__tblr_w_tl } { \l__tblr_t_tl } }
   }
 
 \cs_new_protected:Npn \__tblr_build_vline_dash:nn #1 #2
