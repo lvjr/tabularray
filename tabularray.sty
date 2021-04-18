@@ -754,6 +754,7 @@
 
 \cs_new_protected:Npn \buildtblr #1 #2 #3
   {
+    \mode_leave_vertical:
     \int_gincr:N \g_tblr_level_int
     \__tblr_clear_prop_lists:
     \__tblr_enable_table_commands:
