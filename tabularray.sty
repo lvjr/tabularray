@@ -34,7 +34,6 @@
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
 \cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
-\cs_generate_variant:Nn \tl_if_blank:nTF { xTF }
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { xn } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T, TF }
@@ -70,6 +69,7 @@
 \box_new:N \l__tblr_a_box
 \box_new:N \l__tblr_b_box
 \box_new:N \l__tblr_c_box % for cell box
+\box_new:N \l__tblr_d_box
 
 \int_new:N \g_tblr_level_int % store table nesting level
 
@@ -261,12 +261,29 @@
   }
 \cs_generate_variant:Nn \__tblr_dash_style_make_boxes:nnn { nxx }
 
+\cs_new_protected:Npn \__tblr_get_hline_dash_style:N #1
+  {
+    \tl_set:Nx \l_tmpa_tl
+      { \prop_item:NV \g__tblr_defined_hdash_styles_prop #1 }
+    \tl_if_empty:NF \l_tmpa_tl { \tl_set_eq:NN #1 \l_tmpa_tl }
+  }
+
+\cs_new_protected:Npn \__tblr_get_vline_dash_style:N #1
+  {
+    \tl_set:Nx \l_tmpa_tl
+      { \prop_item:NV \g__tblr_defined_vdash_styles_prop #1 }
+    \tl_if_empty:NF \l_tmpa_tl { \tl_set_eq:NN #1 \l_tmpa_tl }
+  }
+
 \NewDashStyle {dashed} {on ~ 2pt ~ off ~ 2pt}
 \NewDashStyle {dotted} {on ~ 0.4pt ~ off ~ 1pt}
 
 %%% --------------------------------------------------------
-%%  \section{Set Hlines}
+%%  \section{Set Hlines and Vlines}
 %%% --------------------------------------------------------
+
+\tl_set:Nn \@tblr@dash { dash }
+\tl_set:Nn \@tblr@text { text }
 
 %% Add \SetHline, \hline and \cline commands
 
@@ -285,8 +302,7 @@
   {
     \__tblr_set_hline_num:n {#2}
     \tl_clear:N \l__tblr_hline_dash_tl
-    \keys_set:nn { tblr-hline } { ds = \hrule, #1 }
-    \__tblr_get_hline_dash_style:N \l__tblr_hline_dash_tl
+    \keys_set:nn { tblr-hline } { ds = solid, #1 }
     \__tblr_set_hline_cmd:n {#3}
   }
 
@@ -315,13 +331,10 @@
       }
   }
 
-%% The keys hline-text and hline-dash are mutually exclusive.
-%% When hline-text is set, hline-dash will be ignored.
-
 \keys_define:nn { tblr-hline }
   {
-    ds .tl_set:N = \l__tblr_hline_dash_tl,
-    tt .code:n = \__tblr_hline_spec_main:nn { text } {#1},
+    ds .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 },
+    tt .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text #1 },
     tk .code:n = \__tblr_hline_spec_sub:nn { thickness } { \dim_eval:n {#1} },
     fg .code:n = \__tblr_hline_spec_sub:nn { foreground } {#1},
   }
@@ -339,17 +352,10 @@
     \int_step_inline:nn { \l_tblr_col_count_int }
       {
         \__tblr_prop_gput:nxx { hline }
-          { [\int_use:N \rownum][##1][\l__tblr_hline_num_tl] / #1 } {#2}
+          { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / #1 } {#2}
       }
   }
 \cs_generate_variant:Nn \__tblr_hline_spec_sub:nn { nV }
-
-\cs_new_protected:Npn \__tblr_get_hline_dash_style:N #1
-  {
-    \tl_set:Nx \l_tmpa_tl
-      { \prop_item:NV \g__tblr_defined_hdash_styles_prop #1 }
-    \tl_if_empty:NF \l_tmpa_tl { \tl_set_eq:NN #1 \l_tmpa_tl }
-  }
 
 \cs_new_protected_nopar:Npn \__tblr_set_hline_cmd:n #1
   {
@@ -369,15 +375,11 @@
       { \tl_set:Nn \l_tmpa_tl {#2} }
     \int_step_inline:nnn {#1} { \l_tmpa_tl }
       {
-        \__tblr_prop_gput:nxV { hline }
-          { [\int_use:N \rownum][##1][\l__tblr_hline_num_tl] / @dash }
-          \l__tblr_hline_dash_tl
+        \__tblr_prop_gput:nxx { hline }
+          { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / @dash }
+          { \l__tblr_hline_dash_tl }
       }
   }
-
-%%% --------------------------------------------------------
-%%  \section{Set Vlines}
-%%% --------------------------------------------------------
 
 %% Add \SetVline, \vline and \rline commands
 
@@ -396,8 +398,7 @@
   {
     \__tblr_set_vline_num:n {#2}
     \tl_clear:N \l__tblr_vline_dash_tl
-    \keys_set:nn { tblr-vline } { ds = \vrule, #1 }
-    \__tblr_get_vline_dash_style:N \l__tblr_vline_dash_tl
+    \keys_set:nn { tblr-vline } { ds = solid, #1 }
     \__tblr_set_vline_cmd:n {#3}
   }
 
@@ -426,13 +427,10 @@
       }
   }
 
-%% The keys vline-text and vline-dash are mutually exclusive.
-%% When vline-text is set, vline-dash will be ignored.
-
 \keys_define:nn { tblr-vline }
   {
-    ds .tl_set:N = \l__tblr_vline_dash_tl,
-    tt .code:n = \__tblr_vline_spec_main:nn { text } {#1},
+    ds .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 },
+    tt .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text #1 },
     tk .code:n = \__tblr_vline_spec_sub:nn { thickness } { \dim_eval:n {#1} },
     fg .code:n = \__tblr_vline_spec_sub:nn { foreground } {#1},
   }
@@ -450,17 +448,10 @@
     \int_step_inline:nn { \l_tblr_row_count_int }
       {
         \__tblr_prop_gput:nxx { vline }
-          { [##1][\int_use:N \colnum][\l__tblr_vline_num_tl] / #1 } {#2}
+          { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / #1 } {#2}
       }
   }
 \cs_generate_variant:Nn \__tblr_vline_spec_sub:nn { nV }
-
-\cs_new_protected:Npn \__tblr_get_vline_dash_style:N #1
-  {
-    \tl_set:Nx \l_tmpa_tl
-      { \prop_item:NV \g__tblr_defined_vdash_styles_prop #1 }
-    \tl_if_empty:NF \l_tmpa_tl { \tl_set_eq:NN #1 \l_tmpa_tl }
-  }
 
 \cs_new_protected_nopar:Npn \__tblr_set_vline_cmd:n #1
   {
@@ -481,9 +472,9 @@
       { \tl_set:Nn \l_tmpa_tl {#2} }
     \int_step_inline:nnn {#1} { \l_tmpa_tl }
       {
-        \__tblr_prop_gput:nxV { vline }
-          { [##1][\int_use:N \colnum][\l__tblr_vline_num_tl] / @dash }
-          \l__tblr_vline_dash_tl
+        \__tblr_prop_gput:nxx { vline }
+          { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / @dash }
+          { \l__tblr_vline_dash_tl }
       }
   }
 
@@ -564,21 +555,20 @@
               { \int_compare_p:nNn { \l__tblr_i_tl } = { \rownum } }
               { \int_compare_p:nNn { \l__tblr_j_tl } = { \colnum } }
               {
-                %% I can't clear cell text since there may be some \hline's in it
                 \__tblr_prop_gput:nxx {cell}
                   { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
               }
             \int_compare:nNnF { \l__tblr_i_tl } = { \rownum }
               {
                 \__tblr_prop_gput:nxx {hline}
-                  { [\l__tblr_i_tl][\l__tblr_j_tl] / text } { }
+                  { [\l__tblr_i_tl][\l__tblr_j_tl] / @hline-count } { }
                 \__tblr_prop_gput:nxx {hline}
                   { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
               }
             \int_compare:nNnF { \l__tblr_j_tl } = { \colnum }
               {
                 \__tblr_prop_gput:nxx {vline}
-                  { [\l__tblr_i_tl][\l__tblr_j_tl] / text } { }
+                  { [\l__tblr_i_tl][\l__tblr_j_tl] / @vline-count } { }
                 \__tblr_prop_gput:nxx {vline}
                   { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
               }
@@ -1526,11 +1516,7 @@
 \cs_new_protected:Npn \__tblr_measure_and_update_vline_size:nn #1 #2
   {
     \hbox_set:Nn \l__tblr_b_box
-      {
-        \__tblr_prop_if_in:nxTF { vline } { [#1][#2] / text }
-          { \__tblr_prop_item:ne { vline } { [#1][#2] / text } }
-          { \__tblr_get_vline_dash:nnn {#1} {#2} {1pt} }
-      }
+      { \__tblr_get_vline_dash:nnnn {#1} {#2} {1pt} {1pt} }
     \dim_set:Nn \l__tblr_w_dim { \box_wd:N \l__tblr_b_box }
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-width } }
@@ -1544,20 +1530,36 @@
   }
 
 %% Get vline text, #1: row number, #2: column number, #3: line length
-\cs_new_protected:Npn \__tblr_get_vline_dash:nnn #1 #2 #3
+\cs_new_protected:Npn \__tblr_get_vline_dash:nnnn #1 #2 #3 #4
   {
     \tl_set:Nx \l__tblr_c_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-count } }
     \tl_set:Nx \l__tblr_s_tl
       { \__tblr_prop_item:ne { vline } { [#2] / rulesep } }
+    \tl_set:Nx \l__tblr_h_tl { \dim_eval:n { #3 + #4 } }
     \tl_if_empty:NF \l__tblr_c_tl
       {
         \int_step_inline:nn { \l__tblr_c_tl }
           {
             \tl_set:Nx \l__tblr_d_tl
-              { \__tblr_prop_item:ne { vline } { [#1][#2][##1] / @dash } }
-            \tl_if_empty:NF \l__tblr_d_tl
-              { \vbox_to_ht:nn {#3} { \xleaders \l__tblr_d_tl \vfil } }
+              { \__tblr_prop_item:ne { vline } { [#1][#2](##1) / @dash } }
+            \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
+            \tl_set:Nx \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
+            \vbox_to_ht:nn {\l__tblr_h_tl}
+              {
+                \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
+                  {
+                    \__tblr_get_vline_dash_style:N \l__tblr_b_tl
+                    \xleaders \l__tblr_b_tl \vfil
+                  }
+                  {
+                    \hbox_set:Nn \l__tblr_d_box { \l__tblr_b_tl }
+                    \box_set_ht:Nn \l__tblr_d_box {#3}
+                    \box_set_dp:Nn \l__tblr_d_box {#4}
+                    \box_use:N \l__tblr_d_box
+                    \hrule height ~ 0pt
+                  }
+              }
             \skip_horizontal:n { \l__tblr_s_tl }
           }
         \skip_horizontal:n { - \l__tblr_s_tl }
@@ -1569,12 +1571,7 @@
 %% We will use hline text first even if it is empty
 \cs_new_protected:Npn \__tblr_measure_and_update_hline_size:nn #1 #2
   {
-    \vbox_set:Nn \l__tblr_b_box
-      {
-        \__tblr_prop_if_in:nxTF { hline } { [#1][#2] / text }
-          { \__tblr_prop_item:ne { hline } { [#1][#2] / text } }
-          { \__tblr_get_hline_dash:nnn {#1} {#2} {1pt} }
-      }
+    \vbox_set:Nn \l__tblr_b_box { \__tblr_get_hline_dash:nnn {#1} {#2} {1pt} }
     \dim_set:Nn \l__tblr_h_dim { \box_ht:N \l__tblr_b_box }
     \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne { hline } { [#1] / @hline-height } }
@@ -1600,9 +1597,18 @@
           {
             \hrule height ~ 0pt % remove lineskip
             \tl_set:Nx \l__tblr_d_tl
-              { \__tblr_prop_item:ne { hline } { [#1][#2][##1] / @dash } }
-            \tl_if_empty:NF \l__tblr_d_tl
-              { \hbox_to_wd:nn {#3} { \xleaders \l__tblr_d_tl \hfil } }
+              { \__tblr_prop_item:ne { hline } { [#1][#2](##1) / @dash } }
+            \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
+            \tl_set:Nx \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
+            \hbox_to_wd:nn {#3}
+              {
+                \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
+                  {
+                    \__tblr_get_hline_dash_style:N \l__tblr_b_tl
+                    \xleaders \l__tblr_b_tl \hfil
+                  }
+                  { \l__tblr_b_tl }
+              }
             \skip_vertical:n { \l__tblr_s_tl }
           }
         \skip_vertical:n { - \l__tblr_s_tl }
@@ -2445,23 +2451,15 @@
 \cs_generate_variant:Nn \__tblr_build_hline:n { x, V }
 
 %% #1: row number, #2: column number
-%% We will use hline text first even if it is empty
 \cs_new_protected:Npn \__tblr_build_hline_segment:nn #1 #2
   {
     \__tblr_get_col_outer_width_border_width:nNN {#2}
       \l__tblr_w_dim \l__tblr_b_dim
     \vbox_set:Nn \l__tblr_c_box
       {
-        \__tblr_prop_if_in:nxTF { hline } { [#1][#2] / text }
-          {
-            \hbox_to_wd:nn { \l__tblr_w_dim }
-              { \__tblr_prop_item:ne { hline } { [#1][#2] / text } }
-          }
-          {
-            %% add an empty hbox to support vbox width
-            \tex_hbox:D to \l__tblr_w_dim {}
-            \__tblr_get_hline_dash:nnn {#1} {#2} {\l__tblr_w_dim}
-          }
+        %% add an empty hbox to support vbox width
+        \tex_hbox:D to \l__tblr_w_dim {}
+        \__tblr_get_hline_dash:nnn {#1} {#2} { \l__tblr_w_dim }
       }
     \box_use:N \l__tblr_c_box
     \skip_horizontal:n { - \l__tblr_b_dim }
@@ -2528,25 +2526,19 @@
   }
 \cs_generate_variant:Nn \__tblr_get_row_inner_height_depth:nNN { V }
 
-%% We will use vline text first even if it is empty
 \cs_new_protected:Npn \__tblr_build_vline:nn #1 #2
   {
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-width } }
-    \__tblr_prop_if_in:nxTF { vline } { [#1][#2] / text }
-      {
-        \hbox_to_wd:nn { \l__tblr_w_tl }
-          { \__tblr_prop_item:ne { vline } { [#1][#2] / text } }
-      }
-      { \__tblr_build_vline_dash:nn {#1} {#2} }
+    \__tblr_build_vline_dash:nn {#1} {#2}
   }
 
 \cs_new_protected:Npn \__tblr_build_vline_dash:nn #1 #2
   {
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
       {
-        \__tblr_get_vline_dash:nnn {#1} {#2}
-          { \dim_eval:n { \l__tblr_h_dim + \l__tblr_d_dim } }
+        \__tblr_get_vline_dash:nnnn {#1} {#2}
+          { \dim_eval:n { \l__tblr_h_dim } } { \dim_eval:n { \l__tblr_d_dim } }
       }
     \vbox_set:Nn \l__tblr_c_box { \box_use:N \l__tblr_a_box }
     \box_set_ht:Nn \l__tblr_c_box { \dim_use:N \l__tblr_h_dim }
