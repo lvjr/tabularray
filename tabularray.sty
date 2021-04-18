@@ -48,6 +48,7 @@
 \tl_new:N  \l__tblr_i_tl  % for row index
 \tl_new:N  \l__tblr_j_tl  % for column index
 \tl_new:N  \l__tblr_k_tl
+\tl_new:N  \l__tblr_n_tl
 \tl_new:N  \l__tblr_r_tl
 \tl_new:N  \l__tblr_s_tl
 \tl_new:N  \l__tblr_t_tl
@@ -1512,107 +1513,100 @@
 
 %% Measure and update thickness of the vline
 %% #1: row number, #2 column number
-%% We will use vline text first even if it is empty
 \cs_new_protected:Npn \__tblr_measure_and_update_vline_size:nn #1 #2
   {
-    \hbox_set:Nn \l__tblr_b_box
-      { \__tblr_get_vline_dash:nnnn {#1} {#2} {1pt} {1pt} }
-    \dim_set:Nn \l__tblr_w_dim { \box_wd:N \l__tblr_b_box }
-    \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { vline } { [#2] / @vline-width } }
-    \bool_lazy_or:nnT
-      { \tl_if_empty_p:N \l__tblr_w_tl }
-      { \dim_compare_p:nNn { \dim_use:N \l__tblr_w_dim } > { \l__tblr_w_tl } }
+    \dim_zero:N \l__tblr_w_dim
+    \tl_set:Nx \l__tblr_n_tl
+      { \__tblr_prop_item:ne { vline } { [#2] / @vline-count } }
+    \tl_if_empty:NF \l__tblr_n_tl
       {
-        \__tblr_prop_gput:nxx { vline }
-          { [#2]/ @vline-width } { \dim_use:N \l__tblr_w_dim }
+        \tl_set:Nx \l__tblr_s_tl
+          { \__tblr_prop_item:ne { vline } { [#2] / rulesep } }
+        \int_step_inline:nn { \l__tblr_n_tl }
+          {
+            \vbox_set_to_ht:Nnn \l__tblr_b_box {1pt}
+              {
+                \__tblr_get_vline_segment_child:nnnnn
+                  {#1} {#2} {##1} {1pt} {1pt}
+              }
+            \tl_set:Nx \l__tblr_w_tl { \dim_eval:n { \box_wd:N \l__tblr_b_box } }
+            \__tblr_prop_gput_if_larger:nxx { vline }
+              { [#2](##1) / @vline-width } { \l__tblr_w_tl }
+            \dim_add:Nn \l__tblr_w_dim { \l__tblr_w_tl }
+            \dim_add:Nn \l__tblr_w_dim { \l__tblr_s_tl }
+          }
+        \dim_add:Nn \l__tblr_w_dim { - \l__tblr_s_tl }
       }
+    \__tblr_prop_gput_if_larger:nxx { vline }
+      { [#2]/ @vline-width } { \dim_use:N \l__tblr_w_dim }
   }
 
-%% Get vline text, #1: row number, #2: column number, #3: line length
-\cs_new_protected:Npn \__tblr_get_vline_dash:nnnn #1 #2 #3 #4
+%% Get text of a vline segment
+%% #1: row number, #2: column number; #3: index number; #4: height; #5: depth
+\cs_new_protected:Npn \__tblr_get_vline_segment_child:nnnnn #1 #2 #3 #4 #5
   {
-    \tl_set:Nx \l__tblr_c_tl
-      { \__tblr_prop_item:ne { vline } { [#2] / @vline-count } }
-    \tl_set:Nx \l__tblr_s_tl
-      { \__tblr_prop_item:ne { vline } { [#2] / rulesep } }
-    \tl_set:Nx \l__tblr_h_tl { \dim_eval:n { #3 + #4 } }
-    \tl_if_empty:NF \l__tblr_c_tl
+    \tl_set:Nx \l__tblr_d_tl
+      { \__tblr_prop_item:ne { vline } { [#1][#2](#3) / @dash } }
+    \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
+    \tl_set:Nx \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
+    \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
       {
-        \int_step_inline:nn { \l__tblr_c_tl }
-          {
-            \tl_set:Nx \l__tblr_d_tl
-              { \__tblr_prop_item:ne { vline } { [#1][#2](##1) / @dash } }
-            \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
-            \tl_set:Nx \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
-            \vbox_to_ht:nn {\l__tblr_h_tl}
-              {
-                \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
-                  {
-                    \__tblr_get_vline_dash_style:N \l__tblr_b_tl
-                    \xleaders \l__tblr_b_tl \vfil
-                  }
-                  {
-                    \hbox_set:Nn \l__tblr_d_box { \l__tblr_b_tl }
-                    \box_set_ht:Nn \l__tblr_d_box {#3}
-                    \box_set_dp:Nn \l__tblr_d_box {#4}
-                    \box_use:N \l__tblr_d_box
-                    \hrule height ~ 0pt
-                  }
-              }
-            \skip_horizontal:n { \l__tblr_s_tl }
-          }
-        \skip_horizontal:n { - \l__tblr_s_tl }
+        \__tblr_get_vline_dash_style:N \l__tblr_b_tl
+        \xleaders \l__tblr_b_tl \vfil
+      }
+      {
+        \hbox_set:Nn \l__tblr_d_box { \l__tblr_b_tl }
+        \box_set_ht:Nn \l__tblr_d_box {#4}
+        \box_set_dp:Nn \l__tblr_d_box {#5}
+        \box_use:N \l__tblr_d_box
       }
   }
 
 %% Measure and update thickness of the hline
 %% #1: row number, #2 column number
-%% We will use hline text first even if it is empty
 \cs_new_protected:Npn \__tblr_measure_and_update_hline_size:nn #1 #2
   {
-    \vbox_set:Nn \l__tblr_b_box { \__tblr_get_hline_dash:nnn {#1} {#2} {1pt} }
-    \dim_set:Nn \l__tblr_h_dim { \box_ht:N \l__tblr_b_box }
-    \tl_set:Nx \l__tblr_h_tl
-      { \__tblr_prop_item:ne { hline } { [#1] / @hline-height } }
-    \bool_lazy_or:nnT
-      { \tl_if_empty_p:N \l__tblr_h_tl }
-      { \dim_compare_p:nNn { \dim_use:N \l__tblr_h_dim } > { \l__tblr_h_tl } }
+    \dim_zero:N \l__tblr_h_dim
+    \tl_set:Nx \l__tblr_n_tl
+      { \__tblr_prop_item:ne { hline } { [#1] / @hline-count } }
+    \tl_if_empty:NF \l__tblr_n_tl
       {
-        \__tblr_prop_gput:nxx { hline }
-          { [#1] / @hline-height } { \dim_use:N \l__tblr_h_dim }
+        \tl_set:Nx \l__tblr_s_tl
+          { \__tblr_prop_item:ne { hline } { [#1] / rulesep } }
+        \int_step_inline:nn { \l__tblr_n_tl }
+          {
+            \hbox_set_to_wd:Nnn \l__tblr_b_box {1pt}
+              { \__tblr_get_hline_segment_child:nnn {#1} {#2} {##1} }
+            \tl_set:Nx \l__tblr_h_tl
+              {
+                \dim_eval:n
+                  { \box_ht:N \l__tblr_b_box + \box_dp:N \l__tblr_b_box }
+              }
+            \__tblr_prop_gput_if_larger:nxx { hline }
+              { [#1](##1) / @hline-height } { \l__tblr_h_tl }
+            \dim_add:Nn \l__tblr_h_dim { \l__tblr_h_tl }
+            \dim_add:Nn \l__tblr_h_dim { \l__tblr_s_tl }
+          }
+        \dim_add:Nn \l__tblr_h_dim { - \l__tblr_s_tl }
       }
+    \__tblr_prop_gput_if_larger:nxx { hline }
+      { [#1] / @hline-height } { \dim_use:N \l__tblr_h_dim }
   }
 
-%% Get hline text, #1: row number, #2: column number, #3: line length
-\cs_new_protected:Npn \__tblr_get_hline_dash:nnn #1 #2 #3
+%% Get text of a hline segment
+%% #1: row number, #2: column number; #3: index number
+\cs_new_protected:Npn \__tblr_get_hline_segment_child:nnn #1 #2 #3
   {
-    \tl_set:Nx \l__tblr_c_tl
-      { \__tblr_prop_item:ne { hline } { [#1] / @hline-count } }
-    \tl_set:Nx \l__tblr_s_tl
-      { \__tblr_prop_item:ne { hline } { [#1] / rulesep } }
-    \tl_if_empty:NF \l__tblr_c_tl
+    \tl_set:Nx \l__tblr_d_tl
+      { \__tblr_prop_item:ne { hline } { [#1][#2](#3) / @dash } }
+    \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
+    \tl_set:Nx \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
+    \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
       {
-        \int_step_inline:nn { \l__tblr_c_tl }
-          {
-            \hrule height ~ 0pt % remove lineskip
-            \tl_set:Nx \l__tblr_d_tl
-              { \__tblr_prop_item:ne { hline } { [#1][#2](##1) / @dash } }
-            \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
-            \tl_set:Nx \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
-            \hbox_to_wd:nn {#3}
-              {
-                \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
-                  {
-                    \__tblr_get_hline_dash_style:N \l__tblr_b_tl
-                    \xleaders \l__tblr_b_tl \hfil
-                  }
-                  { \l__tblr_b_tl }
-              }
-            \skip_vertical:n { \l__tblr_s_tl }
-          }
-        \skip_vertical:n { - \l__tblr_s_tl }
+        \__tblr_get_hline_dash_style:N \l__tblr_b_tl
+        \xleaders \l__tblr_b_tl \hfil
       }
+      { \l__tblr_b_tl }
   }
 
 %% Calculate the width and height for every cell
@@ -2453,16 +2447,35 @@
 %% #1: row number, #2: column number
 \cs_new_protected:Npn \__tblr_build_hline_segment:nn #1 #2
   {
-    \__tblr_get_col_outer_width_border_width:nNN {#2}
-      \l__tblr_w_dim \l__tblr_b_dim
-    \vbox_set:Nn \l__tblr_c_box
+    \tl_set:Nx \l__tblr_n_tl
+      { \__tblr_prop_item:ne { hline } { [#1] / @hline-count } }
+    \tl_if_empty:NF \l__tblr_n_tl
       {
-        %% add an empty hbox to support vbox width
-        \tex_hbox:D to \l__tblr_w_dim {}
-        \__tblr_get_hline_dash:nnn {#1} {#2} { \l__tblr_w_dim }
+        \__tblr_get_col_outer_width_border_width:nNN {#2}
+          \l__tblr_w_dim \l__tblr_b_dim
+        \tl_set:Nx \l__tblr_s_tl
+          { \__tblr_prop_item:ne { hline } { [#1] / rulesep } }
+        \vbox_set:Nn \l__tblr_c_box
+          {
+            %% add an empty hbox to support vbox width
+            \tex_hbox:D to \l__tblr_w_dim {}
+            \int_step_inline:nn { \l__tblr_n_tl }
+              {
+                \tl_set:Nx \l__tblr_h_tl
+                  { \__tblr_prop_item:ne { hline } { [#1](##1) / @hline-height } }
+                \hrule height ~ 0pt % remove lineskip
+                \hbox_set_to_wd:Nnn \l__tblr_b_box { \l__tblr_w_dim }
+                  { \__tblr_get_hline_segment_child:nnn {#1} {#2} {##1} }
+                \box_set_ht:Nn \l__tblr_b_box { \l__tblr_h_tl }
+                \box_set_dp:Nn \l__tblr_b_box { 0pt }
+                \box_use:N \l__tblr_b_box
+                \skip_vertical:n { \l__tblr_s_tl }
+              }
+            \skip_vertical:n { - \l__tblr_s_tl }
+          }
+        \box_use:N \l__tblr_c_box
+        \skip_horizontal:n { - \l__tblr_b_dim }
       }
-    \box_use:N \l__tblr_c_box
-    \skip_horizontal:n { - \l__tblr_b_dim }
   }
 
 %% Read from table specifications and calculate the widths of row and border
@@ -2492,10 +2505,10 @@
     \vrule width ~ 0pt ~ height ~ \l__tblr_h_dim ~ depth ~ \l__tblr_d_dim
     \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
       {
-        \__tblr_build_vline:nn { #1 } { \l__tblr_j_tl }
+        \__tblr_build_vline_segment:nn { #1 } { \l__tblr_j_tl }
         \__tblr_build_cell:NN #1 \l__tblr_j_tl
       }
-    \__tblr_build_vline:nn { #1 } { \int_eval:n {\l_tblr_col_count_int + 1} }
+    \__tblr_build_vline_segment:nn { #1 } { \int_eval:n {\l_tblr_col_count_int + 1} }
   }
 
 %% Read from table specifications and calculate inner height/depth of the row
@@ -2526,24 +2539,39 @@
   }
 \cs_generate_variant:Nn \__tblr_get_row_inner_height_depth:nNN { V }
 
-\cs_new_protected:Npn \__tblr_build_vline:nn #1 #2
+%% #1: row number, #2: column number
+\cs_new_protected:Npn \__tblr_build_vline_segment:nn #1 #2
   {
-    \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { vline } { [#2] / @vline-width } }
-    \__tblr_build_vline_dash:nn {#1} {#2}
-  }
-
-\cs_new_protected:Npn \__tblr_build_vline_dash:nn #1 #2
-  {
-    \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
+    \tl_set:Nx \l__tblr_n_tl
+      { \__tblr_prop_item:ne { vline } { [#2] / @vline-count } }
+    \tl_if_empty:NF \l__tblr_n_tl
       {
-        \__tblr_get_vline_dash:nnnn {#1} {#2}
-          { \dim_eval:n { \l__tblr_h_dim } } { \dim_eval:n { \l__tblr_d_dim } }
+        \tl_set:Nx \l__tblr_s_tl
+          { \__tblr_prop_item:ne { vline } { [#2] / rulesep } }
+        \hbox_set:Nn \l__tblr_a_box
+          {
+            \int_step_inline:nn { \l__tblr_n_tl }
+              {
+                \tl_set:Nx \l__tblr_w_tl
+                  { \__tblr_prop_item:ne { vline } { [#2](##1) / @vline-width } }
+                \vbox_set_to_ht:Nnn \l__tblr_b_box
+                  { \dim_eval:n { \l__tblr_h_dim + \l__tblr_d_dim } }
+                  {
+                    \__tblr_get_vline_segment_child:nnnnn {#1} {#2} {##1}
+                      { \dim_eval:n { \l__tblr_h_dim } }
+                      { \dim_eval:n { \l__tblr_d_dim } }
+                  }
+                \box_set_wd:Nn \l__tblr_b_box { \l__tblr_w_tl }
+                \box_use:N \l__tblr_b_box
+                \skip_horizontal:n { \l__tblr_s_tl }
+              }
+            \skip_horizontal:n { - \l__tblr_s_tl }
+          }
+        \vbox_set:Nn \l__tblr_c_box { \box_use:N \l__tblr_a_box }
+        \box_set_ht:Nn \l__tblr_c_box { \dim_use:N \l__tblr_h_dim }
+        \box_set_dp:Nn \l__tblr_c_box { \dim_use:N \l__tblr_d_dim }
+        \box_use:N \l__tblr_c_box
       }
-    \vbox_set:Nn \l__tblr_c_box { \box_use:N \l__tblr_a_box }
-    \box_set_ht:Nn \l__tblr_c_box { \dim_use:N \l__tblr_h_dim }
-    \box_set_dp:Nn \l__tblr_c_box { \dim_use:N \l__tblr_d_dim }
-    \box_use:N \l__tblr_c_box
   }
 
 \cs_new_protected:Npn \__tblr_build_cell:NN #1 #2
