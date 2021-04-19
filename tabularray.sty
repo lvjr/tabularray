@@ -210,7 +210,7 @@
         \__tblr_set_row_col_from_key_name:w ##1
         ##2
       }
-    \__tblr_prop_log:n {cell}
+    \LogTblrTracing { cell }
   }
 
 \cs_new_protected:Npn \__tblr_set_row_col_from_key_name:w [#1][#2]
@@ -759,7 +759,7 @@
     \__tblr_clear_prop_lists:
     \__tblr_enable_table_commands:
     \__tblr_split_table:n { #3 }
-    \prop_log:N \l__tblr_table_commands_prop
+    \LogTblrTracing { command }
     \__tblr_initial_table_spec:
     \__tblr_parse_table_spec:n { #2 }
     \__tblr_execute_table_commands:
@@ -849,7 +849,7 @@
 \cs_new_protected:Npn \__tblr_split_lines_to_cells:N #1
   {
     \seq_map_indexed_function:NN #1 \__tblr_split_one_line:nn
-    \__tblr_prop_log:n {text}
+    \LogTblrTracing { text }
   }
 
 %% Split one line into cells and store them
@@ -1416,7 +1416,7 @@
   {
     \bool_do_until:Nn \g__tblr_colrow_spec_expand_stop_bool
       {
-        \tl_log:N #1
+        \LogTblrTracing { colspec, rowspec }
         \bool_gset_true:N \g__tblr_colrow_spec_expand_stop_bool
         \tl_set_eq:NN \l_tmpa_tl #1
         \tl_gclear:N #1
@@ -1478,11 +1478,7 @@
   {
     \__tblr_calculate_line_sizes:
     \__tblr_calculate_cell_sizes:
-    \__tblr_prop_log:n {cell}
-    \__tblr_prop_log:n {row}
-    \__tblr_prop_log:n {column}
-    \__tblr_prop_log:n {hline}
-    \__tblr_prop_log:n {vline}
+    \LogTblrTracing { cell, row, column, hline, vline }
     \__tblr_compute_extendable_column_width:
     \__tblr_adjust_sizes_for_span_cells:
   }
@@ -1905,9 +1901,7 @@
       }
     \tl_if_empty:NF \l__tblr_a_tl
       { \dim_sub:Nn \l__column_target_dim { \l__tblr_a_tl } }
-    \dim_log:N \l__column_target_dim
-    \prop_log:N \l__column_coefficient_prop
-    \prop_log:N \l__column_natural_width_prop
+    \LogTblrTracing { target }
   }
 
 %% If all columns have negative coefficients and small natural widths,
@@ -1968,9 +1962,7 @@
               }
           }
       }
-    \dim_log:N \l__column_target_dim
-    \prop_log:N \l__column_coefficient_prop
-    \prop_log:N \l__column_computed_width_prop
+    \LogTblrTracing { target }
   }
 
 \cs_new_protected:Npn \__tblr_adjust_extendable_column_width_negative:
@@ -1987,9 +1979,7 @@
         \__tblr_increase_prop_dimen_value:Nnn
           \l__column_computed_width_prop { ##1 } { \l_tmpb_tl }
       }
-    \dim_log:N \l__column_target_dim
-    \prop_log:N \l__column_coefficient_prop
-    \prop_log:N \l__column_computed_width_prop
+    \LogTblrTracing { target }
   }
 
 %% #1: the prop list, #2: the key, #3: the dimen to add
@@ -2021,7 +2011,7 @@
             \__tblr_collect_span_widths:
             \__tblr_set_column_widths_from_span_widths:
           }
-        \__tblr_prop_log:n {column}
+        \LogTblrTracing {column}
         \__tblr_calculate_cell_sizes:
       }
     \__tblr_prop_if_in:nnT {table} {rowspan}
@@ -2029,7 +2019,7 @@
         \__tblr_collect_row_heights_skips:
         \__tblr_collect_span_heights:
         \__tblr_set_row_heights_from_span_heights:
-        \__tblr_prop_log:n {row}
+        \LogTblrTracing {row}
       }
   }
 
@@ -2065,7 +2055,8 @@
         \prop_put:Nxx \l__tblr_item_skip_size_prop { item[\l__tblr_j_tl] }
           { \__tblr_prop_item:ne {column} { [\l__tblr_j_tl] / @col-width } }
       }
-    \prop_log:N \l__tblr_item_skip_size_prop
+    \__tblr_do_if_tracing:nn { cellspan }
+      { \prop_log:N \l__tblr_item_skip_size_prop }
   }
 
 \cs_new_protected:Npn \__tblr_collect_row_heights_skips:
@@ -2098,7 +2089,8 @@
         \prop_put:Nxx \l__tblr_item_skip_size_prop
           { item[\l__tblr_i_tl] } { \l__tblr_h_tl }
       }
-    \prop_log:N \l__tblr_item_skip_size_prop
+    \__tblr_do_if_tracing:nn { cellspan }
+      { \prop_log:N \l__tblr_item_skip_size_prop }
   }
 
 %% #1: row number; #2: tl with result
@@ -2146,7 +2138,8 @@
               }
           }
       }
-    \prop_log:N \l__tblr_span_size_prop
+    \__tblr_do_if_tracing:nn { cellspan }
+      { \prop_log:N \l__tblr_span_size_prop }
   }
 
 \prop_new:N \l__tblr_span_cell_prop
@@ -2217,8 +2210,11 @@
               }
           }
       }
-    \prop_log:N \l__tblr_span_cell_prop
-    \prop_log:N \l__tblr_span_size_prop
+    \__tblr_do_if_tracing:nn { cellspan }
+      {
+        \prop_log:N \l__tblr_span_cell_prop
+        \prop_log:N \l__tblr_span_size_prop
+      }
   }
 
 %% Compute and set column widths from span widths
@@ -2261,7 +2257,11 @@
                 \int_step_variable:nnNn
                   { \l__tblr_i_tl } { \l__tblr_j_tl - 1 } \l__tblr_k_tl
                   {
-                    \tl_log:x { \l__tblr_j_tl : \l__tblr_i_tl -> \l__tblr_k_tl }
+                    \__tblr_do_if_tracing:nn { cellspan }
+                      {
+                        \tl_log:x
+                          { \l__tblr_j_tl : \l__tblr_i_tl -> \l__tblr_k_tl }
+                      }
                     \tl_set:Nx \l_tmpa_tl
                       {
                         \prop_item:Ne #2 { itemskip[\l__tblr_k_tl] }
@@ -2289,7 +2289,7 @@
               { itemskip[\l__tblr_j_tl] } { \dim_use:N \l__tblr_w_dim }
           }
       }
-    \prop_log:N #2
+    \__tblr_do_if_tracing:nn { cellspan } { \prop_log:N #2 }
   }
 \cs_generate_variant:Nn \__tblr_calc_item_sizes_from_span_sizes:nNN { x }
 
@@ -2849,6 +2849,181 @@
         \__tblr_prop_item:ne { row }
           { [\int_eval:n {#1 + \l__tblr_r_tl - 1}] / rowsep-below }
       }
+  }
+
+
+%%% --------------------------------------------------------
+%%  \section{Tracing Tabularray}
+%%% --------------------------------------------------------
+
+\NewDocumentCommand \SetTabularrayTracing { m }
+  {
+    \keys_set:nn { tblr-set-tracing } {#1}
+  }
+\cs_new_eq:NN \SetTblrTracing \SetTabularrayTracing
+
+\bool_new:N \g__tblr_tracing_text_bool
+\bool_new:N \g__tblr_tracing_table_bool
+\bool_new:N \g__tblr_tracing_column_bool
+\bool_new:N \g__tblr_tracing_row_bool
+\bool_new:N \g__tblr_tracing_cell_bool
+\bool_new:N \g__tblr_tracing_vline_bool
+\bool_new:N \g__tblr_tracing_hline_bool
+\bool_new:N \g__tblr_tracing_colspec_bool
+\bool_new:N \g__tblr_tracing_rowspec_bool
+\bool_new:N \g__tblr_tracing_target_bool
+\bool_new:N \g__tblr_tracing_cellspan_bool
+\bool_new:N \g__tblr_tracing_command_bool
+
+\keys_define:nn { tblr-set-tracing }
+  {
+    +text .code:n = \bool_gset_true:N \g__tblr_tracing_text_bool,
+    -text .code:n = \bool_gset_false:N \g__tblr_tracing_text_bool,
+    +table .code:n = \bool_gset_true:N \g__tblr_tracing_table_bool,
+    -table .code:n = \bool_gset_false:N \g__tblr_tracing_table_bool,
+    +column .code:n = \bool_gset_true:N \g__tblr_tracing_column_bool,
+    -column .code:n = \bool_gset_false:N \g__tblr_tracing_column_bool,
+    +row .code:n = \bool_gset_true:N \g__tblr_tracing_row_bool,
+    -row .code:n = \bool_gset_false:N \g__tblr_tracing_row_bool,
+    +cell .code:n = \bool_gset_true:N \g__tblr_tracing_cell_bool,
+    -cell .code:n = \bool_gset_false:N \g__tblr_tracing_cell_bool,
+    +vline .code:n = \bool_gset_true:N \g__tblr_tracing_vline_bool,
+    -vline .code:n = \bool_gset_false:N \g__tblr_tracing_vline_bool,
+    +hline .code:n = \bool_gset_true:N \g__tblr_tracing_hline_bool,
+    -hline .code:n = \bool_gset_false:N \g__tblr_tracing_hline_bool,
+    +colspec .code:n = \bool_gset_true:N \g__tblr_tracing_colspec_bool,
+    -colspec .code:n = \bool_gset_false:N \g__tblr_tracing_colspec_bool,
+    +rowspec .code:n = \bool_gset_true:N \g__tblr_tracing_rowspec_bool,
+    -rowspec .code:n = \bool_gset_false:N \g__tblr_tracing_rowspec_bool,
+    +target .code:n = \bool_gset_true:N \g__tblr_tracing_target_bool,
+    -target .code:n = \bool_gset_false:N \g__tblr_tracing_target_bool,
+    +cellspan .code:n = \bool_gset_true:N \g__tblr_tracing_cellspan_bool,
+    -cellspan .code:n = \bool_gset_false:N \g__tblr_tracing_cellspan_bool,
+    +command .code:n = \bool_gset_true:N \g__tblr_tracing_command_bool,
+    -command .code:n = \bool_gset_false:N \g__tblr_tracing_command_bool,
+    all .code:n = \__tblr_enable_all_tracings:,
+    none .code:n = \__tblr_disable_all_tracings:,
+  }
+
+\cs_new_protected_nopar:Npn \__tblr_enable_all_tracings:
+  {
+    \bool_gset_true:N \g__tblr_tracing_text_bool
+    \bool_gset_true:N \g__tblr_tracing_table_bool
+    \bool_gset_true:N \g__tblr_tracing_column_bool
+    \bool_gset_true:N \g__tblr_tracing_row_bool
+    \bool_gset_true:N \g__tblr_tracing_cell_bool
+    \bool_gset_true:N \g__tblr_tracing_vline_bool
+    \bool_gset_true:N \g__tblr_tracing_hline_bool
+    \bool_gset_true:N \g__tblr_tracing_colspec_bool
+    \bool_gset_true:N \g__tblr_tracing_rowspec_bool
+    \bool_gset_true:N \g__tblr_tracing_target_bool
+    \bool_gset_true:N \g__tblr_tracing_cellspan_bool
+    \bool_gset_true:N \g__tblr_tracing_command_bool
+  }
+
+\cs_new_protected_nopar:Npn \__tblr_disable_all_tracings:
+  {
+    \bool_gset_false:N \g__tblr_tracing_text_bool
+    \bool_gset_false:N \g__tblr_tracing_table_bool
+    \bool_gset_false:N \g__tblr_tracing_column_bool
+    \bool_gset_false:N \g__tblr_tracing_row_bool
+    \bool_gset_false:N \g__tblr_tracing_cell_bool
+    \bool_gset_false:N \g__tblr_tracing_vline_bool
+    \bool_gset_false:N \g__tblr_tracing_hline_bool
+    \bool_gset_false:N \g__tblr_tracing_colspec_bool
+    \bool_gset_false:N \g__tblr_tracing_rowspec_bool
+    \bool_gset_false:N \g__tblr_tracing_target_bool
+    \bool_gset_false:N \g__tblr_tracing_cellspan_bool
+    \bool_gset_false:N \g__tblr_tracing_command_bool
+  }
+
+\NewDocumentCommand \LogTabularrayTracing { m }
+  {
+    \keys_set:nn { tblr-log-tracing } {#1}
+  }
+\cs_new_eq:NN \LogTblrTracing \LogTabularrayTracing
+
+\keys_define:nn { tblr-log-tracing }
+  {
+    unknown .code:n = \__tblr_log_tracing:N \l_keys_key_str
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing:N #1
+  {
+    \bool_if:cT { g__tblr_tracing_ #1 _bool }
+      { \cs:w __tblr_log_tracing _ #1 : \cs_end: }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_text:
+  {
+    \__tblr_prop_log:n { text }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_table:
+  {
+    \__tblr_prop_log:n { table }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_column:
+  {
+    \__tblr_prop_log:n { column }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_row:
+  {
+    \__tblr_prop_log:n { row }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_cell:
+  {
+    \__tblr_prop_log:n { cell }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_vline:
+  {
+    \__tblr_prop_log:n { vline }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_hline:
+  {
+    \__tblr_prop_log:n { hline }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_colspec:
+  {
+    \tl_if_eq:NnT \g__tblr_column_or_row_tl { column }
+      { \tl_log:N \g__tblr_expanded_colrow_spec_tl }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_rowspec:
+  {
+    \tl_if_eq:NnT \g__tblr_column_or_row_tl { row }
+      { \tl_log:N \g__tblr_expanded_colrow_spec_tl }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_target:
+  {
+    \dim_log:N \l__column_target_dim
+    \prop_log:N \l__column_coefficient_prop
+    \prop_log:N \l__column_natural_width_prop
+    \prop_log:N \l__column_computed_width_prop
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_cellspan:
+  {
+    \prop_log:N \l__tblr_item_skip_size_prop
+    \prop_log:N \l__tblr_span_size_prop
+    \prop_log:N \l__tblr_span_cell_prop
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_command:
+  {
+    \prop_log:N \l__tblr_table_commands_prop
+  }
+
+\cs_new_protected:Npn \__tblr_do_if_tracing:nn #1 #2
+  {
+    \bool_if:cT { g__tblr_tracing_ #1 _bool } {#2}
   }
 
 \ExplSyntaxOff
