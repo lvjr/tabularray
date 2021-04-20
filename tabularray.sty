@@ -913,7 +913,7 @@
     \tl_clear:N \l__tblr_saved_table_commands_before_cell_text_tl
     \tl_clear:N \l__tblr_saved_cell_text_after_table_commands_tl
     \int_set:Nn \l__multicolumn_cell_number_int {1}
-    \exp_last_unbraced:NV \__tblr_extract_table_commands_next:N #1 \scan_stop:
+    \exp_last_unbraced:NV \__tblr_extract_table_commands_next:w #1 \scan_stop:
     \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
       {
         \prop_put:NxV \l__tblr_table_commands_prop
@@ -923,7 +923,8 @@
     \tl_set_eq:NN #1 \l__tblr_saved_cell_text_after_table_commands_tl
   }
 
-\cs_new_protected:Npn \__tblr_extract_table_commands_next:N #1
+%% #1 maybe a single token or multiple tokens given in braces
+\cs_new_protected:Npn \__tblr_extract_table_commands_next:w #1
   {
     \clist_if_in:NnTF \g__tblr_table_commands_clist { #1 }
       {
@@ -935,8 +936,12 @@
           { \__tblr_extract_one_table_command:N #1 }
       }
       {
-        \token_if_eq_meaning:NNF #1 \scan_stop:
-          { \__tblr_save_real_cell_text:w #1 }
+        \tl_if_single_token:nTF {#1}
+          {
+            \token_if_eq_meaning:NNF #1 \scan_stop:
+              { \__tblr_save_real_cell_text:w #1 }
+          }
+          { \__tblr_save_real_cell_text:w {#1} }
       }
   }
 
@@ -982,13 +987,14 @@
       }
       {
         \bool_if:NTF \l__tblr_table_command_unbrace_next_bool
-          { \__tblr_last_unbraced:Nn \__tblr_extract_table_commands_next:N }
-          { \__tblr_extract_table_commands_next:N }
+          { \__tblr_last_unbraced:Nn \__tblr_extract_table_commands_next:w }
+          { \__tblr_extract_table_commands_next:w }
       }
   }
 
 \cs_new_protected:Npn \__tblr_last_unbraced:Nn #1 #2 { #1 #2 }
 
+%% The outermost set of braces of cell text #1 will be removed
 \cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \scan_stop:
   {
     \tl_set:Nn \l__tblr_saved_cell_text_after_table_commands_tl {#1}
