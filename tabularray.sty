@@ -106,6 +106,11 @@
     \prop_log:c { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
   }
 
+\cs_new_protected:Npn \__tblr_prop_map_inline:nn #1 #2
+  {
+    \prop_map_inline:cn { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } {#2}
+  }
+
 \cs_new_protected:Npn \__tblr_prop_gput_if_larger:nnn #1 #2 #3
   {
     \__tblr_gput_if_larger:cnn
@@ -205,7 +210,7 @@
 
 \cs_new_protected:Npn \__tblr_execute_table_commands:
   {
-    \prop_map_inline:Nn \l__tblr_table_commands_prop
+    \__tblr_prop_map_inline:nn { command }
       {
         \__tblr_set_row_col_from_key_name:w ##1
         ##2
@@ -772,6 +777,7 @@
 \cs_new_protected:Npn \__tblr_clear_prop_lists:
   {
     \prop_gclear_new:c { g_tblr_text_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g_tblr_command_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g_tblr_table_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g_tblr_row_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g_tblr_column_ \int_use:N \g_tblr_level_int _prop }
@@ -904,7 +910,6 @@
 \clist_gset:Nn \g__tblr_table_commands_unbrace_next_clist {\multirow, \multicolumn}
 \bool_new:N \l__tblr_table_command_unbrace_next_bool
 \int_new:N \l__multicolumn_cell_number_int
-\prop_new:N \l__tblr_table_commands_prop
 \tl_new:N \l__tblr_saved_table_commands_before_cell_text_tl
 \tl_new:N \l__tblr_saved_cell_text_after_table_commands_tl
 
@@ -916,7 +921,7 @@
     \exp_last_unbraced:NV \__tblr_extract_table_commands_next:w #1 \scan_stop:
     \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
       {
-        \prop_put:NxV \l__tblr_table_commands_prop
+        \__tblr_prop_gput:nxV { command }
           {[\int_use:N \rownum][\int_use:N \colnum]}
           \l__tblr_saved_table_commands_before_cell_text_tl
       }
@@ -2869,6 +2874,7 @@
 \cs_new_eq:NN \SetTblrTracing \SetTabularrayTracing
 
 \bool_new:N \g__tblr_tracing_text_bool
+\bool_new:N \g__tblr_tracing_command_bool
 \bool_new:N \g__tblr_tracing_table_bool
 \bool_new:N \g__tblr_tracing_column_bool
 \bool_new:N \g__tblr_tracing_row_bool
@@ -2879,12 +2885,13 @@
 \bool_new:N \g__tblr_tracing_rowspec_bool
 \bool_new:N \g__tblr_tracing_target_bool
 \bool_new:N \g__tblr_tracing_cellspan_bool
-\bool_new:N \g__tblr_tracing_command_bool
 
 \keys_define:nn { tblr-set-tracing }
   {
     +text .code:n = \bool_gset_true:N \g__tblr_tracing_text_bool,
     -text .code:n = \bool_gset_false:N \g__tblr_tracing_text_bool,
+    +command .code:n = \bool_gset_true:N \g__tblr_tracing_command_bool,
+    -command .code:n = \bool_gset_false:N \g__tblr_tracing_command_bool,
     +table .code:n = \bool_gset_true:N \g__tblr_tracing_table_bool,
     -table .code:n = \bool_gset_false:N \g__tblr_tracing_table_bool,
     +column .code:n = \bool_gset_true:N \g__tblr_tracing_column_bool,
@@ -2905,8 +2912,6 @@
     -target .code:n = \bool_gset_false:N \g__tblr_tracing_target_bool,
     +cellspan .code:n = \bool_gset_true:N \g__tblr_tracing_cellspan_bool,
     -cellspan .code:n = \bool_gset_false:N \g__tblr_tracing_cellspan_bool,
-    +command .code:n = \bool_gset_true:N \g__tblr_tracing_command_bool,
-    -command .code:n = \bool_gset_false:N \g__tblr_tracing_command_bool,
     all .code:n = \__tblr_enable_all_tracings:,
     none .code:n = \__tblr_disable_all_tracings:,
   }
@@ -2914,6 +2919,7 @@
 \cs_new_protected_nopar:Npn \__tblr_enable_all_tracings:
   {
     \bool_gset_true:N \g__tblr_tracing_text_bool
+    \bool_gset_true:N \g__tblr_tracing_command_bool
     \bool_gset_true:N \g__tblr_tracing_table_bool
     \bool_gset_true:N \g__tblr_tracing_column_bool
     \bool_gset_true:N \g__tblr_tracing_row_bool
@@ -2924,12 +2930,12 @@
     \bool_gset_true:N \g__tblr_tracing_rowspec_bool
     \bool_gset_true:N \g__tblr_tracing_target_bool
     \bool_gset_true:N \g__tblr_tracing_cellspan_bool
-    \bool_gset_true:N \g__tblr_tracing_command_bool
   }
 
 \cs_new_protected_nopar:Npn \__tblr_disable_all_tracings:
   {
     \bool_gset_false:N \g__tblr_tracing_text_bool
+    \bool_gset_false:N \g__tblr_tracing_command_bool
     \bool_gset_false:N \g__tblr_tracing_table_bool
     \bool_gset_false:N \g__tblr_tracing_column_bool
     \bool_gset_false:N \g__tblr_tracing_row_bool
@@ -2940,7 +2946,6 @@
     \bool_gset_false:N \g__tblr_tracing_rowspec_bool
     \bool_gset_false:N \g__tblr_tracing_target_bool
     \bool_gset_false:N \g__tblr_tracing_cellspan_bool
-    \bool_gset_false:N \g__tblr_tracing_command_bool
   }
 
 \NewDocumentCommand \LogTabularrayTracing { m }
@@ -2963,6 +2968,11 @@
 \cs_new_protected:Npn \__tblr_log_tracing_text:
   {
     \__tblr_prop_log:n { text }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_command:
+  {
+    \__tblr_prop_log:n { command }
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_table:
@@ -3020,11 +3030,6 @@
     \prop_log:N \l__tblr_item_skip_size_prop
     \prop_log:N \l__tblr_span_size_prop
     \prop_log:N \l__tblr_span_cell_prop
-  }
-
-\cs_new_protected:Npn \__tblr_log_tracing_command:
-  {
-    \prop_log:N \l__tblr_table_commands_prop
   }
 
 \cs_new_protected:Npn \__tblr_do_if_tracing:nn #1 #2
