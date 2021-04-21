@@ -535,7 +535,26 @@
                   {[\int_use:N \rownum][\int_use:N \colnum] / span-width} {#1},
     bg .code:n = \__tblr_prop_gput:nxx {cell}
                   {[\int_use:N \rownum][\int_use:N \colnum] / background} {#1},
+    unknown .code:n = \__tblr_cell_unknown_key:V \l_keys_key_str,
   }
+
+\regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
+
+\cs_new_protected:Npn \__tblr_cell_unknown_key:n #1
+  {
+    \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+      {
+        \__tblr_prop_gput:nxx {cell}
+          {[\int_use:N \rownum][\int_use:N \colnum] / background} {#1}
+      }
+      {
+        \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
+        \__tblr_prop_gput:nxx {cell}
+          { [\int_use:N \rownum][\int_use:N \colnum] / span-width }
+          { \dim_eval:n { \l__tblr_v_tl } }
+      }
+  }
+\cs_generate_variant:Nn \__tblr_cell_unknown_key:n { V }
 
 \cs_new_protected:Npn \__tblr_set_span_spec:nn #1 #2
   {
@@ -654,7 +673,6 @@
   }
 
 \regex_const:Nn \c__tblr_is_number_key_regex { ^[\+\-]? (\d+|\d*\.\d+)$ }
-\regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
 
 \cs_new_protected:Npn \__tblr_column_unknown_key:n #1
   {
@@ -670,7 +688,7 @@
               { \int_use:N \colnum } { background } {#1}
           }
           {
-          \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
+            \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
             \__tblr_prop_gput:nxx { column }
               { [\int_use:N \colnum] / width } { \dim_eval:n { \l__tblr_v_tl } }
           }
