@@ -348,7 +348,26 @@
     tt .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text #1 },
     tk .code:n = \__tblr_hline_spec_sub:nn { thickness } { \dim_eval:n {#1} },
     fg .code:n = \__tblr_hline_spec_sub:nn { foreground } {#1},
+    unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
   }
+
+\regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
+
+\cs_new_protected:Npn \__tblr_hline_unknown_key:n #1
+  {
+    \prop_if_in:NnTF \g__tblr_defined_hdash_styles_prop {#1}
+      { \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 } }
+      {
+        \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+          { \__tblr_hline_spec_sub:nn { foreground } {#1} }
+          {
+            \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
+            \__tblr_hline_spec_sub:nx { thickness }
+              { \dim_eval:n {\l__tblr_v_tl} }
+          }
+      }
+  }
+\cs_generate_variant:Nn \__tblr_hline_unknown_key:n { V }
 
 \cs_new_protected:Npn \__tblr_hline_spec_main:nn #1 #2
   {
@@ -366,7 +385,7 @@
           { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / #1 } {#2}
       }
   }
-\cs_generate_variant:Nn \__tblr_hline_spec_sub:nn { nV }
+\cs_generate_variant:Nn \__tblr_hline_spec_sub:nn { nV, nx }
 
 \cs_new_protected_nopar:Npn \__tblr_set_hline_cmd:n #1
   {
@@ -541,8 +560,6 @@
                   {[\int_use:N \rownum][\int_use:N \colnum] / background} {#1},
     unknown .code:n = \__tblr_cell_unknown_key:V \l_keys_key_str,
   }
-
-\regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
 
 \cs_new_protected:Npn \__tblr_cell_unknown_key:n #1
   {
