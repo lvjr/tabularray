@@ -296,6 +296,8 @@
 \tl_set:Nn \@tblr@dash { dash }
 \tl_set:Nn \@tblr@text { text }
 
+\regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
+
 %% Add \SetHline, \hline and \cline commands
 
 \tl_new:N \l__tblr_hline_count_tl % the count of all hlines
@@ -350,8 +352,6 @@
     fg .code:n = \__tblr_hline_spec_sub:nn { foreground } {#1},
     unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
   }
-
-\regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
 
 \cs_new_protected:Npn \__tblr_hline_unknown_key:n #1
   {
@@ -463,7 +463,24 @@
     tt .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text #1 },
     tk .code:n = \__tblr_vline_spec_sub:nn { thickness } { \dim_eval:n {#1} },
     fg .code:n = \__tblr_vline_spec_sub:nn { foreground } {#1},
+    unknown .code:n = \__tblr_vline_unknown_key:V \l_keys_key_str,
   }
+
+\cs_new_protected:Npn \__tblr_vline_unknown_key:n #1
+  {
+    \prop_if_in:NnTF \g__tblr_defined_vdash_styles_prop {#1}
+      { \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 } }
+      {
+        \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+          { \__tblr_vline_spec_sub:nn { foreground } {#1} }
+          {
+            \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
+            \__tblr_vline_spec_sub:nx { thickness }
+              { \dim_eval:n {\l__tblr_v_tl} }
+          }
+      }
+  }
+\cs_generate_variant:Nn \__tblr_vline_unknown_key:n { V }
 
 \cs_new_protected:Npn \__tblr_vline_spec_main:nn #1 #2
   {
@@ -481,7 +498,7 @@
           { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / #1 } {#2}
       }
   }
-\cs_generate_variant:Nn \__tblr_vline_spec_sub:nn { nV }
+\cs_generate_variant:Nn \__tblr_vline_spec_sub:nn { nV, nx }
 
 \cs_new_protected_nopar:Npn \__tblr_set_vline_cmd:n #1
   {
