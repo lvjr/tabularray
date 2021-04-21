@@ -316,7 +316,7 @@
   {
     \__tblr_set_hline_num:n {#2}
     \tl_clear:N \l__tblr_hline_dash_tl
-    \keys_set:nn { tblr-hline } { ds = solid, #1 }
+    \keys_set:nn { tblr-hline } { dash = solid, #1 }
     \__tblr_set_hline_cmd:n {#3}
   }
 
@@ -347,10 +347,10 @@
 
 \keys_define:nn { tblr-hline }
   {
-    ds .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 },
-    tt .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text #1 },
-    tk .code:n = \__tblr_hline_spec_sub:nn { thickness } { \dim_eval:n {#1} },
-    fg .code:n = \__tblr_hline_spec_sub:nn { foreground } {#1},
+    dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 },
+    text .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text #1 },
+    wd .code:n = \__tblr_hline_spec_sub:nn { wd } { \dim_eval:n {#1} },
+    fg .code:n = \__tblr_hline_spec_sub:nn { fg } {#1},
     unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
   }
 
@@ -360,10 +360,10 @@
       { \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 } }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
-          { \__tblr_hline_spec_sub:nn { foreground } {#1} }
+          { \__tblr_hline_spec_sub:nn { fg } {#1} }
           {
             \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
-            \__tblr_hline_spec_sub:nx { thickness }
+            \__tblr_hline_spec_sub:nx { wd }
               { \dim_eval:n {\l__tblr_v_tl} }
           }
       }
@@ -429,7 +429,7 @@
   {
     \__tblr_set_vline_num:n {#2}
     \tl_clear:N \l__tblr_vline_dash_tl
-    \keys_set:nn { tblr-vline } { ds = solid, #1 }
+    \keys_set:nn { tblr-vline } { dash = solid, #1 }
     \__tblr_set_vline_cmd:n {#3}
   }
 
@@ -460,10 +460,10 @@
 
 \keys_define:nn { tblr-vline }
   {
-    ds .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 },
-    tt .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text #1 },
-    tk .code:n = \__tblr_vline_spec_sub:nn { thickness } { \dim_eval:n {#1} },
-    fg .code:n = \__tblr_vline_spec_sub:nn { foreground } {#1},
+    dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 },
+    text .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text #1 },
+    wd .code:n = \__tblr_vline_spec_sub:nn { wd } { \dim_eval:n {#1} },
+    fg .code:n = \__tblr_vline_spec_sub:nn { fg } {#1},
     unknown .code:n = \__tblr_vline_unknown_key:V \l_keys_key_str,
   }
 
@@ -473,10 +473,10 @@
       { \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 } }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
-          { \__tblr_vline_spec_sub:nn { foreground } {#1} }
+          { \__tblr_vline_spec_sub:nn { fg } {#1} }
           {
             \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
-            \__tblr_vline_spec_sub:nx { thickness }
+            \__tblr_vline_spec_sub:nx { wd }
               { \dim_eval:n {\l__tblr_v_tl} }
           }
       }
@@ -1490,8 +1490,8 @@
 
 \NewColumnRowType { X } [1][] { Q[co=1,#1] }
 
-\NewColumnRowType { ! } [1] { |[tt={#1}] }
-\NewColumnRowType { @ } [1] { <[0pt]{} |[tt={#1}] >[0pt]{} }
+\NewColumnRowType { ! } [1] { |[text={#1}] }
+\NewColumnRowType { @ } [1] { <[0pt]{} |[text={#1}] >[0pt]{} }
 \NewColumnRowType { * } [2] { \prg_replicate:nn {#1} {#2} }
 
 \cs_new_protected:Npn \__tblr_parse_colrow_spec:nn #1 #2
