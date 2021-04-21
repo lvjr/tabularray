@@ -34,6 +34,7 @@
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
 \cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
+\prg_generate_conditional_variant:Nnn \clist_if_in:Nn { Nx } { TF }
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { xn } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T, TF }
@@ -1161,12 +1162,32 @@
 %%  \section{Parse Table Specifications}
 %%% --------------------------------------------------------
 
-\regex_const:Nn \c__tblr_long_key_name_regex { [A-Za-z]{3,} \s* = }
+\regex_const:Nn \c__tblr_first_key_name_regex { ^ \s * ( [A-Za-z\-] + ) }
 
+\clist_new:N \g__tblr_table_known_keys_clist
+\clist_gset:Nn \g__tblr_table_known_keys_clist
+  { colspec, rowspec, width, span-width, vertical-position }
+
+\keys_define:nn { tblr }
+  {
+    colspec .code:n = \__tblr_parse_colrow_spec:nn { column } {#1},
+    rowspec .code:n = \__tblr_parse_colrow_spec:nn { row } {#1},
+    width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
+    span-width .code:n = \__tblr_keys_gput:nn { span-width } {#1},
+    vertical-position .code:n = \__tblr_keys_gput:nn { vertical-position } {#1},
+  }
+
+%% If the first key name is known, treat #1 is the table spec;
+%% otherwise, treat #1 as colspec.
 \cs_new_protected:Npn \__tblr_parse_table_spec:n #1
   {
-    \regex_match:NnTF \c__tblr_long_key_name_regex {#1}
-      { \keys_set:nn { tblr } {#1} }
+    \regex_extract_once:NnNTF \c__tblr_first_key_name_regex {#1} \l_tmpa_seq
+      {
+        \clist_if_in:NxTF \g__tblr_table_known_keys_clist
+          { \seq_item:Nn \l_tmpa_seq {2} }
+          { \keys_set:nn { tblr } {#1} }
+          { \__tblr_parse_colrow_spec:nn { column } {#1} }
+      }
       { \__tblr_parse_colrow_spec:nn { column } {#1} }
   }
 
@@ -1197,15 +1218,6 @@
     \__tblr_prop_gput:nnn { table } { #1 } { #2 }
   }
 \cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
-
-\keys_define:nn { tblr }
-  {
-    width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
-    span-width .code:n = \__tblr_keys_gput:nn { span-width } {#1},
-    vertical-position .code:n = \__tblr_keys_gput:nn { vertical-position } {#1},
-    colspec .code:n = \__tblr_parse_colrow_spec:nn { column } {#1} ,
-    rowspec .code:n = \__tblr_parse_colrow_spec:nn { row } {#1} ,
-  }
 
 %% Treat \\*[dimen] command
 \NewDocumentCommand \__tblr_newline_skip:w { s o }
