@@ -603,28 +603,44 @@
 %% Both of them could be replaced with \SetCell command
 %% Note that they don't have cell text as the last arguments
 
+%% If \multicolumn is followed by \multirow,
+%% We need to call \__tblr_set_cell_span together
+%% in order to omit all hlines inside the span cell.
+\tl_new:N \g__tblr_multicolumn_num_tl
+\tl_new:N \g__tblr_multicolumn_spec_tl
+
 %% There maybe p{2em} inside #2 of \multicolumn command
 \NewTableCommand \multicolumn [2]
   {
-    \tl_clear:N \l_tmpa_tl
+    \tl_gclear:N \g__tblr_multicolumn_num_tl
+    \tl_gclear:N \g__tblr_multicolumn_spec_tl
     \tl_map_inline:nn {#2}
       {
         \bool_lazy_and:nnF
           { \tl_if_single_token_p:n {##1} }
           { \token_if_eq_charcode_p:NN ##1 | }
-          { \tl_put_right:Nn \l_tmpa_tl {,##1} }
+          { \tl_put_right:Nn \g__tblr_multicolumn_spec_tl {,##1} }
       }
-    \__tblr_set_cell_span:nV { c = #1 } \l_tmpa_tl
+    \peek_meaning:NTF \multirow
+      { \tl_gset:Nn \g__tblr_multicolumn_num_tl {#1} }
+      { \__tblr_set_cell_span:nV { c = #1 } \g__tblr_multicolumn_spec_tl }
   }
 
 \NewTableCommand \multirow [3] [m]
   {
     \tl_if_eq:nnTF {#1} {c}
-      { \tl_set:Nn \l_tmpa_tl {m} }
-      { \tl_set:Nn \l_tmpa_tl {#1} }
+      { \tl_set:Nn \l_tmpa_tl {, m} }
+      { \tl_set:Nn \l_tmpa_tl {, #1} }
     \tl_if_eq:nnF {#3} {*}
       { \tl_if_eq:nnF {#3} {=} { \tl_put_right:Nn \l_tmpa_tl {, wd=#3} } }
-    \__tblr_set_cell_span:nV { r = #2 } \l_tmpa_tl
+    \tl_if_empty:NTF \g__tblr_multicolumn_num_tl
+      { \__tblr_set_cell_span:nV { r = #2 } \l_tmpa_tl }
+      {
+        \tl_put_left:NV \l_tmpa_tl \g__tblr_multicolumn_spec_tl
+        \exp_args:Nx \__tblr_set_cell_span:nV
+          { c = \g__tblr_multicolumn_num_tl, r = #2 } \l_tmpa_tl
+        \tl_gclear:N \g__tblr_multicolumn_num_tl
+      }
   }
 
 %%% --------------------------------------------------------
