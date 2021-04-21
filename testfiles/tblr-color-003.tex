@@ -16,50 +16,20 @@
 
 \bigskip
 
-\BEGINTEST{background: vertical-position=modern}
+\BEGINTEST{column background and row background}
 \begin{tblr}[b]{
   width=0.7\linewidth,
   colspec={|Q[l,wd=0.14\linewidth]||Q[c,1.2,teal7]|Q[r,0.1\linewidth]|
-           |[ds=dashed]|Q[azure7,r]|X[-2.5,c]|Q[l,2cm]|}
+           |[dashed]|Q[azure7,r]|X[-2.5,c]|Q[l,2cm]|}
 }
 \hline
 One   &  Two  & Three & Onej  &  Two  & \SetColumn{bg=red7}Three \\
-\cline[ds=dotted]{1-3}
+\cline[dotted]{1-3}
 \SetRow{r,brown7}
 One   &  Two  & Three & Onej  &  Two  & Three \\
-\hline\cline[ds=dashed]{4-6}
+\hline\cline[dashed]{4-6}
 One   &  Two  & Three & Onej  &  Two  & Three \\
-\hline\cline[ds=dashed]{1}\cline[ds=dotted]{3,4}\hline
-\SetRow{r,yellow7}
-Four  & Five  &   Six & Four  & Five  &   Six \\
-\cline{2-3,5}\hline
-Seven & Eight &  Nine & Seven & Eight &  Nine \\
-\hline\hline
-\SetRow{c,purple7}
-Seven & Eight &  Nine & Seven & Eight &  Nine \\
-\hline\hline
-Seven & Eight &  Nine & Seven & Eight &  Nine \\
-\hline\hline
-\end{tblr}
-\ENDTEST
-
-\bigskip
-
-\BEGINTEST{background: vertical-position=legacy}
-\begin{tblr}[b]{
-  vertical-position=legacy,
-  width=0.7\linewidth,
-  colspec={|Q[l,wd=0.14\linewidth]||Q[c,1.2,teal7]|Q[r,0.1\linewidth]|
-           |[ds=dashed]|Q[azure7,r]|X[-2.5,c]|Q[l,2cm]|}
-}
-\hline
-One   &  Two  & Three & Onej  &  Two  & \SetColumn{bg=red7}Three \\
-\cline[ds=dotted]{1-3}
-\SetRow{r,brown7}
-One   &  Two  & Three & Onej  &  Two  & Three \\
-\hline\cline[ds=dashed]{4-6}
-One   &  Two  & Three & Onej  &  Two  & Three \\
-\hline\cline[ds=dashed]{1}\cline[ds=dotted]{3,4}\hline
+\hline\cline[dashed]{1}\cline[dotted]{3,4}\hline
 \SetRow{r,yellow7}
 Four  & Five  &   Six & Four  & Five  &   Six \\
 \cline{2-3,5}\hline

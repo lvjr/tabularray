@@ -16,29 +16,14 @@
 
 \bigskip
 
-\BEGINTEST{background: vertical-position=modern}
-\begin{tblr}[b]{|l|[ds=dotted]|[tk=2pt]c|r|[ds=solid]|[ds=dashed]|}
+\BEGINTEST{cell background}
+\begin{tblr}[b]{|l|[dotted]|[2pt]c|r|[solid]|[dashed]|}
 \hline
-\SetCell{b,r,bg=orange}Onej   &  Two  & Three \\
+\SetCell{b,r,orange}Onej   &  Two  & Three \\
 \hline\hline\hline
-Four  & \SetCell{bg=teal}Five  &   Six \\
+Four  & \SetCell{teal}Five  &   Six \\
 \hline\hline
-\SetCell{bg=lime}Seven & Eight &  Nine \\
-\hline
-\end{tblr}
-\ENDTEST
-
-\bigskip
-
-\BEGINTEST{background: vertical-position=legacy}
-\bigskip
-\begin{tblr}[b]{vertical-position=legacy,colspec={|l|[ds=dotted]|[tk=2pt]c|r|[ds=solid]|[ds=dashed]|}}
-\hline
-\SetCell{b,r,bg=orange}Onej   &  Two  & Three \\
-\hline\hline\hline
-Four  & \SetCell{bg=teal}Five  &   Six \\
-\hline\hline
-\SetCell{bg=lime}Seven & Eight &  Nine \\
+\SetCell{lime}Seven & Eight &  Nine \\
 \hline
 \end{tblr}
 \ENDTEST
