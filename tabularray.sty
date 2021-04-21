@@ -1582,8 +1582,10 @@
 
 %% Get text of a vline segment
 %% #1: row number, #2: column number; #3: index number; #4: height; #5: depth
+%% We put all code inside a group to avoid conflicts of local variables
 \cs_new_protected:Npn \__tblr_get_vline_segment_child:nnnnn #1 #2 #3 #4 #5
   {
+    \group_begin:
     \tl_set:Nx \l__tblr_d_tl
       { \__tblr_prop_item:ne { vline } { [#1][#2](#3) / @dash } }
     \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
@@ -1599,6 +1601,7 @@
         \box_set_dp:Nn \l__tblr_d_box {#5}
         \box_use:N \l__tblr_d_box
       }
+    \group_end:
   }
 
 %% Measure and update thickness of the hline
@@ -2624,10 +2627,18 @@
   }
 
 %% #1: row number, #2: column number
+%% We make every vline segment intersect with first hline below
+%% to remove gaps in vlines around multirow cells
 \cs_new_protected:Npn \__tblr_build_vline_segment_real:nn #1 #2
   {
     \tl_set:Nx \l__tblr_s_tl
       { \__tblr_prop_item:ne { vline } { [#2] / rulesep } }
+    \tl_set:Nx \l__tblr_b_tl
+      {
+        \__tblr_prop_item:ne { hline }
+          { [\int_eval:n{#1 + 1}](1) / @hline-height }
+      }
+    \tl_if_empty:NT \l__tblr_b_tl { \tl_set:Nn \l__tblr_b_tl { 0pt } }
     \hbox_set:Nn \l__tblr_a_box
       {
         \int_step_inline:nn { \l__tblr_n_tl }
@@ -2639,7 +2650,8 @@
               {
                 \__tblr_get_vline_segment_child:nnnnn {#1} {#2} {##1}
                   { \dim_eval:n { \l__tblr_h_dim } }
-                  { \dim_eval:n { \l__tblr_d_dim } }
+                  { \dim_eval:n { \l__tblr_d_dim + \l__tblr_b_tl } }
+                \skip_vertical:n {  - \l__tblr_b_tl }
               }
             \box_set_wd:Nn \l__tblr_b_box { \l__tblr_w_tl }
             \box_use:N \l__tblr_b_box
