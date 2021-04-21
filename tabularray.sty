@@ -603,27 +603,27 @@
 %% Both of them could be replaced with \SetCell command
 %% Note that they don't have cell text as the last arguments
 
+%% There maybe p{2em} inside #2 of \multicolumn command
 \NewTableCommand \multicolumn [2]
   {
     \tl_clear:N \l_tmpa_tl
     \tl_map_inline:nn {#2}
       {
-        \token_if_eq_charcode:NNF ##1 | { \tl_put_right:Nn \l_tmpa_tl {##1} }
+        \bool_lazy_and:nnF
+          { \tl_if_single_token_p:n {##1} }
+          { \token_if_eq_charcode_p:NN ##1 | }
+          { \tl_put_right:Nn \l_tmpa_tl {,##1} }
       }
     \__tblr_set_cell_span:nV { c = #1 } \l_tmpa_tl
   }
 
 \NewTableCommand \multirow [3] [m]
   {
-    \token_if_eq_charcode:NNTF #1 c
+    \tl_if_eq:nnTF {#1} {c}
       { \tl_set:Nn \l_tmpa_tl {m} }
       { \tl_set:Nn \l_tmpa_tl {#1} }
-    \bool_lazy_or:nnF
-      { \token_if_eq_charcode_p:NN #3 * }
-      { \token_if_eq_charcode_p:NN #3 = }
-      {
-        \tl_put_right:Nn \l_tmpa_tl {, wd=#3}
-      }
+    \tl_if_eq:nnF {#3} {*}
+      { \tl_if_eq:nnF {#3} {=} { \tl_put_right:Nn \l_tmpa_tl {, wd=#3} } }
     \__tblr_set_cell_span:nV { r = #2 } \l_tmpa_tl
   }
 
