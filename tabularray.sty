@@ -156,32 +156,99 @@
 %%  \section{Child Selectors}
 %%% --------------------------------------------------------
 
-\regex_const:Nn \c__tblr_leading_multiple_letters_regex { ^ ( [A-Za-z] {2,} ) }
+\clist_new:N \g_tblr_used_child_selectors_clist
 
-\clist_new:N \l__tblr_childs_clist
-\seq_new:N \l__tblr_childs_seq
+\tl_new:N \l__tblr_childs_arg_spec_tl
+
+\msg_new:nnn { tabularray } { used-child-selector }
+  { Child ~ selector ~ name ~ "#1" ~ has ~ been ~ used! }
+
+\NewDocumentCommand \NewChildSelector { m O{0} o m }
+  {
+    \__tblr_new_child_selector_aux:xnnn { \tl_trim_spaces:n {#1} } {#2} {#3} {#4}
+  }
+
+\cs_new_protected:Npn \__tblr_new_child_selector_aux:nnnn #1 #2 #3 #4
+  {
+    \clist_if_in:NnTF \g_tblr_used_child_selectors_clist { #1 }
+      {
+        \msg_error:nnn { tabularray } { used-child-selector } { #1 }
+        \clist_log:N \g_tblr_used_child_selectors_clist
+      }
+      {
+        \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_childs_arg_spec_tl
+        \exp_args:NcV \NewDocumentCommand
+          { __tblr_child_selector_ #1 :w } \l__tblr_childs_arg_spec_tl { #4 }
+        \clist_gput_right:Nn \g_tblr_used_child_selectors_clist { #1 }
+      }
+  }
+\cs_generate_variant:Nn \__tblr_new_child_selector_aux:nnnn { xnnn }
+
+%% #1: argument number, #2: optional argument default, #3: result tl
+\cs_new_protected:Npn \__tblr_make_xparse_arg_spec:nnN #1 #2 #3
+  {
+    \tl_clear:N #3
+    \int_compare:nNnT { #1 } > { 0 }
+      {
+        \IfValueTF { #2 }
+          { \tl_set:Nn #3 { O{#2} } }
+          { \tl_set:Nn #3 { m } }
+        \tl_put_right:Nx #3 { \prg_replicate:nn { #1 - 1 } { m } }
+      }
+  }
+
+\clist_new:N \l_tblr_childs_clist
+\tl_new:N \l_tblr_childs_total_tl
+
+\NewChildSelector { odd }
+  {
+    \int_step_inline:nnnn {1} {2} { \l_tblr_childs_total_tl }
+      { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
+  }
+
+\NewChildSelector { even }
+  {
+    \int_step_inline:nnnn {2} {2} { \l_tblr_childs_total_tl }
+      { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
+  }
+
+\regex_const:Nn \c__tblr_split_selector_name_regex { ^ ( [A-Za-z] {2,} ) ( . * ) }
+\seq_new:N \l__tblr_childs_split_seq
+\seq_new:N \l__tblr_childs_regex_seq
 \tl_new:N \l__tblr_childs_end_tl
+\tl_new:N \l__tblr_childs_selector_tl
 
 %% #1, child specifications; #2, total number.
-%% The result will be put into \l__tblr_childs_clist
+%% The result will be put into \l_tblr_childs_clist
 \cs_new_protected:Npn \__tblr_get_childs:nn #1 #2
   {
-    \clist_clear:N \l__tblr_childs_clist
-    \regex_match:NnTF \c__tblr_leading_multiple_letters_regex {#1}
-      {  }
+    \clist_clear:N \l_tblr_childs_clist
+    \tl_set:Nx \l_tblr_childs_total_tl {#2}
+    \regex_extract_once:NnNTF \c__tblr_split_selector_name_regex {#1}
+      \l__tblr_childs_regex_seq
+      {
+        \tl_set:No \l__tblr_childs_selector_tl
+          {
+            \cs:w
+            __tblr_child_selector_ \seq_item:Nn \l__tblr_childs_regex_seq {2} :w
+            \cs_end:
+          }
+        \exp_args:Nx \l__tblr_childs_selector_tl
+          { \seq_item:Nn \l__tblr_childs_regex_seq{3} }
+      }
       {
         \tl_if_eq:nnTF {#1} {-}
           { \__tblr_get_childs_normal:nn {1-#2} {#2} }
           { \__tblr_get_childs_normal:nn {#1} {#2} }
       }
-    \clist_log:N \l__tblr_childs_clist
+    %\clist_log:N \l_tblr_childs_clist
   }
 \cs_generate_variant:Nn \__tblr_get_childs:nn { nx }
 
 \cs_new_protected:Npn \__tblr_get_childs_normal:nn #1 #2
   {
-    \seq_set_split:Nnn \l__tblr_childs_seq {,} {#1}
-    \seq_map_inline:Nn \l__tblr_childs_seq
+    \seq_set_split:Nnn \l__tblr_childs_split_seq {,} {#1}
+    \seq_map_inline:Nn \l__tblr_childs_split_seq
       { \__tblr_get_childs_normal_aux:w ##1 - s \scan_stop }
   }
 
@@ -191,7 +258,7 @@
       { \tl_set:Nn \l__tblr_childs_end_tl {#1} }
       { \tl_set:Nn \l__tblr_childs_end_tl {#2} }
     \int_step_inline:nnn {#1} { \l__tblr_childs_end_tl }
-      { \clist_put_right:Nn \l__tblr_childs_clist {##1} }
+      { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
   }
 
 %%% --------------------------------------------------------
@@ -228,19 +295,6 @@
             \tl_gset:cn { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } {#2}
           }
         \clist_gput_right:Nn \g__tblr_table_commands_clist { #1 }
-      }
-  }
-
-%% #1: argument number, #2: optional argument default, #3: result tl
-\cs_new_protected:Npn \__tblr_make_xparse_arg_spec:nnN #1 #2 #3
-  {
-    \tl_clear:N #3
-    \int_compare:nNnT { #1 } > { 0 }
-      {
-        \IfValueTF { #2 }
-          { \tl_set:Nn #3 { O{#2} } }
-          { \tl_set:Nn #3 { m } }
-        \tl_put_right:Nx #3 { \prg_replicate:nn { #1 - 1 } { m } }
       }
   }
 
@@ -770,7 +824,7 @@
   {
     \group_begin:
     \__tblr_get_childs:nx {#1} { \int_use:N \l_tblr_col_count_int }
-    \clist_map_inline:Nn \l__tblr_childs_clist
+    \clist_map_inline:Nn \l_tblr_childs_clist
       {
         \int_set:Nn \colnum {##1}
         \tblr_set_column:nn {#2} {#3}
@@ -888,7 +942,7 @@
   {
     \group_begin:
     \__tblr_get_childs:nx {#1} { \int_use:N \l_tblr_row_count_int }
-    \clist_map_inline:Nn \l__tblr_childs_clist
+    \clist_map_inline:Nn \l_tblr_childs_clist
       {
         \int_set:Nn \rownum {##1}
         \tblr_set_row:nn {#2} {#3}
