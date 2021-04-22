@@ -724,6 +724,24 @@
     \keys_set:nn { tblr-column } {#2}
   }
 
+\cs_new_protected:Npn \tblr_set_column:nnn #1 #2 #3
+  {
+    \group_begin:
+    \int_set:Nn \colnum {#1}
+    \tblr_set_column:nn {#2} {#3}
+    \group_end:
+  }
+
+%% Check the number of arguments and call \tblr_set_column in different ways
+%% Note that #1 always includes an outer pair of braces
+\cs_new_protected:Npn \__tblr_set_column_aux:nn #1 #2
+  {
+    \tl_if_head_is_group:nTF {#2}
+      { \tblr_set_column:nnn #1 #2 }
+      { \tblr_set_column:nnn #1 {} {#2} }
+  }
+\cs_generate_variant:Nn \__tblr_set_column_aux:nn { Vn }
+
 \keys_define:nn { tblr-column }
   {
     l .code:n = \__tblr_set_key_for_every_column_cell:nnn
@@ -819,6 +837,24 @@
   {
     \keys_set:nn { tblr-row } {#2}
   }
+
+\cs_new_protected:Npn \tblr_set_row:nnn #1 #2 #3
+  {
+    \group_begin:
+    \int_set:Nn \rownum {#1}
+    \tblr_set_row:nn {#2} {#3}
+    \group_end:
+  }
+
+%% Check the number of arguments and call \tblr_set_row in different ways
+%% Note that #1 always includes an outer pair of braces
+\cs_new_protected:Npn \__tblr_set_row_aux:nn #1 #2
+  {
+    \tl_if_head_is_group:nTF {#2}
+      { \tblr_set_row:nnn #1 #2 }
+      { \tblr_set_row:nnn #1 {} {#2} }
+  }
+\cs_generate_variant:Nn \__tblr_set_row_aux:nn { Vn }
 
 \keys_define:nn { tblr-row }
   {
@@ -1542,8 +1578,6 @@
 %%  \section{Parse Table Specifications}
 %%% --------------------------------------------------------
 
-\regex_const:Nn \c__tblr_first_key_name_regex { ^ \s * ( [A-Za-z\-] + ) }
-
 \clist_new:N \g__tblr_table_known_keys_clist
 \clist_gset:Nn \g__tblr_table_known_keys_clist
   {
@@ -1560,10 +1594,27 @@
     vertical-position .code:n = \__tblr_keys_gput:nn { vertical-position } {#1},
     columns .code:n = \__tblr_set_every_column_aux:n {#1},
     rows .code:n = \__tblr_set_every_row_aux:n {#1},
+    unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
+
+\regex_const:Nn \c__tblr_split_key_name_regex { ^ ( [a-z] + ) ( . * ) }
+
+\cs_new_protected:Npn \__tblr_table_special_key:nn #1 #2
+  {
+    \regex_extract_once:NnNT \c__tblr_split_key_name_regex {#1} \l_tmpa_seq
+      {
+        \tl_set:Nx \l__tblr_a_tl { \seq_item:Nn \l_tmpa_seq {2} }
+        \tl_set_rescan:Nnx \l__tblr_b_tl {} { \seq_item:Nn \l_tmpa_seq {3} }
+        \cs:w __tblr_set_ \l__tblr_a_tl _aux:Vn \cs_end: \l__tblr_b_tl {#2}
+      }
+  }
+\cs_generate_variant:Nn \__tblr_table_special_key:nn { Vn }
 
 %% If the first key name is known, treat #1 is the table spec;
 %% otherwise, treat #1 as colspec.
+
+\regex_const:Nn \c__tblr_first_key_name_regex { ^ \s * ( [A-Za-z\-] + ) }
+
 \cs_new_protected:Npn \__tblr_parse_table_spec:n #1
   {
     \regex_extract_once:NnNTF \c__tblr_first_key_name_regex {#1} \l_tmpa_seq
