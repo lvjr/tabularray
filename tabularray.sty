@@ -686,9 +686,33 @@
 %%  \section{Set Columns and Rows}
 %%% --------------------------------------------------------
 
+%% \SetColumns command for setting every column in the table
+%% We put all code inside a group to avoid affecting other table commands
+
+\NewTableCommand \SetColumns [2] []
+  {
+    \tblr_set_every_column:nn {#1} {#2}
+  }
+
+\cs_new_protected:Npn \tblr_set_every_column:nn #1 #2
+  {
+    \group_begin:
+    \int_step_inline:nn { \l_tblr_col_count_int }
+      {
+        \int_set:Nn \colnum {##1}
+        \tblr_set_column:nn {#1} {#2}
+      }
+    \group_end:
+  }
+
 %% \SetColumn command for current column or each cells in the column
 
 \NewTableCommand \SetColumn [2] []
+  {
+    \tblr_set_column:nn {#1} {#2}
+  }
+
+\cs_new_protected:Npn \tblr_set_column:nn #1 #2
   {
     \keys_set:nn { tblr-column } {#2}
   }
@@ -751,9 +775,33 @@
   }
 \cs_generate_variant:Nn \__tblr_column_unknown_key:n { V }
 
+%% \SetRows command for setting every row in the table
+%% We put all code inside a group to avoid affecting other table commands
+
+\NewTableCommand \SetRows [2] []
+  {
+    \tblr_set_every_row:nn {#1} {#2}
+  }
+
+\cs_new_protected:Npn \tblr_set_every_row:nn #1 #2
+  {
+    \group_begin:
+    \int_step_inline:nn { \l_tblr_row_count_int }
+      {
+        \int_set:Nn \rownum {##1}
+        \tblr_set_row:nn {#1} {#2}
+      }
+    \group_end:
+  }
+
 %% \SetRow command for current row or each cells in the row
 
 \NewTableCommand \SetRow [2] []
+  {
+    \tblr_set_row:nn {#1} {#2}
+  }
+
+\cs_new_protected:Npn \tblr_set_row:nn #1 #2
   {
     \keys_set:nn { tblr-row } {#2}
   }
@@ -1484,7 +1532,10 @@
 
 \clist_new:N \g__tblr_table_known_keys_clist
 \clist_gset:Nn \g__tblr_table_known_keys_clist
-  { colspec, rowspec, width, span-width, vertical-position }
+  {
+    colspec, rowspec, width, span-width, vertical-position,
+    column, row, cell, vline, hline, columns, rows, cells, vlines, hlines,
+  }
 
 \keys_define:nn { tblr }
   {
@@ -1493,6 +1544,8 @@
     width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
     span-width .code:n = \__tblr_keys_gput:nn { span-width } {#1},
     vertical-position .code:n = \__tblr_keys_gput:nn { vertical-position } {#1},
+    columns .code:n = \tblr_set_every_column:nn #1,
+    rows .code:n = \tblr_set_every_row:nn #1,
   }
 
 %% If the first key name is known, treat #1 is the table spec;
