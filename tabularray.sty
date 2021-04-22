@@ -626,17 +626,47 @@
 %%  \section{Set Cells}
 %%% --------------------------------------------------------
 
+%% \SetCells command for setting every cell in the table
+\NewTableCommand \SetCells [2] []
+  {
+    \tblr_set_every_cell:nn {#1} {#2}
+  }
+
+%% We put all code inside a group to avoid affecting other table commands
+\cs_new_protected:Npn \tblr_set_every_cell:nn #1 #2
+  {
+    \group_begin:
+    \int_step_inline:nn { \l_tblr_row_count_int }
+      {
+        \int_set:Nn \rownum {##1}
+        \int_step_inline:nn { \l_tblr_col_count_int }
+          {
+            \int_set:Nn \colnum {####1}
+            \tblr_set_cell:nn {#1} {#2}
+          }
+      }
+    \group_end:
+  }
+
+%% Check the number of arguments and call \tblr_set_every_cell in different ways
+\cs_new_protected:Npn \__tblr_set_every_cell_aux:n #1
+  {
+    \tl_if_head_is_group:nTF {#1}
+      { \tblr_set_every_cell:nn #1 }
+      { \tblr_set_every_cell:nn {} {#1} }
+  }
+
 %% \SetCell command for multirow and/or multicolumn cells
 
 \NewTableCommand \SetCell [2] []
   {
-    \__tblr_set_cell_span:nn { #1 } { #2 }
+    \tblr_set_cell:nn { #1 } { #2 }
   }
 
 \tl_new:N \l__tblr_row_span_num_tl
 \tl_new:N \l__tblr_col_span_num_tl
 
-\cs_new_protected:Npn \__tblr_set_cell_span:nn #1 #2
+\cs_new_protected:Npn \tblr_set_cell:nn #1 #2
   {
     \tl_set:Nn \l__tblr_row_span_num_tl { 1 }
     \tl_set:Nn \l__tblr_col_span_num_tl { 1 }
@@ -644,7 +674,7 @@
     \keys_set:nn { tblr-cell-spec } { #2 }
     \__tblr_set_span_spec:VV \l__tblr_row_span_num_tl \l__tblr_col_span_num_tl
   }
-\cs_generate_variant:Nn \__tblr_set_cell_span:nn { nV }
+\cs_generate_variant:Nn \tblr_set_cell:nn { nV }
 
 \cs_new_protected:Npn \tblr_set_cell:nnnn #1 #2 #3 #4
   {
@@ -659,7 +689,7 @@
         \clist_map_inline:Nn \l_tmpb_clist
           {
             \int_set:Nn \colnum {####1}
-            \__tblr_set_cell_span:nn {#3} {#4}
+            \tblr_set_cell:nn {#3} {#4}
           }
       }
     \group_end:
@@ -768,7 +798,7 @@
 %% Note that they don't have cell text as the last arguments
 
 %% If \multicolumn is followed by \multirow,
-%% We need to call \__tblr_set_cell_span together
+%% We need to call \tblr_set_cell together
 %% in order to omit all hlines inside the span cell.
 \tl_new:N \g__tblr_multicolumn_num_tl
 \tl_new:N \g__tblr_multicolumn_spec_tl
@@ -787,7 +817,7 @@
       }
     \peek_meaning:NTF \multirow
       { \tl_gset:Nn \g__tblr_multicolumn_num_tl {#1} }
-      { \__tblr_set_cell_span:nV { c = #1 } \g__tblr_multicolumn_spec_tl }
+      { \tblr_set_cell:nV { c = #1 } \g__tblr_multicolumn_spec_tl }
   }
 
 \NewTableCommand \multirow [3] [m]
@@ -798,10 +828,10 @@
     \tl_if_eq:nnF {#3} {*}
       { \tl_if_eq:nnF {#3} {=} { \tl_put_right:Nn \l_tmpa_tl {, wd=#3} } }
     \tl_if_empty:NTF \g__tblr_multicolumn_num_tl
-      { \__tblr_set_cell_span:nV { r = #2 } \l_tmpa_tl }
+      { \tblr_set_cell:nV { r = #2 } \l_tmpa_tl }
       {
         \tl_put_left:NV \l_tmpa_tl \g__tblr_multicolumn_spec_tl
-        \exp_args:Nx \__tblr_set_cell_span:nV
+        \exp_args:Nx \tblr_set_cell:nV
           { c = \g__tblr_multicolumn_num_tl, r = #2 } \l_tmpa_tl
         \tl_gclear:N \g__tblr_multicolumn_num_tl
       }
@@ -1727,6 +1757,7 @@
     vertical-position .code:n = \__tblr_keys_gput:nn { vertical-position } {#1},
     columns .code:n = \__tblr_set_every_column_aux:n {#1},
     rows .code:n = \__tblr_set_every_row_aux:n {#1},
+    cells .code:n = \__tblr_set_every_cell_aux:n {#1},
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
 
