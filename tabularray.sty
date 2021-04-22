@@ -777,6 +777,7 @@
   }
 
 %% Check the number of arguments and call \tblr_set_every_cell in different ways
+%% This function is called when parsing table specifications
 \cs_new_protected:Npn \__tblr_set_every_cell_aux:n #1
   {
     \tl_if_head_is_group:nTF {#1}
@@ -825,6 +826,7 @@
 
 %% Check the number of arguments and call \tblr_set_cell in different ways
 %% Note that #1 is always of the type {<i>}{<j>}
+%% This function is called when parsing table specifications
 \cs_new_protected:Npn \__tblr_set_cell_aux:nn #1 #2
   {
     \tl_if_head_is_group:nTF {#2}
@@ -988,6 +990,7 @@
   }
 
 %% Check the number of arguments and call \tblr_set_every_column in different ways
+%% This function is called when parsing table specifications
 \cs_new_protected:Npn \__tblr_set_every_column_aux:n #1
   {
     \tl_if_head_is_group:nTF {#1}
@@ -1021,6 +1024,7 @@
 
 %% Check the number of arguments and call \tblr_set_column in different ways
 %% Note that #1 always includes an outer pair of braces
+%% This function is called when parsing table specifications
 \cs_new_protected:Npn \__tblr_set_column_aux:nn #1 #2
   {
     \tl_if_head_is_group:nTF {#2}
@@ -1106,6 +1110,7 @@
   }
 
 %% Check the number of arguments and call \tblr_set_every_row in different ways
+%% This function is called when parsing table specifications
 \cs_new_protected:Npn \__tblr_set_every_row_aux:n #1
   {
     \tl_if_head_is_group:nTF {#1}
@@ -1139,6 +1144,7 @@
 
 %% Check the number of arguments and call \tblr_set_row in different ways
 %% Note that #1 always includes an outer pair of braces
+%% This function is called when parsing table specifications
 \cs_new_protected:Npn \__tblr_set_row_aux:nn #1 #2
   {
     \tl_if_head_is_group:nTF {#2}
