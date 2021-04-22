@@ -646,6 +646,35 @@
   }
 \cs_generate_variant:Nn \__tblr_set_cell_span:nn { nV }
 
+\cs_new_protected:Npn \tblr_set_cell:nnnn #1 #2 #3 #4
+  {
+    \group_begin:
+    \__tblr_get_childs:nx {#1} { \int_use:N \l_tblr_row_count_int }
+    \clist_set_eq:NN \l_tmpa_clist \l_tblr_childs_clist
+    \__tblr_get_childs:nx {#2} { \int_use:N \l_tblr_col_count_int }
+    \clist_set_eq:NN \l_tmpb_clist \l_tblr_childs_clist
+    \clist_map_inline:Nn \l_tmpa_clist
+      {
+        \int_set:Nn \rownum {##1}
+        \clist_map_inline:Nn \l_tmpb_clist
+          {
+            \int_set:Nn \colnum {####1}
+            \__tblr_set_cell_span:nn {#3} {#4}
+          }
+      }
+    \group_end:
+  }
+
+%% Check the number of arguments and call \tblr_set_cell in different ways
+%% Note that #1 is always of the type {<i>}{<j>}
+\cs_new_protected:Npn \__tblr_set_cell_aux:nn #1 #2
+  {
+    \tl_if_head_is_group:nTF {#2}
+      { \tblr_set_cell:nnnn #1 #2 }
+      { \tblr_set_cell:nnnn #1 {} {#2} }
+  }
+\cs_generate_variant:Nn \__tblr_set_cell_aux:nn { Vn }
+
 \keys_define:nn { tblr-cell-span }
   {
     r .tl_set:N = \l__tblr_row_span_num_tl,
