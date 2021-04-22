@@ -687,13 +687,12 @@
 %%% --------------------------------------------------------
 
 %% \SetColumns command for setting every column in the table
-%% We put all code inside a group to avoid affecting other table commands
-
 \NewTableCommand \SetColumns [2] []
   {
     \tblr_set_every_column:nn {#1} {#2}
   }
 
+%% We put all code inside a group to avoid affecting other table commands
 \cs_new_protected:Npn \tblr_set_every_column:nn #1 #2
   {
     \group_begin:
@@ -703,6 +702,14 @@
         \tblr_set_column:nn {#1} {#2}
       }
     \group_end:
+  }
+
+%% Check the number of arguments and call \tblr_set_every_column in different ways
+\cs_new_protected:Npn \__tblr_set_every_column_aux:n #1
+  {
+    \tl_if_head_is_group:nTF {#1}
+      { \tblr_set_every_column:nn #1 }
+      { \tblr_set_every_column:nn {} {#1} }
   }
 
 %% \SetColumn command for current column or each cells in the column
@@ -776,13 +783,12 @@
 \cs_generate_variant:Nn \__tblr_column_unknown_key:n { V }
 
 %% \SetRows command for setting every row in the table
-%% We put all code inside a group to avoid affecting other table commands
-
 \NewTableCommand \SetRows [2] []
   {
     \tblr_set_every_row:nn {#1} {#2}
   }
 
+%% We put all code inside a group to avoid affecting other table commands
 \cs_new_protected:Npn \tblr_set_every_row:nn #1 #2
   {
     \group_begin:
@@ -792,6 +798,14 @@
         \tblr_set_row:nn {#1} {#2}
       }
     \group_end:
+  }
+
+%% Check the number of arguments and call \tblr_set_every_row in different ways
+\cs_new_protected:Npn \__tblr_set_every_row_aux:n #1
+  {
+    \tl_if_head_is_group:nTF {#1}
+      { \tblr_set_every_row:nn #1 }
+      { \tblr_set_every_row:nn {} {#1} }
   }
 
 %% \SetRow command for current row or each cells in the row
@@ -1544,8 +1558,8 @@
     width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
     span-width .code:n = \__tblr_keys_gput:nn { span-width } {#1},
     vertical-position .code:n = \__tblr_keys_gput:nn { vertical-position } {#1},
-    columns .code:n = \tblr_set_every_column:nn #1,
-    rows .code:n = \tblr_set_every_row:nn #1,
+    columns .code:n = \__tblr_set_every_column_aux:n {#1},
+    rows .code:n = \__tblr_set_every_row_aux:n {#1},
   }
 
 %% If the first key name is known, treat #1 is the table spec;
