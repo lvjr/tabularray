@@ -488,21 +488,32 @@
       { \__tblr_prop_item:ne { hline } { [\int_use:N \rownum] / @hline-count } }
     \tl_if_empty:NTF \l__tblr_hline_count_tl
       {
-        \tl_set:Nx \l__tblr_hline_count_tl { 1 }
         \tl_set:Nx \l__tblr_hline_num_tl { 1 }
         \__tblr_prop_gput:nxx { hline }
-          { [\int_use:N \rownum] / @hline-count } { \l__tblr_hline_count_tl }
+          { [\int_use:N \rownum] / @hline-count } { 1 }
       }
       {
-        \tl_if_eq:nnF {#1} {=}
+        \tl_if_eq:nnTF {#1} {+}
+          { \__tblr_set_hline_num_incr: }
           {
-            \tl_set:Nx \l__tblr_hline_count_tl
-              { \int_eval:n { \l__tblr_hline_count_tl + 1 } }
-            \__tblr_prop_gput:nxx { hline }
-              { [\int_use:N \rownum] / @hline-count } { \l__tblr_hline_count_tl }
+            \tl_if_eq:nnTF {#1} {=}
+              { \tl_set_eq:NN \l__tblr_hline_num_tl \l__tblr_hline_count_tl }
+              {
+                \int_compare:nNnTF {#1} > { \l__tblr_hline_count_tl }
+                  { \__tblr_set_hline_num_incr: }
+                  { \tl_set:Nn \l__tblr_hline_num_tl {#1} }
+              }
           }
-        \tl_set_eq:NN \l__tblr_hline_num_tl \l__tblr_hline_count_tl
       }
+  }
+
+\cs_new_protected:Npn \__tblr_set_hline_num_incr:
+  {
+    \tl_set:Nx \l__tblr_hline_count_tl
+      { \int_eval:n { \l__tblr_hline_count_tl + 1 } }
+    \__tblr_prop_gput:nxx { hline }
+      { [\int_use:N \rownum] / @hline-count } { \l__tblr_hline_count_tl }
+    \tl_set_eq:NN \l__tblr_hline_num_tl \l__tblr_hline_count_tl
   }
 
 \keys_define:nn { tblr-hline }
@@ -652,21 +663,32 @@
       { \__tblr_prop_item:ne { vline } { [\int_use:N \colnum] / @vline-count } }
     \tl_if_empty:NTF \l__tblr_vline_count_tl
       {
-        \tl_set:Nx \l__tblr_vline_count_tl { 1 }
         \tl_set:Nx \l__tblr_vline_num_tl { 1 }
         \__tblr_prop_gput:nxx { vline }
-          { [\int_use:N \colnum] / @vline-count } { \l__tblr_vline_count_tl }
+          { [\int_use:N \colnum] / @vline-count } { 1 }
       }
       {
-        \tl_if_eq:nnF {#1} {=}
+        \tl_if_eq:nnTF {#1} {+}
+          { \__tblr_set_vline_num_incr: }
           {
-            \tl_set:Nx \l__tblr_vline_count_tl
-              { \int_eval:n { \l__tblr_vline_count_tl + 1 } }
-            \__tblr_prop_gput:nxx { vline }
-              { [\int_use:N \colnum] / @vline-count } { \l__tblr_vline_count_tl }
+            \tl_if_eq:nnTF {#1} {=}
+              { \tl_set_eq:NN \l__tblr_vline_num_tl \l__tblr_vline_count_tl }
+              {
+                \int_compare:nNnTF {#1} > { \l__tblr_vline_count_tl }
+                  { \__tblr_set_vline_num_incr: }
+                  { \tl_set:Nn \l__tblr_vline_num_tl {#1} }
+              }
           }
-        \tl_set_eq:NN \l__tblr_vline_num_tl \l__tblr_vline_count_tl
       }
+  }
+
+\cs_new_protected:Npn \__tblr_set_vline_num_incr:
+  {
+    \tl_set:Nx \l__tblr_vline_count_tl
+      { \int_eval:n { \l__tblr_vline_count_tl + 1 } }
+    \__tblr_prop_gput:nxx { vline }
+      { [\int_use:N \colnum] / @vline-count } { \l__tblr_vline_count_tl }
+    \tl_set_eq:NN \l__tblr_vline_num_tl \l__tblr_vline_count_tl
   }
 
 \keys_define:nn { tblr-vline }
