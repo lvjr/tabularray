@@ -445,12 +445,19 @@
     \tblr_set_hline:nnn {#1} {#2} {#3}
   }
 
+%% We need to check "text" key first
+%% If it does exist and has empty value, then do nothing
 \cs_new_protected:Npn \tblr_set_hline:nnn #1 #2 #3
   {
-    \__tblr_set_hline_num:n {#1}
     \tl_clear:N \l__tblr_hline_dash_tl
-    \keys_set:nn { tblr-hline } { dash = solid, #3 }
-    \__tblr_set_hline_cmd:n {#2}
+    \keys_set_groups:nnn { tblr-hline } { text } {#3}
+    \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text }
+      {
+        \__tblr_set_hline_num:n {#1}
+        \tl_clear:N \l__tblr_hline_dash_tl
+        \keys_set:nn { tblr-hline } { dash = solid, #3 }
+        \__tblr_set_hline_cmd:n {#2}
+      }
   }
 
 \cs_new_protected:Npn \tblr_set_hline:nnnn #1 #2 #3 #4
@@ -520,6 +527,7 @@
   {
     dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 },
     text .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text #1 },
+    text .groups:n = { text },
     wd .code:n = \__tblr_hline_spec_sub:nn { wd } { \dim_eval:n {#1} },
     fg .code:n = \__tblr_hline_spec_sub:nn { fg } {#1},
     unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
@@ -620,12 +628,19 @@
     \tblr_set_vline:nnn {#1} {#2} {#3}
   }
 
+%% We need to check "text" key first
+%% If it does exist and has empty value, then do nothing
 \cs_new_protected:Npn \tblr_set_vline:nnn #1 #2 #3
   {
-    \__tblr_set_vline_num:n {#1}
     \tl_clear:N \l__tblr_vline_dash_tl
-    \keys_set:nn { tblr-vline } { dash = solid, #3 }
-    \__tblr_set_vline_cmd:n {#2}
+    \keys_set_groups:nnn { tblr-vline } { text } {#3}
+    \tl_if_eq:NnF \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text }
+      {
+        \__tblr_set_vline_num:n {#1}
+        \tl_clear:N \l__tblr_vline_dash_tl
+        \keys_set:nn { tblr-vline } { dash = solid, #3 }
+        \__tblr_set_vline_cmd:n {#2}
+      }
   }
 
 \cs_new_protected:Npn \tblr_set_vline:nnnn #1 #2 #3 #4
@@ -695,6 +710,7 @@
   {
     dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 },
     text .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text #1 },
+    text .groups:n = { text },
     wd .code:n = \__tblr_vline_spec_sub:nn { wd } { \dim_eval:n {#1} },
     fg .code:n = \__tblr_vline_spec_sub:nn { fg } {#1},
     unknown .code:n = \__tblr_vline_unknown_key:V \l_keys_key_str,
