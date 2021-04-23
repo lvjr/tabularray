@@ -2544,17 +2544,19 @@
       }
   }
 
-\prop_new:N \l__tblr_item_skip_size_prop
-\prop_new:N \l__tblr_span_size_prop
+\prop_new:N \l__tblr_col_item_skip_size_prop
+\prop_new:N \l__tblr_col_span_size_prop
+\prop_new:N \l__tblr_row_item_skip_size_prop
+\prop_new:N \l__tblr_row_span_size_prop
 
 \cs_new_protected:Npn \__tblr_collect_column_widths_skips:
   {
-    \prop_clear:N \l__tblr_item_skip_size_prop
+    \prop_clear:N \l__tblr_col_item_skip_size_prop
     \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
       {
         \int_compare:nNnTF { \l__tblr_j_tl } > { 1 }
           {
-            \prop_put:Nxx \l__tblr_item_skip_size_prop { skip[\l__tblr_j_tl] }
+            \prop_put:Nxx \l__tblr_col_item_skip_size_prop { skip[\l__tblr_j_tl] }
               {
                 \dim_eval:n
                   {
@@ -2570,24 +2572,24 @@
               }
           }
           {
-            \prop_put:Nxn \l__tblr_item_skip_size_prop { skip[\l__tblr_j_tl] }
+            \prop_put:Nxn \l__tblr_col_item_skip_size_prop { skip[\l__tblr_j_tl] }
               { 0pt }
           }
-        \prop_put:Nxx \l__tblr_item_skip_size_prop { item[\l__tblr_j_tl] }
+        \prop_put:Nxx \l__tblr_col_item_skip_size_prop { item[\l__tblr_j_tl] }
           { \__tblr_prop_item:ne {column} { [\l__tblr_j_tl] / @col-width } }
       }
     \__tblr_do_if_tracing:nn { cellspan }
-      { \prop_log:N \l__tblr_item_skip_size_prop }
+      { \prop_log:N \l__tblr_col_item_skip_size_prop }
   }
 
 \cs_new_protected:Npn \__tblr_collect_row_heights_skips:
   {
-    \prop_clear:N \l__tblr_item_skip_size_prop
+    \prop_clear:N \l__tblr_row_item_skip_size_prop
     \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
       {
         \int_compare:nNnTF { \l__tblr_i_tl } > { 1 }
           {
-            \prop_put:Nxx \l__tblr_item_skip_size_prop { skip[\l__tblr_i_tl] }
+            \prop_put:Nxx \l__tblr_row_item_skip_size_prop { skip[\l__tblr_i_tl] }
               {
                 \dim_eval:n
                   {
@@ -2603,15 +2605,15 @@
               }
           }
           {
-            \prop_put:Nxn \l__tblr_item_skip_size_prop { skip[\l__tblr_i_tl] }
+            \prop_put:Nxn \l__tblr_row_item_skip_size_prop { skip[\l__tblr_i_tl] }
               { 0pt }
           }
         \__tblr_collect_one_row_height:NN \l__tblr_i_tl \l__tblr_h_tl
-        \prop_put:Nxx \l__tblr_item_skip_size_prop
+        \prop_put:Nxx \l__tblr_row_item_skip_size_prop
           { item[\l__tblr_i_tl] } { \l__tblr_h_tl }
       }
     \__tblr_do_if_tracing:nn { cellspan }
-      { \prop_log:N \l__tblr_item_skip_size_prop }
+      { \prop_log:N \l__tblr_row_item_skip_size_prop }
   }
 
 %% #1: row number; #2: tl with result
@@ -2635,7 +2637,7 @@
 
 \cs_new_protected:Npn \__tblr_collect_span_widths:
   {
-    \prop_clear:N \l__tblr_span_size_prop
+    \prop_clear:N \l__tblr_col_span_size_prop
     \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
       {
         \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
@@ -2647,7 +2649,7 @@
               }
             \tl_if_empty:NF \l__tblr_a_tl
               {
-                \__tblr_put_if_larger:Nxx \l__tblr_span_size_prop
+                \__tblr_put_if_larger:Nxx \l__tblr_col_span_size_prop
                   {
                     ( \l__tblr_j_tl -
                       \int_eval:n {\l__tblr_j_tl + \l__tblr_a_tl - 1} )
@@ -2660,15 +2662,15 @@
           }
       }
     \__tblr_do_if_tracing:nn { cellspan }
-      { \prop_log:N \l__tblr_span_size_prop }
+      { \prop_log:N \l__tblr_col_span_size_prop }
   }
 
-\prop_new:N \l__tblr_span_cell_prop
+\prop_new:N \l__tblr_row_span_to_row_prop
 
 \cs_new_protected:Npn \__tblr_collect_span_heights:
   {
-    \prop_clear:N \l__tblr_span_cell_prop
-    \prop_clear:N \l__tblr_span_size_prop
+    \prop_clear:N \l__tblr_row_span_to_row_prop
+    \prop_clear:N \l__tblr_row_span_size_prop
     \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
       {
         \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
@@ -2710,7 +2712,7 @@
                       { [\l__tblr_i_tl][\l__tblr_j_tl] / span-depth }
                       \l__tblr_d_tl
                   }
-                \__tblr_put_if_larger:Nxx \l__tblr_span_size_prop
+                \__tblr_put_if_larger:Nxx \l__tblr_row_span_size_prop
                   {
                     ( \l__tblr_i_tl -
                       \int_eval:n {\l__tblr_i_tl + \l__tblr_a_tl - 1} )
@@ -2725,7 +2727,7 @@
                           { [\l__tblr_i_tl][\l__tblr_j_tl] / span-depth }
                       }
                   }
-                \prop_put:Nxx \l__tblr_span_cell_prop
+                \prop_put:Nxx \l__tblr_row_span_to_row_prop
                   { [\l__tblr_i_tl][\l__tblr_j_tl] }
                   { \int_eval:n {\l__tblr_i_tl + \l__tblr_a_tl - 1} }
               }
@@ -2733,8 +2735,8 @@
       }
     \__tblr_do_if_tracing:nn { cellspan }
       {
-        \prop_log:N \l__tblr_span_cell_prop
-        \prop_log:N \l__tblr_span_size_prop
+        \prop_log:N \l__tblr_row_span_to_row_prop
+        \prop_log:N \l__tblr_row_span_size_prop
       }
   }
 
@@ -2743,8 +2745,8 @@
   {
     \__tblr_calc_item_sizes_from_span_sizes:xNN
       { \int_use:N \l_tblr_col_count_int }
-      \l__tblr_item_skip_size_prop
-      \l__tblr_span_size_prop
+      \l__tblr_col_item_skip_size_prop
+      \l__tblr_col_span_size_prop
     \__tblr_set_all_column_widths:
   }
 
@@ -2753,8 +2755,8 @@
   {
     \__tblr_calc_item_sizes_from_span_sizes:xNN
       { \int_use:N \l_tblr_row_count_int }
-      \l__tblr_item_skip_size_prop
-      \l__tblr_span_size_prop
+      \l__tblr_row_item_skip_size_prop
+      \l__tblr_row_span_size_prop
     \__tblr_set_all_row_heights:
   }
 
@@ -2820,7 +2822,7 @@
       {
         \__tblr_prop_gput:nxx {column}
           { [\l__tblr_j_tl] / @col-width }
-          { \prop_item:Ne \l__tblr_item_skip_size_prop { item[\l__tblr_j_tl] } }
+          { \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[\l__tblr_j_tl] } }
       }
   }
 
@@ -2838,7 +2840,7 @@
           }
         \tl_set:Nx \l__tblr_a_tl
           {
-            \prop_item:Ne \l__tblr_item_skip_size_prop { item[\l__tblr_i_tl] }
+            \prop_item:Ne \l__tblr_row_item_skip_size_prop { item[\l__tblr_i_tl] }
           }
         \__tblr_collect_one_row_height:NN \l__tblr_i_tl \l__tblr_t_tl
         \tl_if_eq:enTF
@@ -2866,7 +2868,7 @@
       }
     %% We need to adjust the depth of the span cell when it's bottom aligned
     %% The depth of the span cell must be the same as the depth of the last row
-    \prop_map_inline:Nn \l__tblr_span_cell_prop
+    \prop_map_inline:Nn \l__tblr_row_span_to_row_prop
       {
         \__tblr_get_span_key_row_col:w ##1
         \tl_set:Nx \l__tblr_v_tl
@@ -2923,9 +2925,9 @@
     \int_step_inline:nnn { #1 } { #2 }
       {
         \tl_set:Nx \l_tmpa_tl
-          { \prop_item:Ne \l__tblr_item_skip_size_prop { skip[##1] } }
+          { \prop_item:Ne \l__tblr_col_item_skip_size_prop { skip[##1] } }
         \tl_set:Nx \l_tmpb_tl
-          { \prop_item:Ne \l__tblr_item_skip_size_prop { item[##1] } }
+          { \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[##1] } }
         \dim_add:Nn #3 { \dim_eval:n { \l_tmpa_tl + \l_tmpb_tl } }
       }
   }
@@ -3402,7 +3404,7 @@
 
 %% #1: row number; #2: column number; #3: dimen register for rowsep above.
 %% #4: dimen register for total height; #5: dimen register for rowsep below.
-%% We can use \l__tblr_item_skip_size_prop which was made before
+%% We can use \l__tblr_row_item_skip_size_prop which was made before
 \cs_new_protected:Npn \__tblr_get_span_vertical_sizes:NNNNN #1 #2 #3 #4 #5
   {
     \tl_set:Nx \l__tblr_r_tl
@@ -3413,11 +3415,11 @@
     \int_step_inline:nnn { #1 } { #1 + \l__tblr_r_tl - 2 }
       {
         \dim_add:Nn #4
-          { \prop_item:Ne \l__tblr_item_skip_size_prop { itemskip[##1] } }
+          { \prop_item:Ne \l__tblr_row_item_skip_size_prop { itemskip[##1] } }
       }
     \dim_add:Nn #4
       {
-        \prop_item:Ne \l__tblr_item_skip_size_prop
+        \prop_item:Ne \l__tblr_row_item_skip_size_prop
           { item[\int_eval:n { #1 + \l__tblr_r_tl - 1 }] }
       }
     %\tl_log:x { cell[#1][#2] ~:~ height = \dim_use:N #3 }
@@ -3593,9 +3595,11 @@
 
 \cs_new_protected:Npn \__tblr_log_tracing_cellspan:
   {
-    \prop_log:N \l__tblr_item_skip_size_prop
-    \prop_log:N \l__tblr_span_size_prop
-    \prop_log:N \l__tblr_span_cell_prop
+    \prop_log:N \l__tblr_col_item_skip_size_prop
+    \prop_log:N \l__tblr_col_span_size_prop
+    \prop_log:N \l__tblr_row_item_skip_size_prop
+    \prop_log:N \l__tblr_row_span_size_prop
+    \prop_log:N \l__tblr_row_span_to_row_prop
   }
 
 \cs_new_protected:Npn \__tblr_do_if_tracing:nn #1 #2
