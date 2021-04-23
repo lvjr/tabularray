@@ -550,21 +550,8 @@
 
 \cs_new_protected_nopar:Npn \__tblr_set_hline_cmd:n #1
   {
-    \tl_if_eq:nnTF {#1} {-}
-      { \__tblr_hline_spec_sub:nV { @dash } \l__tblr_hline_dash_tl }
-      {
-        \seq_set_split:Nnn \l_tmpa_seq {,} {#1}
-        \seq_map_inline:Nn \l_tmpa_seq
-        { \__tblr_set_hline_cmd_aux:w ##1 - s \scan_stop }
-      }
-  }
-
-\cs_new_protected_nopar:Npn \__tblr_set_hline_cmd_aux:w #1 - #2 #3 \scan_stop
-  {
-    \tl_if_eq:nnTF {#2} {s}
-      { \tl_set:Nn \l_tmpa_tl {#1} }
-      { \tl_set:Nn \l_tmpa_tl {#2} }
-    \int_step_inline:nnn {#1} { \l_tmpa_tl }
+    \__tblr_get_childs:nx {#1} { \int_use:N \l_tblr_col_count_int }
+    \clist_map_inline:Nn \l_tblr_childs_clist
       {
         \__tblr_prop_gput:nxx { hline }
           { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / @dash }
@@ -727,22 +714,8 @@
 
 \cs_new_protected_nopar:Npn \__tblr_set_vline_cmd:n #1
   {
-    \tl_if_eq:nnTF {#1} {-}
-      { \__tblr_vline_spec_sub:nV { @dash } \l__tblr_vline_dash_tl }
-      {
-        \seq_set_split:Nnn \l_tmpa_seq {,} {#1}
-        \seq_map_inline:Nn \l_tmpa_seq
-        { \__tblr_set_vline_cmd_aux:w ##1 - s \scan_stop }
-      }
-  }
-\cs_generate_variant:Nn \__tblr_set_vline_cmd:n { V }
-
-\cs_new_protected_nopar:Npn \__tblr_set_vline_cmd_aux:w #1 - #2 #3 \scan_stop
-  {
-    \tl_if_eq:nnTF {#2} {s}
-      { \tl_set:Nn \l_tmpa_tl {#1} }
-      { \tl_set:Nn \l_tmpa_tl {#2} }
-    \int_step_inline:nnn {#1} { \l_tmpa_tl }
+    \__tblr_get_childs:nx {#1} { \int_use:N \l_tblr_row_count_int }
+    \clist_map_inline:Nn \l_tblr_childs_clist
       {
         \__tblr_prop_gput:nxx { vline }
           { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / @dash }
