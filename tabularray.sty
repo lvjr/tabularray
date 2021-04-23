@@ -396,7 +396,7 @@
 \regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
 
 %% \SetHlines command for setting every hline in the table
-\NewTableCommand \SetHlines [3] [next]
+\NewTableCommand \SetHlines [3] [+]
   {
     \tblr_set_every_hline:nnn {#1} {#2} {#3}
   }
@@ -433,14 +433,14 @@
 \tl_new:N \l__tblr_hline_cols_tl  % the columns of the hline
 \tl_new:N \l__tblr_hline_dash_tl  % dash style
 
-\NewTableCommand \cline [2] [] { \SetHline [last] {#2} {#1} }
+\NewTableCommand \cline [2] [] { \SetHline [=] {#2} {#1} }
 
-\NewTableCommand \hline [1] [] { \SetHline [next] {-} {#1} }
+\NewTableCommand \hline [1] [] { \SetHline [+] {-} {#1} }
 
-%% #1: the index of the hline (may be next or last)
+%% #1: the index of the hline (may be + or =)
 %% #2: which columns of the hline, separate by commas
 %% #3: key=value pairs
-\NewTableCommand \SetHline [3] [next]
+\NewTableCommand \SetHline [3] [+]
   {
     \tblr_set_hline:nnn {#1} {#2} {#3}
   }
@@ -480,7 +480,7 @@
   }
 \cs_generate_variant:Nn \__tblr_set_hline_aux:nn { Vn }
 
-%% #1: the index of hline to set (may be next or last)
+%% #1: the index of hline to set (may be + or =)
 \cs_new_protected:Npn \__tblr_set_hline_num:n #1
   {
     \tl_clear:N \l__tblr_hline_num_tl
@@ -494,7 +494,7 @@
           { [\int_use:N \rownum] / @hline-count } { \l__tblr_hline_count_tl }
       }
       {
-        \tl_if_eq:nnF {#1} { last }
+        \tl_if_eq:nnF {#1} {=}
           {
             \tl_set:Nx \l__tblr_hline_count_tl
               { \int_eval:n { \l__tblr_hline_count_tl + 1 } }
@@ -560,7 +560,7 @@
   }
 
 %% \SetVlines command for setting every vline in the table
-\NewTableCommand \SetVlines [3] [next]
+\NewTableCommand \SetVlines [3] [+]
   {
     \tblr_set_every_vline:nnn {#1} {#2} {#3}
   }
@@ -597,14 +597,14 @@
 \tl_new:N \l__tblr_vline_rows_tl  % the rows of the vline
 \tl_new:N \l__tblr_vline_dash_tl  % dash style
 
-\NewTableCommand \rline [2] [] { \SetVline [last] {#2} {#1} }
+\NewTableCommand \rline [2] [] { \SetVline [=] {#2} {#1} }
 
-\NewTableCommand \vline [1] [] { \SetVline [next] {-} {#1} }
+\NewTableCommand \vline [1] [] { \SetVline [+] {-} {#1} }
 
-%% #1: the index of the vline (may be next or last)
+%% #1: the index of the vline (may be + or =)
 %% #2: which rows of the vline, separate by commas
 %% #3: key=value pairs
-\NewTableCommand \SetVline [3] [next]
+\NewTableCommand \SetVline [3] [+]
   {
     \tblr_set_vline:nnn {#1} {#2} {#3}
   }
@@ -644,7 +644,7 @@
   }
 \cs_generate_variant:Nn \__tblr_set_vline_aux:nn { Vn }
 
-%% #1: the index of vline to set (may be next or last)
+%% #1: the index of vline to set (may be + or =)
 \cs_new_protected:Npn \__tblr_set_vline_num:n #1
   {
     \tl_clear:N \l__tblr_vline_num_tl
@@ -658,7 +658,7 @@
           { [\int_use:N \colnum] / @vline-count } { \l__tblr_vline_count_tl }
       }
       {
-        \tl_if_eq:nnF {#1} { last }
+        \tl_if_eq:nnF {#1} {=}
           {
             \tl_set:Nx \l__tblr_vline_count_tl
               { \int_eval:n { \l__tblr_vline_count_tl + 1 } }
