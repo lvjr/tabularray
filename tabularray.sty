@@ -63,9 +63,6 @@
 \int_new:N \l__tblr_r_int % for row number
 \dim_new:N \l__tblr_d_dim % for depth
 \dim_new:N \l__tblr_h_dim % for height
-\dim_new:N \l__tblr_r_dim
-\dim_new:N \l__tblr_s_dim
-\dim_new:N \l__tblr_t_dim
 \dim_new:N \l__tblr_v_dim
 \dim_new:N \l__tblr_w_dim % for width
 \box_new:N \l__tblr_a_box
@@ -77,6 +74,12 @@
 \dim_new:N \g__tblr_d_dim % for depth
 \dim_new:N \g__tblr_h_dim % for height
 \dim_new:N \g__tblr_w_dim % for width
+\dim_new:N \g__tblr_o_dim
+\dim_new:N \g__tblr_p_dim
+\dim_new:N \g__tblr_q_dim
+\dim_new:N \g__tblr_r_dim
+\dim_new:N \g__tblr_s_dim
+\dim_new:N \g__tblr_t_dim
 
 \int_new:N \g_tblr_level_int % store table nesting level
 
@@ -3280,14 +3283,25 @@
           { \__tblr_prop_item:ne { cell } { [#1][#2] / background } }
         \tl_if_empty:NF \l__tblr_b_tl
           {
+            \__tblr_prop_if_in:nxTF { cell } { [#1][#2] / colspan }
+              {
+                \__tblr_get_span_horizontal_sizes:NNNNN #1 #2
+                  \g__tblr_o_dim \g__tblr_p_dim \g__tblr_q_dim
+                \dim_set:Nn \l_tmpa_dim
+                  { \g__tblr_o_dim + \g__tblr_p_dim + \g__tblr_q_dim }
+              }
+              {
+                \dim_set:Nn \l_tmpa_dim
+                  { \l__tblr_x_tl + \l__tblr_w_tl + \l__tblr_y_tl }
+              }
             \__tblr_build_cell_background:nnnn
-              { \dim_eval:n { \l__tblr_x_tl + \l__tblr_w_tl + \l__tblr_y_tl } }
+              { \dim_use:N \l_tmpa_dim }
               { \g__tblr_h_dim }
               {
                 \dim_eval:n
                   {
-                    \l__tblr_r_dim + \l__tblr_s_dim
-                                   + \l__tblr_t_dim - \g__tblr_h_dim
+                    \g__tblr_r_dim + \g__tblr_s_dim
+                                   + \g__tblr_t_dim - \g__tblr_h_dim
                   }
               }
               { \l__tblr_b_tl }
@@ -3310,7 +3324,7 @@
     \tl_set:Nx \l__tblr_y_tl
       { \__tblr_prop_item:ne { column } { [#2] / colsep-right } }
     \__tblr_get_span_vertical_sizes:NNNNN #1 #2
-      \l__tblr_r_dim \l__tblr_s_dim \l__tblr_t_dim
+      \g__tblr_r_dim \g__tblr_s_dim \g__tblr_t_dim
     \__tblr_build_span_cell_background:nn {#1} {#2}
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / halign } }
@@ -3322,7 +3336,7 @@
         \__tblr_get_cell_text:nn { #1 } { #2 }
         \tl_if_eq:NnT \l__tblr_a_tl { center } { \hfil }
       }
-    \vbox_set_to_ht:Nnn \l__tblr_b_box { \l__tblr_s_dim }
+    \vbox_set_to_ht:Nnn \l__tblr_b_box { \g__tblr_s_dim }
       {
         \tl_if_eq:NnF { \l__tblr_v_tl } { top } { \vfil }
         \box_use:N \l__tblr_a_box
@@ -3357,7 +3371,7 @@
     \tl_set:Nx \l__tblr_y_tl
       { \__tblr_prop_item:ne { column } { [#2] / colsep-right } }
     \__tblr_get_span_vertical_sizes:NNNNN #1 #2
-      \l__tblr_r_dim \l__tblr_s_dim \l__tblr_t_dim
+      \g__tblr_r_dim \g__tblr_s_dim \g__tblr_t_dim
     \__tblr_build_span_cell_background:nn {#1} {#2}
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / halign } }
@@ -3382,7 +3396,7 @@
               { [\int_eval:n {#1 + \l__tblr_r_tl - 1}] / @row-foot }
           }
       }
-    \vbox_set_to_ht:Nnn \l__tblr_b_box { \l__tblr_s_dim }
+    \vbox_set_to_ht:Nnn \l__tblr_b_box { \g__tblr_s_dim }
       {
         \tl_if_eq:NnF { \l__tblr_v_tl } { top } { \vfil }
         \box_use:N \l__tblr_a_box
@@ -3407,29 +3421,67 @@
 %% We can use \l__tblr_row_item_skip_size_prop which was made before
 \cs_new_protected:Npn \__tblr_get_span_vertical_sizes:NNNNN #1 #2 #3 #4 #5
   {
+    \group_begin:
     \tl_set:Nx \l__tblr_r_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / rowspan } }
-    \dim_set:Nn #3
+    \dim_gset:Nn #3
       { \__tblr_prop_item:ne { row } { [#1] / rowsep-above } }
-    \dim_zero:N #4
+    \dim_gzero:N #4
     \int_step_inline:nnn { #1 } { #1 + \l__tblr_r_tl - 2 }
       {
-        \dim_add:Nn #4
+        \dim_gadd:Nn #4
           { \prop_item:Ne \l__tblr_row_item_skip_size_prop { itemskip[##1] } }
       }
-    \dim_add:Nn #4
+    \dim_gadd:Nn #4
       {
         \prop_item:Ne \l__tblr_row_item_skip_size_prop
           { item[\int_eval:n { #1 + \l__tblr_r_tl - 1 }] }
       }
-    %\tl_log:x { cell[#1][#2] ~:~ height = \dim_use:N #3 }
-    \dim_set:Nn #5
+    \dim_gset:Nn #5
       {
         \__tblr_prop_item:ne { row }
           { [\int_eval:n {#1 + \l__tblr_r_tl - 1}] / rowsep-below }
       }
+    \group_end:
+    %\tl_log:x { cell[#1][#2] ~:~ \dim_use:N #3, \dim_use:N #4, \dim_use:N #5 }
   }
 
+%% #1: row number; #2: column number; #3: dimen register for colsep left.
+%% #4: dimen register for total width; #5: dimen register for colsep right.
+%% We can use \l__tblr_col_item_skip_size_prop which was made before
+%% But when span-width=minimal, there are no itemskip in the prop list.
+%% Therefore we need to calculate them from the sizes of items and skips
+\cs_new_protected:Npn \__tblr_get_span_horizontal_sizes:NNNNN #1 #2 #3 #4 #5
+  {
+    \group_begin:
+    \tl_set:Nx \l__tblr_c_tl
+      { \__tblr_prop_item:ne { cell } { [#1][#2] / colspan } }
+    \dim_gset:Nn #3
+      { \__tblr_prop_item:ne { column } { [#2] / colsep-left } }
+    \dim_gzero:N #4
+    \int_step_inline:nnn { #2 } { #2 + \l__tblr_c_tl - 2 }
+      {
+        \dim_gadd:Nn #4
+          { \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[##1] } }
+        \dim_gadd:Nn #4
+          {
+            \prop_item:Ne \l__tblr_col_item_skip_size_prop
+              { skip[\int_eval:n { ##1 + 1 }] }
+          }
+      }
+    \dim_gadd:Nn #4
+      {
+        \prop_item:Ne \l__tblr_col_item_skip_size_prop
+          { item[\int_eval:n { #2 + \l__tblr_c_tl - 1 }] }
+      }
+    \dim_gset:Nn #5
+      {
+        \__tblr_prop_item:ne { column }
+          { [\int_eval:n {#2 + \l__tblr_c_tl - 1}] / colsep-right }
+      }
+    \group_end:
+    %\tl_log:x { cell[#1][#2] ~:~ \dim_use:N #3, \dim_use:N #4, \dim_use:N #5 }
+  }
 
 %%% --------------------------------------------------------
 %%  \section{Tracing Tabularray}
