@@ -2198,6 +2198,7 @@
 
 \cs_new_protected:Npn \__tblr_get_cell_text_real:nn #1 #2
   {
+    \group_begin:
     \tl_set:Nx \l__tblr_c_tl { \__tblr_prop_item:ne {text} {[#1][#2]} }
     \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne {cell} { [#1][#2] / halign } }
@@ -2215,12 +2216,17 @@
         \tl_set_eq:NN \l_tmpa_tl \l__tblr_c_tl
         \__tblr_insert_braces:N \l_tmpa_tl
         \seq_set_split:NnV \l_tmpa_seq { \\ } \l_tmpa_tl
-        \int_compare:nNnT { \seq_count:N \l_tmpa_seq } > { 1 }
+        \int_compare:nNnTF { \seq_count:N \l_tmpa_seq } > { 1 }
           {
             \tl_put_left:Nn \l__tblr_c_tl { \begin{tblr}{ @{} Q @{} } }
             \tl_put_right:Nn \l__tblr_c_tl { \end{tblr} }
+            \l__tblr_c_tl
           }
-        \l__tblr_c_tl
+          {
+            \tl_if_eq:NnF \l__tblr_h_tl {l} { \hfil }
+            \l__tblr_c_tl
+            \tl_if_eq:NnF \l__tblr_h_tl {r} { \hfil }
+          }
       }
       {
         $ \m@th \cs:w __tlbr_vbox_ \l__tblr_v_tl :n \cs_end: {
@@ -2230,6 +2236,7 @@
             \l__tblr_c_tl
         } $
       }
+    \group_end:
   }
 
 %% Update natural dimensions of the cell
@@ -3186,11 +3193,7 @@
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / halign } }
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
-      {
-        \tl_if_eq:NnF \l__tblr_a_tl { l } { \hfil }
-        \__tblr_get_cell_text:nn { #1 } { #2 }
-        \tl_if_eq:NnT \l__tblr_a_tl { c } { \hfil }
-      }
+      { \__tblr_get_cell_text:nn {#1} {#2} }
     \skip_horizontal:n { \l__tblr_x_tl }
     \box_use:N \l__tblr_a_box
     \skip_horizontal:n { \l__tblr_y_tl }
@@ -3214,11 +3217,7 @@
     \tl_set:Nx \l__tblr_v_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / valign } }
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
-      {
-        \tl_if_eq:NnF \l__tblr_a_tl { l } { \hfil }
-        \__tblr_get_cell_text:nn { #1 } { #2 }
-        \tl_if_eq:NnT \l__tblr_a_tl { c } { \hfil }
-      }
+      { \__tblr_get_cell_text:nn {#1} {#2} }
     \tl_if_eq:NnT { \l__tblr_v_tl } { t }
       {
         \box_set_ht:Nn \l__tblr_a_box
@@ -3332,11 +3331,7 @@
     \tl_set:Nx \l__tblr_v_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / valign } }
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
-      {
-        \tl_if_eq:NnF \l__tblr_a_tl { l } { \hfil }
-        \__tblr_get_cell_text:nn { #1 } { #2 }
-        \tl_if_eq:NnT \l__tblr_a_tl { c } { \hfil }
-      }
+      { \__tblr_get_cell_text:nn {#1} {#2} }
     \vbox_set_to_ht:Nnn \l__tblr_b_box { \g__tblr_s_dim }
       {
         \tl_if_eq:NnF { \l__tblr_v_tl } { t } { \vfil }
@@ -3379,11 +3374,7 @@
     \tl_set:Nx \l__tblr_v_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / valign } }
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
-      {
-        \tl_if_eq:NnF \l__tblr_a_tl { l } { \hfil }
-        \__tblr_get_cell_text:nn { #1 } { #2 }
-        \tl_if_eq:NnT \l__tblr_a_tl { c } { \hfil }
-      }
+      { \__tblr_get_cell_text:nn {#1} {#2} }
     \tl_if_eq:NnT { \l__tblr_v_tl } { t }
       {
         \box_set_ht:Nn \l__tblr_a_box
