@@ -872,7 +872,7 @@
     b .code:n = \__tblr_prop_gput:nxx {cell}
                   {[\int_use:N \rownum][\int_use:N \colnum] / valign} {b},
     wd .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / span-width} {#1},
+                  {[\int_use:N \rownum][\int_use:N \colnum] / width} {#1},
     bg .code:n = \__tblr_prop_gput:nxx {cell}
                   {[\int_use:N \rownum][\int_use:N \colnum] / background} {#1},
     unknown .code:n = \__tblr_cell_unknown_key:V \l_keys_key_str,
@@ -888,7 +888,7 @@
       {
         \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
         \__tblr_prop_gput:nxx {cell}
-          { [\int_use:N \rownum][\int_use:N \colnum] / span-width }
+          { [\int_use:N \rownum][\int_use:N \colnum] / width }
           { \dim_eval:n { \l__tblr_v_tl } }
       }
   }
@@ -1826,7 +1826,6 @@
   {
     halign         = l,
     valign         = t,
-    content-width  = 0pt,
     content-height = 0pt,
     content-depth  = 0pt,
   }
@@ -2201,15 +2200,18 @@
     \group_begin:
     \tl_set:Nx \l__tblr_c_tl { \__tblr_prop_item:ne {text} {[#1][#2]} }
     \tl_set:Nx \l__tblr_h_tl
-      { \__tblr_prop_item:ne {cell} { [#1][#2] / halign } }
+      { \__tblr_prop_item:ne { cell } { [#1][#2] / halign } }
     \tl_set:Nx \l__tblr_v_tl
-      { \__tblr_prop_item:ne {cell} { [#1][#2] / valign } }
+      { \__tblr_prop_item:ne { cell } { [#1][#2] / valign } }
     \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne {cell} { [#1][#2] / span-width } }
+      { \__tblr_prop_item:ne { cell } { [#1][#2] / width } }
     \tl_if_empty:NT \l__tblr_w_tl
       {
-        \tl_set:Nx \l__tblr_w_tl
-          { \__tblr_prop_item:ne {column} { [#2] / width } }
+        \__tblr_prop_if_in:nxF { cell } { [#1][#2] / colspan }
+          {
+            \tl_set:Nx \l__tblr_w_tl
+              { \__tblr_prop_item:ne { column } { [#2] / width } }
+          }
       }
     \tl_if_empty:NTF \l__tblr_w_tl
       {
@@ -2247,23 +2249,9 @@
   {
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne {cell} { [#1][#2] / colspan } }
-    \tl_set:Nx \l__tblr_b_tl
-      { \__tblr_prop_item:ne {cell} { [#1][#2] / span-width } }
-    \tl_if_empty:NTF \l__tblr_a_tl
+    \tl_if_empty:NF \l__tblr_a_tl
       {
-        \__tblr_prop_gput:nxx
-          {cell} { [#1][#2] / content-width } { \dim_use:N #3 }
-      }
-      {
-        \tl_if_empty:NTF \l__tblr_b_tl
-          {
-            \__tblr_prop_gput:nxx
-              {cell} {[#1][#2] / natural-width } { \dim_use:N #3 }
-          }
-          {
-            \__tblr_prop_gput:nxx
-              {cell} {[#1][#2] / content-width } { \dim_use:N #3 }
-          }
+        \__tblr_prop_gput:nxx {cell} { [#1][#2] / @cell-width } { \dim_use:N #3 }
         \dim_zero:N #3 % don't affect column width
       }
     \tl_set:Nx \l__tblr_a_tl
@@ -2692,7 +2680,7 @@
                   }
                   {
                     \__tblr_prop_item:ne {cell}
-                      { [\l__tblr_i_tl][\l__tblr_j_tl] / natural-width }
+                      { [\l__tblr_i_tl][\l__tblr_j_tl] / @cell-width }
                   }
               }
           }
@@ -2947,7 +2935,7 @@
                   { \int_eval:n { \l__tblr_j_tl + \l__tblr_a_tl - 1 } }
                   \l__tblr_w_dim
                 \__tblr_prop_gput:nxx {cell}
-                  { [\l__tblr_i_tl][\l__tblr_j_tl] / span-width }
+                  { [\l__tblr_i_tl][\l__tblr_j_tl] / width }
                   { \dim_use:N \l__tblr_w_dim }
               }
           }
