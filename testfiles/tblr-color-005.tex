@@ -1,0 +1,64 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{ninecolors}
+\usepackage{tabularray}
+
+\ExplSyntaxOn
+\let \replicate = \prg_replicate:nn
+\ExplSyntaxOff
+
+\begin{document}
+
+\hrule
+
+\START
+
+\bigskip
+
+\BEGINTEST{multicolumn: compute column widths from span widths}
+TB\begin{tblr}{|l|l|l|Q[t,l]|l|}
+\hline
+  11111111 & 222222 & 333big333 & 4444 \\
+\hline
+  \SetCell[c=2]{teal7}12 12 12 12 12 12 12 12 12 12 & 222 & 333 & 444 \\
+\hline
+  \SetCell[c=3]{red7}13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 & 222 & 333 & 444 \\
+\hline
+  111 & \SetCell[c=2]{blue7}23 23 23 23 23 23 23 23 & 333 & 444 \\
+\hline
+  \SetCell[c=4]{brown7}14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 & 222 & 333 & 444 \\
+\hline
+  111 & \SetCell[c=3]{cyan7}24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 & 333 & 444 \\
+\hline
+  111 & 222 & \SetCell[c=2]{yellow7}34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 & 444 \\
+\hline
+\end{tblr}LR
+\ENDTEST
+
+\bigskip
+
+\BEGINTEST{multicolumn: compute span widths from column widths}
+TB\begin{tblr}{span-width=minimal,colspec={|l|l|l|Q[t,l]|l|}}
+\hline
+  11111111 & 222222 & 333big333 & 4444 \\
+\hline
+  \SetCell[c=2]{teal7}12 12 12 12 12 12 12 12 12 12 & 222 & 333 & 444 \\
+\hline
+  \SetCell[c=3]{red7}13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 & 222 & 333 & 444 \\
+\hline
+  111 & \SetCell[c=2]{blue7}23 23 23 23 23 23 23 23 & 333 & 444 \\
+\hline
+  \SetCell[c=4]{brown7}14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 & 222 & 333 & 444 \\
+\hline
+  111 & \SetCell[c=3]{cyan7}24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 & 333 & 444 \\
+\hline
+  111 & 222 & \SetCell[c=2]{yellow7}34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 & 444 \\
+\hline
+\end{tblr}LR
+\ENDTEST
+
+\end{document}

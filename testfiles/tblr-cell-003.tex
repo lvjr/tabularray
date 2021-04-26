@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\ExplSyntaxOn
+\let \replicate = \prg_replicate:nn
+\ExplSyntaxOff
+
+\begin{document}
+
+\hrule\bigskip
+
+\begin{tabular}{|p{2cm}|b{2cm}|m{2cm}|b{2cm}|p{2cm}|r|}
+\hline
+  111 \newline 111 & 222Big \newline Big & 333 \newline Small &
+  ooo \newline Med & 555 \newline fox & 666 \\
+\hline
+  111 \newline Big \newline 1xx & 222 \newline Big & 333 \newline Small &
+  444 \newline Med & 555 \newline fox & 66666 \\
+\hline
+\end{tabular}
+
+\bigskip
+
+\BEGINTEST{break line in cells}
+\begin{tblr}{|Q[p,r,wd=2cm]|b{2cm}|m{2cm}|Q[b,r,wd=2cm]|p{2cm}|r|}
+\hline
+  {111 \\ 111} & 222Big \newline Big & 333 \newline Small \newline Three &
+  ooo \newline Med & 555 \newline fox & 666 \\
+\hline
+  {111 \\ Big \\ 1xx} & 222 \newline Big & 333 \newline Small &
+  444 \newline Med & 555 \newline fox & 66666 \\
+\hline
+  {111 \\ Small} & ooo \newline 222 \newline Big & 333 \newline Small &
+  444 \newline Med & 555 \newline fox & 66666 \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}

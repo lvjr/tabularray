@@ -1,0 +1,70 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+
+\ExplSyntaxOn
+\let \replicate = \prg_replicate:nn
+\ExplSyntaxOff
+
+\begin{document}
+
+\hrule
+
+\START
+
+\bigskip
+
+\BEGINTEST{hlines and vlines}
+\begin{tblr}{hlines,vlines} % <--- when the value is empty, give solid lines
+  one & two    & three  & alpha & beta    & gamma \\
+ four & five   & six    & delta & epsilon & zeta  \\
+seven & eight  & nine   & eta   & theta   & iota  \\
+  ten & eleven & twelve & kappa & lambda  & mu    \\
+  one & two    & three  & alpha & beta    & gamma \\
+ four & five   & six    & delta & epsilon & zeta  \\
+seven & eight  & nine   & eta   & theta   & iota  \\
+  ten & eleven & twelve & kappa & lambda  & mu    \\
+\end{tblr}
+\ENDTEST
+
+\bigskip
+\BEGINTEST{hlines and vlines}
+\begin{tblr}{
+  hlines = {dotted},
+  vlines = {1,3,5,7}{dashed},
+  vlines = {1}{2,4,6,8}{}
+}
+  one & two    & three  & alpha & beta    & gamma \\
+ four & five   & six    & delta & epsilon & zeta  \\
+seven & eight  & nine   & eta   & theta   & iota  \\
+  ten & eleven & twelve & kappa & lambda  & mu    \\
+  one & two    & three  & alpha & beta    & gamma \\
+ four & five   & six    & delta & epsilon & zeta  \\
+seven & eight  & nine   & eta   & theta   & iota  \\
+  ten & eleven & twelve & kappa & lambda  & mu    \\
+\end{tblr}
+\ENDTEST
+
+\bigskip
+
+\BEGINTEST{hlines and vlines}
+\begin{tblr}{}
+  \SetHlines{-}{dotted}
+  \SetVlines{odd}{dashed}
+  \SetVlines[1]{even}{}
+  one & two    & three  & alpha & beta    & gamma \\
+ four & five   & six    & delta & epsilon & zeta  \\
+seven & eight  & nine   & eta   & theta   & iota  \\
+  ten & eleven & twelve & kappa & lambda  & mu    \\
+  one & two    & three  & alpha & beta    & gamma \\
+ four & five   & six    & delta & epsilon & zeta  \\
+seven & eight  & nine   & eta   & theta   & iota  \\
+  ten & eleven & twelve & kappa & lambda  & mu    \\
+\end{tblr}
+\ENDTEST
+
+\end{document}

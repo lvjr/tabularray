@@ -4,7 +4,6 @@
 
 \input{regression-test}
 
-\usepackage{ninecolors}
 \usepackage{tabularray}
 
 \ExplSyntaxOn
@@ -19,14 +18,14 @@
 
 \bigskip
 
-\BEGINTEST{cell background}
+\BEGINTEST{normal cell}
 \begin{tblr}[b]{|l|[dotted]|[2pt]c|r|[solid]|[dashed]|}
 \hline
-\SetCell{b,r,orange}Onej   &  Two  & Three \\
+\SetCell{b,r}Onej   &  Two  & Three \\
 \hline\hline\hline
-Four  & \SetCell{teal}Five  &   Six \\
+Four  & Five  &   Six \\
 \hline\hline
-\SetCell{lime}Seven & Eight &  Nine \\
+Seven & Eight &  Nine \\
 \hline
 \end{tblr}
 \ENDTEST

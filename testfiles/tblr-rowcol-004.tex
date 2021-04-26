@@ -1,0 +1,70 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+
+\ExplSyntaxOn
+\let \replicate = \prg_replicate:nn
+\ExplSyntaxOff
+
+\begin{document}
+
+\hrule
+
+\START
+
+\vspace{2em}
+
+%% 固定列的宽度太大，表格宽度不够
+\BEGINTEST{normal columns with large widths}
+\begin{tblr}{width=300pt,colspec=|l|Q[-1]|Q[-2]|Q[-5]|Q[-2]|l|Q[2]|Q[3]|l|}
+\hline
+\replicate{6}{\rule{10pt}{2pt}\hfil} & \rule{6pt}{2pt} & \rule{10pt}{2pt} & 
+\rule{6pt}{2pt} & \rule{10pt}{2pt} & \replicate{7}{\rule{10pt}{2pt}\hfil} &
+\rule{10pt}{2pt} & \rule{6pt}{2pt} & \replicate{8}{\rule{10pt}{2pt}\hfil} \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\vspace{2em}
+
+%% X 列的系数有正有负
+\BEGINTEST{extendable columns with positive and negative coefficients}
+\begin{tblr}{width=300pt,colspec=|l|Q[-1]|Q[-2]|Q[-5]|Q[-2]|l|Q[2]|Q[3.0]|l|}
+\hline
+\rule{6pt}{2pt} & \rule{10pt}{2pt} & \replicate{30}{\rule{10pt}{2pt}\hfil} &
+\replicate{8}{\rule{10pt}{2pt}\hfil} & \replicate{8}{\rule{10pt}{2pt}\hfil} &
+\rule{6pt}{2pt} & Hello & World & \rule{6pt}{2pt} \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\vspace{2em}
+%% X 列的系数全是负数，且有饱满列
+\BEGINTEST{extendable columns with only negative coefficients}
+\begin{tblr}{width=300pt,colspec=|l|Q[-1]|Q[-2]|Q[-5]|Q[-2]|l|Q[-2]|Q[-3]|l|}
+\hline
+\rule{6pt}{2pt} & \rule{10pt}{2pt} & \replicate{30}{\rule{10pt}{2pt}\hfil} &
+\replicate{8}{\rule{10pt}{2pt}\hfil} & \replicate{8}{\rule{10pt}{2pt}\hfil} &
+\rule{6pt}{2pt} & Hello & World & \rule{6pt}{2pt} \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\vspace{2em}
+
+%% X 列的系数全是负数，且无饱满列
+\BEGINTEST{extendable underfull columns with only negative coefficients}
+\begin{tblr}{width=300pt,colspec=|l|Q[-1]|Q[-2]|Q[-5]|Q[-2]|l|Q[-2]|Q[-3]|l|}
+\hline
+\rule{6pt}{2pt} & \rule{10pt}{2pt} & \replicate{3}{\rule{10pt}{2pt}\hfil} &
+\replicate{4}{\rule{10pt}{2pt}\hfil} & \replicate{2}{\rule{10pt}{2pt}\hfil} &
+\rule{6pt}{2pt} & \rule{10pt}{2pt} & \rule{10pt}{2pt} & \rule{6pt}{2pt} \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}
