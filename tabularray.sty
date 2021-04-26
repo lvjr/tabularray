@@ -2888,24 +2888,6 @@
         \__tblr_prop_gput:nxx {row}
           { [\l__tblr_i_tl] / @row-height } { \l__tblr_a_tl }
       }
-    %% We need to adjust the depth of the span cell when it's bottom aligned
-    %% The depth of the span cell must be the same as the depth of the last row
-    \prop_map_inline:Nn \l__tblr_row_span_to_row_prop
-      {
-        \__tblr_get_span_key_row_col:w ##1
-        \tl_set:Nx \l__tblr_v_tl
-          {
-            \__tblr_prop_item:ne {cell}
-              { [\l__tblr_i_tl][\l__tblr_j_tl] / valign }
-          }
-        \tl_if_eq:NnT \l__tblr_v_tl { b }
-          {
-            \tl_set:Nx \l__tblr_r_tl
-              { \__tblr_prop_item:ne {cell} { ##1 / rowspan } }
-            \__tblr_prop_gput:nxx {cell} { ##1 / @cell-depth }
-              { \__tblr_prop_item:ne {row} { [##2] / @row-foot } }
-          }
-      }
   }
 
 \cs_new_protected:Npn \__tblr_get_span_key_row_col:w [#1][#2]
