@@ -2259,9 +2259,9 @@
     \tl_if_empty:NF \l__tblr_a_tl
       {
         \__tblr_prop_gput:nxx {cell}
-          { [#1][#2] / span-height } { \dim_use:N #4 }
+          { [#1][#2] / @cell-height } { \dim_use:N #4 }
         \__tblr_prop_gput:nxx {cell}
-          { [#1][#2] / span-depth } { \dim_use:N #5 }
+          { [#1][#2] / @cell-depth } { \dim_use:N #5 }
         %% Don't affect row height
         \tl_if_eq:NnF \l__tblr_v_tl { t } {
           \dim_zero:N #4
@@ -2717,7 +2717,7 @@
                           { [\l__tblr_i_tl] / @row-head }
                       }
                     \__tblr_prop_gput:nxV {cell}
-                      { [\l__tblr_i_tl][\l__tblr_j_tl] / span-height }
+                      { [\l__tblr_i_tl][\l__tblr_j_tl] / @cell-height }
                       \l__tblr_h_tl
                   }
                 \tl_if_eq:NnT \l__tblr_v_tl { b }
@@ -2731,7 +2731,7 @@
                           }
                       }
                     \__tblr_prop_gput:nxV {cell}
-                      { [\l__tblr_i_tl][\l__tblr_j_tl] / span-depth }
+                      { [\l__tblr_i_tl][\l__tblr_j_tl] / @cell-depth }
                       \l__tblr_d_tl
                   }
                 \__tblr_put_if_larger:Nxx \l__tblr_row_span_size_prop
@@ -2743,10 +2743,10 @@
                     \dim_eval:n
                       {
                         \__tblr_prop_item:ne {cell}
-                          { [\l__tblr_i_tl][\l__tblr_j_tl] / span-height }
+                          { [\l__tblr_i_tl][\l__tblr_j_tl] / @cell-height }
                         +
                         \__tblr_prop_item:ne {cell}
-                          { [\l__tblr_i_tl][\l__tblr_j_tl] / span-depth }
+                          { [\l__tblr_i_tl][\l__tblr_j_tl] / @cell-depth }
                       }
                   }
                 \prop_put:Nxx \l__tblr_row_span_to_row_prop
@@ -2902,7 +2902,7 @@
           {
             \tl_set:Nx \l__tblr_r_tl
               { \__tblr_prop_item:ne {cell} { ##1 / rowspan } }
-            \__tblr_prop_gput:nxx {cell} { ##1 / span-depth }
+            \__tblr_prop_gput:nxx {cell} { ##1 / @cell-depth }
               { \__tblr_prop_item:ne {row} { [##2] / @row-foot } }
           }
       }
