@@ -2325,7 +2325,7 @@
             { \__tblr_prop_item:ne { row } { [#1] / @row-head } }
           \tl_set:Nx \l_tmpa_tl { \dim_max:nn {#3} { \l__tblr_e_tl } }
           \tl_set:Nx \l_tmpb_tl
-            { \dim_max:nn {#4} { \l__tblr_h_tl - \l__tblr_e_tl } }
+            { \dim_max:nn {#4} { \l__tblr_h_tl - \l_tmpa_tl } }
           \__tblr_prop_gput_if_larger:nxx { row }
             { [#1] / @row-head } { \l_tmpa_tl }
           \__tblr_prop_gput_if_larger:nxx { row }
@@ -2340,9 +2340,9 @@
         {
           \tl_set:Nx \l__tblr_f_tl
             { \__tblr_prop_item:ne { row } { [#1] / @row-foot } }
-          \tl_set:Nx \l_tmpa_tl
-            { \dim_max:nn {#3} { \l__tblr_h_tl - \l__tblr_f_tl } }
           \tl_set:Nx \l_tmpb_tl { \dim_max:nn {#4} { \l__tblr_f_tl } }
+          \tl_set:Nx \l_tmpa_tl
+            { \dim_max:nn {#3} { \l__tblr_h_tl - \l_tmpb_tl } }
           \__tblr_prop_gput_if_larger:nxx { row }
             { [#1] / @row-foot } { \l_tmpb_tl }
           \__tblr_prop_gput_if_larger:nxx { row }
