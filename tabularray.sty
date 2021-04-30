@@ -2143,6 +2143,51 @@
       { \l__tblr_b_tl }
   }
 
+%% current cell alignments
+\tl_new:N \g__tblr_cell_halign_tl
+\tl_new:N \g__tblr_cell_valign_tl
+\tl_new:N \g__tblr_cell_middle_tl
+
+\tl_const:Nn \c__tblr_valign_h_tl { h }
+\tl_const:Nn \c__tblr_valign_m_tl { m }
+\tl_const:Nn \c__tblr_valign_f_tl { f }
+\tl_const:Nn \c__tblr_valign_t_tl { t }
+\tl_const:Nn \c__tblr_valign_b_tl { b }
+
+%% #1: row number; #2: column number
+\cs_new_protected:Npn \__tblr_get_cell_alignments:nn #1 #2
+  {
+    \group_begin:
+    \tl_gset:Nx \g__tblr_cell_halign_tl
+      { \__tblr_prop_item:ne { cell } { [#1][#2] / halign } }
+    \tl_set:Nx \l__tblr_v_tl
+      { \__tblr_prop_item:ne { cell } { [#1][#2] / valign } }
+    \tl_case:NnF \l__tblr_v_tl
+      {
+        \c__tblr_valign_t_tl
+          {
+            \tl_gset:Nn \g__tblr_cell_valign_tl {m}
+            \tl_gset:Nn \g__tblr_cell_middle_tl {t}
+          }
+        \c__tblr_valign_m_tl
+          {
+            \tl_gset:Nn \g__tblr_cell_valign_tl {m}
+            \tl_gset:Nn \g__tblr_cell_middle_tl {m}
+          }
+        \c__tblr_valign_b_tl
+          {
+            \tl_gset:Nn \g__tblr_cell_valign_tl {m}
+            \tl_gset:Nn \g__tblr_cell_middle_tl {b}
+          }
+      }
+      {
+        \tl_gset_eq:NN \g__tblr_cell_valign_tl \l__tblr_v_tl
+        \tl_gclear:N \g__tblr_cell_middle_tl
+      }
+    \group_end:
+  }
+
+%% current cell dimensions
 \dim_new:N \g__tblr_cell_wd_dim
 \dim_new:N \g__tblr_cell_ht_dim
 \dim_new:N \g__tblr_cell_head_dim
@@ -2203,6 +2248,7 @@
 
 \cs_new_protected:Npn \__tblr_get_cell_text:nn #1 #2
   {
+    \__tblr_get_cell_alignments:nn {#1} {#2}
     \__tblr_prop_if_in:nxF {cell} { [#1][#2] / omit }
       { \__tblr_get_cell_text_real:nn { #1 } { #2 } }
   }
@@ -2212,10 +2258,6 @@
   {
     \group_begin:
     \tl_set:Nx \l__tblr_c_tl { \__tblr_prop_item:ne {text} {[#1][#2]} }
-    \tl_set:Nx \l__tblr_h_tl
-      { \__tblr_prop_item:ne { cell } { [#1][#2] / halign } }
-    \tl_set:Nx \l__tblr_v_tl
-      { \__tblr_prop_item:ne { cell } { [#1][#2] / valign } }
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / width } }
     \tl_if_empty:NT \l__tblr_w_tl
@@ -2233,21 +2275,21 @@
         \seq_set_split:NnV \l_tmpa_seq { \\ } \l_tmpa_tl
         \int_compare:nNnT { \seq_count:N \l_tmpa_seq } > { 1 }
           {
-            \tl_put_left:Nx \l__tblr_c_tl { { @{} \l__tblr_h_tl @{} } }
+            \tl_put_left:Nx \l__tblr_c_tl { { @{} \g__tblr_cell_halign_tl @{} } }
             \tl_put_left:Nn \l__tblr_c_tl { \begin{tblr} }
             \tl_put_right:Nn \l__tblr_c_tl { \end{tblr} }
           }
           {
-            \tl_if_eq:NnF \l__tblr_h_tl {l} { \hfil }
+            \tl_if_eq:NnF \g__tblr_cell_halign_tl {l} { \hfil }
             \l__tblr_c_tl
-            \tl_if_eq:NnF \l__tblr_h_tl {r} { \hfil }
+            \tl_if_eq:NnF \g__tblr_cell_halign_tl {r} { \hfil }
             \bool_if:NT \g__tblr_measure_sizes_bool
               { \__tblr_get_hcell_sizes:N \l__tblr_c_tl }
           }
       }
       {
-        \__tblr_get_vcell_and_sizes:NNNN
-          \l__tblr_c_tl \l__tblr_w_tl \l__tblr_h_tl \l__tblr_v_tl
+        \__tblr_get_vcell_and_sizes:NNNN \l__tblr_c_tl \l__tblr_w_tl
+          \g__tblr_cell_halign_tl \g__tblr_cell_valign_tl
       }
     \group_end:
   }
@@ -2264,10 +2306,6 @@
     \dim_gset:Nn \g__tblr_cell_foot_dim { \box_dp:N \l__tblr_c_box }
     \group_end:
   }
-
-\tl_const:Nn \c__tblr_valign_h_tl { h }
-\tl_const:Nn \c__tblr_valign_m_tl { m }
-\tl_const:Nn \c__tblr_valign_f_tl { f }
 
 %% #1: cell text; #2: box width; #3: horizontal alignment; #4 vertical alignment
 \cs_new_protected:Npn \__tblr_get_vcell_and_sizes:NNNN #1 #2 #3 #4
@@ -2322,8 +2360,6 @@
       }
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne {cell} { [#1][#2] / rowspan } }
-    \tl_set:Nx \l__tblr_v_tl
-      { \__tblr_prop_item:ne {cell} { [#1][#2] / valign } }
     \tl_if_empty:NF \l__tblr_a_tl
       {
         \__tblr_prop_gput:nxx {cell}
@@ -2331,11 +2367,11 @@
         \__tblr_prop_gput:nxx {cell}
           { [#1][#2] / @cell-depth } { \dim_use:N #5 }
         %% Don't affect row height
-        \tl_if_eq:NnF \l__tblr_v_tl { h } {
+        \tl_if_eq:NnF \g__tblr_cell_valign_tl { h } {
           \dim_zero:N #4
         }
         %% We have to update the depth of the last span row here
-        \tl_if_eq:NnT \l__tblr_v_tl { f }
+        \tl_if_eq:NnT \g__tblr_cell_valign_tl { f }
           {
             \__tblr_prop_gput_if_larger:nxx {row}
               { [\int_eval:n { #1 + \l__tblr_a_tl - 1 }] / @row-foot }
@@ -2375,8 +2411,6 @@
 \cs_new_protected:Npn \__tblr_update_row_size_modern:nnNNN #1 #2 #3 #4 #5
   {
     \group_begin:
-    \tl_set:Nx \l__tblr_v_tl
-      { \__tblr_prop_item:ne { cell } { [#1][#2] / valign } }
     %% Note that \l__tblr_h_tl may be empty
     \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne { row } { [#1] / @row-height } }
