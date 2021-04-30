@@ -2432,9 +2432,9 @@
                     \__tblr_prop_gput:nxV { row }
                       { [#1] / @row-upper } \l__tblr_a_tl
                   }
-                \dim_compare:nNnT { #3 - #5 } > { \l__tblr_b_tl }
+                \dim_compare:nNnT { #3 - #4 } > { \l__tblr_b_tl }
                   {
-                    \tl_set:Nx \l__tblr_b_tl { \dim_eval:n { #3 - #5 } }
+                    \tl_set:Nx \l__tblr_b_tl { \dim_eval:n { #3 - #4 } }
                     \__tblr_prop_gput:nxV { row }
                       { [#1] / @row-lower } \l__tblr_b_tl
                   }
@@ -2460,9 +2460,9 @@
             \c__tblr_middle_b_tl
               {
                 \tl_log:x { b : #1, #2, \dim_use:N #3, \dim_use:N #4, \dim_use:N#5 }
-                \dim_compare:nNnT { #3 - #4 } > { \l__tblr_a_tl }
+                \dim_compare:nNnT { #3 - #5 } > { \l__tblr_a_tl }
                   {
-                    \tl_set:Nx \l__tblr_a_tl { \dim_eval:n { #3 - #4 } }
+                    \tl_set:Nx \l__tblr_a_tl { \dim_eval:n { #3 - #5 } }
                     \__tblr_prop_gput:nxV { row }
                       { [#1] / @row-upper } \l__tblr_a_tl
                   }
