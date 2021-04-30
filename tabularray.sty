@@ -2252,7 +2252,13 @@
 
 \cs_new_protected:Npn \__tblr_get_cell_text:nn #1 #2
   {
-    \__tblr_prop_if_in:nxF {cell} { [#1][#2] / omit }
+    \__tblr_prop_if_in:nxTF {cell} { [#1][#2] / omit }
+      {
+        \dim_gzero:N \g__tblr_cell_wd_dim
+        \dim_gzero:N \g__tblr_cell_ht_dim
+        \dim_gzero:N \g__tblr_cell_head_dim
+        \dim_gzero:N \g__tblr_cell_foot_dim
+      }
       { \__tblr_get_cell_text_real:nn { #1 } { #2 } }
   }
 
