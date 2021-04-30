@@ -2127,9 +2127,17 @@
       { \l__tblr_b_tl }
   }
 
+\dim_new:N \g__tblr_cell_wd_dim
+\dim_new:N \g__tblr_cell_ht_dim
+\dim_new:N \g__tblr_cell_head_dim
+\dim_new:N \g__tblr_cell_foot_dim
+
+\bool_new:N \g__tblr_measure_sizes_bool
+
 %% Calculate the width and height for every cell
 \cs_new_protected:Npn \__tblr_calculate_cell_sizes:
   {
+    \bool_set_true:N \g__tblr_measure_sizes_bool
     %% You can use these two counters in cell text
     \int_zero:N \rownum
     \int_zero:N \colnum
@@ -2140,40 +2148,30 @@
         \int_step_inline:nn { \l_tblr_col_count_int }
           {
             \int_incr:N \colnum
-            \__tblr_measure_and_update_cell_size:nnNNN
+            \__tblr_measure_ceLL_update_sizes:nnNNNN
               { \int_use:N \rownum }
               { \int_use:N \colnum }
-              \l__tblr_w_dim
-              \l__tblr_h_dim
-              \l__tblr_d_dim
+              \g__tblr_cell_wd_dim
+              \g__tblr_cell_ht_dim
+              \g__tblr_cell_head_dim
+              \g__tblr_cell_foot_dim
           }
       }
+    \bool_set_false:N \g__tblr_measure_sizes_bool
   }
 
 %% Measure and update natural dimensions of the row/column/cell
-%% #1: row number, #2 column number
-%% #3: width dimension, #4: height dimension, #5: depth dimension
-\cs_new_protected:Npn \__tblr_measure_and_update_cell_size:nnNNN #1 #2 #3 #4 #5
+%% #1: row number; #2 column number; #3: width dimension;
+%% #4: total height dimension; #5: head dimension; #6: foot dimension
+\cs_new_protected:Npn \__tblr_measure_ceLL_update_sizes:nnNNNN #1 #2 #3 #4 #5 #6
   {
-    \__tblr_measure_cell_size:nnNNN { #1 } { #2 } #3 #4 #5
-    \__tblr_update_cell_size:nnNNN { #1 } { #2 } #3 #4 #5
+    \hbox_set:Nn \l_tmpa_box { \__tblr_get_cell_text:nn {#1} {#2} }
+    \__tblr_update_cell_size:nnNNN {#1} {#2} #3 #5 #6
     \tl_if_eq:enTF
       { \__tblr_prop_item:ne {table} {vertical-position} } {legacy}
-      { \__tblr_update_row_size_legacy:nNN { #1 } #4 #5 }
-      { \__tblr_update_row_size_modern:nnNN { #1 } { #2 } #4 #5 }
-    \__tblr_update_col_size:nN { #2 } #3
-  }
-
-%% Measure natural dimensions of the cell
-%% #1: row number, #2 column number
-%% #3: width dimension, #4: height dimension, #5: depth dimension
-\cs_new_protected:Npn \__tblr_measure_cell_size:nnNNN #1 #2 #3 #4 #5
-  {
-    \hbox_set:Nn \l__tblr_c_box
-      { \__tblr_get_cell_text:nn { #1 } { #2 } }
-    \dim_set:Nn #3 { \box_wd:N \l__tblr_c_box }
-    \dim_set:Nn #4 { \box_ht:N \l__tblr_c_box }
-    \dim_set:Nn #5 { \box_dp:N \l__tblr_c_box }
+      { \__tblr_update_row_size_legacy:nNNN {#1} #4 #5 #6 }
+      { \__tblr_update_row_size_modern:nnNNN {#1} {#2} #4 #5 #6 }
+    \__tblr_update_col_size:nN {#2} #3
   }
 
 %% Get cell text, #1: row number, #2: column number
@@ -2193,6 +2191,7 @@
       { \__tblr_get_cell_text_real:nn { #1 } { #2 } }
   }
 
+%% #1: row number, #2: column number
 \cs_new_protected:Npn \__tblr_get_cell_text_real:nn #1 #2
   {
     \group_begin:
@@ -2226,23 +2225,76 @@
             \tl_if_eq:NnF \l__tblr_h_tl {l} { \hfil }
             \l__tblr_c_tl
             \tl_if_eq:NnF \l__tblr_h_tl {r} { \hfil }
+            \bool_if:NT \g__tblr_measure_sizes_bool
+              { \__tblr_get_hcell_sizes:N \l__tblr_c_tl }
           }
       }
       {
-        $ \m@th \cs:w __tlbr_vbox_ \l__tblr_v_tl :n \cs_end: {
-            \dim_set:Nn \tex_hsize:D { \l__tblr_w_tl }
-            \@arrayparboxrestore
-            \cs:w __tlbr_halign_ \l__tblr_h_tl : \cs_end:
-            \l__tblr_c_tl
-        } $
+        \__tblr_get_vcell_and_sizes:NNNN
+          \l__tblr_c_tl \l__tblr_w_tl \l__tblr_h_tl \l__tblr_v_tl
       }
     \group_end:
   }
 
+%% #1: cell text
+\cs_new_protected:Npn \__tblr_get_hcell_sizes:N #1
+  {
+    \group_begin:
+    \hbox_set:Nn \l__tblr_c_box {#1}
+    \dim_gset:Nn \g__tblr_cell_wd_dim { \box_wd:N \l__tblr_c_box }
+    \dim_gset:Nn \g__tblr_cell_ht_dim
+      { \box_ht:N \l__tblr_c_box + \box_dp:N \l__tblr_c_box }
+    \dim_gset:Nn \g__tblr_cell_head_dim { \box_ht:N \l__tblr_c_box }
+    \dim_gset:Nn \g__tblr_cell_foot_dim { \box_dp:N \l__tblr_c_box }
+    \group_end:
+  }
+
+\tl_const:Nn \c__tblr_valign_t_tl { t }
+\tl_const:Nn \c__tblr_valign_m_tl { m }
+\tl_const:Nn \c__tblr_valign_b_tl { b }
+
+%% #1: cell text; #2: box width; #3: horizontal alignment; #4 vertical alignment
+\cs_new_protected:Npn \__tblr_get_vcell_and_sizes:NNNN #1 #2 #3 #4
+  {
+    \group_begin:
+    \vbox_set_top:Nn \l_tmpa_box { \__tblr_make_vcell_text:nNN #1 #2 #3 }
+    \vbox_set:Nn \l_tmpb_box { \__tblr_make_vcell_text:nNN #1 #2 #3 }
+    \dim_gset:Nn \g__tblr_cell_wd_dim { \box_wd:N \l_tmpb_box }
+    \dim_gset:Nn \g__tblr_cell_ht_dim
+      { \box_ht:N \l_tmpb_box + \box_dp:N \l_tmpb_box }
+    \dim_gset:Nn \g__tblr_cell_head_dim { \box_ht:N \l_tmpa_box }
+    \dim_gset:Nn \g__tblr_cell_foot_dim { \box_dp:N \l_tmpb_box }
+    \tl_case:Nn #4
+      {
+        \c__tblr_valign_t_tl
+          { \box_use:N \l_tmpa_box }
+        \c__tblr_valign_m_tl
+          {
+            \box_move_up:nn
+              {
+                ( \g__tblr_cell_ht_dim - \g__tblr_cell_head_dim
+                                       - \g__tblr_cell_foot_dim ) / 2
+              }
+              { \box_use:N \l_tmpb_box }
+          }
+        \c__tblr_valign_b_tl
+          { \box_use:N \l_tmpb_box }
+      }
+    \group_end:
+  }
+
+%% #1: cell text; #2: box width; #3: horizontal alignment
+\cs_new_protected:Npn \__tblr_make_vcell_text:nNN #1 #2 #3
+  {
+    \dim_set:Nn \tex_hsize:D { #2 }
+    \@arrayparboxrestore
+    \cs:w __tlbr_halign_ #3 : \cs_end:
+    #1
+  }
+
 %% Update natural dimensions of the cell
 %% #1: row number, #2 column number
-%% #3: width dimension, #4: height dimension, #5: depth dimension
-
+%% #3: width dimension, #4: head dimension, #5: foot dimension
 \cs_new_protected:Npn \__tblr_update_cell_size:nnNNN #1 #2 #3 #4 #5
   {
     \tl_set:Nx \l__tblr_a_tl
@@ -2279,9 +2331,8 @@
   }
 
 %% Update size of the row
-%% #1: row number, #2: height dimension, #3: depth dimension
-
-\cs_new_protected:Npn \__tblr_update_row_size_legacy:nNN #1 #2 #3
+%% #1: row number; #2: total height; #3 head dimension; #4: foot dimension
+\cs_new_protected:Npn \__tblr_update_row_size_legacy:nNNN #1 #2 #3 #4
   {
     %% Update height of the row
     \tl_set:Nx \l_tmpb_tl
@@ -2303,52 +2354,41 @@
       }
   }
 
-%% Update size of the row
-%% #1: row number,  #2: column number, #3: height dimension, #4: depth dimension
-
-\tl_const:Nn \c__tblr_valign_t_tl { t }
-\tl_const:Nn \c__tblr_valign_m_tl { m }
-\tl_const:Nn \c__tblr_valign_b_tl { b }
-
-\cs_new_protected:Npn \__tblr_update_row_size_modern:nnNN #1 #2 #3 #4
+%% Update size of the row. #1: row number; #2: column number;
+%% #3: total height dimension; #4: head dimension; #5: foot dimension
+\cs_new_protected:Npn \__tblr_update_row_size_modern:nnNNN #1 #2 #3 #4 #5
   {
+    \group_begin:
     \tl_set:Nx \l__tblr_v_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / valign } }
     %% Note that \l__tblr_h_tl may be empty
     \tl_set:Nx \l__tblr_h_tl
       { \__tblr_prop_item:ne { row } { [#1] / @row-height } }
-    \tl_case:Nn \l__tblr_v_tl
+    \tl_set:Nx \l__tblr_e_tl
+      { \__tblr_prop_item:ne { row } { [#1] / @row-head } }
+    \tl_set:Nx \l__tblr_f_tl
+      { \__tblr_prop_item:ne { row } { [#1] / @row-foot } }
+    \dim_compare:nNnT {#4} > {\l__tblr_e_tl}
       {
-        \c__tblr_valign_t_tl
-        {
-          \tl_set:Nx \l__tblr_e_tl
-            { \__tblr_prop_item:ne { row } { [#1] / @row-head } }
-          \tl_set:Nx \l_tmpa_tl { \dim_max:nn {#3} { \l__tblr_e_tl } }
-          \tl_set:Nx \l_tmpb_tl
-            { \dim_max:nn {#4} { \l__tblr_h_tl - \l_tmpa_tl } }
-          \__tblr_prop_gput_if_larger:nxx { row }
-            { [#1] / @row-head } { \l_tmpa_tl }
-          \__tblr_prop_gput_if_larger:nxx { row }
-            { [#1] / @row-height } { \dim_eval:n { \l_tmpa_tl + \l_tmpb_tl } }
-        }
-        \c__tblr_valign_m_tl
-        {
-          \__tblr_prop_gput_if_larger:nxx { row }
-            { [#1] / @row-height } { \dim_eval:n { #3 + #4 } }
-        }
-        \c__tblr_valign_b_tl
-        {
-          \tl_set:Nx \l__tblr_f_tl
-            { \__tblr_prop_item:ne { row } { [#1] / @row-foot } }
-          \tl_set:Nx \l_tmpb_tl { \dim_max:nn {#4} { \l__tblr_f_tl } }
-          \tl_set:Nx \l_tmpa_tl
-            { \dim_max:nn {#3} { \l__tblr_h_tl - \l_tmpb_tl } }
-          \__tblr_prop_gput_if_larger:nxx { row }
-            { [#1] / @row-foot } { \l_tmpb_tl }
-          \__tblr_prop_gput_if_larger:nxx { row }
-            { [#1] / @row-height } { \dim_eval:n { \l_tmpa_tl + \l_tmpb_tl } }
-        }
+        \__tblr_prop_gput:nxx { row } { [#1] / @row-head } { \dim_use:N #4 }
       }
+    \dim_compare:nNnT {#5} > {\l__tblr_f_tl}
+      {
+        \__tblr_prop_gput:nxx { row } { [#1] / @row-foot } { \dim_use:N #5 }
+      }
+    \dim_compare:nNnT
+      { #3 - #4 - #5 } > { \l__tblr_h_tl - \l__tblr_e_tl - \l__tblr_f_tl }
+      {
+        \tl_set:Nx \l__tblr_x_tl { \dim_max:nn {#4} { \l__tblr_e_tl } }
+        \tl_set:Nx \l__tblr_y_tl { \dim_max:nn {#5} { \l__tblr_f_tl } }
+        \__tblr_prop_gput:nxx { row } { [#1] / @row-height }
+          {
+            \l__tblr_x_tl
+            + \dim_use:N #3 - \dim_use:N #4 - \dim_use:N #5
+            + \l__tblr_y_tl
+          }
+      }
+    \group_end:
   }
 
 
