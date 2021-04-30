@@ -2481,11 +2481,11 @@
           }
       }
       {
+        \tl_set:Nx \l__tblr_x_tl { \dim_max:nn {#4} { \l__tblr_e_tl } }
+        \tl_set:Nx \l__tblr_y_tl { \dim_max:nn {#5} { \l__tblr_f_tl } }
         \dim_compare:nNnT
-          { #3 - #4 - #5 } > { \l__tblr_h_tl - \l__tblr_e_tl - \l__tblr_f_tl }
+          { #3 - #4 - #5 } > { \l__tblr_h_tl - \l__tblr_x_tl - \l__tblr_y_tl }
           {
-            \tl_set:Nx \l__tblr_x_tl { \dim_max:nn {#4} { \l__tblr_e_tl } }
-            \tl_set:Nx \l__tblr_y_tl { \dim_max:nn {#5} { \l__tblr_f_tl } }
             \__tblr_prop_gput:nxx { row } { [#1] / @row-height }
               {
                 \dim_eval:n
