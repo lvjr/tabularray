@@ -54,6 +54,7 @@
 \tl_new:N  \l__tblr_r_tl
 \tl_new:N  \l__tblr_s_tl
 \tl_new:N  \l__tblr_t_tl
+\tl_new:N  \l__tblr_u_tl
 \tl_new:N  \l__tblr_v_tl
 \tl_new:N  \l__tblr_w_tl
 \tl_new:N  \l__tblr_x_tl
@@ -1829,6 +1830,8 @@
     @row-head = 0pt,
     @row-body = 0pt,
     @row-foot = 0pt,
+    @row-upper = 0pt,
+    @row-lower = 0pt,
   }
 
 \prop_const_from_keyval:Nn \c_tblr_default_keyval_col_prop
@@ -2213,7 +2216,7 @@
         \int_step_inline:nn { \l_tblr_col_count_int }
           {
             \int_incr:N \colnum
-            \__tblr_measure_ceLL_update_sizes:nnNNNN
+            \__tblr_measure_cell_update_sizes:nnNNNN
               { \int_use:N \rownum }
               { \int_use:N \colnum }
               \g__tblr_cell_wd_dim
@@ -2228,7 +2231,7 @@
 %% Measure and update natural dimensions of the row/column/cell
 %% #1: row number; #2 column number; #3: width dimension;
 %% #4: total height dimension; #5: head dimension; #6: foot dimension
-\cs_new_protected:Npn \__tblr_measure_ceLL_update_sizes:nnNNNN #1 #2 #3 #4 #5 #6
+\cs_new_protected:Npn \__tblr_measure_cell_update_sizes:nnNNNN #1 #2 #3 #4 #5 #6
   {
     \__tblr_get_cell_alignments:nn {#1} {#2}
     \hbox_set:Nn \l_tmpa_box { \__tblr_get_cell_text:nn {#1} {#2} }
@@ -2333,12 +2336,13 @@
                   { \box_use:N \l_tmpa_box }
                 \c__tblr_middle_m_tl
                   {
-                    \box_move_up:nn
+                    \box_set_ht:Nn \l_tmpb_box
                       {
-                        ( \g__tblr_cell_ht_dim - \g__tblr_cell_head_dim
-                                               - \g__tblr_cell_foot_dim ) / 2
+                        \g__tblr_cell_head_dim
+                        + ( \g__tblr_cell_ht_dim - \g__tblr_cell_head_dim
+                                                 - \g__tblr_cell_foot_dim ) / 2
                       }
-                      { \box_use:N \l_tmpb_box }
+                     \box_use:N \l_tmpb_box
                   }
                 \c__tblr_middle_b_tl
                   { \box_use:N \l_tmpb_box }
@@ -2439,18 +2443,85 @@
       {
         \__tblr_prop_gput:nxx { row } { [#1] / @row-foot } { \dim_use:N #5 }
       }
-    \dim_compare:nNnT
-      { #3 - #4 - #5 } > { \l__tblr_h_tl - \l__tblr_e_tl - \l__tblr_f_tl }
+    \tl_if_eq:NNTF \g__tblr_cell_valign_tl \c__tblr_valign_m_tl
       {
-        \tl_set:Nx \l__tblr_x_tl { \dim_max:nn {#4} { \l__tblr_e_tl } }
-        \tl_set:Nx \l__tblr_y_tl { \dim_max:nn {#5} { \l__tblr_f_tl } }
-        \__tblr_prop_gput:nxx { row } { [#1] / @row-height }
+        \tl_set:Nx \l__tblr_a_tl
+          { \__tblr_prop_item:ne { row } { [#1] / @row-upper } }
+        \tl_set:Nx \l__tblr_b_tl
+          { \__tblr_prop_item:ne { row } { [#1] / @row-lower } }
+        \tl_case:Nn \g__tblr_cell_middle_tl
           {
-            \dim_eval:n
+            \c__tblr_middle_t_tl
               {
-                \l__tblr_x_tl
-                + \dim_use:N #3 - \dim_use:N #4 - \dim_use:N #5
-                + \l__tblr_y_tl
+                \dim_compare:nNnT {#4} > { \l__tblr_a_tl }
+                  {
+                    \tl_set:Nx \l__tblr_a_tl { \dim_use:N #4 }
+                    \__tblr_prop_gput:nxV { row }
+                      { [#1] / @row-upper } \l__tblr_a_tl
+                  }
+                \dim_compare:nNnT { #3 - #5 } > { \l__tblr_b_tl }
+                  {
+                    \tl_set:Nx \l__tblr_b_tl { \dim_eval:n { #3 - #5 } }
+                    \__tblr_prop_gput:nxV { row }
+                      { [#1] / @row-lower } \l__tblr_b_tl
+                  }
+              }
+            \c__tblr_middle_m_tl
+              {
+                \tl_set:Nx \l__tblr_t_tl { \dim_eval:n { #3 - #4 - #5 } }
+                \tl_set:Nx \l__tblr_u_tl { \dim_eval:n { #4 + \l__tblr_t_tl / 2 } }
+                \tl_set:Nx \l__tblr_v_tl { \dim_eval:n { #5 + \l__tblr_t_tl / 2 } }
+                \dim_compare:nNnT { \l__tblr_u_tl } > { \l__tblr_a_tl }
+                  {
+                    \tl_set_eq:NN \l__tblr_a_tl \l__tblr_u_tl
+                    \__tblr_prop_gput:nxV { row }
+                      { [#1] / @row-upper } \l__tblr_a_tl
+                  }
+                \dim_compare:nNnT { \l__tblr_v_tl } > { \l__tblr_b_tl }
+                  {
+                    \tl_set_eq:NN \l__tblr_b_tl \l__tblr_v_tl
+                    \__tblr_prop_gput:nxV { row }
+                      { [#1] / @row-lower } \l__tblr_b_tl
+                  }
+              }
+            \c__tblr_middle_b_tl
+              {
+                \tl_log:x { b : #1, #2, \dim_use:N #3, \dim_use:N #4, \dim_use:N#5 }
+                \dim_compare:nNnT { #3 - #4 } > { \l__tblr_a_tl }
+                  {
+                    \tl_set:Nx \l__tblr_a_tl { \dim_eval:n { #3 - #4 } }
+                    \__tblr_prop_gput:nxV { row }
+                      { [#1] / @row-upper } \l__tblr_a_tl
+                  }
+                \dim_compare:nNnT {#5} > { \l__tblr_b_tl }
+                  {
+                    \tl_set:Nx \l__tblr_b_tl { \dim_use:N #4 }
+                    \__tblr_prop_gput:nxV { row }
+                      { [#1] / @row-lower } \l__tblr_b_tl
+                  }
+              }
+          }
+        \dim_compare:nNnT
+          { \l__tblr_a_tl + \l__tblr_b_tl } > { \l__tblr_h_tl + 0pt }
+          {
+            \__tblr_prop_gput:nxx { row } { [#1] / @row-height }
+              { \dim_eval:n { \l__tblr_a_tl + \l__tblr_b_tl } }
+          }
+      }
+      {
+        \dim_compare:nNnT
+          { #3 - #4 - #5 } > { \l__tblr_h_tl - \l__tblr_e_tl - \l__tblr_f_tl }
+          {
+            \tl_set:Nx \l__tblr_x_tl { \dim_max:nn {#4} { \l__tblr_e_tl } }
+            \tl_set:Nx \l__tblr_y_tl { \dim_max:nn {#5} { \l__tblr_f_tl } }
+            \__tblr_prop_gput:nxx { row } { [#1] / @row-height }
+              {
+                \dim_eval:n
+                  {
+                    \l__tblr_x_tl
+                    + \dim_use:N #3 - \dim_use:N #4 - \dim_use:N #5
+                    + \l__tblr_y_tl
+                  }
               }
           }
       }
@@ -3313,13 +3384,16 @@
     \__tblr_build_normal_cell_background:nn {#1} {#2}
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
       { \__tblr_get_cell_text:nn {#1} {#2} }
-    \tl_if_eq:NnT { \g__tblr_cell_valign_tl } { h }
+    \tl_if_eq:NNTF \g__tblr_cell_valign_tl \c__tblr_valign_m_tl
+      {
+        \box_set_ht:Nn \l__tblr_a_box
+          { \__tblr_prop_item:ne { row } { [#1] / @row-upper } }
+        \box_set_dp:Nn \l__tblr_a_box
+          { \__tblr_prop_item:ne { row } { [#1] / @row-lower } }
+      }
       {
         \box_set_ht:Nn \l__tblr_a_box
           { \__tblr_prop_item:ne { row } { [#1] / @row-head } }
-      }
-    \tl_if_eq:NnT { \g__tblr_cell_valign_tl } { f }
-      {
         \box_set_dp:Nn \l__tblr_a_box
           { \__tblr_prop_item:ne { row } { [#1] / @row-foot } }
       }
