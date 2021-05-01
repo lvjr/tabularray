@@ -2338,13 +2338,19 @@
                   { \box_use:N \l_tmpa_box }
                 \c__tblr_middle_m_tl
                   {
-                    \box_set_ht:Nn \l_tmpb_box
+                    \tl_set:Nx \l__tblr_b_tl
                       {
-                        \g__tblr_cell_head_dim
-                        + ( \g__tblr_cell_ht_dim - \g__tblr_cell_head_dim
-                                                 - \g__tblr_cell_foot_dim ) / 2
+                        \dim_eval:n
+                          {
+                            ( \g__tblr_cell_ht_dim - \g__tblr_cell_head_dim
+                                                   - \g__tblr_cell_foot_dim ) / 2
+                          }
                       }
-                     \box_use:N \l_tmpb_box
+                    \box_set_ht:Nn \l_tmpb_box
+                      { \g__tblr_cell_head_dim + \l__tblr_b_tl }
+                    \box_set_dp:Nn \l_tmpb_box
+                      { \g__tblr_cell_foot_dim + \l__tblr_b_tl }
+                    \box_use:N \l_tmpb_box
                   }
                 \c__tblr_middle_b_tl
                   { \box_use:N \l_tmpb_box }
