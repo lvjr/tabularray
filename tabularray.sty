@@ -2234,7 +2234,7 @@
   {
     \__tblr_get_cell_alignments:nn {#1} {#2}
     \hbox_set:Nn \l_tmpa_box { \__tblr_get_cell_text:nn {#1} {#2} }
-    \__tblr_update_cell_size:nnNNN {#1} {#2} #3 #5 #6
+    \__tblr_update_cell_size:nnNNNN {#1} {#2} #3 #4 #5 #6
     \__tblr_update_row_size:nnNNN {#1} {#2} #4 #5 #6
     \__tblr_update_col_size:nN {#2} #3
   }
@@ -2365,40 +2365,84 @@
     #1
   }
 
-%% Update natural dimensions of the cell
-%% #1: row number, #2 column number
-%% #3: width dimension, #4: head dimension, #5: foot dimension
-\cs_new_protected:Npn \__tblr_update_cell_size:nnNNN #1 #2 #3 #4 #5
+%% #1: total height dimension; #2: head dimension; #3: foot dimension;
+%% #4: tl for resulting upper size; #5: tl for resulting lower size
+
+\tl_new:N \l__tblr_middle_body_tl
+
+\cs_new_protected:Npn \__tblr_get_middle_cell_upper_lower:NNNNN #1 #2 #3 #4 #5
   {
-    \tl_set:Nx \l__tblr_a_tl
+    \tl_case:Nn \g__tblr_cell_middle_tl
+      {
+        \c__tblr_middle_t_tl
+          {
+            \tl_set:Nx #4 { \dim_use:N #2 }
+            \tl_set:Nx #5 { \dim_eval:n { #1 - #2 } }
+          }
+        \c__tblr_middle_m_tl
+          {
+            \tl_set:Nx \l__tblr_middle_body_tl { \dim_eval:n { #1 - #2 - #3 } }
+            \tl_set:Nx #4 { \dim_eval:n { #2 + \l__tblr_middle_body_tl / 2 } }
+            \tl_set:Nx #5 { \dim_eval:n { #3 + \l__tblr_middle_body_tl / 2 } }
+          }
+        \c__tblr_middle_b_tl
+          {
+            \tl_set:Nx #4 { \dim_eval:n { #1 - #3 } }
+            \tl_set:Nx #5 { \dim_use:N #3 }
+          }
+      }
+  }
+
+%% Update natural dimensions of the cell
+%% #1: row number; #2 column number; #3: width dimension;
+%% #4: total height dimension; #5: head dimension; #6: foot dimension
+\cs_new_protected:Npn \__tblr_update_cell_size:nnNNNN #1 #2 #3 #4 #5 #6
+  {
+    \group_begin:
+    \tl_set:Nx \l__tblr_c_tl
       { \__tblr_prop_item:ne {cell} { [#1][#2] / colspan } }
-    \tl_if_empty:NF \l__tblr_a_tl
+    \tl_if_empty:NF \l__tblr_c_tl
       {
         \__tblr_prop_gput:nxx {cell} { [#1][#2] / @cell-width } { \dim_use:N #3 }
         \dim_zero:N #3 % don't affect column width
       }
-    \tl_set:Nx \l__tblr_a_tl
+    \tl_set:Nx \l__tblr_r_tl
       { \__tblr_prop_item:ne {cell} { [#1][#2] / rowspan } }
-    \tl_if_empty:NF \l__tblr_a_tl
+    \tl_if_empty:NF \l__tblr_r_tl
       {
-        \__tblr_prop_gput:nxx {cell}
-          { [#1][#2] / @cell-height } { \dim_use:N #4 }
-        \__tblr_prop_gput:nxx {cell}
-          { [#1][#2] / @cell-depth } { \dim_use:N #5 }
-        %% Don't affect row height
-        \tl_if_eq:NnF \g__tblr_cell_valign_tl { h } {
-          \dim_zero:N #4
-        }
-        %% We have to update the depth of the last span row here
-        \tl_if_eq:NnT \g__tblr_cell_valign_tl { f }
+        \tl_case:Nn \g__tblr_cell_valign_tl
           {
-            \__tblr_prop_gput_if_larger:nxx {row}
-              { [\int_eval:n { #1 + \l__tblr_a_tl - 1 }] / @row-foot }
-              { \dim_use:N #5 }
+            \c__tblr_valign_h_tl
+              {
+                \tl_set:Nx \l__tblr_u_tl { \dim_use:N #5 }
+                \tl_set:Nx \l__tblr_v_tl { \dim_eval:n { #4 - #5 } }
+                %% Update the head size of the first span row here
+                \__tblr_prop_gput_if_larger:nxx { row }
+                  { [#1] / @row-head } { \dim_use:N #5 }
+              }
+            \c__tblr_valign_f_tl
+              {
+                \tl_set:Nx \l__tblr_u_tl { \dim_eval:n { #4 - #6 } }
+                \tl_set:Nx \l__tblr_v_tl { \dim_use:N #6 }
+                %% Update the foot size of the last span row here
+                \__tblr_prop_gput_if_larger:nxx { row }
+                  { [\int_eval:n { #1 + \l__tblr_r_tl - 1 }] / @row-foot }
+                  { \dim_use:N #6 }
+              }
+            \c__tblr_valign_m_tl
+              {
+                \__tblr_get_middle_cell_upper_lower:NNNNN
+                  #4 #5 #6 \l__tblr_u_tl \l__tblr_v_tl
+              }
           }
-        %% Don't affect row depth
-        \dim_zero:N #5
+        \__tblr_prop_gput:nxV {cell} { [#1][#2] / @cell-height } \l__tblr_u_tl
+        \__tblr_prop_gput:nxV {cell} { [#1][#2] / @cell-depth } \l__tblr_v_tl
+        %% Don't affect row sizes
+        \dim_gzero:N #4
+        \dim_gzero:N #5
+        \dim_gzero:N #6
       }
+    \group_end:
   }
 
 
