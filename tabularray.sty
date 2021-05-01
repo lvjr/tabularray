@@ -3286,7 +3286,11 @@
 \cs_new_protected:Npn \__tblr_build_single_row_cell:NN #1 #2
   {
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
-      { \__tblr_get_cell_text:nn {#1} {#2} }
+      {
+        \tl_if_eq:NnF \g__tblr_cell_halign_tl {l} { \hfil }
+        \__tblr_get_cell_text:nn {#1} {#2}
+        \tl_if_eq:NnF \g__tblr_cell_halign_tl {r} { \hfil }
+      }
     \tl_if_eq:NNTF \g__tblr_cell_valign_tl \c__tblr_valign_m_tl
       {
         \box_set_ht:Nn \l__tblr_a_box
@@ -3320,7 +3324,11 @@
 \cs_new_protected:Npn \__tblr_build_multiple_row_cell:NN #1 #2
   {
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
-      { \__tblr_get_cell_text:nn {#1} {#2} }
+      {
+        \tl_if_eq:NnF \g__tblr_cell_halign_tl {l} { \hfil }
+        \__tblr_get_cell_text:nn {#1} {#2}
+        \tl_if_eq:NnF \g__tblr_cell_halign_tl {r} { \hfil }
+      }
     \tl_if_eq:NnT { \g__tblr_cell_valign_tl } { h }
       {
         \box_set_ht:Nn \l__tblr_a_box
