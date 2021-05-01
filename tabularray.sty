@@ -2410,7 +2410,7 @@
     \tl_if_empty:NF \l__tblr_c_tl
       {
         \__tblr_prop_gput:nxx {cell} { [#1][#2] / @cell-width } { \dim_use:N #3 }
-        \dim_zero:N #3 % don't affect column width
+        \dim_gzero:N #3 % don't affect column width
       }
     \tl_set:Nx \l__tblr_r_tl
       { \__tblr_prop_item:ne {cell} { [#1][#2] / rowspan } }
