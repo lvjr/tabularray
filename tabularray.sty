@@ -3281,14 +3281,7 @@
 
 \cs_new_protected:Npn \__tblr_build_cell:NN #1 #2
   {
-    \__tblr_get_cell_alignments:nn {#1} {#2}
-    \__tblr_prop_if_in:nxTF {cell} { [#1][#2] / rowspan }
-      { \__tblr_build_span_cell:NN #1 #2 }
-      { \__tblr_build_normal_cell:NN #1 #2 }
-  }
-
-\cs_new_protected:Npn \__tblr_build_normal_cell:NN #1 #2
-  {
+    \group_begin:
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { column } { [#2] / @col-width } }
     \tl_set:Nx \l__tblr_h_tl
@@ -3299,6 +3292,15 @@
       { \__tblr_prop_item:ne { column } { [#2] / colsep-left } }
     \tl_set:Nx \l__tblr_y_tl
       { \__tblr_prop_item:ne { column } { [#2] / colsep-right } }
+    \__tblr_get_cell_alignments:nn {#1} {#2}
+    \__tblr_prop_if_in:nxTF {cell} { [#1][#2] / rowspan }
+      { \__tblr_build_multiple_row_cell:NN #1 #2 }
+      { \__tblr_build_single_row_cell:NN #1 #2 }
+    \group_end:
+  }
+
+\cs_new_protected:Npn \__tblr_build_single_row_cell:NN #1 #2
+  {
     \__tblr_build_normal_cell_background:nn {#1} {#2}
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
       { \__tblr_get_cell_text:nn {#1} {#2} }
@@ -3332,20 +3334,10 @@
     \skip_horizontal:n { \l__tblr_y_tl }
   }
 
-\cs_new_protected:Npn \__tblr_build_span_cell:NN #1 #2
+\cs_new_protected:Npn \__tblr_build_multiple_row_cell:NN #1 #2
   {
-    \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { column } { [#2] / @col-width } }
-    \tl_set:Nx \l__tblr_h_tl
-      { \__tblr_prop_item:ne { row } { [#1] / @row-height } }
-    \tl_set:Nx \l__tblr_e_tl
-      { \__tblr_prop_item:ne { row } { [#1] / @row-head } }
     \tl_set:Nx \l__tblr_r_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / rowspan } }
-    \tl_set:Nx \l__tblr_x_tl
-      { \__tblr_prop_item:ne { column } { [#2] / colsep-left } }
-    \tl_set:Nx \l__tblr_y_tl
-      { \__tblr_prop_item:ne { column } { [#2] / colsep-right } }
     \__tblr_get_span_vertical_sizes:NNNNN #1 #2
       \g__tblr_r_dim \g__tblr_s_dim \g__tblr_t_dim
     \__tblr_build_span_cell_background:nn {#1} {#2}
@@ -3377,11 +3369,9 @@
         \vss
       }
     \box_set_ht:Nn \l__tblr_c_box { \l__tblr_e_tl }
-    \skip_horizontal:n
-      { \__tblr_prop_item:ne { column } { [#2] / colsep-left } }
+    \skip_horizontal:n { \l__tblr_x_tl }
     \box_use:N \l__tblr_c_box
-    \skip_horizontal:n
-      { \__tblr_prop_item:ne { column } { [#2] / colsep-right } }
+    \skip_horizontal:n { \l__tblr_y_tl }
   }
 
 %% #1: width, #2: height, #3: depth, #4: color
