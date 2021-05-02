@@ -336,8 +336,13 @@
 
 %% \NewDashStyle commands
 
-\prop_gset_from_keyval:Nn \g__tblr_defined_hdash_styles_prop { solid = \hrule }
-\prop_gset_from_keyval:Nn \g__tblr_defined_vdash_styles_prop { solid = \vrule }
+\dim_zero_new:N \rulewidth
+\dim_set:Nn \rulewidth {0.4pt}
+
+\prop_gset_from_keyval:Nn \g__tblr_defined_hdash_styles_prop
+  { solid = \hrule height \rulewidth }
+\prop_gset_from_keyval:Nn \g__tblr_defined_vdash_styles_prop
+  { solid = \vrule width \rulewidth }
 
 \NewDocumentCommand \NewDashStyle { m m }
   {
@@ -362,14 +367,19 @@
     \tl_set:Nn \l__tblr_h_tl { \hbox_to_wd:nn }
     \tl_put_right:Nx \l__tblr_h_tl { { \dim_use:N \l_tmpa_dim } }
     \tl_put_right:Nn \l__tblr_h_tl
-      { { \hss \vbox:n { \hbox_to_wd:nn {#2} {} \hrule } \hss } }
+      {
+        { \hss \vbox:n { \hbox_to_wd:nn {#2} {} \hrule height \rulewidth } \hss }
+      }
     \prop_gput:NnV \g__tblr_defined_hdash_styles_prop {#1} \l__tblr_h_tl
+    %\prop_log:N \g__tblr_defined_hdash_styles_prop
     \tl_set:Nn \l__tblr_v_tl { \vbox_to_ht:nn }
     \tl_put_right:Nx \l__tblr_v_tl { { \dim_use:N \l_tmpa_dim } }
     \tl_put_right:Nn \l__tblr_v_tl
-      { { \vss \hbox:n { \vbox_to_ht:nn {#2} {} \vrule } \vss } }
+      {
+        { \vss \hbox:n { \vbox_to_ht:nn {#2} {} \vrule width \rulewidth } \vss }
+      }
     \prop_gput:NnV \g__tblr_defined_vdash_styles_prop {#1} \l__tblr_v_tl
-    \prop_log:N \g__tblr_defined_vdash_styles_prop
+    %\prop_log:N \g__tblr_defined_vdash_styles_prop
   }
 \cs_generate_variant:Nn \__tblr_dash_style_make_boxes:nnn { nxx }
 
@@ -2071,6 +2081,9 @@
 \cs_new_protected:Npn \__tblr_get_vline_segment_child:nnnnn #1 #2 #3 #4 #5
   {
     \group_begin:
+    \tl_set:Nx \l__tblr_w_tl
+      { \__tblr_prop_item:ne { vline } { [#1][#2](#3) / wd } }
+    \tl_if_empty:NF \l__tblr_w_tl { \dim_set:Nn \rulewidth { \l__tblr_w_tl } }
     \tl_set:Nx \l__tblr_d_tl
       { \__tblr_prop_item:ne { vline } { [#1][#2](#3) / @dash } }
     \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
@@ -2125,6 +2138,10 @@
 %% #1: row number, #2: column number; #3: index number
 \cs_new_protected:Npn \__tblr_get_hline_segment_child:nnn #1 #2 #3
   {
+    \group_begin:
+    \tl_set:Nx \l__tblr_w_tl
+      { \__tblr_prop_item:ne { hline } { [#1][#2](#3) / wd } }
+    \tl_if_empty:NF \l__tblr_w_tl { \dim_set:Nn \rulewidth { \l__tblr_w_tl } }
     \tl_set:Nx \l__tblr_d_tl
       { \__tblr_prop_item:ne { hline } { [#1][#2](#3) / @dash } }
     \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
@@ -2135,6 +2152,7 @@
         \xleaders \l__tblr_b_tl \hfil
       }
       { \l__tblr_b_tl \hfil }
+    \group_end:
   }
 
 %% current cell alignments
