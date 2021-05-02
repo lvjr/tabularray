@@ -1568,8 +1568,13 @@
 %%  \section{Tabularray Environments}
 %%% --------------------------------------------------------
 
+\tl_new:N \l__tblr_env_name_tl
+
 \NewDocumentEnvironment { tblr } { O{c} m +b }
-  { \buildtblr { #1 } { #2 } { #3 } } { }
+  {
+    \tl_set:Nn \l__tblr_env_name_tl { tblr }
+    \buildtblr {#1} {#2} {#3}
+  } { }
 
 %% Read, split and build the table
 
@@ -1825,7 +1830,7 @@
 %%  \section{Initial Table Specifications}
 %%% --------------------------------------------------------
 
-\prop_const_from_keyval:Nn \c_tblr_default_keyval_row_prop
+\prop_const_from_keyval:Nn \g__tblr_default_tblr_rows_prop
   {
     rowsep-above   = 0.2em,
     rowsep-below   = 0.2em,
@@ -1836,25 +1841,25 @@
     @row-lower = 0pt,
   }
 
-\prop_const_from_keyval:Nn \c_tblr_default_keyval_col_prop
+\prop_const_from_keyval:Nn \g__tblr_default_tblr_columns_prop
   {
     colsep-left    = 0.6em,
     colsep-right   = 0.6em,
     @col-width = 0pt,
   }
 
-\prop_const_from_keyval:Nn \c_tblr_default_keyval_cell_prop
+\prop_const_from_keyval:Nn \g__tblr_default_tblr_cells_prop
   {
     halign = l,
     valign = t,
   }
 
-\prop_const_from_keyval:Nn \c_tblr_default_keyval_hline_prop
+\prop_const_from_keyval:Nn \g__tblr_default_tblr_hlines_prop
   {
     rulesep = 2pt,
   }
 
-\prop_const_from_keyval:Nn \c_tblr_default_keyval_vline_prop
+\prop_const_from_keyval:Nn \g__tblr_default_tblr_vlines_prop
   {
     rulesep = 2pt,
   }
@@ -1863,40 +1868,41 @@
   {
     \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
       {
-        \prop_map_inline:Nn \c_tblr_default_keyval_row_prop
+        \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _rows_prop }
           {
             \__tblr_prop_gput:nxn { row } { [\l__tblr_i_tl] / ##1 } {##2}
           }
-        \prop_map_inline:Nn \c_tblr_default_keyval_hline_prop
+        \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _hlines_prop }
           {
             \__tblr_prop_gput:nxn { hline } { [\l__tblr_i_tl] / ##1 } {##2}
           }
         \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
           {
-            \prop_map_inline:Nn \c_tblr_default_keyval_cell_prop
+            \prop_map_inline:cn
+              { g__tblr_default_ \l__tblr_env_name_tl _cells_prop }
               {
                 \__tblr_prop_gput:nxn { cell }
                   { [\l__tblr_i_tl][\l__tblr_j_tl] / ##1 } {##2}
               }
           }
       }
-    \prop_map_inline:Nn \c_tblr_default_keyval_hline_prop
+    \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _hlines_prop }
       {
         \__tblr_prop_gput:nxn { hline }
           { [\int_eval:n { \l_tblr_row_count_int + 1}] / ##1 } {##2}
       }
     \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
       {
-        \prop_map_inline:Nn \c_tblr_default_keyval_col_prop
+        \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _columns_prop }
           {
             \__tblr_prop_gput:nxn { column } { [\l__tblr_j_tl] / ##1 } {##2}
           }
-        \prop_map_inline:Nn \c_tblr_default_keyval_vline_prop
+        \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _vlines_prop }
           {
             \__tblr_prop_gput:nxn { vline } { [\l__tblr_j_tl] / ##1 } {##2}
           }
       }
-    \prop_map_inline:Nn \c_tblr_default_keyval_vline_prop
+    \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _vlines_prop }
       {
         \__tblr_prop_gput:nxn { vline }
           { [\int_eval:n { \l_tblr_col_count_int + 1}] / ##1 } {##2}
