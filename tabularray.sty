@@ -436,6 +436,8 @@
 \tl_new:N \l__tblr_hline_num_tl   % the index of the hline
 \tl_new:N \l__tblr_hline_cols_tl  % the columns of the hline
 \tl_new:N \l__tblr_hline_dash_tl  % dash style
+\tl_new:N \l__tblr_hline_fg_tl    % dash foreground
+\tl_new:N \l__tblr_hline_wd_tl    % dash width
 
 \NewTableCommand \cline [2] [] { \SetHline [=] {#2} {#1} }
 
@@ -453,7 +455,7 @@
 %% If it does exist and has empty value, then do nothing
 \cs_new_protected:Npn \tblr_set_hline:nnn #1 #2 #3
   {
-    \tl_clear:N \l__tblr_hline_dash_tl
+    \group_begin:
     \keys_set_groups:nnn { tblr-hline } { text } {#3}
     \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text }
       {
@@ -462,6 +464,7 @@
         \keys_set:nn { tblr-hline } { dash = solid, #3 }
         \__tblr_set_hline_cmd:n {#2}
       }
+    \group_end:
   }
 
 \cs_new_protected:Npn \tblr_set_hline:nnnn #1 #2 #3 #4
@@ -532,8 +535,8 @@
     dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 },
     text .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text #1 },
     text .groups:n = { text },
-    wd .code:n = \__tblr_hline_spec_sub:nn { wd } { \dim_eval:n {#1} },
-    fg .code:n = \__tblr_hline_spec_sub:nn { fg } {#1},
+    wd .code:n = \tl_set:Nn \l__tblr_hline_wd_tl { \dim_eval:n {#1} },
+    fg .code:n = \tl_set:Nn \l__tblr_hline_fg_tl {#1},
     unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
   }
 
@@ -543,33 +546,14 @@
       { \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 } }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
-          { \__tblr_hline_spec_sub:nn { fg } {#1} }
+          { \tl_set:Nn \l__tblr_hline_fg_tl {#1} }
           {
             \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
-            \__tblr_hline_spec_sub:nx { wd }
-              { \dim_eval:n {\l__tblr_v_tl} }
+            \tl_set:Nn \l__tblr_hline_wd_tl { \dim_eval:n {\l__tblr_v_tl} }
           }
       }
   }
 \cs_generate_variant:Nn \__tblr_hline_unknown_key:n { V }
-
-\cs_new_protected:Npn \__tblr_hline_spec_main:nn #1 #2
-  {
-    \int_step_inline:nn { \l_tblr_col_count_int }
-      {
-        \__tblr_prop_gput:nxx { hline } { [\int_use:N \rownum][##1] / #1 } {#2}
-      }
-  }
-
-\cs_new_protected:Npn \__tblr_hline_spec_sub:nn #1 #2
-  {
-    \int_step_inline:nn { \l_tblr_col_count_int }
-      {
-        \__tblr_prop_gput:nxx { hline }
-          { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / #1 } {#2}
-      }
-  }
-\cs_generate_variant:Nn \__tblr_hline_spec_sub:nn { nV, nx }
 
 \cs_new_protected_nopar:Npn \__tblr_set_hline_cmd:n #1
   {
@@ -579,6 +563,18 @@
         \__tblr_prop_gput:nxx { hline }
           { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / @dash }
           { \l__tblr_hline_dash_tl }
+        \tl_if_empty:NF \l__tblr_hline_wd_tl
+          {
+            \__tblr_prop_gput:nxx { hline }
+              { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / wd }
+              { \l__tblr_hline_wd_tl }
+          }
+        \tl_if_empty:NF \l__tblr_hline_fg_tl
+          {
+            \__tblr_prop_gput:nxx { hline }
+              { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / fg }
+              { \l__tblr_hline_fg_tl }
+          }
       }
   }
 
@@ -619,6 +615,8 @@
 \tl_new:N \l__tblr_vline_num_tl   % the index of the vline
 \tl_new:N \l__tblr_vline_rows_tl  % the rows of the vline
 \tl_new:N \l__tblr_vline_dash_tl  % dash style
+\tl_new:N \l__tblr_vline_fg_tl    % dash foreground
+\tl_new:N \l__tblr_vline_wd_tl    % dash width
 
 \NewTableCommand \rline [2] [] { \SetVline [=] {#2} {#1} }
 
@@ -636,7 +634,7 @@
 %% If it does exist and has empty value, then do nothing
 \cs_new_protected:Npn \tblr_set_vline:nnn #1 #2 #3
   {
-    \tl_clear:N \l__tblr_vline_dash_tl
+    \group_begin:
     \keys_set_groups:nnn { tblr-vline } { text } {#3}
     \tl_if_eq:NnF \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text }
       {
@@ -645,6 +643,7 @@
         \keys_set:nn { tblr-vline } { dash = solid, #3 }
         \__tblr_set_vline_cmd:n {#2}
       }
+    \group_end:
   }
 
 \cs_new_protected:Npn \tblr_set_vline:nnnn #1 #2 #3 #4
@@ -715,8 +714,8 @@
     dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 },
     text .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text #1 },
     text .groups:n = { text },
-    wd .code:n = \__tblr_vline_spec_sub:nn { wd } { \dim_eval:n {#1} },
-    fg .code:n = \__tblr_vline_spec_sub:nn { fg } {#1},
+    wd .code:n = \tl_set:Nn \l__tblr_vline_wd_tl { \dim_eval:n {#1} },
+    fg .code:n = \tl_set:Nn \l__tblr_vline_fg_tl {#1},
     unknown .code:n = \__tblr_vline_unknown_key:V \l_keys_key_str,
   }
 
@@ -726,33 +725,14 @@
       { \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 } }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
-          { \__tblr_vline_spec_sub:nn { fg } {#1} }
+          { \tl_set:Nn \l__tblr_vline_fg_tl {#1} }
           {
             \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
-            \__tblr_vline_spec_sub:nx { wd }
-              { \dim_eval:n {\l__tblr_v_tl} }
+            \tl_set:Nn \l__tblr_vline_wd_tl { \dim_eval:n {\l__tblr_v_tl} }
           }
       }
   }
 \cs_generate_variant:Nn \__tblr_vline_unknown_key:n { V }
-
-\cs_new_protected:Npn \__tblr_vline_spec_main:nn #1 #2
-  {
-    \int_step_inline:nn { \l_tblr_row_count_int }
-      {
-        \__tblr_prop_gput:nxx { vline } { [##1][\int_use:N \colnum] / #1 } {#2}
-      }
-  }
-
-\cs_new_protected:Npn \__tblr_vline_spec_sub:nn #1 #2
-  {
-    \int_step_inline:nn { \l_tblr_row_count_int }
-      {
-        \__tblr_prop_gput:nxx { vline }
-          { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / #1 } {#2}
-      }
-  }
-\cs_generate_variant:Nn \__tblr_vline_spec_sub:nn { nV, nx }
 
 \cs_new_protected_nopar:Npn \__tblr_set_vline_cmd:n #1
   {
@@ -762,6 +742,18 @@
         \__tblr_prop_gput:nxx { vline }
           { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / @dash }
           { \l__tblr_vline_dash_tl }
+        \tl_if_empty:NF \l__tblr_vline_wd_tl
+          {
+            \__tblr_prop_gput:nxx { vline }
+              { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / wd }
+              { \l__tblr_vline_wd_tl }
+          }
+        \tl_if_empty:NF \l__tblr_vline_fg_tl
+          {
+            \__tblr_prop_gput:nxx { vline }
+              { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / fg }
+              { \l__tblr_vline_fg_tl }
+          }
       }
   }
 
