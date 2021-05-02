@@ -2142,7 +2142,7 @@
         \__tblr_get_hline_dash_style:N \l__tblr_b_tl
         \xleaders \l__tblr_b_tl \hfil
       }
-      { \l__tblr_b_tl }
+      { \l__tblr_b_tl \hfil }
   }
 
 %% current cell alignments
@@ -3119,7 +3119,12 @@
               { \__tblr_prop_item:ne { hline } { [#1](##1) / @hline-height } }
             \hrule height ~ 0pt % remove lineskip
             \hbox_set_to_wd:Nnn \l__tblr_b_box { \g__tblr_w_dim }
-              { \__tblr_get_hline_segment_child:nnn {#1} {#2} {##1} }
+              {
+                \tl_set:Nx \l__tblr_f_tl
+                  { \__tblr_prop_item:ne { hline } { [#1][#2](##1) / fg } }
+                \tl_if_empty:NF \l__tblr_f_tl { \color{\l__tblr_f_tl} }
+                \__tblr_get_hline_segment_child:nnn {#1} {#2} {##1}
+              }
             \box_set_ht:Nn \l__tblr_b_box { \l__tblr_h_tl }
             \box_set_dp:Nn \l__tblr_b_box { 0pt }
             \box_use:N \l__tblr_b_box
@@ -3235,6 +3240,9 @@
             \vbox_set_to_ht:Nnn \l__tblr_b_box
               { \dim_eval:n { \g__tblr_h_dim + \g__tblr_d_dim } }
               {
+                \tl_set:Nx \l__tblr_f_tl
+                  { \__tblr_prop_item:ne { vline } { [#1][#2](##1) / fg } }
+                \tl_if_empty:NF \l__tblr_f_tl { \color{\l__tblr_f_tl} }
                 \__tblr_get_vline_segment_child:nnnxx {#1} {#2} {##1}
                   { \dim_eval:n { \g__tblr_h_dim } }
                   { \dim_eval:n { \g__tblr_d_dim + \l__tblr_b_tl } }
