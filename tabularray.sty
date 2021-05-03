@@ -1831,12 +1831,12 @@
 %%  \section{Initial Table Specifications}
 %%% --------------------------------------------------------
 
-\prop_const_from_keyval:Nn \g__tblr_default_tblr_table_prop
+\prop_gset_from_keyval:Nn \g__tblr_default_tblr_table_prop
   {
     stretch = 1,
   }
 
-\prop_const_from_keyval:Nn \g__tblr_default_tblr_rows_prop
+\prop_gset_from_keyval:Nn \g__tblr_default_tblr_rows_prop
   {
     rowsep-above   = 0.2em,
     rowsep-below   = 0.2em,
@@ -1847,25 +1847,25 @@
     @row-lower = 0pt,
   }
 
-\prop_const_from_keyval:Nn \g__tblr_default_tblr_columns_prop
+\prop_gset_from_keyval:Nn \g__tblr_default_tblr_columns_prop
   {
     colsep-left    = 0.6em,
     colsep-right   = 0.6em,
     @col-width = 0pt,
   }
 
-\prop_const_from_keyval:Nn \g__tblr_default_tblr_cells_prop
+\prop_gset_from_keyval:Nn \g__tblr_default_tblr_cells_prop
   {
     halign = l,
     valign = t,
   }
 
-\prop_const_from_keyval:Nn \g__tblr_default_tblr_hlines_prop
+\prop_gset_from_keyval:Nn \g__tblr_default_tblr_hlines_prop
   {
     rulesep = 2pt,
   }
 
-\prop_const_from_keyval:Nn \g__tblr_default_tblr_vlines_prop
+\prop_gset_from_keyval:Nn \g__tblr_default_tblr_vlines_prop
   {
     rulesep = 2pt,
   }
@@ -1917,6 +1917,44 @@
         \__tblr_prop_gput:nxn { vline }
           { [\int_eval:n { \l_tblr_col_count_int + 1}] / ##1 } {##2}
       }
+  }
+
+\tl_new:N \l__tblr_set_default_env_tl
+
+\NewDocumentCommand \SetTabularrayDefault { O{tblr} m }
+  {
+    \tl_set:Nn \l__tblr_set_default_env_tl {#1}
+    \keys_set:nn { tblr-default } {#2}
+  }
+\cs_new_eq:NN \SetTblrDefault \SetTabularrayDefault
+
+\keys_define:nn { tblr-default }
+  {
+    columns .code:n = \__tblr_set_default:nn { columns } {#1},
+    rows    .code:n = \__tblr_set_default:nn { rows } {#1},
+    cells   .code:n = \__tblr_set_default:nn { cells } {#1},
+    hlines  .code:n = \__tblr_set_default:nn { hlines } {#1},
+    vlines  .code:n = \__tblr_set_default:nn { vlines } {#1},
+    unknown .code:n = \__tblr_set_default_table:Nn \l_keys_key_str {#1},
+  }
+
+\cs_new_protected:Npn \__tblr_set_default:nn #1 #2
+  {
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#2}
+    \prop_map_inline:Nn \l_tmpa_prop
+      {
+        \prop_gput:cnn { g__tblr_default_ \l__tblr_set_default_env_tl _ #1 _prop }
+          {##1} {##2}
+      }
+    \prop_log:c { g__tblr_default_ \l__tblr_set_default_env_tl _ #1 _prop }
+  }
+\cs_generate_variant:Nn \__tblr_set_default:nn { nV }
+
+\cs_new_protected:Npn \__tblr_set_default_table:Nn #1 #2
+  {
+    \prop_gput:cVn { g__tblr_default_ \l__tblr_set_default_env_tl _table_prop }
+      {#1} {#2}
+    \prop_log:c { g__tblr_default_ \l__tblr_set_default_env_tl _table_prop }
   }
 
 %%% --------------------------------------------------------
