@@ -38,6 +38,7 @@
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { xn } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T, TF }
+\prg_generate_conditional_variant:Nnn \tl_if_head_eq_meaning:nN { VN } { T, TF }
 
 \tl_new:N  \l__tblr_a_tl
 \tl_new:N  \l__tblr_b_tl
@@ -1204,6 +1205,8 @@
                    { [\int_use:N \rownum] / height } { \dim_eval:n {#1} },
     co .code:n = \__tblr_prop_gput:nxx { row }
                    { [\int_use:N \rownum] / coefficient } {#1},
+    nobreak .code:n = \__tblr_prop_gput:nxx { row }
+                   { [\int_eval:n {\rownum - 1}] / nobreak } { true },
     unknown .code:n = \__tblr_row_unknown_key:V \l_keys_key_str,
   }
 
@@ -1664,13 +1667,36 @@
     \seq_clear:N #2
     \seq_map_inline:Nn \l_tmpa_seq
       {
-        \bool_lazy_or:nnTF
-          { \tl_if_head_eq_meaning_p:nN { ##1 } * }
-          { \tl_if_head_eq_meaning_p:nN { ##1 } [ }
-          { \seq_put_right:Nn #2 { \__tblr_newline_skip:w ##1 } }
-          { \seq_put_right:Nn #2 { ##1 } }
+        \tl_if_head_eq_meaning:nNTF {##1} *
+          {
+            \tl_set:Nn \l__tblr_b_tl { \SetRow{nobreak} }
+            \tl_set:Nx \l__tblr_c_tl { \tl_tail:n {##1} }
+            \tl_trim_spaces:N \l__tblr_c_tl %% Ignore spaces between * and [dimen]
+            \tl_log:N \l__tblr_c_tl
+            \tl_if_head_eq_meaning:VNT \l__tblr_c_tl [
+              {
+                \tl_put_right:Nn \l__tblr_b_tl { \RowBefore@AddBelowSep }
+              }
+            \tl_put_right:NV \l__tblr_b_tl \l__tblr_c_tl
+            \seq_put_right:NV #2 \l__tblr_b_tl
+          }
+          {
+            \tl_if_head_eq_meaning:nNTF { ##1 } [
+              { \seq_put_right:Nn #2 { \RowBefore@AddBelowSep ##1 } }
+              { \seq_put_right:Nn #2 { ##1 } }
+          }
       }
     \int_set:Nn \l_tblr_row_count_int { \seq_count:N #2 }
+  }
+
+%% Treat \\[dimen] command
+\NewTableCommand \RowBefore@AddBelowSep [1] []
+  {
+    \IfValueT { #1 }
+      {
+        \__tblr_prop_gput:nxx { row }
+          { [\int_eval:n {\rownum - 1}] / belowsep+ } { #1 }
+      }
   }
 
 %% Split table lines to cells and store them
@@ -1989,25 +2015,6 @@
     \__tblr_prop_gput:nnn { table } {#1} {#2}
   }
 \cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
-
-%% Treat \\*[dimen] command
-\NewDocumentCommand \__tblr_newline_skip:w { s o }
-  {
-    \IfBooleanT { #1 }
-      {
-        \__tblr_prop_gput:nxx
-          { row }
-          { [\int_eval:n {\rownum - 1}] / pagebreak }
-          { none }
-      }
-    \IfValueT { #2 }
-      {
-        \__tblr_prop_gput:nxx
-          { row }
-          { [\int_eval:n {\rownum - 1}] / extra-rowsep-below }
-          { #2 }
-      }
-  }
 
 %%% --------------------------------------------------------
 %%  \section{Typeset and Calculate Sizes}
