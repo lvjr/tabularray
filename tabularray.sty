@@ -1924,7 +1924,7 @@
 %% #1: env name; #2: options
 \NewDocumentCommand \SetTabularrayDefault { O{tblr} m }
   {
-    \tl_gput_right:cn { g__tblr_default_ #1 _tl } {#2}
+    \tl_gput_right:cn { g__tblr_default_ #1 _tl } { , #2 }
   }
 \cs_new_eq:NN \SetTblrDefault \SetTabularrayDefault
 
