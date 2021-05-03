@@ -1943,14 +1943,14 @@
   {
     colspec .code:n = \__tblr_parse_colrow_spec:nn { column } {#1},
     rowspec .code:n = \__tblr_parse_colrow_spec:nn { row } {#1},
-    width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
+    width      .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
     span-width .code:n = \__tblr_keys_gput:nn { span-width } {#1},
-    stretch .code:n = \__tblr_keys_gput:nn { stretch } {#1},
+    stretch    .code:n = \__tblr_keys_gput:nn { stretch } {#1},
     columns .code:n = \__tblr_set_every_column_aux:n {#1},
-    rows .code:n = \__tblr_set_every_row_aux:n {#1},
-    cells .code:n = \__tblr_set_every_cell_aux:n {#1},
-    hlines .code:n = \__tblr_set_every_hline_aux:n {#1},
-    vlines .code:n = \__tblr_set_every_vline_aux:n {#1},
+    rows    .code:n = \__tblr_set_every_row_aux:n {#1},
+    cells   .code:n = \__tblr_set_every_cell_aux:n {#1},
+    hlines  .code:n = \__tblr_set_every_hline_aux:n {#1},
+    vlines  .code:n = \__tblr_set_every_vline_aux:n {#1},
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
 
@@ -1984,31 +1984,9 @@
       { \__tblr_parse_colrow_spec:nn { column } {#1} }
   }
 
-\NewDocumentCommand { \settblr } { m }
-  { \tblr_setup:n { #1 } }
-
-%% Setup the table
-\cs_new_protected:Npn \tblr_setup:n #1
-  {
-    \keys_set:nn { tblr } { #1 }
-  }
-\cs_generate_variant:Nn \tblr_setup:n { x }
-
-%% If the key doesn't exist, create it ahead
-\cs_new_protected:Npn \__tblr_keys_define_set:nn #1 #2
-  {
-    \keys_if_exist:nnF { tblr } { #1 }
-      {
-        \keys_define:nn { tblr }
-          { #1 .code:n = \__tblr_keys_gput:nn { #1 } { ##1 } }
-      }
-    \keys_set:nn { tblr } { #1 = #2 }
-  }
-\cs_generate_variant:Nn \__tblr_keys_define_set:nn { xn, xx }
-
 \cs_new_protected:Npn  \__tblr_keys_gput:nn #1 #2
   {
-    \__tblr_prop_gput:nnn { table } { #1 } { #2 }
+    \__tblr_prop_gput:nnn { table } {#1} {#2}
   }
 \cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
 
