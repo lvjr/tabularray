@@ -1587,6 +1587,7 @@
     \__tblr_split_table:n { #3 }
     \LogTblrTracing { command }
     \__tblr_initial_table_spec:
+    \LogTblrTracing { table }
     \__tblr_parse_table_spec:n { #2 }
     \__tblr_execute_table_commands:
     \__tblr_disable_table_commands:
@@ -1830,6 +1831,11 @@
 %%  \section{Initial Table Specifications}
 %%% --------------------------------------------------------
 
+\prop_const_from_keyval:Nn \g__tblr_default_tblr_table_prop
+  {
+    stretch = 1,
+  }
+
 \prop_const_from_keyval:Nn \g__tblr_default_tblr_rows_prop
   {
     rowsep-above   = 0.2em,
@@ -1866,6 +1872,10 @@
 
 \cs_new_protected:Npn \__tblr_initial_table_spec:
   {
+    \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _table_prop }
+      {
+        \__tblr_prop_gput:nxn { table } { ##1 } {##2}
+      }
     \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
       {
         \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _rows_prop }
