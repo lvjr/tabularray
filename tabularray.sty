@@ -65,23 +65,18 @@
 \int_new:N \l__tblr_r_int % for row number
 \dim_new:N \l__tblr_d_dim % for depth
 \dim_new:N \l__tblr_h_dim % for height
+\dim_new:N \l__tblr_o_dim
+\dim_new:N \l__tblr_p_dim
+\dim_new:N \l__tblr_q_dim
+\dim_new:N \l__tblr_r_dim
+\dim_new:N \l__tblr_s_dim
+\dim_new:N \l__tblr_t_dim
 \dim_new:N \l__tblr_v_dim
 \dim_new:N \l__tblr_w_dim % for width
 \box_new:N \l__tblr_a_box
 \box_new:N \l__tblr_b_box
 \box_new:N \l__tblr_c_box % for cell box
 \box_new:N \l__tblr_d_box
-
-\dim_new:N \g__tblr_b_dim
-\dim_new:N \g__tblr_d_dim % for depth
-\dim_new:N \g__tblr_h_dim % for height
-\dim_new:N \g__tblr_w_dim % for width
-\dim_new:N \g__tblr_o_dim
-\dim_new:N \g__tblr_p_dim
-\dim_new:N \g__tblr_q_dim
-\dim_new:N \g__tblr_r_dim
-\dim_new:N \g__tblr_s_dim
-\dim_new:N \g__tblr_t_dim
 
 \int_new:N \g_tblr_level_int % store table nesting level
 
@@ -3130,7 +3125,10 @@
       }
   }
 
-%% #1: row number
+\dim_new:N \l__tblr_col_o_wd_dim
+\dim_new:N \l__tblr_col_b_wd_dim
+
+%% Build hline. #1: row number
 \cs_new_protected:Npn \__tblr_build_hline:n #1
   {
     \int_step_inline:nn { \l_tblr_col_count_int }
@@ -3146,7 +3144,7 @@
     \tl_set:Nx \l__tblr_o_tl
       { \__tblr_prop_item:ne { hline } { [#1][#2] / omit } }
     \__tblr_get_col_outer_width_border_width:nNN {#2}
-      \g__tblr_w_dim \g__tblr_b_dim
+      \l__tblr_col_o_wd_dim \l__tblr_col_b_wd_dim
     \tl_if_empty:NTF \l__tblr_o_tl
       {
         \tl_if_empty:NF \l__tblr_n_tl
@@ -3158,7 +3156,7 @@
 %% #1: row number, #2: column number
 \cs_new_protected:Npn \__tblr_build_hline_segment_omit:nn #1 #2
   {
-    \skip_horizontal:n { \g__tblr_w_dim - \g__tblr_b_dim }
+    \skip_horizontal:n { \l__tblr_col_o_wd_dim - \l__tblr_col_b_wd_dim }
   }
 
 %% #1: row number, #2: column number
@@ -3169,13 +3167,13 @@
     \vbox_set:Nn \l__tblr_c_box
       {
         %% add an empty hbox to support vbox width
-        \tex_hbox:D to \g__tblr_w_dim {}
+        \tex_hbox:D to \l__tblr_col_o_wd_dim {}
         \int_step_inline:nn { \l__tblr_n_tl }
           {
             \tl_set:Nx \l__tblr_h_tl
               { \__tblr_prop_item:ne { hline } { [#1](##1) / @hline-height } }
             \hrule height ~ 0pt % remove lineskip
-            \hbox_set_to_wd:Nnn \l__tblr_b_box { \g__tblr_w_dim }
+            \hbox_set_to_wd:Nnn \l__tblr_b_box { \l__tblr_col_o_wd_dim }
               {
                 \tl_set:Nx \l__tblr_f_tl
                   { \__tblr_prop_item:ne { hline } { [#1][#2](##1) / fg } }
@@ -3190,65 +3188,67 @@
         \skip_vertical:n { - \l__tblr_s_tl }
       }
     \box_use:N \l__tblr_c_box
-    \skip_horizontal:n { - \g__tblr_b_dim }
+    \skip_horizontal:n { - \l__tblr_col_b_wd_dim }
   }
 
 %% Read from table specifications and calculate the widths of row and border
 %% column outer width = content width + colsep width + border width
 %% #1: the column number, #2: outer width, #3: border width
-%% We put all code inside a group to avoid conflicts of local variables
 \cs_new_protected:Npn \__tblr_get_col_outer_width_border_width:nNN #1 #2 #3
   {
-    \group_begin:
-    \tl_set:Nx \l__tblr_a_tl
-      { \__tblr_prop_item:ne {vline} { [#1] / @vline-width } }
-    \tl_set:Nx \l__tblr_b_tl
-      { \__tblr_prop_item:ne {column} { [#1] / leftsep} }
-    \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne {column} { [#1] / @col-width } }
-    \tl_set:Nx \l__tblr_c_tl
-      { \__tblr_prop_item:ne {column} { [#1] / rightsep } }
-    \tl_set:Nx \l__tblr_d_tl
-      { \__tblr_prop_item:ne {vline} { [\int_eval:n { #1 + 1 }] / @vline-width } }
-    \dim_gset:Nn #2
-      { \l__tblr_a_tl+\l__tblr_b_tl+\l__tblr_w_tl+\l__tblr_c_tl+\l__tblr_d_tl }
-    \dim_gset:Nn #3 { \l__tblr_d_tl  }
-    \group_end:
+    \dim_set:Nn #3
+      { \__tblr_prop_item:ne {vline} { [\int_eval:n {#1 + 1}] / @vline-width } }
+    \dim_set:Nn #2
+      {
+        \__tblr_prop_item:ne {vline} { [#1] / @vline-width }
+        +
+        \__tblr_prop_item:ne {column} { [#1] / leftsep }
+        +
+        \__tblr_prop_item:ne {column} { [#1] / @col-width }
+        +
+        \__tblr_prop_item:ne {column} { [#1] / rightsep }
+        +
+        #3
+      }
   }
+
+\dim_new:N \l__tblr_row_ht_dim
+\dim_new:N \l__tblr_row_dp_dim
 
 %% Build current row, #1: row number
 \cs_new_protected:Npn \__tblr_build_row:N #1
   {
-    \__tblr_get_row_inner_height_depth:VNN #1 \g__tblr_h_dim \g__tblr_d_dim
-    \vrule width ~ 0pt ~ height ~ \g__tblr_h_dim ~ depth ~ \g__tblr_d_dim
+    \__tblr_get_row_inner_height_depth:VNN
+      #1 \l__tblr_row_ht_dim \l__tblr_row_dp_dim
+    \vrule width ~ 0pt ~ height ~ \l__tblr_row_ht_dim ~ depth ~ \l__tblr_row_dp_dim
     \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
       {
-        \__tblr_build_vline_segment:nn { #1 } { \l__tblr_j_tl }
+        \__tblr_build_vline_segment:nn {#1} { \l__tblr_j_tl }
         \__tblr_build_cell:NN #1 \l__tblr_j_tl
       }
-    \__tblr_build_vline_segment:nn { #1 } { \int_eval:n {\l_tblr_col_count_int + 1} }
+    \__tblr_build_vline_segment:nn {#1} { \int_eval:n {\l_tblr_col_count_int + 1} }
   }
 
 %% Read from table specifications and calculate inner height/depth of the row
 %% inner height = rowsep above + row head
 %% inner depth = row body + row foot + rowsep below
 %% #1: the row number, #2: resulting inner height, #3: resulting inner depth
-%% We put all code inside a group to avoid conflicts of local variables
 \cs_new_protected:Npn \__tblr_get_row_inner_height_depth:nNN #1 #2 #3
   {
-    \group_begin:
-    \tl_set:Nx \l__tblr_a_tl
-      { \__tblr_prop_item:ne { row } { [#1] / abovesep } }
-    \tl_set:Nx \l__tblr_e_tl
-      { \__tblr_prop_item:ne { row } { [#1] / @row-head } }
-    \tl_set:Nx \l__tblr_h_tl
-      { \__tblr_prop_item:ne { row } { [#1] / @row-height } }
-    \tl_set:Nx \l__tblr_f_tl { \dim_eval:n { \l__tblr_h_tl - \l__tblr_e_tl } }
-    \tl_set:Nx \l__tblr_b_tl
-      { \__tblr_prop_item:ne { row } { [#1] / belowsep } }
-    \dim_gset:Nn #2 { \l__tblr_a_tl + \l__tblr_e_tl }
-    \dim_gset:Nn #3 { \l__tblr_f_tl + \l__tblr_b_tl }
-    \group_end:
+    \dim_set:Nn #2
+      {
+        \__tblr_prop_item:ne { row } { [#1] / abovesep }
+        +
+        \__tblr_prop_item:ne { row } { [#1] / @row-head }
+      }
+    \dim_set:Nn #3
+      {
+        \__tblr_prop_item:ne { row } { [#1] / @row-height }
+        -
+        \__tblr_prop_item:ne { row } { [#1] / @row-head }
+        +
+        \__tblr_prop_item:ne { row } { [#1] / belowsep }
+      }
   }
 \cs_generate_variant:Nn \__tblr_get_row_inner_height_depth:nNN { V }
 
@@ -3295,14 +3295,14 @@
             \tl_set:Nx \l__tblr_w_tl
               { \__tblr_prop_item:ne { vline } { [#2](##1) / @vline-width } }
             \vbox_set_to_ht:Nnn \l__tblr_b_box
-              { \dim_eval:n { \g__tblr_h_dim + \g__tblr_d_dim } }
+              { \dim_eval:n { \l__tblr_row_ht_dim + \l__tblr_row_dp_dim } }
               {
                 \tl_set:Nx \l__tblr_f_tl
                   { \__tblr_prop_item:ne { vline } { [#1][#2](##1) / fg } }
                 \tl_if_empty:NF \l__tblr_f_tl { \color{\l__tblr_f_tl} }
                 \__tblr_get_vline_segment_child:nnnxx {#1} {#2} {##1}
-                  { \dim_eval:n { \g__tblr_h_dim } }
-                  { \dim_eval:n { \g__tblr_d_dim + \l__tblr_b_tl } }
+                  { \dim_eval:n { \l__tblr_row_ht_dim } }
+                  { \dim_eval:n { \l__tblr_row_dp_dim + \l__tblr_b_tl } }
                 \skip_vertical:n {  - \l__tblr_b_tl }
               }
             \box_set_wd:Nn \l__tblr_b_box { \l__tblr_w_tl }
@@ -3312,10 +3312,13 @@
         \skip_horizontal:n { - \l__tblr_s_tl }
       }
     \vbox_set:Nn \l__tblr_c_box { \box_use:N \l__tblr_a_box }
-    \box_set_ht:Nn \l__tblr_c_box { \dim_use:N \g__tblr_h_dim }
-    \box_set_dp:Nn \l__tblr_c_box { \dim_use:N \g__tblr_d_dim }
+    \box_set_ht:Nn \l__tblr_c_box { \dim_use:N \l__tblr_row_ht_dim }
+    \box_set_dp:Nn \l__tblr_c_box { \dim_use:N \l__tblr_row_dp_dim }
     \box_use:N \l__tblr_c_box
   }
+
+\tl_new:N \l__tblr_cell_rowspan_tl
+\tl_new:N \l__tblr_cell_colspan_tl
 
 \cs_new_protected:Npn \__tblr_build_cell:NN #1 #2
   {
@@ -3331,17 +3334,17 @@
     \tl_set:Nx \l__tblr_y_tl
       { \__tblr_prop_item:ne { column } { [#2] / rightsep } }
     \__tblr_get_cell_alignments:nn {#1} {#2}
-    \tl_set:Nx \l__tblr_r_tl
+    \tl_set:Nx \l__tblr_cell_rowspan_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / rowspan } }
-    \tl_if_empty:NTF \l__tblr_r_tl
+    \tl_if_empty:NTF \l__tblr_cell_rowspan_tl
       {
         \__tblr_build_cell_background:NN #1 #2
         \__tblr_build_single_row_cell:NN #1 #2
       }
       {
-        %% We need \g__tblr_s_dim in building mulitrow cell
+        %% We need \l__tblr_s_dim in building mulitrow cell
         \__tblr_get_span_vertical_sizes:NNNNN #1 #2
-          \g__tblr_r_dim \g__tblr_s_dim \g__tblr_t_dim
+          \l__tblr_r_dim \l__tblr_s_dim \l__tblr_t_dim
         \__tblr_build_cell_background:NN #1 #2
         \__tblr_build_multiple_row_cell:NN #1 #2
       }
@@ -3404,10 +3407,10 @@
         \box_set_dp:Nn \l__tblr_a_box
           {
             \__tblr_prop_item:ne { row }
-              { [\int_eval:n {#1 + \l__tblr_r_tl - 1}] / @row-foot }
+              { [\int_eval:n {#1 + \l__tblr_cell_rowspan_tl - 1}] / @row-foot }
           }
       }
-    \vbox_set_to_ht:Nnn \l__tblr_b_box { \g__tblr_s_dim }
+    \vbox_set_to_ht:Nnn \l__tblr_b_box { \l__tblr_s_dim }
       {
         \tl_if_eq:NnF { \g__tblr_cell_valign_tl } { h } { \vfil }
         \box_use:N \l__tblr_a_box
@@ -3438,7 +3441,7 @@
             \__tblr_get_cell_background_depth:NNN #1 #2 \l_tmpb_dim
             \__tblr_build_cell_background:nnnn
               { \dim_use:N \l_tmpa_dim }
-              { \g__tblr_h_dim }
+              { \l__tblr_row_ht_dim }
               { \dim_use:N \l_tmpb_dim }
               { \l__tblr_b_tl }
           }
@@ -3449,23 +3452,27 @@
 %% #1: row number; #2: column number; #3 resulting dimension
 \cs_new_protected:Npn \__tblr_get_cell_background_width:NNN #1 #2 #3
   {
-    \__tblr_prop_if_in:nxTF { cell } { [#1][#2] / colspan }
+    \tl_set:Nx \l__tblr_cell_colspan_tl
+      { \__tblr_prop_item:ne { cell } { [#1][#2] / colspan } }
+    \tl_if_empty:NTF \l__tblr_cell_colspan_tl
+      { \dim_set:Nn #3 { \l__tblr_x_tl + \l__tblr_w_tl + \l__tblr_y_tl } }
       {
         \__tblr_get_span_horizontal_sizes:NNNNN #1 #2
-          \g__tblr_o_dim \g__tblr_p_dim \g__tblr_q_dim
-        \dim_set:Nn #3 { \g__tblr_o_dim + \g__tblr_p_dim + \g__tblr_q_dim }
+          \l__tblr_o_dim \l__tblr_p_dim \l__tblr_q_dim
+        \dim_set:Nn #3 { \l__tblr_o_dim + \l__tblr_p_dim + \l__tblr_q_dim }
       }
-      { \dim_set:Nn #3 { \l__tblr_x_tl + \l__tblr_w_tl + \l__tblr_y_tl } }
   }
 
 %% #1: row number; #2: column number; #3 resulting dimension
 \cs_new_protected:Npn \__tblr_get_cell_background_depth:NNN #1 #2 #3
   {
-    \tl_if_empty:NTF \l__tblr_r_tl
-      { \dim_set_eq:NN #3 \g__tblr_d_dim }
+    \tl_if_empty:NTF \l__tblr_cell_rowspan_tl
+      { \dim_set_eq:NN #3 \l__tblr_row_dp_dim }
       {
         \dim_set:Nn #3
-          { \g__tblr_r_dim + \g__tblr_s_dim + \g__tblr_t_dim - \g__tblr_h_dim }
+          {
+            \l__tblr_r_dim + \l__tblr_s_dim + \l__tblr_t_dim - \l__tblr_row_ht_dim
+          }
       }
   }
 
@@ -3487,28 +3494,24 @@
 %% We can use \l__tblr_row_item_skip_size_prop which was made before
 \cs_new_protected:Npn \__tblr_get_span_vertical_sizes:NNNNN #1 #2 #3 #4 #5
   {
-    \group_begin:
-    \tl_set:Nx \l__tblr_r_tl
-      { \__tblr_prop_item:ne { cell } { [#1][#2] / rowspan } }
-    \dim_gset:Nn #3
+    \dim_set:Nn #3
       { \__tblr_prop_item:ne { row } { [#1] / abovesep } }
-    \dim_gzero:N #4
-    \int_step_inline:nnn { #1 } { #1 + \l__tblr_r_tl - 2 }
+    \dim_zero:N #4
+    \int_step_inline:nnn { #1 } { #1 + \l__tblr_cell_rowspan_tl - 2 }
       {
-        \dim_gadd:Nn #4
+        \dim_add:Nn #4
           { \prop_item:Ne \l__tblr_row_item_skip_size_prop { itemskip[##1] } }
       }
-    \dim_gadd:Nn #4
+    \dim_add:Nn #4
       {
         \prop_item:Ne \l__tblr_row_item_skip_size_prop
-          { item[\int_eval:n { #1 + \l__tblr_r_tl - 1 }] }
+          { item[\int_eval:n { #1 + \l__tblr_cell_rowspan_tl - 1 }] }
       }
-    \dim_gset:Nn #5
+    \dim_set:Nn #5
       {
         \__tblr_prop_item:ne { row }
-          { [\int_eval:n {#1 + \l__tblr_r_tl - 1}] / belowsep }
+          { [\int_eval:n {#1 + \l__tblr_cell_rowspan_tl - 1}] / belowsep }
       }
-    \group_end:
     %\tl_log:x { cell[#1][#2] ~:~ \dim_use:N #3, \dim_use:N #4, \dim_use:N #5 }
   }
 
@@ -3519,33 +3522,29 @@
 %% Therefore we need to calculate them from the sizes of items and skips
 \cs_new_protected:Npn \__tblr_get_span_horizontal_sizes:NNNNN #1 #2 #3 #4 #5
   {
-    \group_begin:
-    \tl_set:Nx \l__tblr_c_tl
-      { \__tblr_prop_item:ne { cell } { [#1][#2] / colspan } }
-    \dim_gset:Nn #3
+    \dim_set:Nn #3
       { \__tblr_prop_item:ne { column } { [#2] / leftsep} }
-    \dim_gzero:N #4
-    \int_step_inline:nnn { #2 } { #2 + \l__tblr_c_tl - 2 }
+    \dim_zero:N #4
+    \int_step_inline:nnn { #2 } { #2 + \l__tblr_cell_colspan_tl - 2 }
       {
-        \dim_gadd:Nn #4
+        \dim_add:Nn #4
           { \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[##1] } }
-        \dim_gadd:Nn #4
+        \dim_add:Nn #4
           {
             \prop_item:Ne \l__tblr_col_item_skip_size_prop
               { skip[\int_eval:n { ##1 + 1 }] }
           }
       }
-    \dim_gadd:Nn #4
+    \dim_add:Nn #4
       {
         \prop_item:Ne \l__tblr_col_item_skip_size_prop
-          { item[\int_eval:n { #2 + \l__tblr_c_tl - 1 }] }
+          { item[\int_eval:n { #2 + \l__tblr_cell_colspan_tl - 1 }] }
       }
-    \dim_gset:Nn #5
+    \dim_set:Nn #5
       {
         \__tblr_prop_item:ne { column }
-          { [\int_eval:n {#2 + \l__tblr_c_tl - 1}] / rightsep }
+          { [\int_eval:n {#2 + \l__tblr_cell_colspan_tl - 1}] / rightsep }
       }
-    \group_end:
     %\tl_log:x { cell[#1][#2] ~:~ \dim_use:N #3, \dim_use:N #4, \dim_use:N #5 }
   }
 
