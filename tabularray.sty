@@ -3130,29 +3130,113 @@
 %%  \section{Build the Whole Table}
 %%% --------------------------------------------------------
 
-\cs_new_eq:NN \__tlbr_vbox_t:n \tex_vtop:D
-\cs_new_eq:NN \__tlbr_vbox_m:n \tex_vcenter:D
-\cs_new_eq:NN \__tlbr_vbox_c:n \tex_vcenter:D
-\cs_new_eq:NN \__tlbr_vbox_b:n \tex_vbox:D
+\tl_new:N \__tlbr_vbox_align_tl
+\tl_const:Nn \__tlbr_vbox_t_tl {t}
+\tl_const:Nn \__tlbr_vbox_m_tl {m}
+\tl_const:Nn \__tlbr_vbox_c_tl {c}
+\tl_const:Nn \__tlbr_vbox_b_tl {b}
+
+\box_new:N \l__tblr_table_box
 
 \cs_new_protected:Npn \__tblr_build_whole:n #1
   {
-    \tex_hbox:D
-      { $ \m@th \cs:w __tlbr_vbox_ #1 :n \cs_end:
+    \vbox_set:Nn \l__tblr_table_box
+      {
+        \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
           {
-            \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
-              {
-                \tex_hbox:D { \__tblr_build_hline:V \l__tblr_i_tl }
-                \hrule height ~ 0pt % remove lineskip between hlines and rows
-                \tex_hbox:D { \__tblr_build_row:N \l__tblr_i_tl }
-                \hrule height ~ 0pt
-              }
-            \tex_hbox:D
-              {
-                \__tblr_build_hline:n { \int_eval:n {\c@rowcount + 1} }
-              }
-          } $
+            \hbox:n { \__tblr_build_hline:V \l__tblr_i_tl }
+            \hrule height ~ 0pt % remove lineskip between hlines and rows
+            \hbox:n { \__tblr_build_row:N \l__tblr_i_tl }
+            \hrule height ~ 0pt
+          }
+        \hbox:n { \__tblr_build_hline:n { \int_eval:n {\c@rowcount + 1} } }
       }
+    \__tblr_valign_whole:Nn \l__tblr_table_box #1
+  }
+
+\cs_new_protected:Npn \__tblr_valign_whole:Nn #1 #2
+  {
+    \group_begin:
+    \tl_set:Nn \__tlbr_vbox_align_tl {#2}
+    \dim_set:Nn \l__tblr_t_dim { \box_ht:N #1 + \box_dp:N #1 }
+    \tl_case:NnF \__tlbr_vbox_align_tl
+      {
+        \__tlbr_vbox_m_tl
+          { \__tblr_valign_whole_middle:N #1 }
+        \__tlbr_vbox_c_tl
+          { \__tblr_valign_whole_middle:N #1 }
+        \__tlbr_vbox_t_tl
+          { \__tblr_valign_whole_top:N #1 }
+        \__tlbr_vbox_b_tl
+          { \__tblr_valign_whole_bottom:N #1 }
+      }
+      { \__tblr_valign_whole_middle:N #1 }
+    \group_end:
+  }
+
+\cs_new_protected:Npn \__tblr_valign_whole_middle:N #1
+  {
+    \hbox:n { $ \m@th \tex_vcenter:D { \vbox_unpack_drop:N #1 } $ }
+  }
+
+\cs_new_protected:Npn \__tblr_valign_whole_top:N #1
+  {
+    \tl_set:Nx \l__tblr_a_tl
+      { \__tblr_prop_item:ne { hline } { [1] / @hline-height } }
+    \dim_compare:nNnTF { \l__tblr_a_tl } > { 0pt }
+      {
+        \dim_set:Nn \l__tblr_h_dim { 0pt }
+        \dim_set_eq:NN \l__tblr_d_dim \l__tblr_t_dim
+      }
+      {
+        \dim_set:Nn \l__tblr_h_dim
+          {
+            \__tblr_prop_item:ne { row } { [1] / abovesep }
+            +
+            ( \__tblr_prop_item:ne { row } { [1] / @row-height }
+              +
+              \__tblr_prop_item:ne { row } { [1] / @row-upper }
+              -
+              \__tblr_prop_item:ne { row } { [1] / @row-lower }
+            ) / 2
+          }
+        \dim_set:Nn \l__tblr_d_dim { \l__tblr_t_dim - \l__tblr_h_dim }
+      }
+    \box_set_ht:Nn #1 { \l__tblr_h_dim }
+    \box_set_dp:Nn #1 { \l__tblr_d_dim }
+    \box_use_drop:N #1
+  }
+
+\cs_new_protected:Npn \__tblr_valign_whole_bottom:N #1
+  {
+    \tl_set:Nx \l__tblr_a_tl
+      { \__tblr_prop_item:ne { hline }
+        { [\int_eval:n {\c@rowcount + 1}] / @hline-height } }
+    \dim_compare:nNnTF { \l__tblr_a_tl } > { 0pt }
+      {
+        \dim_set:Nn \l__tblr_d_dim { 0pt }
+        \dim_set_eq:NN \l__tblr_h_dim \l__tblr_t_dim
+      }
+      {
+        \dim_set:Nn \l__tblr_d_dim
+          {
+            ( \__tblr_prop_item:ne { row }
+                { [\int_use:N \c@rowcount] / @row-height }
+              -
+              \__tblr_prop_item:ne { row }
+                { [\int_use:N \c@rowcount] / @row-upper }
+              +
+              \__tblr_prop_item:ne { row }
+                { [\int_use:N \c@rowcount] / @row-lower }
+            ) / 2
+            +
+            \__tblr_prop_item:ne { row } { [1] / belowsep }
+          }
+        \dim_set:Nn \l__tblr_h_dim { \l__tblr_t_dim - \l__tblr_d_dim }
+      }
+    \box_set_ht:Nn #1 { \l__tblr_h_dim }
+    \box_set_dp:Nn #1 { \l__tblr_d_dim }
+    \box_use_drop:N #1
   }
 
 \dim_new:N \l__tblr_col_o_wd_dim
