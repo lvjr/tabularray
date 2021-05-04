@@ -2066,11 +2066,26 @@
 
 \cs_new_protected:Npn \__tblr_calc_cell_and_line_sizes:
   {
+    \__tblr_make_strut_box:
     \__tblr_calculate_line_sizes:
     \__tblr_calculate_cell_sizes:
     \LogTblrTracing { cell, row, column, hline, vline }
     \__tblr_compute_extendable_column_width:
     \__tblr_adjust_sizes_for_span_cells:
+  }
+
+%% make strut box from stretch option of the table
+
+\box_new:N \l__tblr_strut_ht_box
+\box_new:N \l__tblr_strut_dp_box
+
+\cs_new_protected:Npn \__tblr_make_strut_box:
+  {
+    \tl_set:Nx \l__tblr_s_tl { \__tblr_prop_item:ne { table } { stretch } }
+    \hbox_set:Nn \l__tblr_strut_ht_box
+      { \vrule height \l__tblr_s_tl \box_ht:N \strutbox width ~ 0pt }
+    \hbox_set:Nn \l__tblr_strut_dp_box
+      { \vrule depth \l__tblr_s_tl \box_dp:N \strutbox width ~ 0pt }
   }
 
 %% Calculate the thickness for every hline and vline
@@ -2410,7 +2425,10 @@
     \dim_set:Nn \tex_hsize:D { #2 }
     \@arrayparboxrestore
     \cs:w __tlbr_halign_ \g__tblr_cell_halign_tl : \cs_end:
+    \mode_leave_vertical:
+    \box_use:N \l__tblr_strut_ht_box
     \bool_if:NTF \l__tblr_math_mode_bool { $#1$ } { #1 }
+    \box_use:N \l__tblr_strut_dp_box
   }
 
 %% #1: total height dimension; #2: head dimension; #3: foot dimension;
