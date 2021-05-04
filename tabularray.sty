@@ -170,9 +170,11 @@
   }
 \cs_generate_variant:Nn \__tblr_gadd_dimen_value:Nnn { cnn }
 
-%% Two counters for row and column numbering
-\int_new:N \rownum
-\int_new:N \colnum
+%% Some counters for row and column numbering
+\newcounter{rownum}
+\newcounter{colnum}
+\newcounter{rowcount}
+\newcounter{colcount}
 
 %%% --------------------------------------------------------
 %%  \section{Child Selectors}
@@ -344,8 +346,8 @@
 
 \cs_new_protected:Npn \__tblr_set_row_col_from_key_name:w [#1][#2]
   {
-    \int_set:Nn \rownum {#1}
-    \int_set:Nn \colnum {#2}
+    \int_set:Nn \c@rownum {#1}
+    \int_set:Nn \c@colnum {#2}
   }
 
 %%% --------------------------------------------------------
@@ -437,9 +439,9 @@
 \cs_new_protected:Npn \tblr_set_every_hline:nnn #1 #2 #3
   {
     \group_begin:
-    \int_step_inline:nn { \int_eval:n { \l_tblr_row_count_int + 1 } }
+    \int_step_inline:nn { \int_eval:n { \c@rowcount + 1 } }
       {
-        \int_set:Nn \rownum {##1}
+        \int_set:Nn \c@rownum {##1}
         \tblr_set_hline:nnn {#1} {#2} {#3}
       }
     \group_end:
@@ -498,10 +500,10 @@
 \cs_new_protected:Npn \tblr_set_hline:nnnn #1 #2 #3 #4
   {
     \group_begin:
-    \__tblr_get_childs:nx {#1} { \int_eval:n { \l_tblr_row_count_int + 1 } }
+    \__tblr_get_childs:nx {#1} { \int_eval:n { \c@rowcount + 1 } }
     \clist_map_inline:Nn \l_tblr_childs_clist
       {
-        \int_set:Nn \rownum {##1}
+        \int_set:Nn \c@rownum {##1}
         \tblr_set_hline:nnn {#2} {#3} {#4}
       }
     \group_end:
@@ -527,12 +529,12 @@
   {
     \tl_clear:N \l__tblr_hline_num_tl
     \tl_set:Nx \l__tblr_hline_count_tl
-      { \__tblr_prop_item:ne { hline } { [\int_use:N \rownum] / @hline-count } }
+      { \__tblr_prop_item:ne { hline } { [\int_use:N \c@rownum] / @hline-count } }
     \tl_if_empty:NTF \l__tblr_hline_count_tl
       {
         \tl_set:Nx \l__tblr_hline_num_tl { 1 }
         \__tblr_prop_gput:nxx { hline }
-          { [\int_use:N \rownum] / @hline-count } { 1 }
+          { [\int_use:N \c@rownum] / @hline-count } { 1 }
       }
       {
         \tl_if_eq:nnTF {#1} {+}
@@ -554,7 +556,7 @@
     \tl_set:Nx \l__tblr_hline_count_tl
       { \int_eval:n { \l__tblr_hline_count_tl + 1 } }
     \__tblr_prop_gput:nxx { hline }
-      { [\int_use:N \rownum] / @hline-count } { \l__tblr_hline_count_tl }
+      { [\int_use:N \c@rownum] / @hline-count } { \l__tblr_hline_count_tl }
     \tl_set_eq:NN \l__tblr_hline_num_tl \l__tblr_hline_count_tl
   }
 
@@ -585,22 +587,22 @@
 
 \cs_new_protected_nopar:Npn \__tblr_set_hline_cmd:n #1
   {
-    \__tblr_get_childs:nx {#1} { \int_use:N \l_tblr_col_count_int }
+    \__tblr_get_childs:nx {#1} { \int_use:N \c@colcount }
     \clist_map_inline:Nn \l_tblr_childs_clist
       {
         \__tblr_prop_gput:nxx { hline }
-          { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / @dash }
+          { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / @dash }
           { \l__tblr_hline_dash_tl }
         \tl_if_empty:NF \l__tblr_hline_wd_tl
           {
             \__tblr_prop_gput:nxx { hline }
-              { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / wd }
+              { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / wd }
               { \l__tblr_hline_wd_tl }
           }
         \tl_if_empty:NF \l__tblr_hline_fg_tl
           {
             \__tblr_prop_gput:nxx { hline }
-              { [\int_use:N \rownum][##1](\l__tblr_hline_num_tl) / fg }
+              { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / fg }
               { \l__tblr_hline_fg_tl }
           }
       }
@@ -616,9 +618,9 @@
 \cs_new_protected:Npn \tblr_set_every_vline:nnn #1 #2 #3
   {
     \group_begin:
-    \int_step_inline:nn { \int_eval:n { \l_tblr_col_count_int + 1 } }
+    \int_step_inline:nn { \int_eval:n { \c@colcount + 1 } }
       {
-        \int_set:Nn \colnum {##1}
+        \int_set:Nn \c@colnum {##1}
         \tblr_set_vline:nnn {#1} {#2} {#3}
       }
     \group_end:
@@ -677,10 +679,10 @@
 \cs_new_protected:Npn \tblr_set_vline:nnnn #1 #2 #3 #4
   {
     \group_begin:
-    \__tblr_get_childs:nx {#1} { \int_eval:n { \l_tblr_col_count_int + 1} }
+    \__tblr_get_childs:nx {#1} { \int_eval:n { \c@colcount + 1} }
     \clist_map_inline:Nn \l_tblr_childs_clist
       {
-        \int_set:Nn \colnum {##1}
+        \int_set:Nn \c@colnum {##1}
         \tblr_set_vline:nnn {#2} {#3} {#4}
       }
     \group_end:
@@ -706,12 +708,12 @@
   {
     \tl_clear:N \l__tblr_vline_num_tl
     \tl_set:Nx \l__tblr_vline_count_tl
-      { \__tblr_prop_item:ne { vline } { [\int_use:N \colnum] / @vline-count } }
+      { \__tblr_prop_item:ne { vline } { [\int_use:N \c@colnum] / @vline-count } }
     \tl_if_empty:NTF \l__tblr_vline_count_tl
       {
         \tl_set:Nx \l__tblr_vline_num_tl { 1 }
         \__tblr_prop_gput:nxx { vline }
-          { [\int_use:N \colnum] / @vline-count } { 1 }
+          { [\int_use:N \c@colnum] / @vline-count } { 1 }
       }
       {
         \tl_if_eq:nnTF {#1} {+}
@@ -733,7 +735,7 @@
     \tl_set:Nx \l__tblr_vline_count_tl
       { \int_eval:n { \l__tblr_vline_count_tl + 1 } }
     \__tblr_prop_gput:nxx { vline }
-      { [\int_use:N \colnum] / @vline-count } { \l__tblr_vline_count_tl }
+      { [\int_use:N \c@colnum] / @vline-count } { \l__tblr_vline_count_tl }
     \tl_set_eq:NN \l__tblr_vline_num_tl \l__tblr_vline_count_tl
   }
 
@@ -764,22 +766,22 @@
 
 \cs_new_protected_nopar:Npn \__tblr_set_vline_cmd:n #1
   {
-    \__tblr_get_childs:nx {#1} { \int_use:N \l_tblr_row_count_int }
+    \__tblr_get_childs:nx {#1} { \int_use:N \c@rowcount }
     \clist_map_inline:Nn \l_tblr_childs_clist
       {
         \__tblr_prop_gput:nxx { vline }
-          { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / @dash }
+          { [##1][\int_use:N \c@colnum](\l__tblr_vline_num_tl) / @dash }
           { \l__tblr_vline_dash_tl }
         \tl_if_empty:NF \l__tblr_vline_wd_tl
           {
             \__tblr_prop_gput:nxx { vline }
-              { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / wd }
+              { [##1][\int_use:N \c@colnum](\l__tblr_vline_num_tl) / wd }
               { \l__tblr_vline_wd_tl }
           }
         \tl_if_empty:NF \l__tblr_vline_fg_tl
           {
             \__tblr_prop_gput:nxx { vline }
-              { [##1][\int_use:N \colnum](\l__tblr_vline_num_tl) / fg }
+              { [##1][\int_use:N \c@colnum](\l__tblr_vline_num_tl) / fg }
               { \l__tblr_vline_fg_tl }
           }
       }
@@ -799,12 +801,12 @@
 \cs_new_protected:Npn \tblr_set_every_cell:nn #1 #2
   {
     \group_begin:
-    \int_step_inline:nn { \l_tblr_row_count_int }
+    \int_step_inline:nn { \c@rowcount }
       {
-        \int_set:Nn \rownum {##1}
-        \int_step_inline:nn { \l_tblr_col_count_int }
+        \int_set:Nn \c@rownum {##1}
+        \int_step_inline:nn { \c@colcount }
           {
-            \int_set:Nn \colnum {####1}
+            \int_set:Nn \c@colnum {####1}
             \tblr_set_cell:nn {#1} {#2}
           }
       }
@@ -843,16 +845,16 @@
 \cs_new_protected:Npn \tblr_set_cell:nnnn #1 #2 #3 #4
   {
     \group_begin:
-    \__tblr_get_childs:nx {#1} { \int_use:N \l_tblr_row_count_int }
+    \__tblr_get_childs:nx {#1} { \int_use:N \c@rowcount }
     \clist_set_eq:NN \l_tmpa_clist \l_tblr_childs_clist
-    \__tblr_get_childs:nx {#2} { \int_use:N \l_tblr_col_count_int }
+    \__tblr_get_childs:nx {#2} { \int_use:N \c@colcount }
     \clist_set_eq:NN \l_tmpb_clist \l_tblr_childs_clist
     \clist_map_inline:Nn \l_tmpa_clist
       {
-        \int_set:Nn \rownum {##1}
+        \int_set:Nn \c@rownum {##1}
         \clist_map_inline:Nn \l_tmpb_clist
           {
-            \int_set:Nn \colnum {####1}
+            \int_set:Nn \c@colnum {####1}
             \tblr_set_cell:nn {#3} {#4}
           }
       }
@@ -879,27 +881,27 @@
 \keys_define:nn { tblr-cell-spec }
   {
     l .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / halign} {l},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / halign} {l},
     c .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / halign} {c},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / halign} {c},
     r .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / halign} {r},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / halign} {r},
     t .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {t},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / valign} {t},
     p .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {t},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / valign} {t},
     m .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {m},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / valign} {m},
     b .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {b},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / valign} {b},
     h .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {h},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / valign} {h},
     f .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / valign} {f},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / valign} {f},
     wd .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / width} {#1},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / width} {#1},
     bg .code:n = \__tblr_prop_gput:nxx {cell}
-                  {[\int_use:N \rownum][\int_use:N \colnum] / background} {#1},
+                  {[\int_use:N \c@rownum][\int_use:N \c@colnum] / background} {#1},
     unknown .code:n = \__tblr_cell_unknown_key:V \l_keys_key_str,
   }
 
@@ -908,12 +910,12 @@
     \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
       {
         \__tblr_prop_gput:nxx {cell}
-          {[\int_use:N \rownum][\int_use:N \colnum] / background} {#1}
+          {[\int_use:N \c@rownum][\int_use:N \c@colnum] / background} {#1}
       }
       {
         \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
         \__tblr_prop_gput:nxx {cell}
-          { [\int_use:N \rownum][\int_use:N \colnum] / width }
+          { [\int_use:N \c@rownum][\int_use:N \c@colnum] / width }
           { \dim_eval:n { \l__tblr_v_tl } }
       }
   }
@@ -925,34 +927,34 @@
       {
         \__tblr_prop_gput:nnn {table} {rowspan} {true}
         \__tblr_prop_gput:nxn {cell}
-          { [\int_use:N \rownum][\int_use:N \colnum] / rowspan } { #1 }
+          { [\int_use:N \c@rownum][\int_use:N \c@colnum] / rowspan } { #1 }
       }
     \int_compare:nNnT { #2 } > { 1 }
       {
         \__tblr_prop_gput:nnn {table} {colspan} {true}
         \__tblr_prop_gput:nxn {cell}
-          { [\int_use:N \rownum][\int_use:N \colnum] / colspan } { #2 }
+          { [\int_use:N \c@rownum][\int_use:N \c@colnum] / colspan } { #2 }
       }
     \int_step_variable:nnNn
-      { \int_use:N \rownum } { \int_eval:n { \rownum + #1 - 1 } } \l__tblr_i_tl
+      { \int_use:N \c@rownum } { \int_eval:n { \c@rownum + #1 - 1 } } \l__tblr_i_tl
       {
         \int_step_variable:nnNn
-          { \int_use:N \colnum } { \int_eval:n { \colnum + #2 - 1 } }
+          { \int_use:N \c@colnum } { \int_eval:n { \c@colnum + #2 - 1 } }
           \l__tblr_j_tl
           {
             \bool_lazy_and:nnF
-              { \int_compare_p:nNn { \l__tblr_i_tl } = { \rownum } }
-              { \int_compare_p:nNn { \l__tblr_j_tl } = { \colnum } }
+              { \int_compare_p:nNn { \l__tblr_i_tl } = { \c@rownum } }
+              { \int_compare_p:nNn { \l__tblr_j_tl } = { \c@colnum } }
               {
                 \__tblr_prop_gput:nxx {cell}
                   { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
               }
-            \int_compare:nNnF { \l__tblr_i_tl } = { \rownum }
+            \int_compare:nNnF { \l__tblr_i_tl } = { \c@rownum }
               {
                 \__tblr_prop_gput:nxx {hline}
                   { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
               }
-            \int_compare:nNnF { \l__tblr_j_tl } = { \colnum }
+            \int_compare:nNnF { \l__tblr_j_tl } = { \c@colnum }
               {
                 \__tblr_prop_gput:nxx {vline}
                   { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
@@ -1020,9 +1022,9 @@
 \cs_new_protected:Npn \tblr_set_every_column:nn #1 #2
   {
     \group_begin:
-    \int_step_inline:nn { \l_tblr_col_count_int }
+    \int_step_inline:nn { \c@colcount }
       {
-        \int_set:Nn \colnum {##1}
+        \int_set:Nn \c@colnum {##1}
         \tblr_set_column:nn {#1} {#2}
       }
     \group_end:
@@ -1052,10 +1054,10 @@
 \cs_new_protected:Npn \tblr_set_column:nnn #1 #2 #3
   {
     \group_begin:
-    \__tblr_get_childs:nx {#1} { \int_use:N \l_tblr_col_count_int }
+    \__tblr_get_childs:nx {#1} { \int_use:N \c@colcount }
     \clist_map_inline:Nn \l_tblr_childs_clist
       {
-        \int_set:Nn \colnum {##1}
+        \int_set:Nn \c@colnum {##1}
         \tblr_set_column:nn {#2} {#3}
       }
     \group_end:
@@ -1075,38 +1077,38 @@
 \keys_define:nn { tblr-column }
   {
     l .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                  { \int_use:N \colnum } { halign } {l},
+                  { \int_use:N \c@colnum } { halign } {l},
     c .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                  { \int_use:N \colnum } { halign } {c},
+                  { \int_use:N \c@colnum } { halign } {c},
     r .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                  { \int_use:N \colnum } { halign } {r},
+                  { \int_use:N \c@colnum } { halign } {r},
     t .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                  { \int_use:N \colnum } { valign } {t},
+                  { \int_use:N \c@colnum } { valign } {t},
     p .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                  { \int_use:N \colnum } { valign } {t},
+                  { \int_use:N \c@colnum } { valign } {t},
     m .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                  { \int_use:N \colnum } { valign } {m},
+                  { \int_use:N \c@colnum } { valign } {m},
     b .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                  { \int_use:N \colnum } { valign } {b},
+                  { \int_use:N \c@colnum } { valign } {b},
     h .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                  { \int_use:N \colnum } { valign } {h},
+                  { \int_use:N \c@colnum } { valign } {h},
     f .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                  { \int_use:N \colnum } { valign } {f},
+                  { \int_use:N \c@colnum } { valign } {f},
     bg .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                  { \int_use:N \colnum } { background } {#1},
+                  { \int_use:N \c@colnum } { background } {#1},
     wd .code:n = \__tblr_prop_gput:nxx { column }
-                   { [\int_use:N \colnum] / width } { \dim_eval:n {#1} },
+                   { [\int_use:N \c@colnum] / width } { \dim_eval:n {#1} },
     co .code:n = \__tblr_prop_gput:nxx { column }
-                   { [\int_use:N \colnum] / coefficient } {#1},
+                   { [\int_use:N \c@colnum] / coefficient } {#1},
     leftsep .code:n = \__tblr_prop_gput:nxx { column }
-                   { [\int_use:N \colnum] / leftsep } { \dim_eval:n {#1} },
+                   { [\int_use:N \c@colnum] / leftsep } { \dim_eval:n {#1} },
     rightsep .code:n = \__tblr_prop_gput:nxx { column }
-                   { [\int_use:N \colnum] / rightsep } { \dim_eval:n {#1} },
+                   { [\int_use:N \c@colnum] / rightsep } { \dim_eval:n {#1} },
     colsep .meta:n = { leftsep = #1, rightsep = #1},
     leftsep+ .code:n = \__tblr_prop_gadd_dimen_value:nxx { column }
-                   { [\int_use:N \colnum] / leftsep } { \dim_eval:n {#1} },
+                   { [\int_use:N \c@colnum] / leftsep } { \dim_eval:n {#1} },
     rightsep+ .code:n = \__tblr_prop_gadd_dimen_value:nxx { column }
-                   { [\int_use:N \colnum] / rightsep } { \dim_eval:n {#1} },
+                   { [\int_use:N \c@colnum] / rightsep } { \dim_eval:n {#1} },
     colsep+ .meta:n = { leftsep+ = #1, rightsep+ = #1},
     unknown .code:n = \__tblr_column_unknown_key:V \l_keys_key_str,
   }
@@ -1114,7 +1116,7 @@
 %% #1: column number; #2: key; #3: value
 \cs_new_protected:Npn \__tblr_set_key_for_every_column_cell:nnn #1 #2 #3
   {
-    \int_step_inline:nn { \l_tblr_row_count_int }
+    \int_step_inline:nn { \c@rowcount }
       {
         \__tblr_prop_gput:nxn {cell} { [##1][#1] / #2 } {#3}
       }
@@ -1127,18 +1129,18 @@
     \regex_match:NnTF \c__tblr_is_number_key_regex {#1}
       {
         \__tblr_prop_gput:nxx { column }
-          { [\int_use:N \colnum] / coefficient } {#1}
+          { [\int_use:N \c@colnum] / coefficient } {#1}
       }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
           {
             \__tblr_set_key_for_every_column_cell:nnn
-              { \int_use:N \colnum } { background } {#1}
+              { \int_use:N \c@colnum } { background } {#1}
           }
           {
             \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
             \__tblr_prop_gput:nxx { column }
-              { [\int_use:N \colnum] / width } { \dim_eval:n { \l__tblr_v_tl } }
+              { [\int_use:N \c@colnum] / width } { \dim_eval:n { \l__tblr_v_tl } }
           }
       }
   }
@@ -1154,9 +1156,9 @@
 \cs_new_protected:Npn \tblr_set_every_row:nn #1 #2
   {
     \group_begin:
-    \int_step_inline:nn { \l_tblr_row_count_int }
+    \int_step_inline:nn { \c@rowcount }
       {
-        \int_set:Nn \rownum {##1}
+        \int_set:Nn \c@rownum {##1}
         \tblr_set_row:nn {#1} {#2}
       }
     \group_end:
@@ -1186,10 +1188,10 @@
 \cs_new_protected:Npn \tblr_set_row:nnn #1 #2 #3
   {
     \group_begin:
-    \__tblr_get_childs:nx {#1} { \int_use:N \l_tblr_row_count_int }
+    \__tblr_get_childs:nx {#1} { \int_use:N \c@rowcount }
     \clist_map_inline:Nn \l_tblr_childs_clist
       {
-        \int_set:Nn \rownum {##1}
+        \int_set:Nn \c@rownum {##1}
         \tblr_set_row:nn {#2} {#3}
       }
     \group_end:
@@ -1209,48 +1211,48 @@
 \keys_define:nn { tblr-row }
   {
     l .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \rownum } { halign } {l},
+                  { \int_use:N \c@rownum } { halign } {l},
     c .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \rownum } { halign } {c},
+                  { \int_use:N \c@rownum } { halign } {c},
     r .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \rownum } { halign } {r},
+                  { \int_use:N \c@rownum } { halign } {r},
     t .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \rownum } { valign } {t},
+                  { \int_use:N \c@rownum } { valign } {t},
     p .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \rownum } { valign } {t},
+                  { \int_use:N \c@rownum } { valign } {t},
     m .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \rownum } { valign } {m},
+                  { \int_use:N \c@rownum } { valign } {m},
     b .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \rownum } { valign } {b},
+                  { \int_use:N \c@rownum } { valign } {b},
     h .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \rownum } { valign } {h},
+                  { \int_use:N \c@rownum } { valign } {h},
     f .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \rownum } { valign } {f},
+                  { \int_use:N \c@rownum } { valign } {f},
     bg .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \rownum } { background } {#1},
+                  { \int_use:N \c@rownum } { background } {#1},
     ht .code:n = \__tblr_prop_gput:nxx { row }
-                   { [\int_use:N \rownum] / height } { \dim_eval:n {#1} },
+                   { [\int_use:N \c@rownum] / height } { \dim_eval:n {#1} },
     co .code:n = \__tblr_prop_gput:nxx { row }
-                   { [\int_use:N \rownum] / coefficient } {#1},
+                   { [\int_use:N \c@rownum] / coefficient } {#1},
     abovesep .code:n = \__tblr_prop_gput:nxx { row }
-                   { [\int_use:N \rownum] / abovesep } { \dim_eval:n {#1} },
+                   { [\int_use:N \c@rownum] / abovesep } { \dim_eval:n {#1} },
     belowsep .code:n = \__tblr_prop_gput:nxx { row }
-                   { [\int_use:N \rownum] / belowsep } { \dim_eval:n {#1} },
+                   { [\int_use:N \c@rownum] / belowsep } { \dim_eval:n {#1} },
     rowsep .meta:n = { abovesep = #1, belowsep = #1},
     abovesep+ .code:n = \__tblr_prop_gadd_dimen_value:nxx { row }
-                   { [\int_use:N \rownum] / abovesep } { \dim_eval:n {#1} },
+                   { [\int_use:N \c@rownum] / abovesep } { \dim_eval:n {#1} },
     belowsep+ .code:n = \__tblr_prop_gadd_dimen_value:nxx { row }
-                   { [\int_use:N \rownum] / belowsep } { \dim_eval:n {#1} },
+                   { [\int_use:N \c@rownum] / belowsep } { \dim_eval:n {#1} },
     rowsep+ .meta:n = { abovesep+ = #1, belowsep+ = #1},
     nobreak .code:n = \__tblr_prop_gput:nxx { row }
-                   { [\int_eval:n {\rownum - 1}] / nobreak } { true },
+                   { [\int_eval:n {\c@rownum - 1}] / nobreak } { true },
     unknown .code:n = \__tblr_row_unknown_key:V \l_keys_key_str,
   }
 
 %% #1: row number; #2: key; #3: value
 \cs_new_protected:Npn \__tblr_set_key_for_every_row_cell:nnn #1 #2 #3
   {
-    \int_step_inline:nn { \l_tblr_col_count_int }
+    \int_step_inline:nn { \c@colcount }
       {
         \__tblr_prop_gput:nxn {cell} { [#1][##1] / #2 } {#3}
       }
@@ -1261,18 +1263,18 @@
     \regex_match:NnTF \c__tblr_is_number_key_regex {#1}
       {
         \__tblr_prop_gput:nxx { row }
-          { [\int_use:N \rownum] / coefficient } {#1}
+          { [\int_use:N \c@rownum] / coefficient } {#1}
       }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
           {
             \__tblr_set_key_for_every_row_cell:nnn
-              { \int_use:N \rownum } { background } {#1}
+              { \int_use:N \c@rownum } { background } {#1}
           }
           {
           \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
             \__tblr_prop_gput:nxx { row }
-              { [\int_use:N \rownum] / height } { \dim_eval:n { \l__tblr_v_tl } }
+              { [\int_use:N \c@rownum] / height } { \dim_eval:n { \l__tblr_v_tl } }
           }
       }
   }
@@ -1290,7 +1292,7 @@
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ Q } { O{} }
   {
     \keys_set:nn { tblr-column } { #1 }
-    \int_incr:N \colnum
+    \int_incr:N \c@colnum
     \__tblr_execute_colrow_spec_next:N
   }
 \exp_args:Nc \NewDocumentCommand { tblr_column_type_ Q } { O{} }
@@ -1302,7 +1304,7 @@
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_row_type_ Q } { O{} }
   {
     \keys_set:nn { tblr-row } { #1 }
-    \int_incr:N \rownum
+    \int_incr:N \c@rownum
     \__tblr_execute_colrow_spec_next:N
   }
 \exp_args:Nc \NewDocumentCommand { tblr_row_type_ Q } { O{} }
@@ -1339,21 +1341,21 @@
       {
         \__tblr_prop_gput:nxx
           { column }
-          { [\int_use:N \colnum] / leftsep}
+          { [\int_use:N \c@colnum] / leftsep}
           { \dim_eval:n { #1 } }
       }
     \tl_if_blank:nF { #2 }
       {
-        \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+        \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
           {
             \tl_set:Nx \l_tmpa_tl
             {
               \__tblr_prop_item:ne {text}
-                { [\l__tblr_i_tl][\int_use:N \colnum] }
+                { [\l__tblr_i_tl][\int_use:N \c@colnum] }
             }
             \tl_put_left:Nn \l_tmpa_tl { #2 }
             \__tblr_prop_gput:nxV {text}
-              { [\l__tblr_i_tl][\int_use:N \colnum] } \l_tmpa_tl
+              { [\l__tblr_i_tl][\int_use:N \c@colnum] } \l_tmpa_tl
           }
       }
     \__tblr_execute_colrow_spec_next:N
@@ -1370,21 +1372,21 @@
       {
         \__tblr_prop_gput:nxx
           { row }
-          { [\int_use:N \rownum] / abovesep }
+          { [\int_use:N \c@rownum] / abovesep }
           { \dim_eval:n { #1 } }
       }
     \tl_if_blank:nF { #2 }
       {
-        \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+        \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
           {
             \tl_set:Nx \l_tmpa_tl
             {
               \__tblr_prop_item:ne {text}
-                { [\int_use:N \rownum][\l__tblr_j_tl] }
+                { [\int_use:N \c@rownum][\l__tblr_j_tl] }
             }
             \tl_put_left:Nn \l_tmpa_tl { #2 }
             \__tblr_prop_gput:nxV {text}
-              { [\int_use:N \rownum][\l__tblr_j_tl] } \l_tmpa_tl
+              { [\int_use:N \c@rownum][\l__tblr_j_tl] } \l_tmpa_tl
           }
       }
     \__tblr_execute_colrow_spec_next:N
@@ -1401,21 +1403,21 @@
       {
         \__tblr_prop_gput:nxx
           { column }
-          { [\int_eval:n {\colnum - 1}] / rightsep }
+          { [\int_eval:n {\c@colnum - 1}] / rightsep }
           { \dim_eval:n { #1 } }
       }
     \tl_if_blank:nF { #2 }
       {
-        \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+        \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
           {
             \tl_set:Nx \l_tmpa_tl
             {
               \__tblr_prop_item:ne {text}
-                { [\l__tblr_i_tl][\int_eval:n {\colnum - 1}] }
+                { [\l__tblr_i_tl][\int_eval:n {\c@colnum - 1}] }
             }
             \tl_put_right:Nn \l_tmpa_tl { #2 }
             \__tblr_prop_gput:nxV {text}
-              { [\l__tblr_i_tl][\int_eval:n {\colnum - 1}] } \l_tmpa_tl
+              { [\l__tblr_i_tl][\int_eval:n {\c@colnum - 1}] } \l_tmpa_tl
           }
       }
     \__tblr_execute_colrow_spec_next:N
@@ -1432,21 +1434,21 @@
       {
         \__tblr_prop_gput:nxx
           { row }
-          { [\int_eval:n {\rownum - 1}] / belowsep }
+          { [\int_eval:n {\c@rownum - 1}] / belowsep }
           { \dim_eval:n { #1 } }
       }
     \tl_if_blank:nF { #2 }
       {
-        \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+        \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
           {
             \tl_set:Nx \l_tmpa_tl
             {
               \__tblr_prop_item:ne {text}
-                { [\int_eval:n {\rownum - 1}][\l__tblr_j_tl] }
+                { [\int_eval:n {\c@rownum - 1}][\l__tblr_j_tl] }
             }
             \tl_put_right:Nn \l_tmpa_tl { #2 }
             \__tblr_prop_gput:nxV {text}
-              { [\int_eval:n {\rownum - 1}][\l__tblr_j_tl] } \l_tmpa_tl
+              { [\int_eval:n {\c@rownum - 1}][\l__tblr_j_tl] } \l_tmpa_tl
           }
       }
     \__tblr_execute_colrow_spec_next:N
@@ -1593,8 +1595,8 @@
 \cs_new_protected:Npn \__tblr_execute_colrow_spec:N #1
   {
     \tl_if_eq:NnTF \g__tblr_column_or_row_tl { row }
-      { \int_set:Nn \rownum {1} }
-      { \int_set:Nn \colnum {1} }
+      { \int_set:Nn \c@rownum {1} }
+      { \int_set:Nn \c@colnum {1} }
     \exp_last_unbraced:NV \__tblr_execute_colrow_spec_next:N #1 \scan_stop:
   }
 
@@ -1686,13 +1688,11 @@
 %% #1: table content
 
 \seq_new:N \l_tblr_lines_seq
-\int_new:N \l_tblr_row_count_int
-\int_new:N \l_tblr_col_count_int
 
 \cs_new_protected:Npn \__tblr_split_table:n #1
   {
-    \int_zero:N \l_tblr_row_count_int
-    \int_zero:N \l_tblr_col_count_int
+    \int_zero:N \c@rowcount
+    \int_zero:N \c@colcount
     \__tblr_split_table_to_lines:nN { #1 } \l_tblr_lines_seq
     \__tblr_split_lines_to_cells:N \l_tblr_lines_seq
   }
@@ -1726,7 +1726,7 @@
               { \seq_put_right:Nn #2 { ##1 } }
           }
       }
-    \int_set:Nn \l_tblr_row_count_int { \seq_count:N #2 }
+    \int_set:Nn \c@rowcount { \seq_count:N #2 }
   }
 
 %% Treat \\[dimen] command
@@ -1735,7 +1735,7 @@
     \IfValueT { #1 }
       {
         \__tblr_prop_gadd_dimen_value:nxx { row }
-          { [\int_eval:n {\rownum - 1}] / belowsep } { #1 }
+          { [\int_eval:n {\c@rownum - 1}] / belowsep } { #1 }
       }
   }
 
@@ -1752,29 +1752,29 @@
 \cs_new_protected:Npn \__tblr_split_one_line:nn #1 #2
   {
     \seq_set_split:Nnn \l_tmpa_seq { & } { #2 }
-    \int_set:Nn \rownum {#1}
-    \int_zero:N \colnum
+    \int_set:Nn \c@rownum {#1}
+    \int_zero:N \c@colnum
     \seq_map_inline:Nn \l_tmpa_seq
       {
         \tl_set:Nn \l_tmpa_tl { ##1 }
         \__tblr_remove_braces:N \l_tmpa_tl
-        \int_incr:N \colnum
+        \int_incr:N \c@colnum
         \__tblr_extract_table_commands:N \l_tmpa_tl
-        \__tblr_prop_gput:nxV {text} { [#1][\int_use:N \colnum] } \l_tmpa_tl
+        \__tblr_prop_gput:nxV {text} { [#1][\int_use:N \c@colnum] } \l_tmpa_tl
         \__tblr_add_multicolumn_empty_cell:
       }
     %% Decrease row count by 1 if the last row has only one empty cell text
     %% We need to do it here since the > or < column type may add text to cells
     \bool_lazy_and:nnTF
-      { \int_compare_p:nNn {\colnum} = {1} }
+      { \int_compare_p:nNn {\c@colnum} = {1} }
       { \tl_if_empty_p:N \l_tmpa_tl }
-      { \int_decr:N \l_tblr_row_count_int }
+      { \int_decr:N \c@rowcount }
       {
         \__tblr_prop_gput:nnx
-          {row} { [#1] / cell-number } { \int_use:N \colnum }
-        \int_compare:nT { \colnum > \l_tblr_col_count_int }
+          {row} { [#1] / cell-number } { \int_use:N \c@colnum }
+        \int_compare:nT { \c@colnum > \c@colcount }
           {
-            \int_set_eq:NN \l_tblr_col_count_int \colnum
+            \int_set_eq:NN \c@colcount \c@colnum
           }
       }
   }
@@ -1784,9 +1784,9 @@
   {
     \int_step_inline:nn { \l__multicolumn_cell_number_int - 1 }
       {
-        \int_incr:N \colnum
+        \int_incr:N \c@colnum
         \__tblr_prop_gput:nxn {text}
-          { [\int_use:N \rownum][\int_use:N \colnum] } { }
+          { [\int_use:N \c@rownum][\int_use:N \c@colnum] } { }
       }
   }
 
@@ -1811,7 +1811,7 @@
     \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
       {
         \__tblr_prop_gput:nxV { command }
-          {[\int_use:N \rownum][\int_use:N \colnum]}
+          {[\int_use:N \c@rownum][\int_use:N \c@colnum]}
           \l__tblr_saved_table_commands_before_cell_text_tl
       }
     \tl_set_eq:NN #1 \l__tblr_saved_cell_text_after_table_commands_tl
@@ -1943,7 +1943,7 @@
       {
         \__tblr_prop_gput:nxn { table } { ##1 } {##2}
       }
-    \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+    \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
       {
         \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _rows_prop }
           {
@@ -1953,7 +1953,7 @@
           {
             \__tblr_prop_gput:nxn { hline } { [\l__tblr_i_tl] / ##1 } {##2}
           }
-        \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+        \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
           {
             \prop_map_inline:cn
               { g__tblr_default_ \l__tblr_env_name_tl _cells_prop }
@@ -1966,9 +1966,9 @@
     \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _hlines_prop }
       {
         \__tblr_prop_gput:nxn { hline }
-          { [\int_eval:n { \l_tblr_row_count_int + 1}] / ##1 } {##2}
+          { [\int_eval:n { \c@rowcount + 1}] / ##1 } {##2}
       }
-    \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+    \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
         \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _columns_prop }
           {
@@ -1982,7 +1982,7 @@
     \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _vlines_prop }
       {
         \__tblr_prop_gput:nxn { vline }
-          { [\int_eval:n { \l_tblr_col_count_int + 1}] / ##1 } {##2}
+          { [\int_eval:n { \c@colcount + 1}] / ##1 } {##2}
       }
     \keys_set:nv { tblr } { g__tblr_default_ \l__tblr_env_name_tl _tl }
   }
@@ -2092,20 +2092,20 @@
 \cs_new_protected:Npn \__tblr_calculate_line_sizes:
   {
     %% We need these two counters in executing hline and vline commands
-    \int_zero:N \rownum
-    \int_zero:N \colnum
-    \int_step_inline:nn { \l_tblr_row_count_int + 1 }
+    \int_zero:N \c@rownum
+    \int_zero:N \c@colnum
+    \int_step_inline:nn { \c@rowcount + 1 }
       {
-        \int_incr:N \rownum
-        \int_zero:N \colnum
-        \int_step_inline:nn { \l_tblr_col_count_int + 1 }
+        \int_incr:N \c@rownum
+        \int_zero:N \c@colnum
+        \int_step_inline:nn { \c@colcount + 1 }
           {
-            \int_incr:N \colnum
-            \int_compare:nNnT { ##1 } < { \l_tblr_row_count_int + 1 }
+            \int_incr:N \c@colnum
+            \int_compare:nNnT { ##1 } < { \c@rowcount + 1 }
               {
                 \__tblr_measure_and_update_vline_size:nn { ##1 } { ####1 }
               }
-            \int_compare:nNnT { ####1 } < { \l_tblr_col_count_int + 1 }
+            \int_compare:nNnT { ####1 } < { \c@colcount + 1 }
               {
                 \__tblr_measure_and_update_hline_size:nn { ##1 } { ####1 }
               }
@@ -2281,18 +2281,18 @@
 \cs_new_protected:Npn \__tblr_calculate_cell_sizes:
   {
     %% You can use these two counters in cell text
-    \int_zero:N \rownum
-    \int_zero:N \colnum
-    \int_step_inline:nn { \l_tblr_row_count_int }
+    \int_zero:N \c@rownum
+    \int_zero:N \c@colnum
+    \int_step_inline:nn { \c@rowcount }
       {
-        \int_incr:N \rownum
-        \int_zero:N \colnum
-        \int_step_inline:nn { \l_tblr_col_count_int }
+        \int_incr:N \c@rownum
+        \int_zero:N \c@colnum
+        \int_step_inline:nn { \c@colcount }
           {
-            \int_incr:N \colnum
+            \int_incr:N \c@colnum
             \__tblr_measure_cell_update_sizes:nnNNNN
-              { \int_use:N \rownum }
-              { \int_use:N \colnum }
+              { \int_use:N \c@rownum }
+              { \int_use:N \c@colnum }
               \g__tblr_cell_wd_dim
               \g__tblr_cell_ht_dim
               \g__tblr_cell_head_dim
@@ -2631,7 +2631,7 @@
     \prop_clear:N \l__column_coefficient_prop
     \prop_clear:N \l__column_natural_width_prop
     \prop_clear:N \l__column_computed_width_prop
-    \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+    \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
         \tl_set:Nx \l__tblr_a_tl
           { \__tblr_prop_item:ne {column} { [\l__tblr_j_tl] / width } }
@@ -2668,7 +2668,7 @@
     \tl_set:Nx \l__tblr_a_tl
       {
         \__tblr_prop_item:ne {vline}
-          { [\int_eval:n {\l_tblr_col_count_int + 1}] / @vline-width }
+          { [\int_eval:n {\c@colcount + 1}] / @vline-width }
       }
     \tl_if_empty:NF \l__tblr_a_tl
       { \dim_sub:Nn \l__column_target_dim { \l__tblr_a_tl } }
@@ -2796,7 +2796,7 @@
 \cs_new_protected:Npn \__tblr_collect_column_widths_skips:
   {
     \prop_clear:N \l__tblr_col_item_skip_size_prop
-    \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+    \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
         \int_compare:nNnTF { \l__tblr_j_tl } > { 1 }
           {
@@ -2829,7 +2829,7 @@
 \cs_new_protected:Npn \__tblr_collect_row_heights_skips:
   {
     \prop_clear:N \l__tblr_row_item_skip_size_prop
-    \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+    \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
       {
         \int_compare:nNnTF { \l__tblr_i_tl } > { 1 }
           {
@@ -2869,9 +2869,9 @@
 \cs_new_protected:Npn \__tblr_collect_span_widths:
   {
     \prop_clear:N \l__tblr_col_span_size_prop
-    \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+    \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
-        \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+        \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
           {
             \tl_set:Nx \l__tblr_a_tl
               {
@@ -2902,9 +2902,9 @@
   {
     \prop_clear:N \l__tblr_row_span_to_row_prop
     \prop_clear:N \l__tblr_row_span_size_prop
-    \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+    \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
       {
-        \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+        \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
           {
             \tl_set:Nx \l__tblr_a_tl
               {
@@ -2975,7 +2975,7 @@
 \cs_new_protected:Npn \__tblr_set_column_widths_from_span_widths:
   {
     \__tblr_calc_item_sizes_from_span_sizes:xNN
-      { \int_use:N \l_tblr_col_count_int }
+      { \int_use:N \c@colcount }
       \l__tblr_col_item_skip_size_prop
       \l__tblr_col_span_size_prop
     \__tblr_set_all_column_widths:
@@ -2985,7 +2985,7 @@
 \cs_new_protected:Npn \__tblr_set_row_heights_from_span_heights:
   {
     \__tblr_calc_item_sizes_from_span_sizes:xNN
-      { \int_use:N \l_tblr_row_count_int }
+      { \int_use:N \c@rowcount }
       \l__tblr_row_item_skip_size_prop
       \l__tblr_row_span_size_prop
     \__tblr_set_all_row_heights:
@@ -3049,7 +3049,7 @@
 
 \cs_new_protected:Npn \__tblr_set_all_column_widths:
   {
-    \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+    \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
         \__tblr_prop_gput:nxx {column}
           { [\l__tblr_j_tl] / @col-width }
@@ -3059,7 +3059,7 @@
 
 \cs_new_protected:Npn \__tblr_set_all_row_heights:
   {
-    \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+    \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
       {
         \tl_set:Nx \l__tblr_h_tl
           {
@@ -3088,9 +3088,9 @@
 %% Compute and set span widths from column widths
 \cs_new_protected:Npn \__tblr_set_span_widths_from_column_widths:
   {
-    \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+    \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
-        \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+        \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
           {
             \tl_set:Nx \l__tblr_a_tl
               {
@@ -3140,7 +3140,7 @@
     \tex_hbox:D
       { $ \m@th \cs:w __tlbr_vbox_ #1 :n \cs_end:
           {
-            \int_step_variable:nNn { \l_tblr_row_count_int } \l__tblr_i_tl
+            \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
               {
                 \tex_hbox:D { \__tblr_build_hline:V \l__tblr_i_tl }
                 \hrule height ~ 0pt % remove lineskip between hlines and rows
@@ -3149,7 +3149,7 @@
               }
             \tex_hbox:D
               {
-                \__tblr_build_hline:n { \int_eval:n {\l_tblr_row_count_int + 1} }
+                \__tblr_build_hline:n { \int_eval:n {\c@rowcount + 1} }
               }
           } $
       }
@@ -3161,7 +3161,7 @@
 %% Build hline. #1: row number
 \cs_new_protected:Npn \__tblr_build_hline:n #1
   {
-    \int_step_inline:nn { \l_tblr_col_count_int }
+    \int_step_inline:nn { \c@colcount }
       { \__tblr_build_hline_segment:nn { #1 } { ##1 } }
   }
 \cs_generate_variant:Nn \__tblr_build_hline:n { x, V }
@@ -3251,12 +3251,12 @@
     \__tblr_get_row_inner_height_depth:VNN
       #1 \l__tblr_row_ht_dim \l__tblr_row_dp_dim
     \vrule width ~ 0pt ~ height ~ \l__tblr_row_ht_dim ~ depth ~ \l__tblr_row_dp_dim
-    \int_step_variable:nNn { \l_tblr_col_count_int } \l__tblr_j_tl
+    \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
         \__tblr_build_vline_segment:nn {#1} { \l__tblr_j_tl }
         \__tblr_build_cell:NN #1 \l__tblr_j_tl
       }
-    \__tblr_build_vline_segment:nn {#1} { \int_eval:n {\l_tblr_col_count_int + 1} }
+    \__tblr_build_vline_segment:nn {#1} { \int_eval:n {\c@colcount + 1} }
   }
 
 %% Read from table specifications and calculate inner height/depth of the row
