@@ -567,6 +567,7 @@
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_hline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_hline_fg_tl {#1},
+    baseline .code:n = \__tblr_hline_set_baseline:n {#1},
     unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
   }
 
@@ -604,6 +605,24 @@
             \__tblr_prop_gput:nxx { hline }
               { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / fg }
               { \l__tblr_hline_fg_tl }
+          }
+      }
+  }
+
+\NewTableCommand \firsthline [1] [] { \SetHline [+] {-} { #1, baseline=below } }
+\NewTableCommand \lasthline [1] [] { \SetHline [+] {-} { #1, baseline=above } }
+
+\cs_new_protected:Npn \__tblr_hline_set_baseline:n #1
+  {
+    \tl_if_eq:nnTF {#1} {above}
+      {
+        \__tblr_prop_gput:nnx { table }
+          { baseline } { \int_eval:n { \c@rownum - 1 } }
+      }
+      {
+        \tl_if_eq:nnT {#1} {below}
+          {
+            \__tblr_prop_gput:nnx { table } { baseline } { \int_use:N \c@rownum }
           }
       }
   }
@@ -3183,11 +3202,12 @@
   {
     \tl_set:Nx \l__tblr_a_tl
       { \__tblr_prop_item:ne { hline } { [1] / @hline-height } }
-    \dim_compare:nNnTF { \l__tblr_a_tl } > { 0pt }
-      {
-        \dim_set:Nn \l__tblr_h_dim { 0pt }
-        \dim_set_eq:NN \l__tblr_d_dim \l__tblr_t_dim
-      }
+    %% Note that \l__tblr_b_tl may be empty
+    \tl_set:Nx \l__tblr_b_tl
+      { \__tblr_prop_item:ne { table } { baseline } }
+    \bool_lazy_or:nnTF
+      { \dim_compare_p:nNn { \l__tblr_a_tl } = { 0pt } }
+      { \int_compare_p:nNn { \l__tblr_b_tl + 0 } = { 1 } }
       {
         \dim_set:Nn \l__tblr_h_dim
           {
@@ -3202,6 +3222,10 @@
           }
         \dim_set:Nn \l__tblr_d_dim { \l__tblr_t_dim - \l__tblr_h_dim }
       }
+      {
+        \dim_set:Nn \l__tblr_h_dim { 0pt }
+        \dim_set_eq:NN \l__tblr_d_dim \l__tblr_t_dim
+      }
     \box_set_ht:Nn #1 { \l__tblr_h_dim }
     \box_set_dp:Nn #1 { \l__tblr_d_dim }
     \box_use_drop:N #1
@@ -3210,13 +3234,16 @@
 \cs_new_protected:Npn \__tblr_valign_whole_bottom:N #1
   {
     \tl_set:Nx \l__tblr_a_tl
-      { \__tblr_prop_item:ne { hline }
-        { [\int_eval:n {\c@rowcount + 1}] / @hline-height } }
-    \dim_compare:nNnTF { \l__tblr_a_tl } > { 0pt }
       {
-        \dim_set:Nn \l__tblr_d_dim { 0pt }
-        \dim_set_eq:NN \l__tblr_h_dim \l__tblr_t_dim
+        \__tblr_prop_item:ne { hline }
+          { [\int_eval:n {\c@rowcount + 1}] / @hline-height }
       }
+    %% Note that \l__tblr_b_tl may be empty
+    \tl_set:Nx \l__tblr_b_tl
+      { \__tblr_prop_item:ne { table } { baseline } }
+    \bool_lazy_or:nnTF
+      { \dim_compare_p:nNn { \l__tblr_a_tl } = { 0pt } }
+      { \int_compare_p:nNn { \l__tblr_b_tl + 0 } = { \c@rowcount } }
       {
         \dim_set:Nn \l__tblr_d_dim
           {
@@ -3233,6 +3260,10 @@
             \__tblr_prop_item:ne { row } { [1] / belowsep }
           }
         \dim_set:Nn \l__tblr_h_dim { \l__tblr_t_dim - \l__tblr_d_dim }
+      }
+      {
+        \dim_set:Nn \l__tblr_d_dim { 0pt }
+        \dim_set_eq:NN \l__tblr_h_dim \l__tblr_t_dim
       }
     \box_set_ht:Nn #1 { \l__tblr_h_dim }
     \box_set_dp:Nn #1 { \l__tblr_d_dim }
