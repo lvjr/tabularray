@@ -1,0 +1,107 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{normal cells: t cells}
+\SetTblrDefault{rows={rowsep=0pt}}
+\begin{tabular}{|l|c|r|}
+\hline
+One   & Two  & Three \\
+\hline
+Alpha & Beta & Gamma \\
+\hline
+\end{tabular}
+\qquad
+\begin{tblr}{|l|c|r|}
+\hline
+One   & Two  & Three \\
+\hline
+Alpha & Beta & Gamma \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+%% One line t/m/b cells should be the same
+\BEGINTEST{normal cells: t/m/b cells with strut}
+\SetTblrDefault{rows={rowsep=0pt}}
+\begin{tabular}{|p{1cm}|m{1cm}|b{2cm}|}
+\hline
+Alpha & Beta & Gamma \\
+\hline
+\end{tabular}
+\qquad
+\begin{tblr}{|t{1cm}|m{1cm}|b{2cm}|}
+\hline
+Alpha & Beta & Gamma \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip
+
+%% One line t/m/b cells should be the same
+%% But tabular environment failed for it
+\BEGINTEST{normal cells: t/m/b cells without strut}
+\def\arraystretch{0}
+\SetTblrDefault{rows={rowsep=0pt},stretch=0}
+\begin{tabular}{|p{1cm}|m{1cm}|b{2cm}|}
+\hline
+Alpha & Beta & Gamma \\
+\hline
+\end{tabular}
+\qquad
+\begin{tblr}{|t{1cm}|m{1cm}|b{2cm}|}
+\hline
+Alpha & Beta & Gamma \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+%% h and t cells could align with t/m/b cells with strut 
+\BEGINTEST{normal cells: h/t/m/b/f cells with strut}
+\begin{tblr}{|Q[h]|Q[t]|Q[m]|Q[b]|Q[f]|}
+\hline
+head & top & middle & bottom & foot \\
+\hline
+oooo & top & middle & bottom & foot \\
+\hline
+head & top & middle & bottom & oooo \\
+\hline
+oooo & top & middle & bottom & oooo \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip
+
+%% h and t cells may not align with t/m/b cells without strut
+\BEGINTEST{normal cells: h/t/m/b/f cells without strut}
+\SetTblrDefault{stretch=0}
+\begin{tblr}{|Q[h]|Q[t]|Q[m]|Q[b]|Q[f]|}
+\hline
+head & top & middle & bottom & foot \\
+\hline
+oooo & top & middle & bottom & foot \\
+\hline
+head & top & middle & bottom & oooo \\
+\hline
+oooo & top & middle & bottom & oooo \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}

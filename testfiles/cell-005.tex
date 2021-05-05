@@ -1,0 +1,38 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{test \multicolumn cells}
+\begin{tabular}{|r|p{2cm}|c|p{2cm}|}
+\hline
+ Alpha   & \raggedleft Right  & \multicolumn{2}{l|}{Gamma Gamma Gamma} \\
+\hline
+ Epsilon & \raggedleft Righttttt  & Eta    & \centering\arraybackslash Centering \\
+\hline
+ \multicolumn{2}{|l|}{Iota Iota Iota Iota Iota}  & Lambda & \centering\arraybackslash Center \\
+\hline
+\end{tabular}
+\par\bigskip
+\SetTblrDefault{rows={rowsep=0pt}}
+\begin{tblr}{|r|Q[p,r,2cm]|c|Q[p,c,2cm]|}
+\hline
+ Alpha   & Right  & \SetCell[c=2]{}Gamma Gamma Gamma & ? \\
+\hline
+ Epsilon & Righttttt  & Eta    & Centering \\
+\hline
+ \SetCell[c=2]{}Iota Iota Iota Iota Iota & ? & Lambda & Center \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}

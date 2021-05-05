@@ -1,0 +1,20 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{start tabularray in vertical mode}
+\par\begin{tabular}{l}One\end{tabular}TEXT
+\par\begin{tblr}{l}One\end{tblr}TEXT
+\ENDTEST
+
+\end{document}

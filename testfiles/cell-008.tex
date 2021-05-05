@@ -1,0 +1,68 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+
+\ExplSyntaxOn
+\let \replicate = \prg_replicate:nn
+\ExplSyntaxOff
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\SetTblrDefault{stretch=0}
+
+\BEGINTEST{multirow: legacy}
+\begin{tblr}{|t{4em}|b{4em}|m{4em}|m{4em}|b{4em}|t{4em}|}
+\hline
+  \SetCell[r=2]{b}b 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 &
+  \SetCell{t}base top base top  & middle &
+  \SetCell[r=3]{t}t 13 13 & base bot base bot &
+  \SetCell[r=4]{t}t 14 14 \\
+\cline{2-3}\cline{5-5}
+  12 12 12 12 12 &
+  \SetCell[r=2]{t}t 23 23 &
+  \SetCell{b}base bot base bot & &
+  \SetCell[r=3]{b}b 24 24 & \\
+\cline{1-1}\cline{3-3}
+  base top base top & &
+  \SetCell[r=2]{m}m 34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 & & & \\
+\cline{1-2}\cline{4-4}
+  base top base top &
+  \SetCell{b}base bot base bot & &
+  \SetCell{m}middle & & \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip
+
+\BEGINTEST{multirow: modern}
+\begin{tblr}{|h{4em}|f{4em}|m{4em}|m{4em}|f{4em}|h{4em}|}
+\hline
+  \SetCell[r=2]{f}f 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 &
+  \SetCell{h}row head row head & middle &
+  \SetCell[r=3]{h}h 13 13 & row foot row foot &
+  \SetCell[r=4]{h}h 14 14 \\
+\cline{2-3}\cline{5-5}
+  12 12 12 12 12 &
+  \SetCell[r=2]{h}h 23 23 &
+  \SetCell{f}row foot row foot & &
+  \SetCell[r=3]{f}f 24 24 & \\
+\cline{1-1}\cline{3-3}
+  row head row head & &
+  \SetCell[r=2]{m}m 34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 & & & \\
+\cline{1-2}\cline{4-4}
+  row head row head &
+  \SetCell{f}row foot row foot & &
+  \SetCell{m}middle & & \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}

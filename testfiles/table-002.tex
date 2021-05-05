@@ -1,0 +1,65 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{vertical alignment: one row}
+TOP\begin{tabular}[t]{l}Big\end{tabular}TOP TOP\begin{tblr}[t]{Q}Big\end{tblr}TOP
+
+MID\begin{tabular}[m]{l}Big\end{tabular}MID MID\begin{tblr}[m]{Q}Big\end{tblr}MID
+
+MID\begin{tabular}[c]{l}Big\end{tabular}MID MID\begin{tblr}[c]{Q}Big\end{tblr}MID
+
+BOT\begin{tabular}[b]{l}Big\end{tabular}BOT BOT\begin{tblr}[b]{Q}Big\end{tblr}BOT
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{vertical alignment: two rows without hlines}
+\SetTblrDefault{rows={rowsep=0pt}}
+TOP\begin{tabular}[t]{l}big\\box\end{tabular}TOP
+TOP\begin{tblr}[t]{l}big\\box\end{tblr}TOP
+
+MID\begin{tabular}[c]{l}big\\box\end{tabular}MID
+MID\begin{tblr}[c]{l}big\\box\end{tblr}MID
+
+MID\begin{tabular}[c]{l}big\\box\end{tabular}MID
+MID\begin{tblr}[c]{l}big\\box\end{tblr}MID
+
+BOT\begin{tabular}[b]{l}big\\box\end{tabular}BOT
+BOT\begin{tblr}[b]{l}big\\box\end{tblr}BOT
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{vertical alignment: two rows with hlines}
+\SetTblrDefault{rows={rowsep=0pt}}
+TOP\begin{tabular}[t]{l}\hline big\\box\\\hline\end{tabular}TOP
+TOP\begin{tblr}[t]{l}\hline big\\box\\\hline\end{tblr}TOP
+
+\bigskip
+
+MID\begin{tabular}[c]{l}\hline big\\box\\\hline\end{tabular}MID
+MID\begin{tblr}[c]{l}\hline big\\box\\\hline\end{tblr}MID
+
+\bigskip
+
+MID\begin{tabular}[c]{l}\hline big\\box\\\hline\end{tabular}MID
+MID\begin{tblr}[c]{l}\hline big\\box\\\hline\end{tblr}MID
+
+\bigskip
+
+BOT\begin{tabular}[b]{l}\hline big\\box\\\hline\end{tabular}BOT
+BOT\begin{tblr}[b]{l}\hline big\\box\\\hline\end{tblr}BOT
+\ENDTEST
+
+\end{document}

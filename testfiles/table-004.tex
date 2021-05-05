@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{table nesting: same rule width}
+\SetTblrDefault{rows={rowsep=0pt}}
+\begin{tabular}{|l|l|l|l|}
+\hline
+  One & \begin{tabular}{ll}111&111 \\\hline 222&222 \\\hline 333&333\end{tabular} & Big & Big \\
+\hline
+  Small & Big & One & Big \\
+\hline
+\end{tabular}
+\begin{tblr}{|l|l|l|l|}
+\hline
+  One & \begin{tblr}{ll}111&111 \\\hline 222&222 \\\hline 333&333\end{tblr} & Big & Big \\
+\hline
+  Small & Big & One & Big \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{table nesting: different rule widthes}
+\begin{tblr}{|Q|Q|Q|Q|}
+\hline
+  One & \begin{tblr}{hlines={2pt},vlines={2pt}}111 \\ 222 \\ 333\end{tblr} & Big & Big \\
+\hline
+  Small & Big & One & Big \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}

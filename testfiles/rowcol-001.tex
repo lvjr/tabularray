@@ -1,0 +1,35 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing decimal numbers}
+\SetTblrDefault{rows={rowsep=0pt}}
+a\begin{tabular}{|r@{.}ll|}
+\hline
+ 11 & 222 & Three \\
+444 & 5g   & Six \\
+\hline
+  7 & 88  & Nine \\
+\hline
+\end{tabular}b
+\qquad
+a\begin{tblr}{|r@{.}ll|}
+\hline
+ 11 & 222 & Three \\
+444 & 5g   & Six \\
+\hline
+  7 & 88  & Nine \\
+\hline
+\end{tblr}b
+\ENDTEST
+
+\end{document}

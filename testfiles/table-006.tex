@@ -1,0 +1,30 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing \SetTblrDefault}
+\begin{tblr}{}
+  A & B \\ C & D 
+\end{tblr}
+\begingroup
+  \SetTblrDefault{hlines,vlines,stretch=2}
+  \begin{tblr}{}
+    A & B \\ C & D 
+  \end{tblr}
+\endgroup
+\begin{tblr}{}
+  A & B \\ C & D 
+\end{tblr}
+\ENDTEST
+
+\end{document}

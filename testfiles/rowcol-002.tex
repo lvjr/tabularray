@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing rowsep}
+A\begin{tblr}{|l|c|r|}
+\hline
+One   &  Two  & Three \\
+\hline
+\SetRow{rowsep=1em}
+One   &  Two  & Three \\
+\hline
+Four  & Five  &   Six \\
+\hline
+\SetRow{belowsep=1em}
+Four  & Five  &   Six \\
+\hline
+Seven & Eight &  Nine \\
+\hline
+\SetRow{rowsep+=1em}
+Seven & Eight &  Nine \\
+\hline
+\end{tblr}B
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{testing colsep}
+A\begin{tblr}{|l|c|r|l|c|r|}
+\hline
+\SetColumn{colsep=2em}
+One   &  Two  & Three & \SetColumn{colsep+=-4pt}
+                         One   &  Two  & Three \\
+\hline
+Four  & Five  &   Six & Four  & Five  &   Six\\
+\hline
+Seven & Eight &  Nine & Seven & Eight &  Nine \\
+\hline
+\end{tblr}B
+\ENDTEST
+
+\end{document}

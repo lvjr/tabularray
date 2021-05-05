@@ -6,17 +6,10 @@
 
 \usepackage{tabularray}
 
-\ExplSyntaxOn
-\let \replicate = \prg_replicate:nn
-\ExplSyntaxOff
-
 \begin{document}
 
-\hrule
-
 \START
-
-\bigskip
+\hrule\bigskip
 
 \BEGINTEST{hlines and vlines}
 \begin{tblr}{hlines,vlines} % <--- when the value is empty, give solid lines
@@ -31,7 +24,8 @@ seven & eight  & nine   & eta   & theta   & iota  \\
 \end{tblr}
 \ENDTEST
 
-\bigskip
+\bigskip\hrule\bigskip
+
 \BEGINTEST{hlines and vlines}
 \begin{tblr}{
   hlines = {dotted},
@@ -49,7 +43,7 @@ seven & eight  & nine   & eta   & theta   & iota  \\
 \end{tblr}
 \ENDTEST
 
-\bigskip
+\bigskip\hrule\bigskip
 
 \BEGINTEST{hlines and vlines}
 \begin{tblr}{}

@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{multiline cells: t/m/b cells}
+\begin{tblr}{|l|t{2cm}|m{2cm}|b{2cm}|}
+\hline
+text & \SetCell{b,r}{alpha\\alpha}   &  {beta\\beta\\beta}  & {gamma\\gamma} \\
+\hline
+text & {delta\\delta}  & {epsilon\\epsilon\\epsilon}  & \SetCell{t,c}{zeta\\zeta} \\
+\hline
+text & {eta\\eta} & {theta\\theta\\theta} &  {iota\\iota} \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{multiline cells: h/m/f cells}
+\begin{tblr}{|l|h{2cm}|m{2cm}|f{2cm}|}
+\hline
+text & \SetCell{f,r}{alpha\\alpha}   &  {beta\\beta\\beta}  & {gamma\\gamma} \\
+\hline
+text & {delta\\delta}  & {epsilon\\epsilon\\epsilon}  & \SetCell{h,c}{zeta\\zeta} \\
+\hline
+text & {eta\\eta} & {theta\\theta\\theta} &  {iota\\iota} \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{multiline cells: h/t/m/b/f cells}
+\SetTblrDefault{rows={rowsep=0pt}}
+\begin{tblr}{|Q[h,4em]|Q[t,4em]|Q[m,4em]|Q[b,4em]|Q[f,4em]|}
+\hline
+{row\\head} & {top\\line} & {row\\middle} & {bottom\\line} & {row\\foot} \\
+\hline
+{row\\head} & {top\\line} & {row\\middle\\row\\middle\\row} & {bottom\\line} & {row\\foot} \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}

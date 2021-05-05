@@ -1,0 +1,30 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+\usepackage{amsmath}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing math mode}
+A$\begin{array}{|l|p{2cm}|r|}
+\hline
+One   &  Two  & Three\dfrac{A}{B} \\
+\hline
+\end{array}$B
+%% each cell will always be in math mode even when it's in a p-column
+A$\begin{tblr}{|l|p{2cm}|r|}
+\hline
+One   &  Two  & Three\dfrac{A}{B} \\
+\hline
+\end{tblr}$B
+\ENDTEST
+
+\end{document}

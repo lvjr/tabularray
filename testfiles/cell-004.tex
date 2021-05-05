@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{auto break lines by \\}
+% horizontal alignments are obeyed
+\begin{tblr}{|l|c|r|}
+\hline
+  Left & {Centerrrr \\ Center \\ C} & {Righttttt \\ Right} \\
+\hline
+  {Left \\ Lefttt} & {Centerrrrr \\ C \\ Center} & Righttt \\
+\hline
+\end{tblr}
+\ENDTEST
+
+%\bigskip\hrule\bigskip
+%
+%\BEGINTEST{should not break well for these cells}
+%\begin{tblr}{ll}
+%\hline
+%  {111 \\ Inside} Outside & Outside {Inside \\ 222 \\ Inside} \\
+%\hline
+%\end{tblr}
+%\ENDTEST
+%
+%\bigskip\hrule\bigskip
+%
+%%% TO DO or WON'T DO?
+%\BEGINTEST{auto break lines by \newline}
+%\begin{tblr}{|l|c|r|}
+%\hline
+%  Left & Centerrrr \newline Center \newline C & Righttttt \newline Right \\
+%\hline
+%  Left \newline Lefttt & Centerrrrr \newline C \newline Center & Righttt \\
+%\hline
+%\end{tblr}
+%\ENDTEST
+
+\end{document}

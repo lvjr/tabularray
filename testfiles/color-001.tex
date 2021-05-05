@@ -7,10 +7,6 @@
 \usepackage{ninecolors}
 \usepackage{tabularray}
 
-\ExplSyntaxOn
-\let \replicate = \prg_replicate:nn
-\ExplSyntaxOff
-
 \begin{document}
 
 \hrule
@@ -19,10 +15,25 @@
 
 \bigskip
 
-\BEGINTEST{cell background}
+\BEGINTEST{cell background: legacy}
 \begin{tblr}[b]{|l|[dotted]|[2pt]c|r|[solid]|[dashed]|}
 \hline
 \SetCell{b,r,orange}Onej   &  Two  & Three \\
+\hline\hline\hline
+Four  & \SetCell{teal}Five  &   Six \\
+\hline\hline
+\SetCell{lime}Seven & Eight &  Nine \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip
+
+\BEGINTEST{cell background: modern}
+\bigskip
+\begin{tblr}[b]{|Q[h,l]|[dotted]|[2pt]Q[h,c]|Q[h,r]|[solid]|[dashed]|}
+\hline
+\SetCell{f,r,orange}Onej   &  Two  & Three \\
 \hline\hline\hline
 Four  & \SetCell{teal}Five  &   Six \\
 \hline\hline

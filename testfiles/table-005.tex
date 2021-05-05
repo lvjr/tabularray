@@ -1,0 +1,88 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\SetTblrDefault{rows={rowsep=0pt}}
+
+\BEGINTEST{testing stretch option: stretch = 1}
+A\begin{tabular}{|l|c|r|}
+\hline
+One   &  Two  & Three \\
+\hline
+Four  & Five  &   Six \\
+\hline
+Seven & Eight &  Nine \\
+\hline
+\end{tabular}B
+A\begin{tblr}{|l|c|r|}
+\hline
+One   &  Two  & Three \\
+\hline
+Four  & Five  &   Six \\
+\hline
+Seven & Eight &  Nine \\
+\hline
+\end{tblr}B
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{testing stretch option: stretch = 0}
+\def\arraystretch{0}
+\SetTblrDefault{stretch=0}
+A\begin{tabular}{|l|c|r|}
+\hline
+One   &  Two  & Three \\
+\hline
+Four  & Five  &   Six \\
+\hline
+Seven & Eight &  Nine \\
+\hline
+\end{tabular}B
+A\begin{tblr}{|l|c|r|}
+\hline
+One   &  Two  & Three \\
+\hline
+Four  & Five  &   Six \\
+\hline
+Seven & Eight &  Nine \\
+\hline
+\end{tblr}B
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{testing stretch option: stretch = 2}
+\def\arraystretch{2}
+\SetTblrDefault{stretch=2}
+A\begin{tabular}{|l|c|r|}
+\hline
+One   &  Two  & Three \\
+\hline
+Four  & Five  &   Six \\
+\hline
+Seven & Eight &  Nine \\
+\hline
+\end{tabular}B
+A\begin{tblr}{|l|c|r|}
+\hline
+One   &  Two  & Three \\
+\hline
+Four  & Five  &   Six \\
+\hline
+Seven & Eight &  Nine \\
+\hline
+\end{tblr}B
+\ENDTEST
+
+\end{document}

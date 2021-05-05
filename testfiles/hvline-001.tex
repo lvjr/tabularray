@@ -6,25 +6,19 @@
 
 \usepackage{tabularray}
 
-\ExplSyntaxOn
-\let \replicate = \prg_replicate:nn
-\ExplSyntaxOff
-
 \begin{document}
-
-\hrule
 
 \START
 
-\bigskip
+\hrule\bigskip
 
-\BEGINTEST{normal cell}
-\begin{tblr}[b]{|l|[dotted]|[2pt]c|r|[solid]|[dashed]|}
+\BEGINTEST{hline and vline}
+\begin{tblr}{|l|[dotted]|[2pt]c|r|[solid]|[dashed]|}
 \hline
-\SetCell{b,r}Onej   &  Two  & Three \\
-\hline\hline\hline
+One   &  Two  & Three \\
+\hline\hline[dotted]\hline
 Four  & Five  &   Six \\
-\hline\hline
+\hline[dashed]\hline[1pt]
 Seven & Eight &  Nine \\
 \hline
 \end{tblr}

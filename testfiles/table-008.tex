@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+%\usepackage{array}
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing rownum / colnum / rowcount / colcount }
+A\begin{tblr}{|l|c|r|c|}
+\hline
+Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
+Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
+\hline
+Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
+Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
+\hline
+Row=\arabic{rowcount},Col=\arabic{colcount} & Row=\arabic{rowcount},Col=\arabic{colcount} &
+Row=\arabic{rowcount},Col=\arabic{colcount} & Row=\arabic{rowcount},Col=\arabic{colcount} \\
+\hline
+Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
+Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
+\hline
+Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
+Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
+\hline
+\end{tblr}B
+\ENDTEST
+
+\end{document}

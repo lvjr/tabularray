@@ -1,0 +1,26 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{\firsthline and \lasthline}
+\SetTblrDefault{rows={rowsep=0pt}}
+TOP\begin{tabular}[t]{l}\firsthline big\\box\\\hline\end{tabular}TOP
+TOP\begin{tblr}[t]{l}\firsthline big\\box\\\hline\end{tblr}TOP
+
+\bigskip
+
+BOT\begin{tabular}[b]{l}\hline big\\box\\\lasthline\end{tabular}BOT
+BOT\begin{tblr}[b]{l}\hline big\\box\\\lasthline\end{tblr}BOT
+\ENDTEST
+
+\end{document}

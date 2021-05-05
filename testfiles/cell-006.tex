@@ -6,17 +6,10 @@
 
 \usepackage{tabularray}
 
-\ExplSyntaxOn
-\let \replicate = \prg_replicate:nn
-\ExplSyntaxOff
-
 \begin{document}
 
-\hrule
-
 \START
-
-\bigskip
+\hrule\bigskip
 
 \BEGINTEST{multicolumn: compute column widths from span widths}
 TB\begin{tblr}{|l|l|l|Q[t,l]|l|}
