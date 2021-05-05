@@ -2003,15 +2003,15 @@
         \__tblr_prop_gput:nxn { vline }
           { [\int_eval:n { \c@colcount + 1}] / ##1 } {##2}
       }
-    \keys_set:nv { tblr } { g__tblr_default_ \l__tblr_env_name_tl _tl }
+    \keys_set:nv { tblr } { l__tblr_default_ \l__tblr_env_name_tl _tl }
   }
 
-\tl_new:N \g__tblr_default_tblr_tl
+\tl_new:N \l__tblr_default_tblr_tl
 
 %% #1: env name; #2: options
 \NewDocumentCommand \SetTabularrayDefault { O{tblr} m }
   {
-    \tl_gput_right:cn { g__tblr_default_ #1 _tl } { , #2 }
+    \tl_put_right:cn { l__tblr_default_ #1 _tl } { , #2 }
   }
 \cs_new_eq:NN \SetTblrDefault \SetTabularrayDefault
 
