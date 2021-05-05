@@ -3543,12 +3543,12 @@
                 \box_use:N \l__tblr_a_box
               }
           }
+        \hrule height ~ 0pt %% zero depth
       }
-    \vbox_set_to_ht:Nnn \l__tblr_c_box { \l__tblr_row_ht_dim }
+    \vbox_set_to_ht:Nnn \l__tblr_c_box
+      { \l__tblr_row_ht_dim - \l__tblr_row_abovesep_dim }
       {
-        \skip_vertical:N \l__tblr_row_abovesep_dim
         \box_use:N \l__tblr_b_box
-        \skip_vertical:N \l__tblr_row_belowsep_dim
         \vss
       }
     \skip_horizontal:n { \l__tblr_x_tl }
@@ -3595,12 +3595,12 @@
                 \box_use:N \l__tblr_a_box
               }
           }
+        \hrule height ~ 0pt %% zero depth
       }
-    \vbox_set_to_ht:Nnn \l__tblr_c_box { \l__tblr_row_ht_dim }
+    \vbox_set_to_ht:Nnn \l__tblr_c_box
+      { \l__tblr_row_ht_dim - \l__tblr_row_abovesep_dim }
       {
-        \skip_vertical:N \l__tblr_row_abovesep_dim
         \box_use:N \l__tblr_b_box
-        \skip_vertical:N \l__tblr_row_belowsep_dim
         \vss
       }
     \skip_horizontal:n { \l__tblr_x_tl }
