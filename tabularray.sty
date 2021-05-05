@@ -2024,6 +2024,7 @@
   {
     colspec, rowspec, width, span-width, stretch,
     column, row, cell, vline, hline, columns, rows, cells, vlines, hlines,
+    leftsep, rightsep, colsep, abovesep, belowsep, rowsep,
   }
 
 \keys_define:nn { tblr }
@@ -2038,6 +2039,12 @@
     cells   .code:n = \__tblr_set_every_cell_aux:n {#1},
     hlines  .code:n = \__tblr_set_every_hline_aux:n {#1},
     vlines  .code:n = \__tblr_set_every_vline_aux:n {#1},
+    leftsep .code:n = \tblr_set_every_column:nn { } { leftsep = #1 },
+    rightsep .code:n = \tblr_set_every_column:nn { } { rightsep = #1 },
+    colsep .meta:n = { leftsep = #1, rightsep = #1 },
+    abovesep .code:n = \tblr_set_every_row:nn { } { abovesep = #1 },
+    belowsep .code:n = \tblr_set_every_row:nn { } { belowsep = #1 },
+    rowsep .meta:n = { abovesep = #1, belowsep = #1 },
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
 
