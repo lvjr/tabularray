@@ -1014,7 +1014,14 @@
   {
     \tl_if_eq:nnTF {#1} {c}
       { \tl_set:Nn \l_tmpa_tl {, m} }
-      { \tl_set:Nn \l_tmpa_tl {, #1} }
+      {
+        \tl_if_eq:nnTF {#1} {t}
+          { \tl_set:Nn \l_tmpa_tl {, h} }
+          { \tl_if_eq:nnTF {#1} {b}
+            { \tl_set:Nn \l_tmpa_tl {, f} }
+            { \tl_set:Nn \l_tmpa_tl {, #1} }
+          }
+      }
     \tl_if_eq:nnF {#3} {*}
       { \tl_if_eq:nnF {#3} {=} { \tl_put_right:Nn \l_tmpa_tl {, wd=#3} } }
     \tl_if_empty:NTF \g__tblr_multicolumn_num_tl
