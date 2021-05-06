@@ -2029,7 +2029,7 @@
 \clist_new:N \g__tblr_table_known_keys_clist
 \clist_gset:Nn \g__tblr_table_known_keys_clist
   {
-    colspec, rowspec, width, span-width, stretch,
+    colspec, rowspec, width, hspan, stretch,
     column, row, cell, vline, hline, columns, rows, cells, vlines, hlines,
     leftsep, rightsep, colsep, abovesep, belowsep, rowsep,
   }
@@ -2038,9 +2038,9 @@
   {
     colspec .code:n = \__tblr_parse_colrow_spec:nn { column } {#1},
     rowspec .code:n = \__tblr_parse_colrow_spec:nn { row } {#1},
-    width      .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
-    span-width .code:n = \__tblr_keys_gput:nn { span-width } {#1},
-    stretch    .code:n = \__tblr_keys_gput:nn { stretch } {#1},
+    width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
+    hspan .code:n = \__tblr_keys_gput:nn { hspan } {#1},
+    stretch .code:n = \__tblr_keys_gput:nn { stretch } {#1},
     columns .code:n = \__tblr_set_every_column_aux:n {#1},
     rows    .code:n = \__tblr_set_every_row_aux:n {#1},
     cells   .code:n = \__tblr_set_every_cell_aux:n {#1},
@@ -2792,7 +2792,7 @@
 
 %% Compute and adjust widths when there are some span cells.
 %% By default, we will compute column widths from span widths;
-%% but if we set table option "span-width = minimal",
+%% but if we set table option "hspan = minimal",
 %% we will compute span widths from column widths.
 
 \cs_new_protected:Npn \__tblr_adjust_sizes_for_span_cells:
@@ -2801,7 +2801,7 @@
       {
         \__tblr_collect_column_widths_skips:
         \str_if_eq:xnTF
-          { \__tblr_prop_item:ne {table} {span-width} } {minimal}
+          { \__tblr_prop_item:ne {table} {hspan} } {minimal}
           {
             \__tblr_set_span_widths_from_column_widths:
           }
@@ -3712,7 +3712,7 @@
 %% #1: row number; #2: column number; #3: dimen register for colsep left.
 %% #4: dimen register for total width; #5: dimen register for colsep right.
 %% We can use \l__tblr_col_item_skip_size_prop which was made before
-%% But when span-width=minimal, there are no itemskip in the prop list.
+%% But when hspan=minimal, there are no itemskip in the prop list.
 %% Therefore we need to calculate them from the sizes of items and skips
 \cs_new_protected:Npn \__tblr_get_span_horizontal_sizes:NNNNN #1 #2 #3 #4 #5
   {
