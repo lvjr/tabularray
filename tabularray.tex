@@ -20,6 +20,14 @@
   \footnote{GitHub repository: \url{https://github.com/lvjr/tabularray}.}}}
 \newcommand*{\mylpad}[1]{\ifnum#1<10 0\the#1\else\the#1\fi}
 
+\colorlet{highback}{\ifcase\month\or
+  red9\or olive9\or azure9\or red9\or olive9\or azure9\or
+  red9\or olive9\or azure9\or red9\or olive9\or azure9\fi
+}
+\CodeHigh{bg=highback,codebox/bg=highback}
+\NewCodeHighEnv{code}{bg=gray9,codebox/bg=gray9}
+\NewCodeHighEnv{demo}{bg=gray9,codebox/bg=gray9,demo}
+
 %\CodeHigh{lite}
 
 \begin{document}
@@ -40,7 +48,7 @@ we can use \verb!tblr! environments to typeset tabulars and arrays.
 The name \verb!tblr! is short for \verb!tabularray! or \verb!top-bottom-left-right!.
 The following is our first example:
 
-\begin{demohigh}
+\begin{demo}
 \begin{tabular}{lccr}
 \hline
  Alpha   & Beta  & Gamma  & Delta \\
@@ -50,7 +58,7 @@ The following is our first example:
  Iota    & Kappa & Lambda & Mu    \\
 \hline
 \end{tabular}
-\end{demohigh}
+\end{demo}
 
 \begin{demohigh}
 \begin{tblr}{lccr}
@@ -83,25 +91,25 @@ If you don't like it, you could use \verb!\SetTblrDefault! command:
 
 But in many cases, this rowsep is useful:
 
-\begin{demohigh}
+\begin{demo}
 $\begin{array}{rrr}
 \hline
- \frac{2}{3} &  \frac{2}{3} &  \frac{1}{3} \\
- \frac{2}{3} & -\frac{1}{3} & -\frac{2}{3} \\
- \frac{1}{3} & -\frac{2}{3} &  \frac{2}{3} \\
+ \dfrac{2}{3} &  \dfrac{2}{3} &  \dfrac{1}{3} \\
+ \dfrac{2}{3} & -\dfrac{1}{3} & -\dfrac{2}{3} \\
+ \dfrac{1}{3} & -\dfrac{2}{3} &  \dfrac{2}{3} \\
 \hline
 \end{array}$
-\end{demohigh}
+\end{demo}
 
 \begin{demohigh}
 $\begin{tblr}{rrr}
 \hline
- \frac{2}{3} &  \frac{2}{3} &  \frac{1}{3} \\
- \frac{2}{3} & -\frac{1}{3} & -\frac{2}{3} \\
- \frac{1}{3} & -\frac{2}{3} &  \frac{2}{3} \\
+ \dfrac{2}{3} &  \dfrac{2}{3} &  \dfrac{1}{3} \\
+ \dfrac{2}{3} & -\dfrac{1}{3} & -\dfrac{2}{3} \\
+ \dfrac{1}{3} & -\dfrac{2}{3} &  \dfrac{2}{3} \\
 \hline
 \end{tblr}$
-\end{demohigh} 
+\end{demohigh}
 
 Note that you can use \verb!tblr! in both text and math modes.
 
@@ -158,7 +166,7 @@ The above \verb!h! and \verb!f! columns are necessary for multirow cells.
 In \verb!tabularray!, the \verb!t! and \verb!b! in the optional argument of \verb!\multirow! commands
 will be treated as \verb!h! and \verb!f!, respectively:
 
-\begin{demohigh}
+\begin{demo}
 \begin{tabular}{|l|l|l|l|}
 \hline
  \multirow[t]{4}{1.5cm}{Multirow Cell One} & Alpha &
@@ -168,7 +176,7 @@ will be treated as \verb!h! and \verb!f!, respectively:
  & Delta & & Delta \\
 \hline
 \end{tabular}
-\end{demohigh}
+\end{demo}
 
 \begin{demohigh}
 \begin{tblr}{|l|l|l|l|}
@@ -188,7 +196,7 @@ Furthermore, \verb!tabularray! will always typeset descent multirow cells.
 First, it will set correct vertical \verb!c! alignment,
 even though some rows have large height:
 
-\begin{demohigh}
+\begin{demo}
 \begin{tabular}{|l|m{4em}|}
 \hline
  \multirow[c]{4}{1.5cm}{Multirow} & Alpha  \\
@@ -197,7 +205,7 @@ even though some rows have large height:
  & Delta Delta Delta \\
 \hline
 \end{tabular}
-\end{demohigh}
+\end{demo}
 
 \begin{demohigh}
 \begin{tblr}{|l|m{4em}|}
@@ -213,7 +221,7 @@ even though some rows have large height:
 Second, it will enlarge row heights if the multirow cells have large height,
 therefore it always avoids vertical overflow:
 
-\begin{demohigh}
+\begin{demo}
 \begin{tabular}{|l|m{4em}|}
 \hline
  \multirow[c]{2}{1cm}{Line \\ Line \\ Line \\ Line} & Alpha \\
@@ -221,7 +229,7 @@ therefore it always avoids vertical overflow:
  & Beta \\
 \hline
 \end{tabular}
-\end{demohigh}
+\end{demo}
 
 \begin{demohigh}
 \begin{tblr}{|l|m{4em}|}
@@ -237,7 +245,7 @@ therefore it always avoids vertical overflow:
 
 It was a hard job to typeset cells with multiple rows and multiple columns. For example:
 
-\begin{demohigh}
+\begin{demo}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
  \multirow{2}{*}{2 Rows}
@@ -249,7 +257,7 @@ It was a hard job to typeset cells with multiple rows and multiple columns. For 
  3-1 & 3-2 & 3-3 & 3-4 & 3-5 \\
 \hline
 \end{tabular}
-\end{demohigh}
+\end{demo}
 
 With \verb!tabularray! package, you can set spanned cells with \verb!\SetCell! command:
 within the optional argument of \verb!\SetCell! command,
