@@ -2321,6 +2321,13 @@
       {
         \int_incr:N \c@rownum
         \int_zero:N \c@colnum
+        \tl_set:Nx \l__tblr_h_tl
+           { \__tblr_prop_item:ne { row } { [\int_use:N \c@rownum] / height } }
+        \tl_if_empty:NF \l__tblr_h_tl
+          {
+            \__tblr_prop_gput:nxV { row }
+              { [\int_use:N \c@rownum] / @row-height } \l__tblr_h_tl
+          }
         \int_step_inline:nn { \c@colcount }
           {
             \int_incr:N \c@colnum
