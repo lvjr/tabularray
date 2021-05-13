@@ -441,7 +441,7 @@ Hlines and vlines can also have colors:
 \end{demohigh}
 
 \begin{demohigh}
-\begin{tblr}{colspec={|[2pt,violet7]l|[2pt,magenta7]c|[2pt,purple7]r|[2pt,red7]}}
+\begin{tblr}{colspec={|[2pt,violet5]l|[2pt,magenta5]c|[2pt,purple5]r|[2pt,red5]}}
  Alpha   & Beta  & Gamma  \\
  Epsilon & Zeta  & Eta    \\
  Iota    & Kappa & Lambda \\
@@ -576,7 +576,7 @@ Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlin
 Option \verb!cells! is for setting all cells.
 
 \begin{demohigh}
-\begin{tblr}{hlines,cells={c,blue7}}
+\begin{tblr}{hlines={white},cells={c,blue7}}
  Alpha   & Beta  & Gamma   & Delta   \\
  Epsilon & Zeta  & Eta     & Theta   \\
  Iota    & Kappa & Lambda  & Mu      \\
@@ -616,11 +616,11 @@ Options \verb!rows! and \verb!columns! are for setting all rows and columns, res
  hlines,
  vlines,
  rows = {7mm},
- columns = {15mm,c}
+ columns = {15mm,c},
 }
- Alpha   & Beta  & Gamma   & Delta   \\
- Epsilon & Zeta  & Eta     & Theta   \\
- Iota    & Kappa & Lambda  & Mu      \\
+ Alpha   & Beta  & Gamma   & Delta \\
+ Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    \\
 \end{tblr}
 \end{demohigh}
 
@@ -702,10 +702,10 @@ Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be u
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
- Row=\arabic{rowcount},Col=\arabic{colcount} &
- Row=\arabic{rowcount},Col=\arabic{colcount} &
- Row=\arabic{rowcount},Col=\arabic{colcount} &
- Row=\arabic{rowcount},Col=\arabic{colcount} \\
+ Row=\arabic{rowcount}, Col=\arabic{colcount} &
+ Row=\arabic{rowcount}, Col=\arabic{colcount} &
+ Row=\arabic{rowcount}, Col=\arabic{colcount} &
+ Row=\arabic{rowcount}, Col=\arabic{colcount} \\
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
@@ -724,36 +724,28 @@ By setting option \verb!hspan=minimal!, it will compute span widths from column 
 The following two examples show this difference:
 
 \begin{demohigh}
-\begin{tblr}{|l|l|l|}
-\hline
+\SetTblrDefault{hlines,vlines}
+\begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
  111 111 & 222 222 & 333 333 \\
-\hline
- \SetCell[c=2]{l} 12 Multi Columns Multi Columns 12 & & 333 \\
-\hline
- \SetCell[c=3]{l} 13 Multi Columns Multi Columns Multi Columns 13 & & \\
-\hline
- 111 & \SetCell[c=2]{l} 23 Multi Columns Multi Columns 23 & \\
-\hline
+ 12 Multi Columns Multi Columns 12 & & 333 \\
+ 13 Multi Columns Multi Columns Multi Columns 13 & & \\
+ 111 & 23 Multi Columns Multi Columns 23 & \\
 \end{tblr}
 \end{demohigh}
 
 \begin{demohigh}
-\begin{tblr}{hspan=minimal,colspec={|l|l|l|}}
-\hline
+\SetTblrDefault{hlines,vlines,hspan=minimal}
+\begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
  111 111 & 222 222 & 333 333 \\
-\hline
- \SetCell[c=2]{l} 12 Multi Columns Multi Columns 12 & & 333 \\
-\hline
- \SetCell[c=3]{l} 13 Multi Columns Multi Columns Multi Columns 13 & & \\
-\hline
- 111 & \SetCell[c=2]{l} 23 Multi Columns Multi Columns 23 & \\
-\hline
+ 12 Multi Columns Multi Columns 12 & & 333 \\
+ 13 Multi Columns Multi Columns Multi Columns 13 & & \\
+ 111 & 23 Multi Columns Multi Columns 23 & \\
 \end{tblr}
 \end{demohigh}
 
 \chapter{Source Code}
 
 %\CodeHigh{lite}
-\dochighinput[language=latex/latex3]{tabularray.sty}
+%\dochighinput[language=latex/latex3]{tabularray.sty}
 
 \end{document}
