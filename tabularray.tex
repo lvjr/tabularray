@@ -549,6 +549,39 @@ Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlin
 \end{tblr}
 \end{demohigh}
 
+\section{Cells and Spancells}
+
+Option \verb!cells! is for setting all cells.
+
+\begin{demohigh}
+\begin{tblr}{hlines,cells={c,blue7}}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+Option \verb!cell{i}{j}! is for setting some cells.
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines,
+ cell{odd}{1,4} = {red7},
+ cell{even}{1,4} = {purple7},
+ cell{2}{2} = {r=4,c=2}{c,azure7},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
 \chapter{Source Code}
 
 %\CodeHigh{lite}
