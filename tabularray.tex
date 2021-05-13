@@ -448,6 +448,26 @@ Hlines and vlines can also have colors:
 \end{tblr}
 \end{demohigh}
 
+\section{New Table Commands}
+
+All commands which change the specifications of tables \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
+The following example demonstrates how to define similar rules as in \verb!booktabs! package:
+
+\begin{demohigh}
+\NewTableCommand\toprule{\hline[0.08em]}
+\NewTableCommand\midrule{\hline[0.05em]}
+\NewTableCommand\bottomrule{\hline[0.08em]}
+\begin{tblr}{llll}
+\toprule
+ Alpha   & Beta  & Gamma   & Delta   \\
+\midrule
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+\bottomrule
+\end{tblr}
+\end{demohigh}
+
 \chapter{New Interface}
 
 With \verb!tabularray! package, you can separate style and content totally in tables.
@@ -623,6 +643,6 @@ Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns
 \chapter{Source Code}
 
 %\CodeHigh{lite}
-\dochighinput[language=latex/latex3]{tabularray.sty}
+%\dochighinput[language=latex/latex3]{tabularray.sty}
 
 \end{document}
