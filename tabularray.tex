@@ -642,6 +642,44 @@ Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns
 \end{tblr}
 \end{demohigh}
 
+\section{Experimental Interface}
+
+Everything described in this section is in \underline{\textcolor{red3}{\textbf{experimental}}} status.
+Don’t use it in important documents, unless you have time
+to update them for the newer versions of \verb!tabularray! package in the future.
+
+By default \verb!tabularray! package will compute column widths from span widths.
+By setting option \verb!hspan=minimal!, it will compute span widths from column widths.
+The following two examples show this difference:
+
+\begin{demohigh}
+\begin{tblr}{|l|l|l|}
+\hline
+ 111 111 & 222 222 & 333 333 \\
+\hline
+ \SetCell[c=2]{l} 12 Multi Columns Multi Columns 12 & & 333 \\
+\hline
+ \SetCell[c=3]{l} 13 Multi Columns Multi Columns Multi Columns 13 & & \\
+\hline
+ 111 & \SetCell[c=2]{l} 23 Multi Columns Multi Columns 23 & \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\begin{tblr}{hspan=minimal,colspec={|l|l|l|}}
+\hline
+ 111 111 & 222 222 & 333 333 \\
+\hline
+ \SetCell[c=2]{l} 12 Multi Columns Multi Columns 12 & & 333 \\
+\hline
+ \SetCell[c=3]{l} 13 Multi Columns Multi Columns Multi Columns 13 & & \\
+\hline
+ 111 & \SetCell[c=2]{l} 23 Multi Columns Multi Columns 23 & \\
+\hline
+\end{tblr}
+\end{demohigh}
+
 \chapter{Source Code}
 
 %\CodeHigh{lite}
