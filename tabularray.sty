@@ -3488,6 +3488,8 @@
 
 \tl_new:N \l__tblr_cell_rowspan_tl
 \tl_new:N \l__tblr_cell_colspan_tl
+\dim_new:N \l__tblr_cell_wd_dim
+\dim_new:N \l__tblr_cell_ht_dim
 
 \cs_new_protected:Npn \__tblr_build_cell:NN #1 #2
   {
@@ -3502,18 +3504,29 @@
       { \__tblr_prop_item:ne { column } { [#2] / leftsep} }
     \tl_set:Nx \l__tblr_y_tl
       { \__tblr_prop_item:ne { column } { [#2] / rightsep } }
-    \__tblr_get_cell_alignments:nn {#1} {#2}
+    \tl_set:Nx \l__tblr_cell_colspan_tl
+      { \__tblr_prop_item:ne { cell } { [#1][#2] / colspan } }
+    \tl_if_empty:NTF \l__tblr_cell_colspan_tl
+      { \dim_set:Nn \l__tblr_cell_wd_dim { \l__tblr_w_tl } }
+      {
+        \__tblr_get_span_horizontal_sizes:NNNNN #1 #2
+          \l__tblr_o_dim \l__tblr_cell_wd_dim \l__tblr_q_dim
+      }
     \tl_set:Nx \l__tblr_cell_rowspan_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / rowspan } }
+    \tl_if_empty:NTF \l__tblr_cell_rowspan_tl
+      { \dim_set:Nn \l__tblr_cell_ht_dim { \l__tblr_h_tl } }
+      {
+        \__tblr_get_span_vertical_sizes:NNNNN #1 #2
+          \l__tblr_r_dim \l__tblr_cell_ht_dim \l__tblr_t_dim
+      }
+    \__tblr_get_cell_alignments:nn {#1} {#2}
     \tl_if_empty:NTF \l__tblr_cell_rowspan_tl
       {
         \__tblr_build_cell_background:NN #1 #2
         \__tblr_build_single_row_cell:NN #1 #2
       }
       {
-        %% We need \l__tblr_s_dim in building mulitrow cell
-        \__tblr_get_span_vertical_sizes:NNNNN #1 #2
-          \l__tblr_r_dim \l__tblr_s_dim \l__tblr_t_dim
         \__tblr_build_cell_background:NN #1 #2
         \__tblr_build_multiple_row_cell:NN #1 #2
       }
@@ -3522,13 +3535,13 @@
 
 \cs_new_protected:Npn \__tblr_build_single_row_cell:NN #1 #2
   {
-    \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
+    \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_cell_wd_dim }
       {
         \tl_if_eq:NnF \g__tblr_cell_halign_tl {l} { \hfil }
         \__tblr_get_cell_text:nn {#1} {#2}
         \tl_if_eq:NnF \g__tblr_cell_halign_tl {r} { \hfil }
       }
-    \vbox_set_to_ht:Nnn \l__tblr_b_box { \l__tblr_h_tl }
+    \vbox_set_to_ht:Nnn \l__tblr_b_box { \l__tblr_cell_ht_dim }
       {
         \tl_case:Nn \g__tblr_cell_valign_tl
           {
@@ -3567,18 +3580,18 @@
       }
     \skip_horizontal:n { \l__tblr_x_tl }
     \box_use:N \l__tblr_c_box
-    \skip_horizontal:n { \l__tblr_y_tl }
+    \skip_horizontal:n { \l__tblr_y_tl - \l__tblr_cell_wd_dim + \l__tblr_w_tl }
   }
 
 \cs_new_protected:Npn \__tblr_build_multiple_row_cell:NN #1 #2
   {
-    \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_w_tl }
+    \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_cell_wd_dim }
       {
         \tl_if_eq:NnF \g__tblr_cell_halign_tl {l} { \hfil }
         \__tblr_get_cell_text:nn {#1} {#2}
         \tl_if_eq:NnF \g__tblr_cell_halign_tl {r} { \hfil }
       }
-    \vbox_set_to_ht:Nnn \l__tblr_b_box { \l__tblr_s_dim }
+    \vbox_set_to_ht:Nnn \l__tblr_b_box { \l__tblr_cell_ht_dim }
       {
         \tl_case:Nn \g__tblr_cell_valign_tl
           {
@@ -3619,7 +3632,7 @@
       }
     \skip_horizontal:n { \l__tblr_x_tl }
     \box_use:N \l__tblr_c_box
-    \skip_horizontal:n { \l__tblr_y_tl }
+    \skip_horizontal:n { \l__tblr_y_tl - \l__tblr_cell_wd_dim + \l__tblr_w_tl }
   }
 
 \cs_new_protected:Npn \__tblr_build_cell_background:NN #1 #2
@@ -3646,14 +3659,10 @@
 %% #1: row number; #2: column number; #3 resulting dimension
 \cs_new_protected:Npn \__tblr_get_cell_background_width:NNN #1 #2 #3
   {
-    \tl_set:Nx \l__tblr_cell_colspan_tl
-      { \__tblr_prop_item:ne { cell } { [#1][#2] / colspan } }
     \tl_if_empty:NTF \l__tblr_cell_colspan_tl
       { \dim_set:Nn #3 { \l__tblr_x_tl + \l__tblr_w_tl + \l__tblr_y_tl } }
       {
-        \__tblr_get_span_horizontal_sizes:NNNNN #1 #2
-          \l__tblr_o_dim \l__tblr_p_dim \l__tblr_q_dim
-        \dim_set:Nn #3 { \l__tblr_o_dim + \l__tblr_p_dim + \l__tblr_q_dim }
+        \dim_set:Nn #3 { \l__tblr_o_dim + \l__tblr_cell_wd_dim + \l__tblr_q_dim }
       }
   }
 
@@ -3665,7 +3674,8 @@
       {
         \dim_set:Nn #3
           {
-            \l__tblr_r_dim + \l__tblr_s_dim + \l__tblr_t_dim - \l__tblr_row_ht_dim
+            \l__tblr_r_dim + \l__tblr_cell_ht_dim
+                           + \l__tblr_t_dim - \l__tblr_row_ht_dim
           }
       }
   }
