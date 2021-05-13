@@ -448,6 +448,107 @@ Hlines and vlines can also have colors:
 \end{tblr}
 \end{demohigh}
 
+\chapter{New Interface}
+
+With \verb!tabularray! package, you can separate style and content totally in tables.
+
+\section{Hlines and Vlines}
+
+Options \verb!hlines! and \verb!vlines! are for setting all hlines and vlines, respectively.
+With empty value, all hlines/vlines will be solid.
+
+\begin{demohigh}
+\begin{tblr}{hlines,vlines}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+With values inside one pair of braces, all hlines/vlines will be styled.
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines = {1pt,solid},
+ vlines = {red7,dashed},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+Another pair of braces before will select segments in all hlines/vlines.
+
+\begin{demohigh}
+\begin{tblr}{
+ vlines = {1,3,5}{dashed},
+ vlines = {2,4,6}{solid},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+The above example can be simplified with \verb!odd! and \verb!even! values.
+
+\begin{demohigh}
+\begin{tblr}{
+ vlines = {odd}{dashed},
+ vlines = {even}{solid},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+Another pair of braces before will draw more hlines/vlines (in which \verb!-! stands for all line segments).
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines = {1}{-}{dashed},
+ hlines = {2}{-}{solid},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlines, respectively.
+
+\begin{demohigh}
+\begin{tblr}{
+ hline{1,7} = {1pt,solid},
+ hline{3-5} = {blue7,dashed},
+ vline{1,5} = {3-4}{dotted},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
 \chapter{Source Code}
 
 %\CodeHigh{lite}
