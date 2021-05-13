@@ -16,6 +16,7 @@
   {Typeset tabulars and arrays with LaTeX3}
 
 %\RequirePackage{xparse}
+\AtBeginDocument{\@ifpackageloaded{xcolor}{\RequirePackage{ninecolors}}{}}
 
 \ExplSyntaxOn
 
