@@ -11,13 +11,13 @@
 \hypersetup{
   colorlinks=true,
   urlcolor=blue3,
+  linkcolor=red3,
 }
 \renewcommand*{\thefootnote}{*}
 
 \newcommand*{\myversion}{2021G}
-\newcommand*{\mydate}{Version \myversion\myrepo\ (\the\year-\mylpad\month-\mylpad\day)}
-\newcommand*{\myrepo}{{\renewcommand*{\thefootnote}{}%
-  \footnote{GitHub repository: \url{https://github.com/lvjr/tabularray}.}}}
+\newcommand*{\mydate}{Version \myversion\ (\the\year-\mylpad\month-\mylpad\day)\\\myrepo}
+\newcommand*{\myrepo}{\url{https://github.com/lvjr/tabularray}}
 \newcommand*{\mylpad}[1]{\ifnum#1<10 0\the#1\else\the#1\fi}
 
 \colorlet{highback}{\ifcase\month\or
@@ -590,9 +590,12 @@ Option \verb!cell{i}{j}! is for setting some cells.
 
 \begin{demohigh}
 \begin{tblr}{
- hlines,
- cell{odd}{1,4} = {red7},
- cell{even}{1,4} = {purple7},
+ hlines = {white},
+ vlines = {white},
+ cell{1,6}{odd} = {teal7},
+ cell{1,6}{even} = {green7},
+ cell{2,4}{1,4} = {red7},
+ cell{3,5}{1,4} = {purple7},
  cell{2}{2} = {r=4,c=2}{c,azure7},
 }
  Alpha   & Beta  & Gamma   & Delta   \\
@@ -618,9 +621,6 @@ Options \verb!rows! and \verb!columns! are for setting all rows and columns, res
  Alpha   & Beta  & Gamma   & Delta   \\
  Epsilon & Zeta  & Eta     & Theta   \\
  Iota    & Kappa & Lambda  & Mu      \\
- Nu      & Xi    & Omicron & Pi      \\
- Rho     & Sigma & Tau     & Upsilon \\
- Phi     & Chi   & Psi     & Omega   \\
 \end{tblr}
 \end{demohigh}
 
@@ -754,6 +754,6 @@ The following two examples show this difference:
 \chapter{Source Code}
 
 %\CodeHigh{lite}
-%\dochighinput[language=latex/latex3]{tabularray.sty}
+\dochighinput[language=latex/latex3]{tabularray.sty}
 
 \end{document}
