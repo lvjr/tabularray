@@ -459,11 +459,11 @@ The following example demonstrates how to define similar rules as in \verb!bookt
 \NewTableCommand\bottomrule{\hline[0.08em]}
 \begin{tblr}{llll}
 \toprule
- Alpha   & Beta  & Gamma   & Delta   \\
+ Alpha   & Beta  & Gamma   & Delta \\
 \midrule
- Epsilon & Zeta  & Eta     & Theta   \\
- Iota    & Kappa & Lambda  & Mu      \\
- Nu      & Xi    & Omicron & Pi      \\
+ Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    \\
+ Nu      & Xi    & Omicron & Pi    \\
 \bottomrule
 \end{tblr}
 \end{demohigh}
@@ -639,6 +639,56 @@ Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns
  Nu      & Xi    & Omicron & Pi      \\
  Rho     & Sigma & Tau     & Upsilon \\
  Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+\section{Space in Tables}
+
+Options \verb!rowsep! and \verb!colsep! are for setting padding for rows and columns, respectively.
+
+\begin{demohigh}
+\SetTblrDefault{rowsep=2pt,colsep=2pt}
+\begin{tblr}{hlines,vlines}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+Also \verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! options are available:
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines,
+ vlines,
+ rows = {abovesep=1pt,belowsep=5pt},
+ columns = {leftsep=1pt,rightsep=5pt},
+}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+And \verb!\\[dimen]! can be replaced by \verb!belowsep+! option:
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines, row{2} = {belowsep+=5pt},
+}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+Also \verb!\arraystretch! parameter can be replaced by \verb!stretch! option:
+
+\begin{demohigh}
+\begin{tblr}{hlines,stretch=1.5}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
 \end{tblr}
 \end{demohigh}
 
