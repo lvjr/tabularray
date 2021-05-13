@@ -582,6 +582,44 @@ Option \verb!cell{i}{j}! is for setting some cells.
 \end{tblr}
 \end{demohigh}
 
+\section{Rows and Columns}
+
+Options \verb!rows! and \verb!columns! are for setting all rows and columns, respectively.
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines,
+ vlines,
+ rows = {7mm},
+ columns = {15mm,c}
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns, respectively.
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines = {1pt,white},
+ row{odd} = {blue7},
+ row{even} = {azure7},
+ column{1} = {purple7,c},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
 \chapter{Source Code}
 
 %\CodeHigh{lite}
