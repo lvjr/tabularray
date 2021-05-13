@@ -692,6 +692,27 @@ Also \verb!\arraystretch! parameter can be replaced by \verb!stretch! option:
 \end{tblr}
 \end{demohigh}
 
+\section{Counters in Tables}
+
+Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be used in cell text:
+
+\begin{demohigh}
+\begin{tblr}{hlines}
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
+ Row=\arabic{rowcount},Col=\arabic{colcount} &
+ Row=\arabic{rowcount},Col=\arabic{colcount} &
+ Row=\arabic{rowcount},Col=\arabic{colcount} &
+ Row=\arabic{rowcount},Col=\arabic{colcount} \\
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
+\end{tblr}
+\end{demohigh}
+
 \section{Experimental Interface}
 
 Everything described in this section is in \underline{\textcolor{red3}{\textbf{experimental}}} status.
