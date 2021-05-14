@@ -1,0 +1,184 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+TEST 1: multicolumn: compute column widths from span widths
+============================================================
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+============================================================
+============================================================
+TEST 2: multicolumn: compute span widths from column widths
+============================================================
+Overfull \hbox (12.4pt too wide) detected at line 58
+[] 
+\hbox(8.39996+15.60004)x85.73355
+.\vbox(8.39996+15.60004)x98.13354
+..\hbox(8.39996+0.0)x98.13354, glue set 8.13336fil
+...\hbox(0.0+0.0)x0.0
+...\hbox(8.39996+0.0)x0.0
+....\rule(8.39996+*)x0.0
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 3
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 3
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 3
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 3
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 3
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 3
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 3
+...\glue(\rightskip) 0.0 plus 1.0fil
+..\penalty 300
+..\glue(\baselineskip) 5.55556
+..\hbox(6.44444+3.60004)x98.13354, glue set 44.06676fil
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 3
+...\hbox(0.0+3.60004)x0.0
+....\rule(*+3.60004)x0.0
+...\penalty 10000
+...\glue(\parfillskip) 0.0 plus 1.0fil
+...\glue(\rightskip) 0.0 plus 1.0fil
+.\glue 0.0 plus 1.0fil
+Overfull \hbox (12.4pt too wide) detected at line 58
+[] 
+\hbox(8.39996+15.60004)x118.1336
+.\vbox(8.39996+15.60004)x130.5336
+..\hbox(8.39996+0.0)x130.5336, glue set 0.53334fil
+...\hbox(0.0+0.0)x0.0
+...\hbox(8.39996+0.0)x0.0
+....\rule(8.39996+*)x0.0
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue(\rightskip) 0.0 plus 1.0fil
+..\penalty 300
+..\glue(\baselineskip) 5.55556
+..\hbox(6.44444+3.60004)x130.5336, glue set 26.9334fil
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 2
+...\OT1/cmr/m/n/10 4
+...\hbox(0.0+3.60004)x0.0
+....\rule(*+3.60004)x0.0
+...\penalty 10000
+...\glue(\parfillskip) 0.0 plus 1.0fil
+...\glue(\rightskip) 0.0 plus 1.0fil
+.\glue 0.0 plus 1.0fil
+Overfull \hbox (12.4pt too wide) detected at line 58
+[] 
+\hbox(8.39996+27.60004)x75.73352
+.\vbox(8.39996+27.60004)x88.13351
+..\hbox(8.39996+0.0)x88.13351, glue set 11.46669fil
+...\hbox(0.0+0.0)x0.0
+...\hbox(8.39996+0.0)x0.0
+....\rule(8.39996+*)x0.0
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue(\rightskip) 0.0 plus 1.0fil
+..\penalty 150
+..\glue(\baselineskip) 5.55556
+..\hbox(6.44444+0.0)x88.13351, glue set 11.46669fil
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue(\rightskip) 0.0 plus 1.0fil
+..\penalty 150
+..\glue(\baselineskip) 5.55556
+..\hbox(6.44444+3.60004)x88.13351, glue set 25.73338fil
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\glue 3.33333 plus 1.66666 minus 1.11111
+...\OT1/cmr/m/n/10 3
+...\OT1/cmr/m/n/10 4
+...\hbox(0.0+3.60004)x0.0
+....\rule(*+3.60004)x0.0
+...\penalty 10000
+...\glue(\parfillskip) 0.0 plus 1.0fil
+...\glue(\rightskip) 0.0 plus 1.0fil
+.\glue 0.0 plus 1.0fil
+============================================================
+[1
+] (color-003.aux)

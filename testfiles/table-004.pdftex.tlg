@@ -1,0 +1,24 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+TEST 1: table nesting: same rule width
+============================================================
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+Package tabularray Warning: Table width is too small,need 0.0pt more!
+Package tabularray Warning: Table width is too small,need 0.0pt more!
+Package tabularray Warning: Table width is too small,need 0.0pt more!
+Package tabularray Warning: Table width is too small,need 0.0pt more!
+============================================================
+============================================================
+TEST 2: table nesting: different rule widthes
+============================================================
+Package tabularray Warning: Table width is too small,need 0.0pt more!
+Package tabularray Warning: Table width is too small,need 0.0pt more!
+Package tabularray Warning: Table width is too small,need 0.0pt more!
+Package tabularray Warning: Table width is too small,need 0.0pt more!
+============================================================
+[1
+] (table-004.aux)

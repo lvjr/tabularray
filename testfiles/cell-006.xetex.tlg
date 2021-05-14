@@ -1,0 +1,145 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+TEST 1: multicolumn: compute column widths from span widths
+============================================================
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+============================================================
+============================================================
+TEST 2: multicolumn: compute span widths from column widths
+============================================================
+Overfull \hbox (12.4pt too wide) detected at line 53
+[] 
+\hbox(8.39996+15.60004)x85.73999
+.\vbox(8.39996+15.60004)x98.13998
+..\hbox(8.39996+0.21999)x98.13998, glue set 8.15997fil
+...\hbox(0.0+0.0)x0.0
+...\hbox(8.39996+0.0)x0.0
+....\rule(8.39996+*)x0.0
+...\TU/lmr/m/n/10 23
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 23
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 23
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 23
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 23
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 23
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 23
+...\glue(\rightskip) 0.0 plus 1.0fil
+..\penalty 300
+..\glue(\baselineskip) 5.12001
+..\hbox(6.66+3.60004)x98.13998, glue set 44.06999fil
+...\TU/lmr/m/n/10 23
+...\hbox(0.0+3.60004)x0.0
+....\rule(*+3.60004)x0.0
+...\penalty 10000
+...\glue(\parfillskip) 0.0 plus 1.0fil
+...\glue(\rightskip) 0.0 plus 1.0fil
+.\glue 0.0 plus 1.0fil
+Overfull \hbox (12.4pt too wide) detected at line 53
+[] 
+\hbox(8.39996+15.60004)x118.13998
+.\vbox(8.39996+15.60004)x130.53998
+..\hbox(8.39996+0.0)x130.53998, glue set 0.56996fil
+...\hbox(0.0+0.0)x0.0
+...\hbox(8.39996+0.0)x0.0
+....\rule(8.39996+*)x0.0
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue(\rightskip) 0.0 plus 1.0fil
+..\penalty 300
+..\glue(\baselineskip) 5.23
+..\hbox(6.77+3.60004)x130.53998, glue set 26.94499fil
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 24
+...\hbox(0.0+3.60004)x0.0
+....\rule(*+3.60004)x0.0
+...\penalty 10000
+...\glue(\parfillskip) 0.0 plus 1.0fil
+...\glue(\rightskip) 0.0 plus 1.0fil
+.\glue 0.0 plus 1.0fil
+Overfull \hbox (12.4pt too wide) detected at line 53
+[] 
+\hbox(8.39996+27.60004)x75.73999
+.\vbox(8.39996+27.60004)x88.13998
+..\hbox(8.39996+0.21999)x88.13998, glue set 11.48997fil
+...\hbox(0.0+0.0)x0.0
+...\hbox(8.39996+0.0)x0.0
+....\rule(8.39996+*)x0.0
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue(\rightskip) 0.0 plus 1.0fil
+..\penalty 150
+..\glue(\baselineskip) 5.01001
+..\hbox(6.77+0.21999)x88.13998, glue set 11.48997fil
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue(\rightskip) 0.0 plus 1.0fil
+..\penalty 150
+..\glue(\baselineskip) 5.01001
+..\hbox(6.77+3.60004)x88.13998, glue set 25.73999fil
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\glue 3.33 plus 1.665 minus 1.11
+...\TU/lmr/m/n/10 34
+...\hbox(0.0+3.60004)x0.0
+....\rule(*+3.60004)x0.0
+...\penalty 10000
+...\glue(\parfillskip) 0.0 plus 1.0fil
+...\glue(\rightskip) 0.0 plus 1.0fil
+.\glue 0.0 plus 1.0fil
+============================================================
+[1
+] (cell-006.aux)
