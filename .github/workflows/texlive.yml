@@ -6,8 +6,6 @@ on: [push]
 
 env:
   CTAN_URL: https://mirrors.rit.edu/CTAN
-  TL_PACKAGES: adobemapping amsfonts amsmath atbegshi cjk cjkutils cm ctablestack currfile dvipdfmx ec epstopdf-pkg everysel etex etoolbox euenc fancyhdr fandol filehook fontspec graphics graphics-cfg graphics-def iftex l3build l3experimental l3kernel l3packages latex-bin lm lm-math ltxcmds lualatex-math lualibs luaotfload luatex luatex85 luatexbase luatexja metafont mfware ms oberdiek platex-tools tex tex-ini-files tools trimspaces ucharcat ulem unicode-data uplatex varwidth xcolor xetex xkeyval xunicode
-  TL_EXTRA_PACKAGES: amscls atveryend auxhook beamer bibunits bigintcalc bitset booktabs caption carlisle cjkpunct cleveref context enumitem environ eso-pic etexcmds everyhook fontaxes footmisc geometry gettitlestring hycolor hyperref infwarerr intcalc kastrup koma-script kvdefinekeys kvoptions kvsetkeys letltxmacro multirow mweights natbib newtx ninecolors notoccite ntheorem pdfescape pdflscape pdfpages pdftexcmds pgf pkuthss psnfss refcount rerunfilecheck sansmathaccent setspace soul svn-prov tex-gyre tex-gyre-math thuthesis titlesec tocloft translator txfonts unicode-math uniquecounter url xecjk xits xstring zhmetrics zhmetrics-uptex zhnumber
 
 jobs:
   build-ubuntu:
@@ -19,8 +17,9 @@ jobs:
         export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
         wget ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl-unx.tar.gz
         tar -xzf install-tl-unx.tar.gz
-        cd install-tl-20* && ./install-tl --profile ../.github/workflows/texlive.profile
-        tlmgr install ${{ env.TL_PACKAGES }} ${{ env.TL_EXTRA_PACKAGES }}
+        cd install-tl-20*
+        ./install-tl --profile ../.github/workflows/texlive.profile
+        echo $(cat ../.github/workflows/texlive.package) | xargs tlmgr install
         tlmgr update --self --all --no-auto-install --repository=${{ env.CTAN_URL }}/systems/texlive/tlnet/
     - name: Install pdftoppm
       run:
