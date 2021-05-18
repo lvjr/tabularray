@@ -2030,13 +2030,16 @@
 \clist_new:N \g__tblr_table_known_keys_clist
 \clist_gset:Nn \g__tblr_table_known_keys_clist
   {
-    colspec, rowspec, width, hspan, stretch,
+    long, colspec, rowspec, width, hspan, stretch,
     column, row, cell, vline, hline, columns, rows, cells, vlines, hlines,
     leftsep, rightsep, colsep, abovesep, belowsep, rowsep,
   }
 
+\bool_new:N \l__tblr_long_table_bool
+
 \keys_define:nn { tblr }
   {
+    long .bool_set:N = \l__tblr_long_table_bool,
     colspec .code:n = \__tblr_parse_colrow_spec:nn { column } {#1},
     rowspec .code:n = \__tblr_parse_colrow_spec:nn { row } {#1},
     width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
@@ -3179,20 +3182,95 @@
 
 \box_new:N \l__tblr_table_box
 
+%% #1: table alignment
 \cs_new_protected:Npn \__tblr_build_whole:n #1
+  {
+    \bool_if:NTF \l__tblr_long_table_bool
+      { \__tblr_build_long_table:n {#1} }
+      { \__tblr_build_short_table:n {#1} }
+  }
+
+\dim_new:N \l__tblr_remain_height_dim
+\tl_new:N \l__tblr_long_from_tl
+
+\cs_new_protected:Npn \__tblr_build_long_table:n #1
+  {
+    %\dim_log:N \pagegoal
+    %\dim_log:N \pagetotal
+    \dim_set:Nn \l__tblr_remain_height_dim { \pagegoal - \pagetotal }
+    \tl_set:Nn \l__tblr_long_from_tl {1}
+    \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
+      {
+        \dim_set:Nn \l_tmpa_dim
+          {
+            \__tblr_prop_item:ne { hline } { [\l__tblr_i_tl] / @hline-height }
+            +
+            \__tblr_prop_item:ne { row } { [\l__tblr_i_tl] / abovesep }
+            +
+            \__tblr_prop_item:ne { row } { [\l__tblr_i_tl] / @row-height }
+            +
+            \__tblr_prop_item:ne { row } { [\l__tblr_i_tl] / belowsep }
+          }
+        \dim_compare:nNnTF
+          { \l_tmpa_dim } > { \l__tblr_remain_height_dim }
+          {
+            \tl_log:N \l__tblr_i_tl
+            \__tblr_build_page_table:nnx {#1}
+              { \l__tblr_long_from_tl } { \int_eval:n { \l__tblr_i_tl - 1 } }
+            \newpage
+            \hbox{}\kern-\topskip\nobreak
+            \leavevmode
+            %\dim_log:N \pagegoal
+            %\dim_log:N \pagetotal
+            \dim_set:Nn \l__tblr_remain_height_dim
+              { \pagegoal - \pagetotal - \l_tmpa_dim }
+            \tl_set_eq:NN \l__tblr_long_from_tl \l__tblr_i_tl
+          }
+          {
+            \dim_add:Nn \l__tblr_remain_height_dim { -\l_tmpa_dim }
+          }
+      }
+    \__tblr_build_page_table:nnn {#1} { \l__tblr_long_from_tl } { \c@rowcount }
+  }
+
+\cs_new_protected:Npn \__tblr_build_page_table:nnn #1 #2 #3
+  {
+    \__tblr_build_one_table:nn {#2} {#3}
+    \__tblr_halign_whole:Nn \l__tblr_table_box #1
+  }
+\cs_generate_variant:Nn \__tblr_build_page_table:nnn { nnx }
+
+\cs_new_protected:Npn \__tblr_halign_whole:Nn #1 #2
+  {
+    \noindent
+    \hbox_to_wd:nn { \linewidth }
+      {
+        \tl_if_eq:nnF {#2} {l} { \hfil }
+        \box_use:N #1
+        \tl_if_eq:nnF {#2} {r} { \hfil }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_build_short_table:n #1
+  {
+    \__tblr_build_one_table:nn {1} {\c@rowcount}
+    \__tblr_valign_whole:Nn \l__tblr_table_box #1
+  }
+
+%% #1: row from; #2: row to
+\cs_new_protected:Npn \__tblr_build_one_table:nn #1 #2
   {
     \vbox_set:Nn \l__tblr_table_box
       {
-        \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
+        \int_step_variable:nnNn {#1} {#2} \l__tblr_i_tl
           {
             \hbox:n { \__tblr_build_hline:V \l__tblr_i_tl }
             \hrule height ~ 0pt % remove lineskip between hlines and rows
             \hbox:n { \__tblr_build_row:N \l__tblr_i_tl }
             \hrule height ~ 0pt
           }
-        \hbox:n { \__tblr_build_hline:n { \int_eval:n {\c@rowcount + 1} } }
+        \hbox:n { \__tblr_build_hline:n { \int_eval:n {#2 + 1} } }
       }
-    \__tblr_valign_whole:Nn \l__tblr_table_box #1
   }
 
 \cs_new_protected:Npn \__tblr_valign_whole:Nn #1 #2
