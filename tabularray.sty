@@ -2772,14 +2772,14 @@
 \cs_new_protected:Npn \__tblr_compute_extendable_column_width:
   {
     \__tblr_collect_extendable_column_width:
-    \dim_compare:nTF { \l__column_target_dim  >=  0pt }
-      {
-        \prop_if_empty:NF \l__column_coefficient_prop
-          { \__tblr_adjust_extendable_column_width: }
-      }
+    \dim_compare:nNnTF { \l__column_target_dim } < { 0pt }
       {
         \msg_warning:nnx { tabularray } { table-width-too-small }
           { \dim_abs:n { \l__column_target_dim } }
+      }
+      {
+        \prop_if_empty:NF \l__column_coefficient_prop
+          { \__tblr_adjust_extendable_column_width: }
       }
   }
 
