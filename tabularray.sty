@@ -7,7 +7,7 @@
 %%% ----------------------------------------------------------------------------
 
 %%% --------------------------------------------------------
-%%  \section{Scratch Variables and Data Structures}
+%%  \section{Scratch Variables and Function Variants}
 %%% --------------------------------------------------------
 
 \NeedsTeXFormat{LaTeX2e}
@@ -78,6 +78,10 @@
 \box_new:N \l__tblr_b_box
 \box_new:N \l__tblr_c_box % for cell box
 \box_new:N \l__tblr_d_box
+
+%%% --------------------------------------------------------
+%%  \section{Data Structures Based on Property Lists}
+%%% --------------------------------------------------------
 
 \int_new:N \g_tblr_level_int % store table nesting level
 
@@ -176,6 +180,10 @@
 \newcounter{colnum}
 \newcounter{rowcount}
 \newcounter{colcount}
+
+%%% --------------------------------------------------------
+%%  \section{Data Structures Based on Integer Arrays}
+%%% --------------------------------------------------------
 
 \int_new:N \g__tblr_array_int
 
