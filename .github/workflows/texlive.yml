@@ -21,13 +21,16 @@ jobs:
         ./install-tl --profile ../.github/workflows/texlive.profile
         echo $(cat ${{github.workspace}}/.github/workflows/texlive.package) | xargs tlmgr install
         tlmgr update --self --all --no-auto-install --repository=${{env.CTAN_URL}}/systems/texlive/tlnet/
-    - name: Install pdftoppm
-      run:
-        sudo apt-get install poppler-utils
-    - name: Test tabularray
+    - name: Test tabularray with l3build
       run: |
         export PATH=${{github.workspace}}/tmp/texlive/bin/x86_64-linux:$PATH
         l3build check
+    - name: Install pdftoppm
+      run:
+        sudo apt-get install poppler-utils
+    - name: Test tabularray with ppmcheck
+      run: |
+        export PATH=${{github.workspace}}/tmp/texlive/bin/x86_64-linux:$PATH
         texlua ppmcheck.lua
   build-windows:
     runs-on: windows-latest
@@ -42,12 +45,15 @@ jobs:
         .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive.profile
         ${{github.workspace}}/.github/workflows/texlive.bat
         tlmgr update --self --all --no-auto-install --repository=${{env.CTAN_URL}}/systems/texlive/tlnet/
+    - name: Test tabularray with l3build
+      run: |
+        ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\win32;" + ${env:PATH}
+        l3build check
     - name: Install pdftoppm
       run: |
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\win32;" + ${env:PATH}
         tlmgr install wintools.win32
-    - name: Test tabularray
+    - name: Test tabularray with ppmcheck
       run: |
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\win32;" + ${env:PATH}
-        l3build check
         texlua ppmcheck.lua
