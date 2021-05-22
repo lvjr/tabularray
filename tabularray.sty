@@ -226,7 +226,7 @@
 \cs_new_protected:Npn \__tblr_data_gput_if_larger_row:nnn #1 #2 #3
   {
     \__tblr_array_gput_if_larger:cnn
-      { g__tblr_row_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_row_ \int_use:N \g_tblr_level_int _intarray }
       { \__tblr_data_row_key_to_int:nn {#1} {#2} }
       { #3 }
   }
@@ -236,7 +236,7 @@
   {
     \int_compare:nNnT
       { \__tblr_data_dim_to_int:n {#3} } > { \intarray_item:Nn #1 {#2} }
-      { \intarray_gput:Nnn #1 {#2} {#3} }
+      { \intarray_gset:Nnn #1 {#2} {#3} }
   }
 \cs_generate_variant:Nn \__tblr_array_gput_if_larger:Nnn { cnn }
 
@@ -3872,8 +3872,8 @@
       }
     \dim_set:Nn #5
       {
-        \__tblr_prop_item:ne { row }
-          { [\int_eval:n {#1 + \l__tblr_cell_rowspan_tl - 1}] / belowsep }
+        \__tblr_data_item_row:en
+          { \int_eval:n { #1 + \l__tblr_cell_rowspan_tl - 1 } } { belowsep }
       }
     %\tl_log:x { cell[#1][#2] ~:~ \dim_use:N #3, \dim_use:N #4, \dim_use:N #5 }
   }
