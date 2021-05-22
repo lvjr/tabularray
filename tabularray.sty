@@ -293,7 +293,7 @@
           }
         \cs_set_protected:Npn \__tblr_data_gadd_dimen_value_row:nnn #1 #2 #3
           {
-            \__tblr_data_gadd_dimen_value:nnn { row } { [#1] / #2 } {#3}
+            \__tblr_prop_gadd_dimen_value:nnn { row } { [#1] / #2 } {#3}
           }
       }
   }
@@ -2653,7 +2653,7 @@
                 \tl_set:Nx \l__tblr_u_tl { \dim_eval:n { #4 - #6 } }
                 \tl_set:Nx \l__tblr_v_tl { \dim_use:N #6 }
                 %% Update the foot size of the last span row here
-                \__tblr_data_gput_if_larger:ene
+                \__tblr_data_gput_if_larger_row:ene
                   { \int_eval:n { #1 + \l__tblr_r_tl - 1 } }
                   { @row-foot }
                   { \dim_use:N #6 }
@@ -3464,7 +3464,7 @@
               -
               \__tblr_data_item_row:en { \int_use:N \c@rowcount } { @row-upper }
               +
-              \__tblr_data_item_row:ne { \int_use:N \c@rowcount } { @row-lower }
+              \__tblr_data_item_row:en { \int_use:N \c@rowcount } { @row-lower }
             ) / 2
             +
             \__tblr_data_item_row:nn {1} { belowsep }
