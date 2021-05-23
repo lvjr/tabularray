@@ -20,6 +20,25 @@
 
 \ExplSyntaxOn
 
+%% Backport \tl_if_eq:NnTF for old texlive 2020
+\cs_if_exist:NF \tl_if_eq:NnTF
+  {
+    \tl_new:N \l__tblr_backport_b_tl
+    \prg_new_protected_conditional:Npnn \tl_if_eq:Nn #1 #2 { T, F, TF }
+      {
+        \group_begin:
+          \tl_set:Nn \l__tblr_backport_b_tl {#2}
+          \exp_after:wN
+        \group_end:
+        \if_meaning:w #1 \l__tblr_backport_b_tl
+          \prg_return_true:
+        \else:
+          \prg_return_false:
+        \fi:
+      }
+    \prg_generate_conditional_variant:Nnn \tl_if_eq:Nn { c } { TF, T, F }
+  }
+
 \cs_generate_variant:Nn \msg_error:nnnn { nnVn }
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nxn, Nxx, NxV }
