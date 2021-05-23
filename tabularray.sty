@@ -243,6 +243,16 @@
     #1 sp
   }
 
+\cs_new:Npn \__tblr_data_dec_to_int:n #1
+  {
+    \dim_to_decimal_in_sp:n {#1 pt}
+  }
+
+\cs_new:Npn \__tblr_data_int_to_dec:n #1
+  {
+    \dim_to_decimal:n {#1 sp}
+  }
+
 \int_new:N \g__tblr_data_row_key_count_int
 
 \__tblr_data_new_key:nnn { row } { abovesep }    { dim }
