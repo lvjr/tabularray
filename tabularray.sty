@@ -192,7 +192,7 @@
   {
     \int_gincr:N \g__tblr_array_int
     \intarray_new:cn { g__tblr_row_ \int_use:N \g__tblr_array_int _intarray }
-      { 10 * \c@rowcount }
+      { \g__tblr_data_row_key_count_int * \c@rowcount }
     \cs_set_eq:cc { g__tblr_row_ \int_use:N \g_tblr_level_int _intarray }
       { g__tblr_row_ \int_use:N \g__tblr_array_int _intarray }
     %\intarray_log:c { g__tblr_row_ \int_use:N \g_tblr_level_int _intarray }
@@ -202,16 +202,60 @@
 \cs_new_protected:Npn \__tblr_data_new_key:nnn #1 #2 #3
   {
     \int_gincr:c { g__tblr_data_#1_key_count_int }
+    \tl_const:ce
+      {
+        g__tblr_data_#1_key_name_
+          \int_use:c { g__tblr_data_#1_key_count_int } _tl
+      }
+      { #2 }
     \tl_const:ce { g__tblr_data_#1_key_number_#2_tl }
       { \int_use:c { g__tblr_data_#1_key_count_int } }
     \tl_const:cn { g__tblr_data_#1_key_type_#2_tl } {#3}
   }
+
+\int_new:N \g__tblr_data_row_key_count_int
+
+\__tblr_data_new_key:nnn { row } { height }      { dim }
+\__tblr_data_new_key:nnn { row } { coefficient } { dec }
+\__tblr_data_new_key:nnn { row } { abovesep }    { dim }
+\__tblr_data_new_key:nnn { row } { belowsep }    { dim }
+\__tblr_data_new_key:nnn { row } { @row-height } { dim }
+\__tblr_data_new_key:nnn { row } { @row-head }   { dim }
+\__tblr_data_new_key:nnn { row } { @row-foot }   { dim }
+\__tblr_data_new_key:nnn { row } { @row-upper }  { dim }
+\__tblr_data_new_key:nnn { row } { @row-lower }  { dim }
 
 %% #1: data name; #2: data index; #3: key name
 \cs_new:Npn \__tblr_data_key_to_int:nnn #1 #2 #3
   {
     ( #2 - 1 ) * \int_use:c { g__tblr_data_#1_key_count_int }
       + \tl_use:c { g__tblr_data_#1_key_number_#3_tl }
+  }
+
+\int_new:N \l__tblr_key_count_int
+\int_new:N \l__tblr_key_quotient_int
+\int_new:N \l__tblr_key_remainder_int
+
+%% #1: data name; #2: array position;
+%% #3: returning tl with index; #4: returning tl with key name
+\cs_new:Npn \__tblr_data_int_to_key:nnNN #1 #2 #3 #4
+  {
+    \int_set_eq:Nc \l__tblr_key_count_int { g__tblr_data_#1_key_count_int }
+    \int_set:Nn \l__tblr_key_quotient_int
+      {
+        \int_div_truncate:nn
+          { #2 + \l__tblr_key_count_int - 1 } { \l__tblr_key_count_int }
+      }
+    \int_set:Nn \l__tblr_key_remainder_int
+      {
+        #2 + \l__tblr_key_count_int
+          - \l__tblr_key_quotient_int * \l__tblr_key_count_int
+      }
+    \int_compare:nNnT { \l__tblr_key_remainder_int } = { 0 }
+      { \int_set_eq:NN \l__tblr_key_remainder_int \l__tblr_key_count_int }
+    \tl_set:Nx #3 { \int_use:N \l__tblr_key_quotient_int }
+    \tl_set_eq:Nc #4
+      { g__tblr_data_#1_key_name_ \int_use:N \l__tblr_key_remainder_int _tl }
   }
 
 %% #1: data name; #2: key name; #3: value
@@ -231,16 +275,19 @@
     \cs_end:
     {#3}
   }
-\cs_generate_variant:Nn \__tblr_data_int_to_value:nnn { nne }
+\cs_generate_variant:Nn \__tblr_data_int_to_value:nnn { nne, nVe }
 
 \cs_new:Npn \__tblr_data_dim_to_int:n #1
   {
     \dim_to_decimal_in_sp:n {#1}
   }
 
+%% Return a dimension in pt so that it's easier to understand in tracing messages
 \cs_new:Npn \__tblr_data_int_to_dim:n #1
   {
-    #1 sp
+    %#1 sp
+    %\dim_eval:n { #1 sp }
+    \dim_to_decimal:n { #1 sp } pt
   }
 
 \cs_new:Npn \__tblr_data_dec_to_int:n #1
@@ -252,18 +299,6 @@
   {
     \dim_to_decimal:n {#1 sp}
   }
-
-\int_new:N \g__tblr_data_row_key_count_int
-
-\__tblr_data_new_key:nnn { row } { height }      { dim }
-\__tblr_data_new_key:nnn { row } { coefficient } { dec }
-\__tblr_data_new_key:nnn { row } { abovesep }    { dim }
-\__tblr_data_new_key:nnn { row } { belowsep }    { dim }
-\__tblr_data_new_key:nnn { row } { @row-height } { dim }
-\__tblr_data_new_key:nnn { row } { @row-head }   { dim }
-\__tblr_data_new_key:nnn { row } { @row-foot }   { dim }
-\__tblr_data_new_key:nnn { row } { @row-upper }  { dim }
-\__tblr_data_new_key:nnn { row } { @row-lower }  { dim }
 
 %% #1: row number; #2: key; #3: value
 \cs_new_protected:Npn \__tblr_data_gput_row:nnn #1 #2 #3
@@ -286,9 +321,28 @@
   }
 \cs_generate_variant:Nn \__tblr_data_item_row:nn { en }
 
+\tl_new:N \l__tblr_data_key_tl
+\tl_new:N \l__tblr_data_index_tl
+
 \cs_new_protected:Npn \__tblr_data_log:n #1
   {
-    \intarray_log:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+    %\intarray_log:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+    \tl_set:Nx \l_tmpa_tl { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+    \int_step_inline:nn
+      { \intarray_count:c { \l_tmpa_tl } }
+      {
+        \__tblr_data_int_to_key:nnNN {#1} {##1}
+          \l__tblr_data_index_tl \l__tblr_data_key_tl
+        \tl_log:x
+          {
+            { #1 [\l__tblr_data_index_tl] / \l__tblr_data_key_tl }
+            \space = \space
+            {
+              \__tblr_data_int_to_value:nVe {#1} \l__tblr_data_key_tl
+                { \intarray_item:cn { \l_tmpa_tl } {##1} }
+            }
+          }
+      }
     \__tblr_prop_log:n {#1}
   }
 
