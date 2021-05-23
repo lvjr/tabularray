@@ -20,15 +20,6 @@
 
 \ExplSyntaxOn
 
-\cs_if_exist:NF \vbox_set_top_to_ht:Nnn
-  {
-    \cs_new_protected:Npn \vbox_set_top_to_ht:Nnn #1 #2 #3
-      {
-        \tex_setbox:D #1 \tex_vtop:D to \dim_eval:n { #2 }
-          { \color_group_begin: #3 \par \color_group_end: }
-      }
- }
-
 \cs_generate_variant:Nn \msg_error:nnnn { nnVn }
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nxn, Nxx, NxV }
