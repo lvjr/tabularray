@@ -255,6 +255,8 @@
 
 \int_new:N \g__tblr_data_row_key_count_int
 
+\__tblr_data_new_key:nnn { row } { height }      { dim }
+\__tblr_data_new_key:nnn { row } { coefficient } { dec }
 \__tblr_data_new_key:nnn { row } { abovesep }    { dim }
 \__tblr_data_new_key:nnn { row } { belowsep }    { dim }
 \__tblr_data_new_key:nnn { row } { @row-height } { dim }
@@ -1433,10 +1435,10 @@
                   { \int_use:N \c@rownum } { valign } {f},
     bg .code:n = \__tblr_set_key_for_every_row_cell:nnn
                   { \int_use:N \c@rownum } { background } {#1},
-    ht .code:n = \__tblr_prop_gput:nxx { row }
-                   { [\int_use:N \c@rownum] / height } { \dim_eval:n {#1} },
-    co .code:n = \__tblr_prop_gput:nxx { row }
-                   { [\int_use:N \c@rownum] / coefficient } {#1},
+    ht .code:n = \__tblr_data_gput_row:ene
+                   { \int_use:N \c@rownum } { height } { \dim_eval:n {#1} },
+    co .code:n = \__tblr_data_gput_row:ene
+                   { \int_use:N \c@rownum } { coefficient } {#1},
     abovesep .code:n = \__tblr_data_gput_row:ene
                    { \int_use:N \c@rownum } { abovesep } { \dim_eval:n {#1} },
     belowsep .code:n = \__tblr_data_gput_row:ene
@@ -1465,8 +1467,7 @@
   {
     \regex_match:NnTF \c__tblr_is_number_key_regex {#1}
       {
-        \__tblr_prop_gput:nxx { row }
-          { [\int_use:N \c@rownum] / coefficient } {#1}
+        \__tblr_data_gput_row:ene { \int_use:N \c@rownum } { coefficient } {#1}
       }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
@@ -1476,8 +1477,8 @@
           }
           {
           \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
-            \__tblr_prop_gput:nxx { row }
-              { [\int_use:N \c@rownum] / height } { \dim_eval:n { \l__tblr_v_tl } }
+            \__tblr_data_gput_row:ene { \int_use:N \c@rownum }
+              { height } { \dim_eval:n { \l__tblr_v_tl } }
           }
       }
   }
@@ -2498,7 +2499,7 @@
         \int_incr:N \c@rownum
         \int_zero:N \c@colnum
         \tl_set:Nx \l__tblr_h_tl
-           { \__tblr_prop_item:ne { row } { [\int_use:N \c@rownum] / height } }
+           { \__tblr_data_item_row:en { \int_use:N \c@rownum } { height } }
         \tl_if_empty:NF \l__tblr_h_tl
           {
             \__tblr_data_gput_row:enV
