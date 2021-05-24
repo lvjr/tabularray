@@ -361,7 +361,7 @@
 \cs_new_protected:Npn \__tblr_data_gput_if_larger:nnnn #1 #2 #3 #4
   {
     \__tblr_array_gput_if_larger:cnn
-      { g__tblr_row_ \int_use:N \g_tblr_level_int _intarray }
+      { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
       { \__tblr_data_key_to_int:nnn {#1} {#2} {#3} }
       { \__tblr_data_value_to_int:nnn {#1} {#3} {#4} }
   }
