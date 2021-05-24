@@ -39,12 +39,19 @@
     \prg_generate_conditional_variant:Nnn \tl_if_eq:Nn { c } { TF, T, F }
   }
 
+%% Compatible with texlive 2020
+\cs_if_exist:NF \seq_map_indexed_function:NN
+  {
+    \cs_set_eq:NN \seq_map_indexed_function:NN \seq_indexed_map_function:NN
+  }
+
 \cs_generate_variant:Nn \msg_error:nnnn { nnVn }
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nxn, Nxx, NxV }
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
 \cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
 \cs_generate_variant:Nn \tl_const:Nn { ce }
+\cs_generate_variant:Nn \tl_log:n { x }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
 \prg_generate_conditional_variant:Nnn \clist_if_in:Nn { Nx } { TF }
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
@@ -4209,4 +4216,3 @@
   }
 
 \ExplSyntaxOff
-
