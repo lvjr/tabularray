@@ -2207,6 +2207,8 @@
   {
     leftsep = 6pt,
     rightsep = 6pt,
+    width = -1pt, % column width unset
+    coefficient = 0, % column coefficient unset
     @col-width = 0pt,
   }
 
@@ -2214,6 +2216,7 @@
   {
     halign = l,
     valign = t,
+    width = -1pt, % cell width unset
   }
 
 \prop_gset_from_keyval:Nn \g__tblr_default_tblr_hlines_prop
@@ -2641,7 +2644,7 @@
     \tl_set:Nx \l__tblr_c_tl { \__tblr_prop_item:ne {text} {[#1][#2]} }
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_prop_item:ne { cell } { [#1][#2] / width } }
-    \tl_if_empty:NT \l__tblr_w_tl
+    \dim_compare:nNnT { \l__tblr_w_tl } < { 0pt } % cell width unset
       {
         \__tblr_prop_if_in:nxF { cell } { [#1][#2] / colspan }
           {
@@ -2649,7 +2652,7 @@
               { \__tblr_data_item:nen { column } {#2} { width } }
           }
       }
-    \tl_if_empty:NT \l__tblr_w_tl
+    \dim_compare:nNnT { \l__tblr_w_tl } < { 0pt } % column width unset
       {
         \bool_if:NTF \l__tblr_math_mode_bool
           {
@@ -2945,9 +2948,9 @@
           { \__tblr_data_item:nen { column } { \l__tblr_j_tl } { coefficient } }
         \tl_set:Nx \l__tblr_c_tl
           { \__tblr_data_item:nen  { column } { \l__tblr_j_tl } { @col-width } }
-        \tl_if_empty:NTF \l__tblr_a_tl
+        \dim_compare:nNnTF { \l__tblr_a_tl } < { 0pt } % column width unset
           {
-            \tl_if_empty:NTF \l__tblr_b_tl
+            \dim_compare:nNnTF { \l__tblr_b_tl pt } = { 0pt }
               { \dim_sub:Nn \l__column_target_dim { \l__tblr_c_tl } }
               {
                 \prop_put:Nxx \l__column_coefficient_prop
