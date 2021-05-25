@@ -716,7 +716,7 @@ Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be u
 \section{Experimental Interface}
 
 Everything described in this section is in \underline{\textcolor{red3}{\textbf{experimental}}} status.
-Don’t use it in important documents, unless you have time
+Don’t use them in important documents, unless you have time
 to update them for the newer versions of \verb!tabularray! package in the future.
 
 By default \verb!tabularray! package will compute column widths from span widths.
@@ -742,6 +742,12 @@ The following two examples show this difference:
  111 & 23 Multi Columns Multi Columns 23 & \\
 \end{tblr}
 \end{demohigh}
+
+To trace internal data behind \verb!tblr! environment, you can use \verb!\SetTblrTracing! command.
+For example, \verb!\SetTblrTracing{all}! will turn on all tracings,
+and \verb!\SetTblrTracing{none}! will turn off all tracings.
+\verb!\SetTblrTracing{+row,+column}! will only tracing row and column data.
+All tracing messages will be written to the log files.
 
 \chapter{Source Code}
 
