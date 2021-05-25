@@ -97,6 +97,12 @@
 \box_new:N \l__tblr_c_box % for cell box
 \box_new:N \l__tblr_d_box
 
+%% Some counters for row and column numbering
+\newcounter{rownum}
+\newcounter{colnum}
+\newcounter{rowcount}
+\newcounter{colcount}
+
 %%% --------------------------------------------------------
 %%  \section{Data Structures Based on Property Lists}
 %%% --------------------------------------------------------
@@ -192,12 +198,6 @@
     \prop_gput:Nnx #1 { #2 } { \dim_eval:n { \prop_item:Nn #1 { #2 } + #3 } }
   }
 \cs_generate_variant:Nn \__tblr_gadd_dimen_value:Nnn { cnn }
-
-%% Some counters for row and column numbering
-\newcounter{rownum}
-\newcounter{colnum}
-\newcounter{rowcount}
-\newcounter{colcount}
 
 %%% --------------------------------------------------------
 %%  \section{Data Structures Based on Integer Arrays}
