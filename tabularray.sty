@@ -203,18 +203,6 @@
 %%  \section{Data Structures Based on Integer Arrays}
 %%% --------------------------------------------------------
 
-\int_new:N \g__tblr_array_int
-
-\cs_new_protected:Npn \__tblr_initial_table_data:
-  {
-    \int_gincr:N \g__tblr_array_int
-    \intarray_new:cn { g__tblr_row_ \int_use:N \g__tblr_array_int _intarray }
-      { \g__tblr_data_row_key_count_int * \c@rowcount }
-    \cs_set_eq:cc { g__tblr_row_ \int_use:N \g_tblr_level_int _intarray }
-      { g__tblr_row_ \int_use:N \g__tblr_array_int _intarray }
-    %\intarray_log:c { g__tblr_row_ \int_use:N \g_tblr_level_int _intarray }
-  }
-
 %% #1: data name; #2: key name; #3: value type
 \cs_new_protected:Npn \__tblr_data_new_key:nnn #1 #2 #3
   {
@@ -231,7 +219,6 @@
   }
 
 \int_new:N \g__tblr_data_row_key_count_int
-
 \__tblr_data_new_key:nnn { row } { height }      { dim }
 \__tblr_data_new_key:nnn { row } { coefficient } { dec }
 \__tblr_data_new_key:nnn { row } { abovesep }    { dim }
@@ -241,6 +228,36 @@
 \__tblr_data_new_key:nnn { row } { @row-foot }   { dim }
 \__tblr_data_new_key:nnn { row } { @row-upper }  { dim }
 \__tblr_data_new_key:nnn { row } { @row-lower }  { dim }
+
+\int_new:N \g__tblr_data_column_key_count_int
+\__tblr_data_new_key:nnn { column } { width }       { dim }
+\__tblr_data_new_key:nnn { column } { coefficient } { dec }
+\__tblr_data_new_key:nnn { column } { leftsep }     { dim }
+\__tblr_data_new_key:nnn { column } { rightsep }    { dim }
+\__tblr_data_new_key:nnn { column } { @col-width }  { dim }
+
+\clist_const:Nn \g__tblr_data_clist { row, column }
+\tl_const:Nn \g__tblr_data_row_count { \c@rowcount }
+\tl_const:Nn \g__tblr_data_column_count { \c@colcount }
+\int_new:N \g__tblr_array_int
+
+\cs_new_protected:Npn \__tblr_initial_table_data:
+  {
+    \clist_map_function:NN \g__tblr_data_clist \__tblr_initial_one_data:n
+  }
+
+\cs_new_protected:Npn \__tblr_initial_one_data:n #1
+  {
+    \int_gincr:N \g__tblr_array_int
+    \intarray_new:cn { g__tblr_#1_ \int_use:N \g__tblr_array_int _intarray }
+      {
+        \int_use:c { g__tblr_data_#1_key_count_int }
+          * \tl_use:c { g__tblr_data_#1_count }
+      }
+    \cs_set_eq:cc { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+      { g__tblr_#1_ \int_use:N \g__tblr_array_int _intarray }
+    \intarray_log:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+  }
 
 %% #1: data name; #2: data index; #3: key name
 \cs_new:Npn \__tblr_data_key_to_int:nnn #1 #2 #3
