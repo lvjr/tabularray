@@ -112,51 +112,51 @@
 \cs_new_protected:Npn \__tblr_prop_gput:nnn #1 #2 #3
   {
     \prop_gput:cnn
-      { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
+      { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
   }
 \cs_generate_variant:Nn \__tblr_prop_gput:nnn { nnx, nnV, nxn, nxx, nxV }
 
 \cs_new:Npn \__tblr_prop_item:nn #1 #2
   {
-    \prop_item:cn { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 }
+    \prop_item:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 }
   }
 \cs_generate_variant:Nn \__tblr_prop_item:nn { ne }
 
 \cs_new_protected:Npn \__tblr_prop_if_in:nnT #1
   {
-    \prop_if_in:cnT { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+    \prop_if_in:cnT { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop }
   }
 \cs_new_protected:Npn \__tblr_prop_if_in:nnF #1
   {
-    \prop_if_in:cnF { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+    \prop_if_in:cnF { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop }
   }
 \cs_new_protected:Npn \__tblr_prop_if_in:nnTF #1
   {
-    \prop_if_in:cnTF { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+    \prop_if_in:cnTF { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop }
   }
 \prg_generate_conditional_variant:Nnn \__tblr_prop_if_in:nn { nx } { T, F, TF }
 
 \cs_new_protected:Npn \__tblr_prop_log:n #1
   {
-    \prop_log:c { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+    \prop_log:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop }
   }
 
 \cs_new_protected:Npn \__tblr_prop_map_inline:nn #1 #2
   {
-    \prop_map_inline:cn { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } {#2}
+    \prop_map_inline:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } {#2}
   }
 
 \cs_new_protected:Npn \__tblr_prop_gput_if_larger:nnn #1 #2 #3
   {
     \__tblr_gput_if_larger:cnn
-      { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
+      { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
   }
 \cs_generate_variant:Nn \__tblr_prop_gput_if_larger:nnn { nnx, nnV, nxn, nxx, nxV }
 
 \cs_new_protected:Npn \__tblr_prop_gadd_dimen_value:nnn #1 #2 #3
   {
     \__tblr_gadd_dimen_value:cnn
-      { g_tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
+      { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
   }
 \cs_generate_variant:Nn \__tblr_prop_gadd_dimen_value:nnn { nnx, nnV, nxn, nxx }
 
@@ -2124,14 +2124,14 @@
 
 \cs_new_protected:Npn \__tblr_clear_prop_lists:
   {
-    \prop_gclear_new:c { g_tblr_text_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_command_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_table_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_row_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_column_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_cell_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_hline_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g_tblr_vline_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_text_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_command_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_table_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_row_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_column_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_cell_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_hline_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_vline_ \int_use:N \g_tblr_level_int _prop }
   }
 
 %% Insert and remove braces for nesting environments inside cells
