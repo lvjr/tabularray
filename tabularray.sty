@@ -211,7 +211,10 @@
     \bool_lazy_or:nnTF
       { \int_compare_p:nNn {#2} < {0} }
       { \int_compare_p:nNn {#2} > {\intarray_count:N #1} }
-      { \msg_warning:nnnn { tabularray } { intarray-beyond-bound } {#1} {#2} }
+      {
+        \bool_if:NT \g__tblr_tracing_intarray_bool
+          { \msg_warning:nnnn { tabularray } { intarray-beyond-bound } {#1} {#2} }
+      }
       { \intarray_gset:Nnn #1 {#2} {#3} }
   }
 \cs_generate_variant:Nn \__tblr_intarray_gset:Nnn { cnn }
@@ -4270,6 +4273,7 @@
 \bool_new:N \g__tblr_tracing_rowspec_bool
 \bool_new:N \g__tblr_tracing_target_bool
 \bool_new:N \g__tblr_tracing_cellspan_bool
+\bool_new:N \g__tblr_tracing_intarray_bool
 
 \keys_define:nn { tblr-set-tracing }
   {
@@ -4297,6 +4301,8 @@
     -target .code:n = \bool_gset_false:N \g__tblr_tracing_target_bool,
     +cellspan .code:n = \bool_gset_true:N \g__tblr_tracing_cellspan_bool,
     -cellspan .code:n = \bool_gset_false:N \g__tblr_tracing_cellspan_bool,
+    +intarray .code:n = \bool_gset_true:N \g__tblr_tracing_intarray_bool,
+    -intarray .code:n = \bool_gset_false:N \g__tblr_tracing_intarray_bool,
     all .code:n = \__tblr_enable_all_tracings:,
     none .code:n = \__tblr_disable_all_tracings:,
   }
@@ -4315,6 +4321,7 @@
     \bool_gset_true:N \g__tblr_tracing_rowspec_bool
     \bool_gset_true:N \g__tblr_tracing_target_bool
     \bool_gset_true:N \g__tblr_tracing_cellspan_bool
+    \bool_gset_true:N \g__tblr_tracing_intarray_bool
   }
 
 \cs_new_protected_nopar:Npn \__tblr_disable_all_tracings:
@@ -4331,6 +4338,7 @@
     \bool_gset_false:N \g__tblr_tracing_rowspec_bool
     \bool_gset_false:N \g__tblr_tracing_target_bool
     \bool_gset_false:N \g__tblr_tracing_cellspan_bool
+    \bool_gset_false:N \g__tblr_tracing_intarray_bool
   }
 
 \NewDocumentCommand \LogTabularrayTracing { m }
