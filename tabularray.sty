@@ -2414,6 +2414,7 @@
 \prop_gset_from_keyval:Nn \g__tblr_default_tblr_table_prop
   {
     stretch = 1,
+    rulesep = 2pt,
   }
 
 \prop_gset_from_keyval:Nn \g__tblr_default_tblr_rows_prop
@@ -2448,12 +2449,10 @@
 
 \prop_gset_from_keyval:Nn \g__tblr_default_tblr_hlines_prop
   {
-    rulesep = 2pt,
   }
 
 \prop_gset_from_keyval:Nn \g__tblr_default_tblr_vlines_prop
   {
-    rulesep = 2pt,
   }
 
 \cs_new_protected:Npn \__tblr_initial_table_spec:
@@ -2652,7 +2651,7 @@
     \tl_if_empty:NF \l__tblr_n_tl
       {
         \tl_set:Nx \l__tblr_s_tl
-          { \__tblr_prop_item:ne { vline } { [#2] / rulesep } }
+          { \__tblr_prop_item:ne { table } { rulesep } }
         \int_step_inline:nn { \l__tblr_n_tl }
           {
             \vbox_set_to_ht:Nnn \l__tblr_b_box {1pt}
@@ -2710,7 +2709,7 @@
     \tl_if_empty:NF \l__tblr_n_tl
       {
         \tl_set:Nx \l__tblr_s_tl
-          { \__tblr_prop_item:ne { hline } { [#1] / rulesep } }
+          { \__tblr_prop_item:ne { table } { rulesep } }
         \int_step_inline:nn { \l__tblr_n_tl }
           {
             \hbox_set_to_wd:Nnn \l__tblr_b_box {1pt}
@@ -3898,7 +3897,7 @@
 \cs_new_protected:Npn \__tblr_build_hline_segment_real:nn #1 #2
   {
     \tl_set:Nx \l__tblr_s_tl
-      { \__tblr_prop_item:ne { hline } { [#1] / rulesep } }
+      { \__tblr_prop_item:ne { table } { rulesep } }
     \vbox_set:Nn \l__tblr_c_box
       {
         %% add an empty hbox to support vbox width
@@ -4026,7 +4025,7 @@
 \cs_new_protected:Npn \__tblr_build_vline_segment_real:nn #1 #2
   {
     \tl_set:Nx \l__tblr_s_tl
-      { \__tblr_prop_item:ne { vline } { [#2] / rulesep } }
+      { \__tblr_prop_item:ne { table } { rulesep } }
     \tl_set:Nx \l__tblr_b_tl
       {
         \__tblr_prop_item:ne { hline }
