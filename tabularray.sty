@@ -212,9 +212,23 @@
 
 \cs_new:Npn \__tblr_text_item:nn #1 #2
   {
-    \exp_args:Nv \exp_not:n { g__tblr_text_ \int_use:N \g_tblr_level_int _#1_#2_tl }
+    \tl_if_exist:cT { g__tblr_text_ \int_use:N \g_tblr_level_int _#1_#2_tl }
+      {
+        \exp_args:Nv \exp_not:n
+          { g__tblr_text_ \int_use:N \g_tblr_level_int _#1_#2_tl }
+      }
   }
 \cs_generate_variant:Nn \__tblr_text_item:nn { ne }
+
+\cs_new_protected:Npn \__tblr_text_gput_if_larger:nnn #1 #2 #3
+  {
+    \tl_set:Nx \l__tblr_put_if_larger_tl { \__tblr_text_item:nn {#1} {#2} }
+    \bool_lazy_or:nnT
+      { \tl_if_empty_p:N \l__tblr_put_if_larger_tl }
+      { \dim_compare_p:nNn {#3} > { \l__tblr_put_if_larger_tl } }
+      { \__tblr_text_gput:nnn {#1} {#2} {#3} }
+  }
+\cs_generate_variant:Nn \__tblr_text_gput_if_larger:nnn { nne, nnV, nen, nee, neV }
 
 \cs_new_protected:Npn \__tblr_text_log:n #1
   {
@@ -1020,12 +1034,12 @@
   {
     \tl_clear:N \l__tblr_hline_num_tl
     \tl_set:Nx \l__tblr_hline_count_tl
-      { \__tblr_prop_item:ne { hline } { [\int_use:N \c@rownum] / @hline-count } }
+      { \__tblr_text_item:ne { hline } { [\int_use:N \c@rownum] / @hline-count } }
     %% \l__tblr_hline_count_tl may be empty when rowspec has extra |'s
     \int_compare:nNnTF { \l__tblr_hline_count_tl + 0 } = {0}
       {
         \tl_set:Nx \l__tblr_hline_num_tl { 1 }
-        \__tblr_prop_gput:nxx { hline }
+        \__tblr_text_gput:nen { hline }
           { [\int_use:N \c@rownum] / @hline-count } { 1 }
       }
       {
@@ -1047,7 +1061,7 @@
   {
     \tl_set:Nx \l__tblr_hline_count_tl
       { \int_eval:n { \l__tblr_hline_count_tl + 1 } }
-    \__tblr_prop_gput:nxx { hline }
+    \__tblr_text_gput:nee { hline }
       { [\int_use:N \c@rownum] / @hline-count } { \l__tblr_hline_count_tl }
     \tl_set_eq:NN \l__tblr_hline_num_tl \l__tblr_hline_count_tl
   }
@@ -1083,18 +1097,18 @@
     \__tblr_get_childs:nx {#1} { \int_use:N \c@colcount }
     \clist_map_inline:Nn \l_tblr_childs_clist
       {
-        \__tblr_prop_gput:nxx { hline }
+        \__tblr_text_gput:nee { hline }
           { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / @dash }
           { \l__tblr_hline_dash_tl }
         \tl_if_empty:NF \l__tblr_hline_wd_tl
           {
-            \__tblr_prop_gput:nxx { hline }
+            \__tblr_text_gput:nee { hline }
               { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / wd }
               { \l__tblr_hline_wd_tl }
           }
         \tl_if_empty:NF \l__tblr_hline_fg_tl
           {
-            \__tblr_prop_gput:nxx { hline }
+            \__tblr_text_gput:nee { hline }
               { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / fg }
               { \l__tblr_hline_fg_tl }
           }
@@ -1464,7 +1478,7 @@
               }
             \int_compare:nNnF { \l__tblr_i_tl } = { \c@rownum }
               {
-                \__tblr_prop_gput:nxx {hline}
+                \__tblr_text_gput:nen { hline }
                   { [\l__tblr_i_tl][\l__tblr_j_tl] / omit } {true}
               }
             \int_compare:nNnF { \l__tblr_j_tl } = { \c@colnum }
@@ -2473,7 +2487,7 @@
           }
         \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _hlines_prop }
           {
-            \__tblr_prop_gput:nxn { hline } { [\l__tblr_i_tl] / ##1 } {##2}
+            \__tblr_text_gput:nen { hline } { [\l__tblr_i_tl] / ##1 } {##2}
           }
         \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
           {
@@ -2487,7 +2501,7 @@
       }
     \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _hlines_prop }
       {
-        \__tblr_prop_gput:nxn { hline }
+        \__tblr_text_gput:nen { hline }
           { [\int_eval:n { \c@rowcount + 1}] / ##1 } {##2}
       }
     \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
@@ -2709,7 +2723,7 @@
   {
     \dim_zero:N \l__tblr_h_dim
     \tl_set:Nx \l__tblr_n_tl
-      { \__tblr_prop_item:ne { hline } { [#1] / @hline-count } }
+      { \__tblr_text_item:ne { hline } { [#1] / @hline-count } }
     \int_compare:nNnT { \l__tblr_n_tl } > {0}
       {
         \tl_set:Nx \l__tblr_s_tl
@@ -2723,14 +2737,14 @@
                 \dim_eval:n
                   { \box_ht:N \l__tblr_b_box + \box_dp:N \l__tblr_b_box }
               }
-            \__tblr_prop_gput_if_larger:nxx { hline }
+            \__tblr_text_gput_if_larger:nee { hline }
               { [#1](##1) / @hline-height } { \l__tblr_h_tl }
             \dim_add:Nn \l__tblr_h_dim { \l__tblr_h_tl }
             \dim_add:Nn \l__tblr_h_dim { \l__tblr_s_tl }
           }
         \dim_add:Nn \l__tblr_h_dim { - \l__tblr_s_tl }
       }
-    \__tblr_prop_gput_if_larger:nxx { hline }
+    \__tblr_text_gput_if_larger:nee { hline }
       { [#1] / @hline-height } { \dim_use:N \l__tblr_h_dim }
   }
 
@@ -2740,10 +2754,10 @@
   {
     \group_begin:
     \tl_set:Nx \l__tblr_w_tl
-      { \__tblr_prop_item:ne { hline } { [#1][#2](#3) / wd } }
+      { \__tblr_text_item:ne { hline } { [#1][#2](#3) / wd } }
     \tl_if_empty:NF \l__tblr_w_tl { \dim_set:Nn \rulewidth { \l__tblr_w_tl } }
     \tl_set:Nx \l__tblr_d_tl
-      { \__tblr_prop_item:ne { hline } { [#1][#2](#3) / @dash } }
+      { \__tblr_text_item:ne { hline } { [#1][#2](#3) / @dash } }
     \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
     \tl_set:Nx \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
     \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
@@ -3379,7 +3393,7 @@
                     \__tblr_data_item:nen { row }
                       { \int_eval:n {\l__tblr_i_tl - 1} } { belowsep }
                     +
-                    \__tblr_prop_item:ne {hline}
+                    \__tblr_text_item:ne { hline }
                       { [\l__tblr_i_tl] / @hline-height }
                     +
                     \__tblr_data_item:nen { row } { \l__tblr_i_tl } { abovesep }
@@ -3696,7 +3710,7 @@
       {
         \dim_set:Nn \l_tmpa_dim
           {
-            \__tblr_prop_item:ne { hline } { [\l__tblr_i_tl] / @hline-height }
+            \__tblr_text_item:ne { hline } { [\l__tblr_i_tl] / @hline-height }
             +
             \__tblr_data_item:nen { row } { \l__tblr_i_tl } { abovesep }
             +
@@ -3794,7 +3808,7 @@
 \cs_new_protected:Npn \__tblr_valign_whole_top:N #1
   {
     \tl_set:Nx \l__tblr_a_tl
-      { \__tblr_prop_item:ne { hline } { [1] / @hline-height } }
+      { \__tblr_text_item:ne { hline } { [1] / @hline-height } }
     %% Note that \l__tblr_b_tl may be empty
     \tl_set:Nx \l__tblr_b_tl
       { \__tblr_prop_item:ne { table } { baseline } }
@@ -3828,7 +3842,7 @@
   {
     \tl_set:Nx \l__tblr_a_tl
       {
-        \__tblr_prop_item:ne { hline }
+        \__tblr_text_item:ne { hline }
           { [\int_eval:n {\c@rowcount + 1}] / @hline-height }
       }
     %% Note that \l__tblr_b_tl may be empty
@@ -3878,9 +3892,9 @@
 \cs_new_protected:Npn \__tblr_build_hline_segment:nn #1 #2
   {
     \tl_set:Nx \l__tblr_n_tl
-      { \__tblr_prop_item:ne { hline } { [#1] / @hline-count } }
+      { \__tblr_text_item:ne { hline } { [#1] / @hline-count } }
     \tl_set:Nx \l__tblr_o_tl
-      { \__tblr_prop_item:ne { hline } { [#1][#2] / omit } }
+      { \__tblr_text_item:ne { hline } { [#1][#2] / omit } }
     \__tblr_get_col_outer_width_border_width:nNN {#2}
       \l__tblr_col_o_wd_dim \l__tblr_col_b_wd_dim
     \tl_if_empty:NTF \l__tblr_o_tl
@@ -3909,12 +3923,12 @@
         \int_step_inline:nn { \l__tblr_n_tl }
           {
             \tl_set:Nx \l__tblr_h_tl
-              { \__tblr_prop_item:ne { hline } { [#1](##1) / @hline-height } }
+              { \__tblr_text_item:ne { hline } { [#1](##1) / @hline-height } }
             \hrule height ~ 0pt % remove lineskip
             \hbox_set_to_wd:Nnn \l__tblr_b_box { \l__tblr_col_o_wd_dim }
               {
                 \tl_set:Nx \l__tblr_f_tl
-                  { \__tblr_prop_item:ne { hline } { [#1][#2](##1) / fg } }
+                  { \__tblr_text_item:ne { hline } { [#1][#2](##1) / fg } }
                 \tl_if_empty:NF \l__tblr_f_tl { \color{\l__tblr_f_tl} }
                 \__tblr_get_hline_segment_child:nnn {#1} {#2} {##1}
               }
@@ -4032,7 +4046,7 @@
       { \__tblr_prop_item:ne { table } { rulesep } }
     \tl_set:Nx \l__tblr_b_tl
       {
-        \__tblr_prop_item:ne { hline }
+        \__tblr_text_item:ne { hline }
           { [\int_eval:n{#1 + 1}](1) / @hline-height }
       }
     \tl_if_empty:NT \l__tblr_b_tl { \tl_set:Nn \l__tblr_b_tl { 0pt } }
@@ -4431,7 +4445,7 @@
 
 \cs_new_protected:Npn \__tblr_log_tracing_hline:
   {
-    \__tblr_prop_log:n { hline }
+    \__tblr_text_log:n { hline }
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_colspec:
