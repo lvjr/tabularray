@@ -1021,7 +1021,8 @@
     \tl_clear:N \l__tblr_hline_num_tl
     \tl_set:Nx \l__tblr_hline_count_tl
       { \__tblr_prop_item:ne { hline } { [\int_use:N \c@rownum] / @hline-count } }
-    \tl_if_empty:NTF \l__tblr_hline_count_tl
+    %% \l__tblr_hline_count_tl may be empty when rowspec has extra |'s
+    \int_compare:nNnTF { \l__tblr_hline_count_tl + 0 } = {0}
       {
         \tl_set:Nx \l__tblr_hline_num_tl { 1 }
         \__tblr_prop_gput:nxx { hline }
@@ -1219,7 +1220,8 @@
     \tl_clear:N \l__tblr_vline_num_tl
     \tl_set:Nx \l__tblr_vline_count_tl
       { \__tblr_prop_item:ne { vline } { [\int_use:N \c@colnum] / @vline-count } }
-    \tl_if_empty:NTF \l__tblr_vline_count_tl
+    %% \l__tblr_vline_count_tl may be empty when colspec has extra |'s
+    \int_compare:nNnTF { \l__tblr_vline_count_tl + 0 } = {0}
       {
         \tl_set:Nx \l__tblr_vline_num_tl { 1 }
         \__tblr_prop_gput:nxx { vline }
@@ -2449,10 +2451,12 @@
 
 \prop_gset_from_keyval:Nn \g__tblr_default_tblr_hlines_prop
   {
+    @hline-count = 0,
   }
 
 \prop_gset_from_keyval:Nn \g__tblr_default_tblr_vlines_prop
   {
+    @vline-count = 0,
   }
 
 \cs_new_protected:Npn \__tblr_initial_table_spec:
@@ -2648,7 +2652,7 @@
     \dim_zero:N \l__tblr_w_dim
     \tl_set:Nx \l__tblr_n_tl
       { \__tblr_prop_item:ne { vline } { [#2] / @vline-count } }
-    \tl_if_empty:NF \l__tblr_n_tl
+    \int_compare:nNnT { \l__tblr_n_tl } > {0}
       {
         \tl_set:Nx \l__tblr_s_tl
           { \__tblr_prop_item:ne { table } { rulesep } }
@@ -2706,7 +2710,7 @@
     \dim_zero:N \l__tblr_h_dim
     \tl_set:Nx \l__tblr_n_tl
       { \__tblr_prop_item:ne { hline } { [#1] / @hline-count } }
-    \tl_if_empty:NF \l__tblr_n_tl
+    \int_compare:nNnT { \l__tblr_n_tl } > {0}
       {
         \tl_set:Nx \l__tblr_s_tl
           { \__tblr_prop_item:ne { table } { rulesep } }
@@ -3881,7 +3885,7 @@
       \l__tblr_col_o_wd_dim \l__tblr_col_b_wd_dim
     \tl_if_empty:NTF \l__tblr_o_tl
       {
-        \tl_if_empty:NF \l__tblr_n_tl
+        \int_compare:nNnT { \l__tblr_n_tl } > {0}
           { \__tblr_build_hline_segment_real:nn {#1} {#2} }
       }
       { \__tblr_build_hline_segment_omit:nn {#1} {#2} }
@@ -4005,7 +4009,7 @@
       { \__tblr_prop_item:ne { vline } { [#1][#2] / omit } }
     \tl_if_empty:NTF \l__tblr_o_tl
       {
-        \tl_if_empty:NF \l__tblr_n_tl
+        \int_compare:nNnT { \l__tblr_n_tl } > {0}
           { \__tblr_build_vline_segment_real:nn {#1} {#2} }
       }
       { \__tblr_build_vline_segment_omit:nn {#1} {#2} }
