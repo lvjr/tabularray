@@ -109,6 +109,18 @@
 
 \int_new:N \g_tblr_level_int % store table nesting level
 
+\cs_new_protected:Npn \__tblr_clear_prop_lists:
+  {
+    \prop_gclear_new:c { g__tblr_text_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_command_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_table_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_row_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_column_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_cell_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_hline_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_vline_ \int_use:N \g_tblr_level_int _prop }
+  }
+
 \cs_new_protected:Npn \__tblr_prop_gput:nnn #1 #2 #3
   {
     \prop_gput:cnn
@@ -203,10 +215,30 @@
 %%  \section{Data Structures Based on Token Lists}
 %%% --------------------------------------------------------
 
+\cs_new_protected:Npn \__tblr_clear_text_lists:
+  {
+    \__tblr_clear_one_text_lists:n { text }
+    \__tblr_clear_one_text_lists:n { hline }
+    \__tblr_clear_one_text_lists:n { vline }
+  }
+
+\cs_new_protected:Npn \__tblr_clear_one_text_lists:n #1
+  {
+    \clist_if_exist:cTF { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
+      {
+        \clist_map_inline:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
+          {
+            \tl_gclear:c { g__tblr_text_ \int_use:N \g_tblr_level_int _#1_##1_tl }
+          }
+      }
+      { \clist_new:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } }
+  }
+
 \cs_new_protected:Npn \__tblr_text_gput:nnn #1 #2 #3
   {
     \tl_gset:cn
       { g__tblr_text_ \int_use:N \g_tblr_level_int _#1_#2_tl } {#3}
+    \clist_gput_right:cx { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } {#2}
   }
 \cs_generate_variant:Nn \__tblr_text_gput:nnn { nne, nnV, nen, nee, neV }
 
@@ -232,16 +264,14 @@
 
 \cs_new_protected:Npn \__tblr_text_log:n #1
   {
-    \int_step_inline:nn { \c@rowcount }
+    \clist_gremove_duplicates:c
+      { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
+    \tl_log:n { ----------~----------~----------~----------~---------- }
+    \clist_map_inline:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
       {
-        \int_step_inline:nn { \c@colcount }
+        \tl_log:x
           {
-            \tl_log:x
-              {
-                { #1[##1][####1] }
-                \space=\space
-                { \__tblr_text_item:nn {#1} { [##1][####1] } }
-              }
+            \space { #1 ##1 } ~\space=>~\space { \__tblr_text_item:nn {#1} {##1} }
           }
       }
   }
@@ -2157,6 +2187,7 @@
     \mode_leave_vertical:
     \int_gincr:N \g_tblr_level_int
     \__tblr_clear_prop_lists:
+    \__tblr_clear_text_lists:
     \__tblr_enable_table_commands:
     \__tblr_split_table:n { #3 }
     \LogTblrTracing { command }
@@ -2169,18 +2200,6 @@
     \__tblr_calc_cell_and_line_sizes:
     \__tblr_build_whole:n { #1 }
     \int_gdecr:N \g_tblr_level_int
-  }
-
-\cs_new_protected:Npn \__tblr_clear_prop_lists:
-  {
-    \prop_gclear_new:c { g__tblr_text_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_command_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_table_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_row_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_column_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_cell_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_hline_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_vline_ \int_use:N \g_tblr_level_int _prop }
   }
 
 %% Insert and remove braces for nesting environments inside cells
