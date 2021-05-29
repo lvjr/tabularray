@@ -589,6 +589,7 @@
   {
     %\intarray_log:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
     \tl_set:Nx \l_tmpa_tl { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+    \tl_log:n { ----------~----------~----------~----------~---------- }
     \int_step_inline:nn
       { \intarray_count:c { \l_tmpa_tl } }
       {
@@ -596,8 +597,9 @@
           \l__tblr_data_index_tl \l__tblr_data_key_tl
         \tl_log:x
           {
+            \space
             { #1 [\l__tblr_data_index_tl] / \l__tblr_data_key_tl }
-            \space = \space
+            ~\space => ~\space
             {
               \__tblr_data_int_to_value:nVe {#1} \l__tblr_data_key_tl
                 { \intarray_item:cn { \l_tmpa_tl } {##1} }
@@ -610,6 +612,7 @@
   {
     %\intarray_log:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
     \tl_set:Nx \l_tmpa_tl { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+    \tl_log:n { ----------~----------~----------~----------~---------- }
     \int_step_inline:nn
       { \intarray_count:c { \l_tmpa_tl } }
       {
@@ -617,11 +620,12 @@
           \l__tblr_data_index_tl \l__tblr_data_index_two_tl \l__tblr_data_key_tl
         \tl_log:x
           {
+            \space
             {
               #1 [\l__tblr_data_index_tl][\l__tblr_data_index_two_tl]
                  / \l__tblr_data_key_tl
             }
-            \space = \space
+            ~\space => ~\space
             {
               \__tblr_data_int_to_value:nVe {#1} \l__tblr_data_key_tl
                 { \intarray_item:cn { \l_tmpa_tl } {##1} }
