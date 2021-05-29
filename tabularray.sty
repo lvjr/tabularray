@@ -200,6 +200,39 @@
 \cs_generate_variant:Nn \__tblr_gadd_dimen_value:Nnn { cnn }
 
 %%% --------------------------------------------------------
+%%  \section{Data Structures Based on Token Lists}
+%%% --------------------------------------------------------
+
+\cs_new_protected:Npn \__tblr_text_gput:nnn #1 #2 #3
+  {
+    \tl_gset:cn
+      { g__tblr_text_ \int_use:N \g_tblr_level_int _#1_#2_tl } {#3}
+  }
+\cs_generate_variant:Nn \__tblr_text_gput:nnn { nne, nnV, nen, nee, neV }
+
+\cs_new:Npn \__tblr_text_item:nn #1 #2
+  {
+    \exp_args:Nv \exp_not:n { g__tblr_text_ \int_use:N \g_tblr_level_int _#1_#2_tl }
+  }
+\cs_generate_variant:Nn \__tblr_text_item:nn { ne }
+
+\cs_new_protected:Npn \__tblr_text_log:n #1
+  {
+    \int_step_inline:nn { \c@rowcount }
+      {
+        \int_step_inline:nn { \c@colcount }
+          {
+            \tl_log:x
+              {
+                { #1[##1][####1] }
+                \space=\space
+                { \__tblr_text_item:nn {#1} { [##1][####1] } }
+              }
+          }
+      }
+  }
+
+%%% --------------------------------------------------------
 %%  \section{Data Structures Based on Integer Arrays}
 %%% --------------------------------------------------------
 
@@ -1835,11 +1868,11 @@
           {
             \tl_set:Nx \l_tmpa_tl
             {
-              \__tblr_prop_item:ne {text}
+              \__tblr_text_item:ne { text }
                 { [\l__tblr_i_tl][\int_use:N \c@colnum] }
             }
             \tl_put_left:Nn \l_tmpa_tl { #2 }
-            \__tblr_prop_gput:nxV {text}
+            \__tblr_text_gput:neV { text }
               { [\l__tblr_i_tl][\int_use:N \c@colnum] } \l_tmpa_tl
           }
       }
@@ -1864,11 +1897,11 @@
           {
             \tl_set:Nx \l_tmpa_tl
             {
-              \__tblr_prop_item:ne {text}
+              \__tblr_text_item:ne { text }
                 { [\int_use:N \c@rownum][\l__tblr_j_tl] }
             }
             \tl_put_left:Nn \l_tmpa_tl { #2 }
-            \__tblr_prop_gput:nxV {text}
+            \__tblr_text_gput:neV { text }
               { [\int_use:N \c@rownum][\l__tblr_j_tl] } \l_tmpa_tl
           }
       }
@@ -1893,11 +1926,11 @@
           {
             \tl_set:Nx \l_tmpa_tl
             {
-              \__tblr_prop_item:ne {text}
+              \__tblr_text_item:ne { text }
                 { [\l__tblr_i_tl][\int_eval:n {\c@colnum - 1}] }
             }
             \tl_put_right:Nn \l_tmpa_tl { #2 }
-            \__tblr_prop_gput:nxV {text}
+            \__tblr_text_gput:neV { text }
               { [\l__tblr_i_tl][\int_eval:n {\c@colnum - 1}] } \l_tmpa_tl
           }
       }
@@ -1922,11 +1955,11 @@
           {
             \tl_set:Nx \l_tmpa_tl
             {
-              \__tblr_prop_item:ne {text}
+              \__tblr_text_item:ne { text }
                 { [\int_eval:n {\c@rownum - 1}][\l__tblr_j_tl] }
             }
             \tl_put_right:Nn \l_tmpa_tl { #2 }
-            \__tblr_prop_gput:nxV {text}
+            \__tblr_text_gput:neV { text }
               { [\int_eval:n {\c@rownum - 1}][\l__tblr_j_tl] } \l_tmpa_tl
           }
       }
@@ -2240,7 +2273,7 @@
         \__tblr_remove_braces:N \l_tmpa_tl
         \int_incr:N \c@colnum
         \__tblr_extract_table_commands:N \l_tmpa_tl
-        \__tblr_prop_gput:nxV {text} { [#1][\int_use:N \c@colnum] } \l_tmpa_tl
+        \__tblr_text_gput:neV { text } { [#1][\int_use:N \c@colnum] } \l_tmpa_tl
         \__tblr_add_multicolumn_empty_cell:
       }
     %% Decrease row count by 1 if the last row has only one empty cell text
@@ -2265,7 +2298,7 @@
     \int_step_inline:nn { \l__multicolumn_cell_number_int - 1 }
       {
         \int_incr:N \c@colnum
-        \__tblr_prop_gput:nxn {text}
+        \__tblr_text_gput:nen { text }
           { [\int_use:N \c@rownum][\int_use:N \c@colnum] } { }
       }
   }
@@ -2835,7 +2868,7 @@
 \cs_new_protected:Npn \__tblr_get_cell_text_real:nn #1 #2
   {
     \group_begin:
-    \tl_set:Nx \l__tblr_c_tl { \__tblr_prop_item:ne {text} {[#1][#2]} }
+    \tl_set:Nx \l__tblr_c_tl { \__tblr_text_item:ne { text } {[#1][#2]} }
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_data_item:neen { cell } {#1} {#2} { width } }
     \dim_compare:nNnT { \l__tblr_w_tl } < { 0pt } % cell width unset
@@ -4360,7 +4393,7 @@
 
 \cs_new_protected:Npn \__tblr_log_tracing_text:
   {
-    \__tblr_prop_log:n { text }
+    \__tblr_text_log:n { text }
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_command:
