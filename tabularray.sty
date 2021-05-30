@@ -1463,8 +1463,42 @@
     bg .code:n = \__tblr_data_gput:neene { cell }
                   { \int_use:N \c@rownum } { \int_use:N \c@colnum }
                   { background } {#1},
+    preto .code:n = \__tblr_cell_preto_text:n {#1},
+    appto .code:n = \__tblr_cell_appto_text:n {#1},
+    fg .code:n = \__tblr_cell_preto_text:n { \color{#1} },
+    font .code:n = \__tblr_cell_preto_text:n { #1 \selectfont },
     unknown .code:n = \__tblr_cell_unknown_key:V \l_keys_key_str,
   }
+
+\tl_new:N \l__tblr_cell_text_tl
+
+\cs_new_protected:Npn \__tblr_cell_preto_text:n #1
+  {
+    \__tblr_cell_preto_text:een
+      { \int_use:N \c@rownum } { \int_use:N \c@colnum } {#1}
+  }
+
+\cs_new_protected:Npn \__tblr_cell_preto_text:nnn #1 #2 #3
+  {
+    \tl_set:Nx \l__tblr_cell_text_tl { \__tblr_text_item:nn { text } { [#1][#2] } }
+    \tl_put_left:Nn \l__tblr_cell_text_tl {#3}
+    \__tblr_text_gput:nnV { text } { [#1][#2] } \l__tblr_cell_text_tl
+  }
+\cs_generate_variant:Nn \__tblr_cell_preto_text:nnn { nen, enn, een }
+
+\cs_new_protected:Npn \__tblr_cell_appto_text:n #1
+  {
+    \__tblr_cell_appto_text:een
+      { \int_use:N \c@rownum } { \int_use:N \c@colnum } {#1}
+  }
+
+\cs_new_protected:Npn \__tblr_cell_appto_text:nnn #1 #2 #3
+  {
+    \tl_set:Nx \l__tblr_cell_text_tl { \__tblr_text_item:ne { text } { [#1][#2] } }
+    \tl_put_right:Nn \l__tblr_cell_text_tl {#3}
+    \__tblr_text_gput:neV { text } { [#1][#2] } \l__tblr_cell_text_tl
+  }
+\cs_generate_variant:Nn \__tblr_cell_appto_text:nnn { nen, enn, een }
 
 \cs_new_protected:Npn \__tblr_cell_unknown_key:n #1
   {
