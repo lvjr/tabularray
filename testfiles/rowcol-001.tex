@@ -32,4 +32,18 @@ a\begin{tblr}{|r@{.}ll|}
 \end{tblr}b
 \ENDTEST
 
+\bigskip\hrule\bigskip
+
+\BEGINTEST{testing !, < and > specifiers}
+\begin{tblr}{
+  colspec={QQ>{\sffamily}Q!{:}>[0pt]{$}Q<{$}Q>{\bfseries}Q},
+  rowspec={>{\itshape}QQ<[0pt]{2}!{\dotfill}>{\footnotesize}QQ<{4}},
+}
+ Alpha & Beta    & Gamma   & Delta & Epsilon & Zeta \\
+ Eta   & Theta   & Iota    & Kappa & Lambda  & Mu \\
+ Nu    & Xi      & Omicron & Pi    & Rho     & Sigma \\
+ Tau   & Upsilon & Phi     & Chi   & Psi     & Omega \\
+\end{tblr}
+\ENDTEST
+
 \end{document}

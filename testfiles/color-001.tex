@@ -10,13 +10,10 @@
 
 \begin{document}
 
-\hrule
-
 \START
+\hrule\medskip
 
-\bigskip
-
-\BEGINTEST{cell background: legacy}
+\BEGINTEST{cell background}
 \begin{tblr}[b]{|l|[dotted]|[2pt]c|r|[solid]|[dashed]|}
 \hline
 \SetCell{b,r,orange}Onej   &  Two  & Three \\
@@ -26,12 +23,7 @@ Four  & \SetCell{teal}Five  &   Six \\
 \SetCell{lime}Seven & Eight &  Nine \\
 \hline
 \end{tblr}
-\ENDTEST
-
-\bigskip
-
-\BEGINTEST{cell background: modern}
-\bigskip
+\qquad
 \begin{tblr}[b]{|Q[h,l]|[dotted]|[2pt]Q[h,c]|Q[h,r]|[solid]|[dashed]|}
 \hline
 \SetCell{f,r,orange}Onej   &  Two  & Three \\
@@ -40,6 +32,23 @@ Four  & \SetCell{teal}Five  &   Six \\
 \hline\hline
 \SetCell{lime}Seven & Eight &  Nine \\
 \hline
+\end{tblr}
+\ENDTEST
+
+\medskip\hrule\medskip
+
+%% Issue 2: Setting fonts?
+\BEGINTEST{cell foreground and font}
+\begin{tblr}{
+ colspec  = {lcr},
+ row{odd} = {bg=azure9},
+ row{1}   = {c,bg=azure3,fg=white,font=\sffamily},
+}
+ Alpha & Beta    & Gamma \\
+ Delta & Epsilon & Zeta \\
+ Eta   & Theta   & Iota \\
+ Kappa & Lambda  & Mu \\
+ Nu Xi Omicron & Pi Rho Sigma & Tau Upsilon Phi \\
 \end{tblr}
 \ENDTEST
 
