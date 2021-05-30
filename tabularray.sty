@@ -1698,6 +1698,8 @@
                   { \int_use:N \c@colnum } { valign } {f},
     bg .code:n = \__tblr_set_key_for_every_column_cell:nnn
                   { \int_use:N \c@colnum } { background } {#1},
+    fg .code:n = \__tblr_preto_text_for_every_column_cell:n { \color{#1} },
+    font .code:n = \__tblr_preto_text_for_every_column_cell:n { #1 \selectfont },
     wd .code:n = \__tblr_data_gput:nene { column }
                    { \int_use:N \c@colnum } { width } { \dim_eval:n {#1} },
     co .code:n = \__tblr_data_gput:nene { column }
@@ -1721,6 +1723,14 @@
     \int_step_inline:nn { \c@rowcount }
       {
         \__tblr_data_gput:neenn { cell } {##1} {#1} {#2} {#3}
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_preto_text_for_every_column_cell:n #1
+  {
+    \int_step_inline:nn { \c@rowcount }
+      {
+        \__tblr_cell_preto_text:nen {##1} { \int_use:N \c@colnum } {#1}
       }
   }
 
@@ -1832,6 +1842,8 @@
                   { \int_use:N \c@rownum } { valign } {f},
     bg .code:n = \__tblr_set_key_for_every_row_cell:nnn
                   { \int_use:N \c@rownum } { background } {#1},
+    fg .code:n = \__tblr_preto_text_for_every_row_cell:n { \color{#1} },
+    font .code:n = \__tblr_preto_text_for_every_row_cell:n { #1 \selectfont },
     ht .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
                    { height } { \dim_eval:n {#1} },
     co .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
@@ -1857,6 +1869,14 @@
     \int_step_inline:nn { \c@colcount }
       {
         \__tblr_data_gput:neenn { cell } {#1} {##1} {#2} {#3}
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_preto_text_for_every_row_cell:n #1
+  {
+    \int_step_inline:nn { \c@colcount }
+      {
+        \__tblr_cell_preto_text:enn { \int_use:N \c@rownum } {##1} {#1}
       }
   }
 
