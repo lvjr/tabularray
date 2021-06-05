@@ -2600,7 +2600,7 @@
   {
     long, colspec, rowspec, width, hspan, stretch,
     column, row, cell, vline, hline, columns, rows, cells, vlines, hlines,
-    leftsep, rightsep, colsep, abovesep, belowsep, rowsep,
+    leftsep, rightsep, colsep, abovesep, belowsep, rowsep, rulesep,
   }
 
 \bool_new:N \l__tblr_long_table_bool
@@ -2624,6 +2624,7 @@
     abovesep .code:n = \tblr_set_every_row:nn { } { abovesep = #1 },
     belowsep .code:n = \tblr_set_every_row:nn { } { belowsep = #1 },
     rowsep .meta:n = { abovesep = #1, belowsep = #1 },
+    rulesep .code:n = \__tblr_keys_gput:nn { rulesep } {#1},
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
 
