@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing rulesep}
+\doublerulesep=4pt
+\begin{tabular}{||llll||}
+\hline\hline
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\hline\hline
+\end{tabular}
+\quad
+\begin{tblr}{rowsep=0pt,rulesep=4pt,colspec={||QQQQ||}}
+\hline\hline
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\hline\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}
