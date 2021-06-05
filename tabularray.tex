@@ -468,7 +468,7 @@ The following example demonstrates how to define similar rules as in \verb!bookt
 \end{tblr}
 \end{demohigh}
 
-\chapter{New Interface}
+\chapter{New Interfaces}
 
 With \verb!tabularray! package, you can separate style and content totally in tables.
 
@@ -642,6 +642,24 @@ Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns
 \end{tblr}
 \end{demohigh}
 
+We can specify foreground colors, background colors and fonts with
+\verb!bg!, \verb!fg! and \verb!font! keys, respectively, for cells/rows/columns.
+In most cases, \verb!bg! key can be omitted, which you can see in the previous examples.
+
+\begin{demohigh}
+\begin{tblr}{
+ colspec  = {lcr},
+ row{odd} = {bg=azure8},
+ row{1}   = {bg=azure3, fg=white, font=\sffamily},
+}
+ Alpha & Beta    & Gamma \\
+ Delta & Epsilon & Zeta  \\
+ Eta   & Theta   & Iota  \\
+ Kappa & Lambda  & Mu    \\
+ Nu Xi Omikron & Pi Rho Sigma & Tau Upsilon Phi \\
+\end{tblr}
+\end{demohigh}
+
 \section{Space in Tables}
 
 Options \verb!rowsep! and \verb!colsep! are for setting padding for rows and columns, respectively.
@@ -682,6 +700,18 @@ And \verb!\\[dimen]! can be replaced by \verb!belowsep+! option:
 \end{tblr}
 \end{demohigh}
 
+Also \verb!\doublerulesep! parameter can be replaced by \verb!rulesep! option:
+
+\begin{demohigh}
+\begin{tblr}{
+ colspec={||llll||},rowspec={|QQQ|},rulesep=4pt,
+}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
 Also \verb!\arraystretch! parameter can be replaced by \verb!stretch! option:
 
 \begin{demohigh}
@@ -713,7 +743,7 @@ Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be u
 \end{tblr}
 \end{demohigh}
 
-\section{Experimental Interface}
+\section{Experimental Interfaces}
 
 Everything described in this section is in \underline{\textcolor{red3}{\textbf{experimental}}} status.
 Don’t use them in important documents, unless you have time
@@ -752,6 +782,6 @@ All tracing messages will be written to the log files.
 \chapter{Source Code}
 
 %\CodeHigh{lite}
-\dochighinput[language=latex/latex3]{tabularray.sty}
+%\dochighinput[language=latex/latex3]{tabularray.sty}
 
 \end{document}
