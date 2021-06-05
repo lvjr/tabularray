@@ -47,6 +47,7 @@ Overfull \hbox (12.4pt too wide) detected at line 53
 ...\OT1/cmr/m/n/10 3
 ...\hbox(0.0+3.60004)x0.0
 ....\rule(*+3.60004)x0.0
+...\kern 0.0
 ...\penalty 10000
 ...\glue(\parfillskip) 0.0 plus 1.0fil
 ...\glue(\rightskip) 0.0 plus 1.0fil
@@ -111,6 +112,7 @@ Overfull \hbox (12.4pt too wide) detected at line 53
 ...\OT1/cmr/m/n/10 4
 ...\hbox(0.0+3.60004)x0.0
 ....\rule(*+3.60004)x0.0
+...\kern 0.0
 ...\penalty 10000
 ...\glue(\parfillskip) 0.0 plus 1.0fil
 ...\glue(\rightskip) 0.0 plus 1.0fil
@@ -175,6 +177,7 @@ Overfull \hbox (12.4pt too wide) detected at line 53
 ...\OT1/cmr/m/n/10 4
 ...\hbox(0.0+3.60004)x0.0
 ....\rule(*+3.60004)x0.0
+...\kern 0.0
 ...\penalty 10000
 ...\glue(\parfillskip) 0.0 plus 1.0fil
 ...\glue(\rightskip) 0.0 plus 1.0fil
