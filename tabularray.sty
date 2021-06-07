@@ -262,6 +262,13 @@
   }
 \cs_generate_variant:Nn \__tblr_text_gput_if_larger:nnn { nne, nnV, nen, nee, neV }
 
+\cs_new_protected:Npn \__tblr_text_gadd_dimen_value:nnn #1 #2 #3
+  {
+    \__tblr_text_gput:nne {#1} {#2}
+      { \dim_eval:n { \__tblr_text_item:ne {#1} {#2} + #3 } }
+  }
+\cs_generate_variant:Nn \__tblr_text_gadd_dimen_value:nnn { nne, nnV, nen, nee }
+
 \cs_new_protected:Npn \__tblr_text_log:n #1
   {
     \clist_gremove_duplicates:c
