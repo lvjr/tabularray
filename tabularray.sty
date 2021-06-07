@@ -217,6 +217,9 @@
 
 \cs_new_protected:Npn \__tblr_clear_text_lists:
   {
+    %\__tblr_clear_one_text_lists:n { row }
+    %\__tblr_clear_one_text_lists:n { column }
+    %\__tblr_clear_one_text_lists:n { cell }
     \__tblr_clear_one_text_lists:n { text }
     \__tblr_clear_one_text_lists:n { hline }
     \__tblr_clear_one_text_lists:n { vline }
@@ -685,39 +688,39 @@
       {
         \cs_set_protected:Npn \__tblr_data_gput:nnnn #1 #2 #3 #4
           {
-            \__tblr_prop_gput:nnn {#1} { [#2] / #3 } {#4}
+            \__tblr_text_gput:nnn {#1} { [#2] / #3 } {#4}
           }
         \cs_set_protected:Npn \__tblr_data_gput:nnnnn #1 #2 #3 #4 #5
           {
-            \__tblr_prop_gput:nnn {#1} { [#2][#3] / #4 } {#5}
+            \__tblr_text_gput:nnn {#1} { [#2][#3] / #4 } {#5}
           }
         \cs_set:Npn \__tblr_data_item:nnn #1 #2 #3
           {
-            \__tblr_prop_item:nn {#1} { [#2] / #3 }
+            \__tblr_text_item:nn {#1} { [#2] / #3 }
           }
         \cs_set:Npn \__tblr_data_item:nnnn #1 #2 #3 #4
           {
-            \__tblr_prop_item:nn {#1} { [#2][#3] / #4 }
+            \__tblr_text_item:nn {#1} { [#2][#3] / #4 }
           }
         \cs_set_protected:Npn \__tblr_data_log:n #1
           {
-            \__tblr_prop_log:n {#1}
+            \__tblr_text_log:n {#1}
           }
         \cs_set_protected:Npn \__tblr_data_gput_if_larger:nnnn #1 #2 #3 #4
           {
-            \__tblr_prop_gput_if_larger:nnn {#1} { [#2] / #3 } {#4}
+            \__tblr_text_gput_if_larger:nnn {#1} { [#2] / #3 } {#4}
           }
         \cs_set_protected:Npn \__tblr_data_gput_if_larger:nnnnn #1 #2 #3 #4 #5
           {
-            \__tblr_prop_gput_if_larger:nnn {#1} { [#2][#3] / #4 } {#5}
+            \__tblr_text_gput_if_larger:nnn {#1} { [#2][#3] / #4 } {#5}
           }
         \cs_set_protected:Npn \__tblr_data_gadd_dimen_value:nnnn #1 #2 #3 #4
           {
-            \__tblr_prop_gadd_dimen_value:nnn {#1} { [#2] / #3 } {#4}
+            \__tblr_text_gadd_dimen_value:nnn {#1} { [#2] / #3 } {#4}
           }
         \cs_set_protected:Npn \__tblr_data_gadd_dimen_value:nnnnn #1 #2 #3 #4 #5
           {
-            \__tblr_prop_gadd_dimen_value:nnn {#1} { [#2][#3] / #4 } {#5}
+            \__tblr_text_gadd_dimen_value:nnn {#1} { [#2][#3] / #4 } {#5}
           }
       }
   }
