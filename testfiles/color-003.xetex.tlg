@@ -11,7 +11,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ============================================================
 TEST 2: multicolumn: compute span widths from column widths
 ============================================================
-Overfull \hbox (12.4pt too wide) detected at line 58
+Overfull \hbox (12.4pt too wide) detected at line 60
 [] 
 \hbox(8.39996+15.60004)x85.73999
 .\vbox(8.39996+15.60004)x98.13998
@@ -44,7 +44,7 @@ Overfull \hbox (12.4pt too wide) detected at line 58
 ...\glue(\parfillskip) 0.0 plus 1.0fil
 ...\glue(\rightskip) 0.0 plus 1.0fil
 .\glue 0.0 plus 1.0fil
-Overfull \hbox (12.4pt too wide) detected at line 58
+Overfull \hbox (12.4pt too wide) detected at line 60
 [] 
 \hbox(8.39996+15.60004)x118.13998
 .\vbox(8.39996+15.60004)x130.53998
@@ -93,7 +93,7 @@ Overfull \hbox (12.4pt too wide) detected at line 58
 ...\glue(\parfillskip) 0.0 plus 1.0fil
 ...\glue(\rightskip) 0.0 plus 1.0fil
 .\glue 0.0 plus 1.0fil
-Overfull \hbox (12.4pt too wide) detected at line 58
+Overfull \hbox (12.4pt too wide) detected at line 60
 [] 
 \hbox(8.39996+27.60004)x75.73999
 .\vbox(8.39996+27.60004)x88.13998

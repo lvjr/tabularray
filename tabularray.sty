@@ -2239,15 +2239,21 @@
     \__tblr_clear_prop_lists:
     \__tblr_clear_spec_lists:
     \__tblr_enable_table_commands:
+    \LogTblrTracing { step = split ~ table}
     \__tblr_split_table:n { #3 }
     \LogTblrTracing { command }
     \bool_if:NT \g__tblr_use_intarray_bool { \__tblr_initial_table_data: }
+    \LogTblrTracing { step = initial ~ table ~ spec}
     \__tblr_initial_table_spec:
     \LogTblrTracing { table }
+    \LogTblrTracing { step = parse ~ table ~ spec}
     \__tblr_parse_table_spec:n { #2 }
+    \LogTblrTracing { step = execute ~ table ~ commands}
     \__tblr_execute_table_commands:
     \__tblr_disable_table_commands:
+    \LogTblrTracing { step = calculate ~ cell ~ and ~ line ~ sizes}
     \__tblr_calc_cell_and_line_sizes:
+    \LogTblrTracing { step = build ~ the ~ whole ~ table}
     \__tblr_build_whole:n { #1 }
     \int_gdecr:N \g_tblr_level_int
   }
@@ -4394,6 +4400,9 @@
 \bool_new:N \g__tblr_tracing_target_bool
 \bool_new:N \g__tblr_tracing_cellspan_bool
 \bool_new:N \g__tblr_tracing_intarray_bool
+\bool_new:N \g__tblr_tracing_step_bool
+
+\bool_gset_true:N \g__tblr_tracing_step_bool
 
 \keys_define:nn { tblr-set-tracing }
   {
@@ -4423,6 +4432,8 @@
     -cellspan .code:n = \bool_gset_false:N \g__tblr_tracing_cellspan_bool,
     +intarray .code:n = \bool_gset_true:N \g__tblr_tracing_intarray_bool,
     -intarray .code:n = \bool_gset_false:N \g__tblr_tracing_intarray_bool,
+    +step .code:n = \bool_gset_true:N \g__tblr_tracing_step_bool,
+    -step .code:n = \bool_gset_false:N \g__tblr_tracing_step_bool,
     all .code:n = \__tblr_enable_all_tracings:,
     none .code:n = \__tblr_disable_all_tracings:,
   }
@@ -4442,6 +4453,7 @@
     \bool_gset_true:N \g__tblr_tracing_target_bool
     \bool_gset_true:N \g__tblr_tracing_cellspan_bool
     \bool_gset_true:N \g__tblr_tracing_intarray_bool
+    \bool_gset_true:N \g__tblr_tracing_step_bool
   }
 
 \cs_new_protected_nopar:Npn \__tblr_disable_all_tracings:
@@ -4459,6 +4471,7 @@
     \bool_gset_false:N \g__tblr_tracing_target_bool
     \bool_gset_false:N \g__tblr_tracing_cellspan_bool
     \bool_gset_false:N \g__tblr_tracing_intarray_bool
+    \bool_gset_false:N \g__tblr_tracing_step_bool
   }
 
 \NewDocumentCommand \LogTabularrayTracing { m }
@@ -4469,6 +4482,7 @@
 
 \keys_define:nn { tblr-log-tracing }
   {
+    step .code:n = \__tblr_log_tracing_step:n {#1},
     unknown .code:n = \__tblr_log_tracing:N \l_keys_key_str
   }
 
@@ -4545,6 +4559,11 @@
     \prop_log:N \l__tblr_row_item_skip_size_prop
     \prop_log:N \l__tblr_row_span_size_prop
     \prop_log:N \l__tblr_row_span_to_row_prop
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_step:n #1
+  {
+    \bool_if:NT \g__tblr_tracing_step_bool { \tl_log:x {Step :~ #1} }
   }
 
 \cs_new_protected:Npn \__tblr_do_if_tracing:nn #1 #2
