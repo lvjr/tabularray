@@ -48,4 +48,16 @@
 %\end{tblr}
 %\ENDTEST
 
+\bigskip\hrule\bigskip
+
+\BEGINTEST{auto break lines by \\ with font option}
+\begin{tblr}{
+  colspec = {|l|l|l|}, cell{1}{2} = {font=\small}, cell{1}{3} = {font=\bfseries},
+}
+  {text  \\ in \\ multiple \\ lines}
+& {text  \\ in \\ multiple \\ lines}
+& {text  \\ in \\ multiple \\ lines}
+\end{tblr}
+\ENDTEST
+
 \end{document}
