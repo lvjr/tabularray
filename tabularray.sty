@@ -2928,6 +2928,15 @@
               \g__tblr_cell_foot_dim
           }
       }
+    \int_step_inline:nn { \c@colcount }
+      {
+        \tl_set:Nx \l__tblr_w_tl
+           { \__tblr_data_item:nen { column } {##1} { width } }
+        \dim_compare:nNnF { \l__tblr_w_tl } < { 0pt }
+          {
+            \__tblr_data_gput:nenV { column } {##1} { @col-width } \l__tblr_w_tl
+          }
+      }
   }
 
 %% Measure and update natural dimensions of the row/column/cell
@@ -3679,7 +3688,7 @@
     \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
         \__tblr_data_gput:nene { column }
-          { \l__tblr_j_tl } { @col-width }
+          { \l__tblr_j_tl } { width }
           { \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[\l__tblr_j_tl] } }
       }
   }
