@@ -346,6 +346,7 @@
 \__tblr_data_new_key:nnn { cell } { halign }       { str }
 \__tblr_data_new_key:nnn { cell } { valign }       { str }
 \__tblr_data_new_key:nnn { cell } { background }   { str }
+\__tblr_data_new_key:nnn { cell } { font }         { str }
 \__tblr_data_new_key:nnn { cell } { omit }         { int }
 \__tblr_data_new_key:nnn { cell } { @cell-width }  { dim }
 \__tblr_data_new_key:nnn { cell } { @cell-height } { dim }
@@ -517,18 +518,18 @@
 
 \cs_new_protected:Npn \__tblr_data_int_from_str:n #1
   {
-    \tl_if_exist:cTF { g__tblr_data_#1_to_int_tl }
+    \tl_if_exist:cTF { g__tblr_data_ \tl_to_str:n {#1} _to_int_tl }
       {
         \tl_gset_eq:Nc \g__tblr_data_int_from_value_tl
-          { g__tblr_data_#1_to_int_tl }
+          { g__tblr_data_ \tl_to_str:n {#1} _to_int_tl }
       }
       {
         \int_gincr:N \g__tblr_data_str_value_count_int
-        \tl_gset:cx { g__tblr_data_#1_to_int_tl }
+        \tl_gset:cx { g__tblr_data_ \tl_to_str:n {#1} _to_int_tl }
           { \int_use:N \g__tblr_data_str_value_count_int }
-        \tl_gset:cx
+        \tl_gset:cn
           { g__tblr_data_ \int_use:N \g__tblr_data_str_value_count_int _to_str_tl }
-          { #1 }
+          { \exp_not:n {#1} }
         \tl_gset:Nx \g__tblr_data_int_from_value_tl
           { \int_use:N \g__tblr_data_str_value_count_int }
       }
@@ -1476,9 +1477,23 @@
     preto .code:n = \__tblr_cell_preto_text:n {#1},
     appto .code:n = \__tblr_cell_appto_text:n {#1},
     fg .code:n = \__tblr_cell_preto_text:n { \color{#1} },
-    font .code:n = \__tblr_cell_preto_text:n { #1 \selectfont },
+    font .code:n = \__tblr_cell_gput:nn { font } { #1 \selectfont },
     unknown .code:n = \__tblr_cell_unknown_key:V \l_keys_key_str,
   }
+
+\cs_new_protected:Npn \__tblr_cell_gput:nn #1 #2
+  {
+    \__tblr_data_gput:neenn { cell }
+      { \int_use:N \c@rownum } { \int_use:N \c@colnum } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_cell_gput:nn { ne }
+
+\cs_new_protected:Npn \__tblr_cell_gput:nnnn #1 #2 #3 #4
+  {
+    \__tblr_data_gput:nnnnn { cell } {#1} {#2} {#3} {#4}
+  }
+\cs_generate_variant:Nn \__tblr_cell_gput:nnnn
+  { nenn, ennn, eenn, nene, enne, eene }
 
 \tl_new:N \l__tblr_cell_text_tl
 
@@ -1709,7 +1724,8 @@
     bg .code:n = \__tblr_set_key_for_every_column_cell:nnn
                   { \int_use:N \c@colnum } { background } {#1},
     fg .code:n = \__tblr_preto_text_for_every_column_cell:n { \color{#1} },
-    font .code:n = \__tblr_preto_text_for_every_column_cell:n { #1 \selectfont },
+    font .code:n = \__tblr_set_key_for_every_column_cell:nnn
+                     { \int_use:N \c@colnum } { font } { #1 \selectfont },
     wd .code:n = \__tblr_data_gput:nene { column }
                    { \int_use:N \c@colnum } { width } { \dim_eval:n {#1} },
     co .code:n = \__tblr_data_gput:nene { column }
@@ -1861,7 +1877,8 @@
     bg .code:n = \__tblr_set_key_for_every_row_cell:nnn
                   { \int_use:N \c@rownum } { background } {#1},
     fg .code:n = \__tblr_preto_text_for_every_row_cell:n { \color{#1} },
-    font .code:n = \__tblr_preto_text_for_every_row_cell:n { #1 \selectfont },
+    font .code:n = \__tblr_set_key_for_every_row_cell:nnn
+                     { \int_use:N \c@rownum } { font } { #1 \selectfont },
     ht .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
                    { height } { \dim_eval:n {#1} },
     co .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
@@ -2972,6 +2989,7 @@
   {
     \group_begin:
     \tl_set:Nx \l__tblr_c_tl { \__tblr_spec_item:ne { text } {[#1][#2]} }
+    \tl_set:Nx \l__tblr_f_tl { \__tblr_data_item:neen { cell } {#1} {#2} { font } }
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_data_item:neen { cell } {#1} {#2} { width } }
     \dim_compare:nNnT { \l__tblr_w_tl } < { 0pt } % cell width unset
@@ -2998,12 +3016,13 @@
             \seq_map_variable:NNn \l_tmpa_seq \l_tmpa_tl
               {
                 \__tblr_remove_braces:N \l_tmpa_tl
-                \hbox_set:Nn \l_tmpa_box { \l_tmpa_tl }
+                \hbox_set:Nn \l_tmpa_box { \l__tblr_f_tl \l_tmpa_tl }
                 \tl_set:Nx \l__tblr_w_tl
                   { \dim_max:nn { \l__tblr_w_tl } { \box_wd:N \l_tmpa_box } }
               }
           }
       }
+    \tl_put_left:NV \l__tblr_c_tl \l__tblr_f_tl
     \__tblr_get_vcell_and_sizes:NN \l__tblr_c_tl \l__tblr_w_tl
     \group_end:
   }
