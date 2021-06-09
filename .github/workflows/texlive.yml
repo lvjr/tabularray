@@ -2,7 +2,7 @@
 
 name: Test tabularray in TeX Live
 
-on: [push]
+on: [push, pull_request]
 
 env:
   CTAN_URL: https://mirrors.rit.edu/CTAN
