@@ -2911,7 +2911,8 @@
         \int_zero:N \c@colnum
         \tl_set:Nx \l__tblr_h_tl
            { \__tblr_data_item:nen { row } { \int_use:N \c@rownum } { height } }
-        \tl_if_empty:NF \l__tblr_h_tl
+        %% We didn't initialize row heights with -1pt
+        \dim_compare:nNnF { \l__tblr_h_tl } = { 0pt }
           {
             \__tblr_data_gput:nenV { row } { \int_use:N \c@rownum }
               { @row-height } \l__tblr_h_tl
