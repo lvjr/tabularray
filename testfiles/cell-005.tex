@@ -37,4 +37,29 @@
 \end{tblr}
 \ENDTEST
 
+\bigskip\hrule\bigskip
+
+%% Issue #15
+\BEGINTEST{testing fix-width columns with all cells spanned}
+\noindent
+\begin{tblr}{width=\textwidth,colsep=2pt,colspec={|*{16}{X[c]|}}}
+\hline
+  \multicolumn{4}{|r|}{4}
+& \multicolumn{4}{r|}{8}
+& \multicolumn{4}{r|}{12}
+& \multicolumn{4}{r|}{16}\\
+\hline
+  \multicolumn{1}{|c|}{B/R}
+& \multicolumn{5}{c|}{Msg-Type}
+& \multicolumn{5}{c|}{Src-Addr}
+& \multicolumn{5}{c|}{Dest-Addr}\\
+\hline
+  \multicolumn{16}{|c|}{Fletcher-16 Checksum}\\
+\hline
+  \multicolumn{8}{|c|}{Payload-Length in Bits}
+& \multicolumn{8}{c|}{Payload max. 28 Byte}\\
+\hline
+\end{tblr}
+\ENDTEST
+
 \end{document}
