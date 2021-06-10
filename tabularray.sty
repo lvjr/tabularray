@@ -184,7 +184,7 @@
       { \dim_compare_p:nNn { #3 } > { \l__tblr_put_if_larger_tl } }
       { \prop_put:Nnn #1 { #2 } { #3 }  }
   }
-\cs_generate_variant:Nn \__tblr_put_if_larger:Nnn { Nnx, Nxn, Nxx }
+\cs_generate_variant:Nn \__tblr_put_if_larger:Nnn { Nnx, Nxn, Nxx, NnV }
 
 \cs_new_protected:Npn \__tblr_gput_if_larger:Nnn #1 #2 #3
   {
@@ -2631,7 +2631,7 @@
 \clist_new:N \g__tblr_table_known_keys_clist
 \clist_gset:Nn \g__tblr_table_known_keys_clist
   {
-    long, colspec, rowspec, width, hspan, stretch,
+    long, colspec, rowspec, width, hspan, vspan, stretch,
     column, row, cell, vline, hline, columns, rows, cells, vlines, hlines,
     leftsep, rightsep, colsep, abovesep, belowsep, rowsep, rulesep,
   }
@@ -2645,6 +2645,7 @@
     rowspec .code:n = \__tblr_parse_colrow_spec:nn { row } {#1},
     width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
     hspan .code:n = \__tblr_keys_gput:nn { hspan } {#1},
+    vspan .code:n = \__tblr_keys_gput:nn { vspan } {#1},
     stretch .code:n = \__tblr_keys_gput:nn { stretch } {#1},
     columns .code:n = \__tblr_set_every_column_aux:n {#1},
     rows    .code:n = \__tblr_set_every_row_aux:n {#1},
@@ -3630,27 +3631,49 @@
 %% Compute and set column widths from span widths
 \cs_new_protected:Npn \__tblr_set_column_widths_from_span_widths:
   {
-    \__tblr_calc_item_sizes_from_span_sizes:xNN
-      { \int_use:N \c@colcount }
-      \l__tblr_col_item_skip_size_prop
-      \l__tblr_col_span_size_prop
+    \str_if_eq:xnTF
+      { \__tblr_prop_item:ne {table} {hspan} }
+      { even }
+      {
+        \__tblr_distribute_span_sizes_even:xNN
+          { \int_use:N \c@colcount }
+          \l__tblr_col_item_skip_size_prop
+          \l__tblr_col_span_size_prop
+      }
+      {
+        \__tblr_distribute_span_sizes_default:xNN
+          { \int_use:N \c@colcount }
+          \l__tblr_col_item_skip_size_prop
+          \l__tblr_col_span_size_prop
+      }
     \__tblr_set_all_column_widths:
   }
 
 %% Compute and set row heights from span heights
 \cs_new_protected:Npn \__tblr_set_row_heights_from_span_heights:
   {
-    \__tblr_calc_item_sizes_from_span_sizes:xNN
-      { \int_use:N \c@rowcount }
-      \l__tblr_row_item_skip_size_prop
-      \l__tblr_row_span_size_prop
+    \str_if_eq:xnTF
+      { \__tblr_prop_item:ne {table} {vspan} }
+      { even }
+      {
+        \__tblr_distribute_span_sizes_even:nNN
+          { \int_use:N \c@rowcount }
+          \l__tblr_row_item_skip_size_prop
+          \l__tblr_row_span_size_prop
+      }
+      {
+        \__tblr_distribute_span_sizes_default:xNN
+          { \int_use:N \c@rowcount }
+          \l__tblr_row_item_skip_size_prop
+          \l__tblr_row_span_size_prop
+      }
     \__tblr_set_all_row_heights:
   }
 
 %% See page 245 in Chapter 22 of TeXbook
 %% #1: total number of items
 %% #2: prop list with item sizes and skip sizes; #3: prop list with span sizes
-\cs_new_protected:Npn \__tblr_calc_item_sizes_from_span_sizes:nNN #1 #2 #3
+\cs_new_protected:Npn \__tblr_distribute_span_sizes_default:nNN #1 #2 #3
   {
     \int_step_variable:nNn { #1 } \l__tblr_j_tl
       {
@@ -3701,7 +3724,53 @@
       }
     \__tblr_do_if_tracing:nn { cellspan } { \prop_log:N #2 }
   }
-\cs_generate_variant:Nn \__tblr_calc_item_sizes_from_span_sizes:nNN { x }
+\cs_generate_variant:Nn \__tblr_distribute_span_sizes_default:nNN { x }
+
+%% #1: total number of items
+%% #2: prop list with item sizes and skip sizes; #3: prop list with span sizes
+\cs_new_protected:Npn \__tblr_distribute_span_sizes_even:nNN #1 #2 #3
+  {
+    \prop_clear:N \l_tmpa_prop
+    \prop_map_inline:Nn #3
+      {
+        \__tblr_get_span_from_to:w ##1 \scan_stop:
+        \dim_set:Nn \l_tmpa_dim {##2}
+        \dim_sub:Nn \l_tmpa_dim { \prop_item:Ne #2 { item[\l__tblr_a_tl] } }
+        \int_step_inline:nnn { \l__tblr_a_tl + 1 } { \l__tblr_b_tl }
+          {
+            \dim_sub:Nn \l_tmpa_dim
+              {
+                \prop_item:Nn #2 { item[####1] } + \prop_item:Ne #2 { skip[####1] }
+              }
+          }
+        \__tblr_do_if_tracing:nn { cellspan }
+          {
+            \tl_log:x { \l__tblr_a_tl -> \l__tblr_b_tl : ~ \dim_use:N \l_tmpa_dim }
+          }
+        \dim_compare:nNnT {\l_tmpa_dim} > {0pt}
+          {
+            \tl_set:Nx \l_tmpa_tl
+              { \dim_eval:n { \l_tmpa_dim / (\l__tblr_b_tl - \l__tblr_a_tl + 1) } }
+            \int_step_inline:nnn { \l__tblr_a_tl } { \l__tblr_b_tl }
+              {
+                \__tblr_put_if_larger:NnV \l_tmpa_prop {####1} \l_tmpa_tl
+              }
+          }
+      }
+    \__tblr_do_if_tracing:nn { cellspan } { \prop_log:N \l_tmpa_prop }
+    \prop_map_inline:Nn \l_tmpa_prop
+      {
+        \__tblr_add_dimen_value:Nnn #2 {item[##1]} {##2}
+      }
+    \__tblr_do_if_tracing:nn { cellspan } { \prop_log:N #2 }
+  }
+\cs_generate_variant:Nn \__tblr_distribute_span_sizes_even:nNN { x }
+
+\cs_new_protected:Npn \__tblr_get_span_from_to:w (#1-#2) \scan_stop:
+  {
+    \tl_set:Nn \l__tblr_a_tl {#1}
+    \tl_set:Nn \l__tblr_b_tl {#2}
+  }
 
 \cs_new_protected:Npn \__tblr_set_all_column_widths:
   {
@@ -4350,6 +4419,8 @@
 %% #1: row number; #2: column number; #3: dimen register for rowsep above.
 %% #4: dimen register for total height; #5: dimen register for rowsep below.
 %% We can use \l__tblr_row_item_skip_size_prop which was made before
+%% But when vspan=even, there are no itemskip in the prop list.
+%% Therefore we need to calculate them from the sizes of items and skips
 \cs_new_protected:Npn \__tblr_get_span_vertical_sizes:NNNNN #1 #2 #3 #4 #5
   {
     \dim_set:Nn #3
@@ -4358,7 +4429,12 @@
     \int_step_inline:nnn { #1 } { #1 + \l__tblr_cell_rowspan_tl - 2 }
       {
         \dim_add:Nn #4
-          { \prop_item:Ne \l__tblr_row_item_skip_size_prop { itemskip[##1] } }
+          {
+            \prop_item:Ne \l__tblr_row_item_skip_size_prop { item[##1] }
+            +
+            \prop_item:Ne \l__tblr_row_item_skip_size_prop
+              { skip[\int_eval:n { ##1 + 1 }] }
+          }
       }
     \dim_add:Nn #4
       {
@@ -4376,7 +4452,7 @@
 %% #1: row number; #2: column number; #3: dimen register for colsep left.
 %% #4: dimen register for total width; #5: dimen register for colsep right.
 %% We can use \l__tblr_col_item_skip_size_prop which was made before
-%% But when hspan=minimal, there are no itemskip in the prop list.
+%% But when hspan=even or hspan=minimal, there are no itemskip in the prop list.
 %% Therefore we need to calculate them from the sizes of items and skips
 \cs_new_protected:Npn \__tblr_get_span_horizontal_sizes:NNNNN #1 #2 #3 #4 #5
   {
