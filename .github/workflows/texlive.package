@@ -10,7 +10,6 @@ bibunits
 bigintcalc
 bitset
 booktabs
-calc
 caption
 carlisle
 cjk
@@ -18,7 +17,6 @@ cjkpunct
 cjkutils
 cleveref
 cm
-context
 ctablestack
 currfile
 diagbox
