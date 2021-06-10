@@ -10,6 +10,7 @@ bibunits
 bigintcalc
 bitset
 booktabs
+calc
 caption
 carlisle
 cjk
@@ -86,6 +87,7 @@ pdflscape
 pdfpages
 pdftexcmds
 pgf
+pict2e
 pkuthss
 platex-tools
 psnfss
