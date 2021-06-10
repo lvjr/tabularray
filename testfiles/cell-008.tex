@@ -67,4 +67,29 @@
 \end{tblr}
 \ENDTEST
 
+\bigskip
+
+\BEGINTEST{multirow: modern with vspan=even}
+\begin{tblr}{colspec={|h{4em}|f{4em}|m{4em}|m{4em}|f{4em}|h{4em}|},vspan=even}
+\hline
+  \SetCell[r=2]{f}f 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 &
+  \SetCell{h}row head row head & middle &
+  \SetCell[r=3]{h}h 13 13 & row foot row foot &
+  \SetCell[r=4]{h}h 14 14 \\
+\cline{2-3}\cline{5-5}
+  12 12 12 12 12 &
+  \SetCell[r=2]{h}h 23 23 &
+  \SetCell{f}row foot row foot & &
+  \SetCell[r=3]{f}f 24 24 & \\
+\cline{1-1}\cline{3-3}
+  row head row head & &
+  \SetCell[r=2]{m}m 34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 & & & \\
+\cline{1-2}\cline{4-4}
+  row head row head &
+  \SetCell{f}row foot row foot & &
+  \SetCell{m}middle & & \\
+\hline
+\end{tblr}
+\ENDTEST
+
 \end{document}

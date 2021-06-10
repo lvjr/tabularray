@@ -15,6 +15,28 @@
 \START
 \hrule\bigskip
 
+\BEGINTEST{multicolumn: compute span widths from column widths}
+TB\begin{tblr}{hspan=minimal,colspec={|l|l|l|Q[t,l]|l|}}
+\hline
+  11111111 & 222222 & 333big333 & 4444 \\
+\hline
+  \SetCell[c=2]{}12 12 12 12 12 12 12 12 12 12 & 222 & 333 & 444 \\
+\hline
+  \SetCell[c=3]{}13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 & 222 & 333 & 444 \\
+\hline
+  111 & \SetCell[c=2]{}23 23 23 23 23 23 23 23 & 333 & 444 \\
+\hline
+  \SetCell[c=4]{}14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 & 222 & 333 & 444 \\
+\hline
+  111 & \SetCell[c=3]{}24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 & 333 & 444 \\
+\hline
+  111 & 222 & \SetCell[c=2]{}34 34 34 34 34 34 34 34 34 34 34 34 34 34 34 & 444 \\
+\hline
+\end{tblr}LR
+\ENDTEST
+
+\bigskip
+
 \BEGINTEST{multicolumn: compute column widths from span widths}
 TB\begin{tblr}{|l|l|l|Q[t,l]|l|}
 \hline
@@ -37,8 +59,8 @@ TB\begin{tblr}{|l|l|l|Q[t,l]|l|}
 
 \bigskip
 
-\BEGINTEST{multicolumn: compute span widths from column widths}
-TB\begin{tblr}{hspan=minimal,colspec={|l|l|l|Q[t,l]|l|}}
+\BEGINTEST{multicolumn: distribute span sizes evenly to columns}
+TB\begin{tblr}{colspec={|l|l|l|Q[t,l]|l|}, hspan=even}
 \hline
   11111111 & 222222 & 333big333 & 4444 \\
 \hline
