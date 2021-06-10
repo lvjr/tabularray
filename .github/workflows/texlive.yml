@@ -24,7 +24,7 @@ jobs:
     - name: Test tabularray with l3build
       run: |
         export PATH=${{github.workspace}}/tmp/texlive/bin/x86_64-linux:$PATH
-        l3build check
+        l3build check --debug --halt-on-error --show-log-on-error
     - name: Install pdftoppm
       run:
         sudo apt-get install poppler-utils
@@ -48,7 +48,7 @@ jobs:
     - name: Test tabularray with l3build
       run: |
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\win32;" + ${env:PATH}
-        l3build check
+        l3build check --debug --halt-on-error --show-log-on-error
     - name: Install pdftoppm
       run: |
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\win32;" + ${env:PATH}
