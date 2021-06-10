@@ -3733,14 +3733,14 @@
     \prop_clear:N \l_tmpa_prop
     \prop_map_inline:Nn #3
       {
-        \__tblr_get_span_from_to:w ##1 \scan_stop:
+        \__tblr_get_span_from_to:w ##1
         \dim_set:Nn \l_tmpa_dim {##2}
         \dim_sub:Nn \l_tmpa_dim { \prop_item:Ne #2 { item[\l__tblr_a_tl] } }
         \int_step_inline:nnn { \l__tblr_a_tl + 1 } { \l__tblr_b_tl }
           {
             \dim_sub:Nn \l_tmpa_dim
               {
-                \prop_item:Nn #2 { item[####1] } + \prop_item:Ne #2 { skip[####1] }
+                \prop_item:Ne #2 { skip[####1] } + \prop_item:Nn #2 { item[####1] }
               }
           }
         \__tblr_do_if_tracing:nn { cellspan }
@@ -3766,7 +3766,7 @@
   }
 \cs_generate_variant:Nn \__tblr_distribute_span_sizes_even:nNN { x }
 
-\cs_new_protected:Npn \__tblr_get_span_from_to:w (#1-#2) \scan_stop:
+\cs_new_protected:Npn \__tblr_get_span_from_to:w (#1-#2)
   {
     \tl_set:Nn \l__tblr_a_tl {#1}
     \tl_set:Nn \l__tblr_b_tl {#2}
@@ -3802,12 +3802,6 @@
         \__tblr_data_gput:nene { row }
           { \l__tblr_i_tl } { @row-height } { \l__tblr_a_tl }
       }
-  }
-
-\cs_new_protected:Npn \__tblr_get_span_key_row_col:w [#1][#2]
-  {
-    \tl_set:Nn \l__tblr_i_tl {#1}
-    \tl_set:Nn \l__tblr_j_tl {#2}
   }
 
 %% Compute and set span widths from column widths
@@ -4426,20 +4420,16 @@
     \dim_set:Nn #3
       { \__tblr_data_item:nen { row } {#1} { abovesep } }
     \dim_zero:N #4
-    \int_step_inline:nnn { #1 } { #1 + \l__tblr_cell_rowspan_tl - 2 }
+    \dim_add:Nn #4
+      { \prop_item:Ne \l__tblr_row_item_skip_size_prop { item[#1] } }
+    \int_step_inline:nnn { #1 + 1 } { #1 + \l__tblr_cell_rowspan_tl - 1 }
       {
         \dim_add:Nn #4
           {
-            \prop_item:Ne \l__tblr_row_item_skip_size_prop { item[##1] }
+            \prop_item:Ne \l__tblr_row_item_skip_size_prop { skip[##1] }
             +
-            \prop_item:Ne \l__tblr_row_item_skip_size_prop
-              { skip[\int_eval:n { ##1 + 1 }] }
+            \prop_item:Ne \l__tblr_row_item_skip_size_prop { item[##1] }
           }
-      }
-    \dim_add:Nn #4
-      {
-        \prop_item:Ne \l__tblr_row_item_skip_size_prop
-          { item[\int_eval:n { #1 + \l__tblr_cell_rowspan_tl - 1 }] }
       }
     \dim_set:Nn #5
       {
@@ -4459,20 +4449,16 @@
     \dim_set:Nn #3
       { \__tblr_data_item:nen { column } {#2} { leftsep } }
     \dim_zero:N #4
-    \int_step_inline:nnn { #2 } { #2 + \l__tblr_cell_colspan_tl - 2 }
+    \dim_add:Nn #4
+      { \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[#2] } }
+    \int_step_inline:nnn { #2 + 1 } { #2 + \l__tblr_cell_colspan_tl - 1 }
       {
-        \dim_add:Nn #4
-          { \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[##1] } }
         \dim_add:Nn #4
           {
-            \prop_item:Ne \l__tblr_col_item_skip_size_prop
-              { skip[\int_eval:n { ##1 + 1 }] }
+            \prop_item:Ne \l__tblr_col_item_skip_size_prop { skip[##1] }
+            +
+            \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[##1] }
           }
-      }
-    \dim_add:Nn #4
-      {
-        \prop_item:Ne \l__tblr_col_item_skip_size_prop
-          { item[\int_eval:n { #2 + \l__tblr_cell_colspan_tl - 1 }] }
       }
     \dim_set:Nn #5
       {
