@@ -4662,4 +4662,33 @@
     \bool_if:cT { g__tblr_tracing_ #1 _bool } {#2}
   }
 
+%%% --------------------------------------------------------
+%%  \section{Tabularray Libraries}
+%%% --------------------------------------------------------
+
+%% Library diagbox and command \diagbox
+
+\cs_new_protected:Npn \__tblr_use_lib_diagbox:
+  {
+    \RequirePackage{diagbox}
+    \cs_set_eq:NN \__tblr_lib_saved_diagbox:w \diagbox
+    \RenewDocumentCommand \diagbox { O{} m m }
+      {
+        \__tblr_lib_diagbox_fix:n
+          { \__tblr_lib_saved_diagbox:w [##1] {##2} {##3} }
+      }
+  }
+
+\box_new:N \l__tblr_diag_box
+
+\cs_new_protected:Npn \__tblr_lib_diagbox_fix:n #1
+  {
+    \hbox_set:Nn \l__tblr_diag_box {#1}
+    \box_set_ht:Nn \l__tblr_diag_box { \box_ht:N \l__tblr_diag_box - 2pt }
+    \box_set_dp:Nn \l__tblr_diag_box { \box_dp:N \l__tblr_diag_box - 2pt }
+    \box_use:N \l__tblr_diag_box
+  }
+
+\__tblr_use_lib_diagbox:
+
 \ExplSyntaxOff
