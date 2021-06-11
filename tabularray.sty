@@ -901,6 +901,40 @@
   }
 
 %%% --------------------------------------------------------
+%%> \section{New Content Commands}
+%%% --------------------------------------------------------
+
+%% We need to emulate or fix some commands such as \diagbox in other packages
+%% These commands must be defined with \NewContentCommand command
+%% We only enable them inside tblr environment to avoid potential conflict
+
+\clist_new:N \g__tblr_content_commands_clist
+
+\msg_new:nnn { tabularray } { defined-content-command }
+  { Content ~ commnad ~ #1 has ~ been ~ defined! }
+
+\NewDocumentCommand \NewContentCommand { m O{0} o m }
+  {
+    \clist_if_in:NnTF \g__tblr_content_commands_clist { #1 }
+      {
+        \msg_warning:nnn { tabularray } { defined-content-command } { #1 }
+        \clist_log:N \g__tblr_content_commands_clist
+      }
+      {
+        \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_a_tl
+        \exp_args:NcV \NewDocumentCommand
+          { __tblr_content_command_ \cs_to_str:N #1 :w } \l__tblr_a_tl { #4 }
+        \clist_gput_right:Nn \g__tblr_content_commands_clist { #1 }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_enable_content_commands:
+  {
+    \clist_map_inline:Nn \g__tblr_content_commands_clist
+      { \cs_set_eq:Nc ##1 { __tblr_content_command_ \cs_to_str:N ##1 :w } }
+  }
+
+%%% --------------------------------------------------------
 %%  \section{New Dash Styles}
 %%% --------------------------------------------------------
 
@@ -2269,6 +2303,7 @@
     \__tblr_execute_table_commands:
     \__tblr_disable_table_commands:
     \LogTblrTracing { step = calculate ~ cell ~ and ~ line ~ sizes}
+    \__tblr_enable_content_commands:
     \__tblr_calc_cell_and_line_sizes:
     \LogTblrTracing { step = build ~ the ~ whole ~ table}
     \__tblr_build_whole:n { #1 }
