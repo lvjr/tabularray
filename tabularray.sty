@@ -4759,7 +4759,9 @@
         \__tblr_lib_diagbox_fix:n
           {
             \__tblr_lib_saved_diagbox:w
-              [leftsep=\leftsep, rightsep=\rightsep, ##1] {##2} {##3}
+              [ leftsep=\leftsep, rightsep=\rightsep, ##1 ]
+              { \__tblr_lib_diagbox_math_or_text:n {##2} }
+              { \__tblr_lib_diagbox_math_or_text:n {##3} }
           }
       }
     \NewContentCommand \diagboxthree [4] []
@@ -4767,9 +4769,17 @@
         \__tblr_lib_diagbox_fix:n
           {
             \__tblr_lib_saved_diagbox:w
-              [leftsep=\leftsep, rightsep=\rightsep, ##1] {##2} {##3} {##4}
+              [ leftsep=\leftsep, rightsep=\rightsep, ##1 ]
+              { \__tblr_lib_diagbox_math_or_text:n {##2} }
+              { \__tblr_lib_diagbox_math_or_text:n {##3} }
+              { \__tblr_lib_diagbox_math_or_text:n {##4} }
           }
       }
+  }
+
+\cs_new_protected:Npn \__tblr_lib_diagbox_math_or_text:n #1
+  {
+    \bool_if:NTF \l__tblr_math_mode_bool {$#1$} {#1}
   }
 
 \box_new:N \l__tblr_diag_box
