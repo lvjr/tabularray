@@ -4757,7 +4757,10 @@
     \NewContentCommand \diagbox [3] []
       {
         \__tblr_lib_diagbox_fix:n
-          { \__tblr_lib_saved_diagbox:w [##1] {##2} {##3} }
+          {
+            \__tblr_lib_saved_diagbox:w
+              [leftsep=\leftsep, rightsep=\rightsep, ##1] {##2} {##3}
+          }
       }
   }
 
@@ -4766,8 +4769,8 @@
 \cs_new_protected:Npn \__tblr_lib_diagbox_fix:n #1
   {
     \hbox_set:Nn \l__tblr_diag_box {#1}
-    \box_set_ht:Nn \l__tblr_diag_box { \box_ht:N \l__tblr_diag_box - 2pt }
-    \box_set_dp:Nn \l__tblr_diag_box { \box_dp:N \l__tblr_diag_box - 2pt }
+    \box_set_ht:Nn \l__tblr_diag_box { \box_ht:N \l__tblr_diag_box - \abovesep }
+    \box_set_dp:Nn \l__tblr_diag_box { \box_dp:N \l__tblr_diag_box - \belowsep }
     \box_use:N \l__tblr_diag_box
   }
 
