@@ -4701,9 +4701,19 @@
 %%  \section{Tabularray Libraries}
 %%% --------------------------------------------------------
 
+\NewDocumentCommand \NewTblrLibrary { m m }
+  {
+    \cs_new_protected:cpn { __tblr_use_lib_ #1: } {#2}
+  }
+
+\NewDocumentCommand \UseTblrLibrary { m }
+  {
+    \use:c { __tblr_use_lib_ #1: }
+  }
+
 %% Library diagbox and command \diagbox
 
-\cs_new_protected:Npn \__tblr_use_lib_diagbox:
+\NewTblrLibrary { diagbox }
   {
     \RequirePackage{diagbox}
     \cs_set_eq:NN \__tblr_lib_saved_diagbox:w \diagbox
@@ -4724,6 +4734,6 @@
     \box_use:N \l__tblr_diag_box
   }
 
-\__tblr_use_lib_diagbox:
+\UseTblrLibrary { diagbox }
 
 \ExplSyntaxOff
