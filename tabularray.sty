@@ -4762,6 +4762,14 @@
               [leftsep=\leftsep, rightsep=\rightsep, ##1] {##2} {##3}
           }
       }
+    \NewContentCommand \diagboxthree [4] []
+      {
+        \__tblr_lib_diagbox_fix:n
+          {
+            \__tblr_lib_saved_diagbox:w
+              [leftsep=\leftsep, rightsep=\rightsep, ##1] {##2} {##3} {##4}
+          }
+      }
   }
 
 \box_new:N \l__tblr_diag_box
