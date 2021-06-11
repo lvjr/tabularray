@@ -1,0 +1,81 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{diagbox}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{diagbox: one diagonal line}
+\begin{tabular}{|l|l|l|l|}
+\hline
+ \diagbox{Aa}{Pp} & Beta & Gamma & Delta \\
+\hline
+ Epsilon & Zeta  & Eta    & Theta \\
+\hline
+ Iota    & Kappa & Lambda & Mu    \\
+\hline
+\end{tabular}
+\qquad
+\begin{tblr}{hlines,vlines,row{1}={abovesep=3pt,belowsep=5pt},column{1}={leftsep=2pt,rightsep=4pt}}
+ \diagbox{Aa}{Pp} & Beta & Gamma & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{diagbox: two diagonal lines}
+\begin{tabular}{|l|l|l|l|}
+\hline
+ \diagbox{Aa}{Pp}{Hh} & Beta & Gamma & Delta \\
+\hline
+ Epsilon & Zeta  & Eta    & Theta \\
+\hline
+ Iota    & Kappa & Lambda & Mu    \\
+\hline
+\end{tabular}
+\qquad
+\begin{tblr}{hlines,vlines,row{1}={abovesep=5pt,belowsep=3pt},column{1}={leftsep=4pt,rightsep=2pt}}
+ \diagboxthree{Aa}{Pp}{Hh} & Beta & Gamma & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+%% by default \tabcolsep=6pt, \arraycolsep=5pt
+\BEGINTEST{diagbox: math mode}
+{\let\tabcolsep=\arraycolsep
+$\begin{array}{|c|cc|}
+\hline
+ \hbox{\diagbox{$X_1$}{$X_2$}} & 0 & 1 \\
+\hline
+  0 & 0.1 & 0.2 \\
+  1 & 0.3 & 0.4 \\
+\hline
+\end{array}$}%
+\qquad
+\SetTblrDefault{rowsep=0pt,colsep=5pt}%
+$\begin{tblr}{|c|cc|}
+\hline
+ \diagbox{X_1}{X_2} & 0 & 1 \\
+\hline
+  0 & 0.1 & 0.2 \\
+  1 & 0.3 & 0.4 \\
+\hline
+\end{tblr}$
+\ENDTEST
+
+\end{document}

@@ -1,0 +1,42 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+\usepackage{booktabs}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{booktabs}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{booktabs: testing}
+\begin{tabular}{llll}
+\toprule
+ Alpha   & Beta  & Gamma   & Delta \\
+\midrule
+ Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    \\
+ Nu      & Xi    & Omicron & Pi    \\
+\bottomrule
+\end{tabular}
+\qquad
+%\SetTblrDefault{rowsep=2pt}%
+\begin{tblr}{llll}
+\toprule
+ Alpha   & Beta  & Gamma   & Delta \\
+\midrule
+ Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    \\
+ Nu      & Xi    & Omicron & Pi    \\
+\bottomrule
+\end{tblr}
+\ENDTEST
+
+\end{document}
