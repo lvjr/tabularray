@@ -103,6 +103,12 @@
 \newcounter{rowcount}
 \newcounter{colcount}
 
+%% Some dimensions for row and column spacing
+\dim_new:N \abovesep
+\dim_new:N \belowsep
+\dim_new:N \leftsep
+\dim_new:N \rightsep
+
 %%% --------------------------------------------------------
 %%  \section{Data Structures Based on Property Lists}
 %%% --------------------------------------------------------
@@ -2962,6 +2968,7 @@
       {
         \int_incr:N \c@rownum
         \int_zero:N \c@colnum
+        \__tblr_update_rowsep_registers:
         \tl_set:Nx \l__tblr_h_tl
           { \__tblr_data_item:nen { row } { \int_use:N \c@rownum } { height } }
         %% We didn't initialize row heights with -1pt
@@ -2973,6 +2980,7 @@
         \int_step_inline:nn { \c@colcount }
           {
             \int_incr:N \c@colnum
+            \__tblr_update_colsep_registers:
             \__tblr_measure_cell_update_sizes:nnNNNN
               { \int_use:N \c@rownum }
               { \int_use:N \c@colnum }
@@ -2991,6 +2999,22 @@
             \__tblr_data_gput:nenV { column } {##1} { @col-width } \l__tblr_w_tl
           }
       }
+  }
+
+\cs_new_protected:Npn \__tblr_update_rowsep_registers:
+  {
+    \dim_set:Nn \abovesep
+      { \__tblr_data_item:nen { row } { \int_use:N \c@rownum } { abovesep } }
+    \dim_set:Nn \belowsep
+      { \__tblr_data_item:nen { row } { \int_use:N \c@rownum } { belowsep } }
+  }
+
+\cs_new_protected:Npn \__tblr_update_colsep_registers:
+  {
+    \dim_set:Nn \leftsep
+      { \__tblr_data_item:nen { column } { \int_use:N \c@colnum } { leftsep } }
+    \dim_set:Nn \rightsep
+      { \__tblr_data_item:nen { column } { \int_use:N \c@colnum } { rightsep } }
   }
 
 %% Measure and update natural dimensions of the row/column/cell
@@ -4175,6 +4199,8 @@
 %% Build current row, #1: row number
 \cs_new_protected:Npn \__tblr_build_row:N #1
   {
+    \int_set:Nn \c@rownum {#1}
+    \__tblr_update_rowsep_registers:
     \__tblr_get_row_inner_height_depth:VNNNN #1
       \l__tblr_row_ht_dim \l__tblr_row_dp_dim
       \l__tblr_row_abovesep_dim \l__tblr_row_belowsep_dim
@@ -4289,8 +4315,8 @@
 
 \cs_new_protected:Npn \__tblr_build_cell:NN #1 #2
   {
-    \int_set:Nn \c@rownum {#1}
     \int_set:Nn \c@colnum {#2}
+    \__tblr_update_colsep_registers:
     \group_begin:
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_data_item:nen { column } {#2} { @col-width } }
