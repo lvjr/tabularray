@@ -4701,6 +4701,8 @@
 %%  \section{Tabularray Libraries}
 %%% --------------------------------------------------------
 
+%% \NewTblrLibrary and \UseTblrLibrary commands
+
 \NewDocumentCommand \NewTblrLibrary { m m }
   {
     \cs_new_protected:cpn { __tblr_use_lib_ #1: } {#2}
@@ -4708,7 +4710,16 @@
 
 \NewDocumentCommand \UseTblrLibrary { m }
   {
-    \use:c { __tblr_use_lib_ #1: }
+    \clist_map_inline:nn {#1} { \use:c { __tblr_use_lib_ ##1: } }
+  }
+
+%% Library booktabs and commands \toprule, \midrule, \bottomrule
+
+\NewTblrLibrary { booktabs }
+  {
+    \NewTableCommand\toprule{\hline[0.08em]}
+    \NewTableCommand\midrule{\hline[0.05em]}
+    \NewTableCommand\bottomrule{\hline[0.08em]}
   }
 
 %% Library diagbox and command \diagbox
@@ -4734,6 +4745,6 @@
     \box_use:N \l__tblr_diag_box
   }
 
-\UseTblrLibrary { diagbox }
+\UseTblrLibrary { booktabs, diagbox }
 
 \ExplSyntaxOff
