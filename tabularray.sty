@@ -2963,7 +2963,7 @@
         \int_incr:N \c@rownum
         \int_zero:N \c@colnum
         \tl_set:Nx \l__tblr_h_tl
-           { \__tblr_data_item:nen { row } { \int_use:N \c@rownum } { height } }
+          { \__tblr_data_item:nen { row } { \int_use:N \c@rownum } { height } }
         %% We didn't initialize row heights with -1pt
         \dim_compare:nNnF { \l__tblr_h_tl } = { 0pt }
           {
@@ -2985,7 +2985,7 @@
     \int_step_inline:nn { \c@colcount }
       {
         \tl_set:Nx \l__tblr_w_tl
-           { \__tblr_data_item:nen { column } {##1} { width } }
+          { \__tblr_data_item:nen { column } {##1} { width } }
         \dim_compare:nNnF { \l__tblr_w_tl } < { 0pt }
           {
             \__tblr_data_gput:nenV { column } {##1} { @col-width } \l__tblr_w_tl
