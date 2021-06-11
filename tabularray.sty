@@ -4707,7 +4707,7 @@
   {
     \RequirePackage{diagbox}
     \cs_set_eq:NN \__tblr_lib_saved_diagbox:w \diagbox
-    \RenewDocumentCommand \diagbox { O{} m m }
+    \NewContentCommand \diagbox [3] []
       {
         \__tblr_lib_diagbox_fix:n
           { \__tblr_lib_saved_diagbox:w [##1] {##2} {##3} }
