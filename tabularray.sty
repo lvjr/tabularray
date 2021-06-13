@@ -2675,6 +2675,7 @@
     long, colspec, rowspec, width, hspan, vspan, stretch,
     column, row, cell, vline, hline, columns, rows, cells, vlines, hlines,
     leftsep, rightsep, colsep, abovesep, belowsep, rowsep, rulesep,
+    rowhead, rowfoot,
   }
 
 \bool_new:N \l__tblr_long_table_bool
@@ -2700,6 +2701,8 @@
     belowsep .code:n = \tblr_set_every_row:nn { } { belowsep = #1 },
     rowsep .meta:n = { abovesep = #1, belowsep = #1 },
     rulesep .code:n = \__tblr_keys_gput:nn { rulesep } {#1},
+    rowhead .code:n = \__tblr_keys_gput:nn { rowhead } {#1},
+    rowfoot .code:n = \__tblr_keys_gput:nn { rowfoot } {#1},
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
 
@@ -3926,14 +3929,19 @@
 
 \dim_new:N \l__tblr_remain_height_dim
 \tl_new:N \l__tblr_long_from_tl
+\tl_new:N \l__tblr_long_to_tl
 
 \cs_new_protected:Npn \__tblr_build_long_table:n #1
   {
+    \__tblr_build_row_head_foot:
     %\dim_log:N \pagegoal
     %\dim_log:N \pagetotal
     \dim_set:Nn \l__tblr_remain_height_dim { \pagegoal - \pagetotal }
-    \tl_set:Nn \l__tblr_long_from_tl {1}
-    \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
+    \tl_set:Nx \l__tblr_long_from_tl { \int_eval:n { \l__tblr_row_head_tl + 1 } }
+    \tl_set:Nx \l__tblr_long_to_tl
+      { \int_eval:n { \c@rowcount - ( \l__tblr_row_head_tl + 0 ) } }
+    \int_step_variable:nnNn
+      { \l__tblr_long_from_tl } { \l__tblr_long_to_tl } \l__tblr_i_tl
       {
         \dim_set:Nn \l_tmpa_dim
           {
@@ -3964,12 +3972,46 @@
             \dim_add:Nn \l__tblr_remain_height_dim { -\l_tmpa_dim }
           }
       }
-    \__tblr_build_page_table:nnn {#1} { \l__tblr_long_from_tl } { \c@rowcount }
+    \__tblr_build_page_table:nnn
+      {#1} { \l__tblr_long_from_tl } { \l__tblr_long_to_tl }
+  }
+
+\tl_new:N \l__tblr_row_head_tl
+\tl_new:N \l__tblr_row_foot_tl
+\box_new:N \l__tblr_row_head_box
+\box_new:N \l__tblr_row_foot_box
+
+\cs_new_protected:Npn \__tblr_build_row_head_foot:
+  {
+    %% \l__tblr_row_head_tl and \l__tblr_row_foot_tl may be empty
+    \tl_set:Nx \l__tblr_row_head_tl { \__tblr_prop_item:ne { table } { rowhead } }
+    \int_compare:nNnTF { \l__tblr_row_head_tl + 0 } > { 0 }
+      {
+        \__tblr_build_one_table:nn {1} { \l__tblr_row_head_tl }
+        \box_set_eq:NN \l__tblr_row_head_box \l__tblr_table_box
+      }
+      { \box_clear:N \l__tblr_row_head_box }
+    \tl_set:Nx \l__tblr_row_foot_tl { \__tblr_prop_item:ne { table } { rowfoot } }
+    \int_compare:nNnTF { \l__tblr_row_foot_tl + 0 } > { 0 }
+      {
+        \__tblr_build_one_table:nn
+          { \c@rowcount - \l__tblr_row_foot_tl + 1 } { \c@rowcount }
+        \box_set_eq:NN \l__tblr_row_foot_box \l__tblr_table_box
+      }
+      { \box_clear:N \l__tblr_row_foot_box }
   }
 
 \cs_new_protected:Npn \__tblr_build_page_table:nnn #1 #2 #3
   {
     \__tblr_build_one_table:nn {#2} {#3}
+    \vbox_set:Nn \l__tblr_table_box
+      {
+        \box_use:N \l__tblr_row_head_box
+        \hrule height ~ 0pt
+        \box_use:N \l__tblr_table_box
+        \hrule height ~ 0pt
+        \box_use:N \l__tblr_row_foot_box
+      }
     \__tblr_halign_whole:Nn \l__tblr_table_box #1
   }
 \cs_generate_variant:Nn \__tblr_build_page_table:nnn { nnx }
