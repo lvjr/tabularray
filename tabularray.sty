@@ -3934,8 +3934,7 @@
 \cs_new_protected:Npn \__tblr_build_long_table:n #1
   {
     \__tblr_build_row_head_foot:
-    %\dim_log:N \pagegoal
-    %\dim_log:N \pagetotal
+    \LogTblrTracing { page }
     \dim_set:Nn \l__tblr_remain_height_dim { \pagegoal - \pagetotal }
     \tl_set:Nx \l__tblr_long_from_tl { \int_eval:n { \l__tblr_row_head_tl + 1 } }
     \tl_set:Nx \l__tblr_long_to_tl
@@ -3956,14 +3955,13 @@
         \dim_compare:nNnTF
           { \l_tmpa_dim } > { \l__tblr_remain_height_dim }
           {
-            \tl_log:N \l__tblr_i_tl
+            \__tblr_do_if_tracing:nn { page } { \tl_log:N \l__tblr_i_tl }
             \__tblr_build_page_table:nnx {#1}
               { \l__tblr_long_from_tl } { \int_eval:n { \l__tblr_i_tl - 1 } }
             \newpage
             \hbox{}\kern-\topskip\nobreak
             \leavevmode
-            %\dim_log:N \pagegoal
-            %\dim_log:N \pagetotal
+            \LogTblrTracing { page }
             \dim_set:Nn \l__tblr_remain_height_dim
               { \pagegoal - \pagetotal - \l_tmpa_dim }
             \tl_set_eq:NN \l__tblr_long_from_tl \l__tblr_i_tl
@@ -4594,6 +4592,7 @@
 \bool_new:N \g__tblr_tracing_target_bool
 \bool_new:N \g__tblr_tracing_cellspan_bool
 \bool_new:N \g__tblr_tracing_intarray_bool
+\bool_new:N \g__tblr_tracing_page_bool
 \bool_new:N \g__tblr_tracing_step_bool
 
 \bool_gset_true:N \g__tblr_tracing_step_bool
@@ -4626,6 +4625,8 @@
     -cellspan .code:n = \bool_gset_false:N \g__tblr_tracing_cellspan_bool,
     +intarray .code:n = \bool_gset_true:N \g__tblr_tracing_intarray_bool,
     -intarray .code:n = \bool_gset_false:N \g__tblr_tracing_intarray_bool,
+    +page .code:n = \bool_gset_true:N \g__tblr_tracing_page_bool,
+    -page .code:n = \bool_gset_false:N \g__tblr_tracing_page_bool,
     +step .code:n = \bool_gset_true:N \g__tblr_tracing_step_bool,
     -step .code:n = \bool_gset_false:N \g__tblr_tracing_step_bool,
     all .code:n = \__tblr_enable_all_tracings:,
@@ -4647,6 +4648,7 @@
     \bool_gset_true:N \g__tblr_tracing_target_bool
     \bool_gset_true:N \g__tblr_tracing_cellspan_bool
     \bool_gset_true:N \g__tblr_tracing_intarray_bool
+    \bool_gset_true:N \g__tblr_tracing_page_bool
     \bool_gset_true:N \g__tblr_tracing_step_bool
   }
 
@@ -4665,6 +4667,7 @@
     \bool_gset_false:N \g__tblr_tracing_target_bool
     \bool_gset_false:N \g__tblr_tracing_cellspan_bool
     \bool_gset_false:N \g__tblr_tracing_intarray_bool
+    \bool_gset_false:N \g__tblr_tracing_page_bool
     \bool_gset_false:N \g__tblr_tracing_step_bool
   }
 
@@ -4753,6 +4756,12 @@
     \prop_log:N \l__tblr_row_item_skip_size_prop
     \prop_log:N \l__tblr_row_span_size_prop
     \prop_log:N \l__tblr_row_span_to_row_prop
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_page:
+  {
+    \dim_log:N \pagegoal
+    \dim_log:N \pagetotal
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_step:n #1
