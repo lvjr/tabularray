@@ -15,7 +15,7 @@
 \hrule\bigskip
 
 \BEGINTEST{testing \\*[dimen]}
-\SetTblrDefault{rows={rowsep=0pt}}
+\SetTblrDefault{rowsep=0pt}
 A\begin{tabular}{|l|c|r|}
 \hline
 One   &  Two  & Three \\ [4pt]
@@ -47,6 +47,30 @@ Seven & Eight &  Nine \\  *[1em]
 Seven & Eight &  Nine \\  * [1em]
 \hline
 \end{tblr}B
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+%% Issue 20: \relax after \\ or \hline creates column bunching
+\BEGINTEST{testing \\\relax and \hline\relax}
+\SetTblrDefault{rowsep=0pt}
+$\begin{array}{c|cccc}
+ \times & [1] & [2] & [3] & [4] \\
+\hline\relax
+ [1] & [1] & [2] & [3] & [4] \\\relax
+ [2] & [2] & [4] & [1] & [3] \\ \relax
+ [3] & [3] & [1] & [4] & [2] \\  \relax
+ [4] & [4] & [3] & [2] & [1]
+\end{array}$
+\qquad
+$\begin{tblr}{c|cccc}
+ \times & [1] & [2] & [3] & [4] \\
+\hline\relax
+ [1] & [1] & [2] & [3] & [4] \\\relax
+ [2] & [2] & [4] & [1] & [3] \\ \relax
+ [3] & [3] & [1] & [4] & [2] \\  \relax
+ [4] & [4] & [3] & [2] & [1]
+\end{tblr}$
 \ENDTEST
 
 \end{document}
