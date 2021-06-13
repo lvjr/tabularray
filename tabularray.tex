@@ -1001,6 +1001,167 @@ and \verb!\SetTblrTracing{none}! will turn off all tracings.
 \verb!\SetTblrTracing{+row,+column}! will only tracing row and column data.
 All tracing messages will be written to the log files.
 
+\chapter{The Old Interfaces}
+
+With tabularray package, you can still use improved table commands to change the styles of tables.
+Same as \verb!tabular! and \verb!array! environments,
+all table commands \textcolor{red3}{must} be put at the beginning ot the cell text.
+Also, new table commands \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
+
+\section{Hline Commands}
+
+The \verb!\hline! command has an optional argument which accepts key-value options.
+The available keys are the same as Table \ref{key:hvline}.
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\hline
+ Alpha   & Beta  & Gamma  & Delta \\
+\hline[dashed]
+ Epsilon & Zeta  & Eta    & Theta \\
+\hline[dotted]
+ Iota    & Kappa & Lambda & Mu    \\
+\hline[2pt,blue5]
+\end{tblr}
+\end{demohigh}
+
+The \verb!\cline! command also has an optional argument which is the same as \verb!\hline!.
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\cline{1-4}
+ Alpha   & Beta  & Gamma  & Delta \\
+\cline[dashed]{1,3}
+ Epsilon & Zeta  & Eta    & Theta \\
+\cline[dashed]{2,4}
+ Iota    & Kappa & Lambda & Mu    \\
+\cline[2pt,blue5]{-}
+\end{tblr}
+\end{demohigh}
+
+You can use child selectors in the mandatory argument of \verb!\cline!.
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\cline{1-4}
+ Alpha   & Beta  & Gamma  & Delta \\
+\cline[dashed]{odd}
+ Epsilon & Zeta  & Eta    & Theta \\
+\cline[dashed]{even}
+ Iota    & Kappa & Lambda & Mu    \\
+\cline[2pt,blue5]{-}
+\end{tblr}
+\end{demohigh}
+
+\section{Cell Commands}
+
+The \verb!\SetCell! command has a mandatory argument for setting the styles of current cell.
+The available keys are the same as Table \ref{key:cell}.
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\hline[1pt]
+ Alpha   & \SetCell{bg=teal2,fg=white} Beta & Gamma & Delta \\
+\hline
+ Epsilon & Zeta & \SetCell{r,font=\scshape} Eta & Theta \\
+\hline
+ Iota    & Kappa & Lambda & Mu    \\
+\hline[1pt]
+\end{tblr}
+\end{demohigh}
+
+The \verb!\SetCell! command also has an optional argument for setting the multispan of current cell.
+The available keys are the same as Table \ref{key:cellspan}.
+
+\begin{demohigh}
+\begin{tblr}{|X|X|X|X|X|X|}
+\hline
+ Alpha & Beta & Gamma & Delta & Epsilon & Zeta \\
+\hline
+ \SetCell[c=2]{c} Eta & 2-2
+              & \SetCell[c=2]{c} Iota & 2-4
+                              & \SetCell[c=2]{c} Lambda  & 2-6 \\
+\hline
+ \SetCell[c=3]{l} Nu & 3-2 & 3-3
+                      & \SetCell[c=3]{l} Pi & 3-5 & 3-6   \\
+\hline
+ \SetCell[c=6]{r} Tau & 4-2 & 4-3 & 4-4 & 4-5 & 4-6 \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+\section{Row Commands}
+
+The \verb!\SetRow! command has a mandatory argument for setting the styles of current row.
+The available keys are the same as Table \ref{key:row}.
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\hline[1pt]
+ \SetRow{azure8} Alpha & Beta & Gamma & Delta \\
+\hline
+ \SetRow{blue8,c} Epsilon & Zeta & Eta & Theta \\
+\hline
+ \SetRow{violet8} Iota & Kappa & Lambda & Mu \\
+\hline[1pt]
+\end{tblr}
+\end{demohigh}
+
+\section{Column Types}
+
+The \verb!tabularray! package has only one type of primitive column: the \verb!Q! column.
+Other types of columns are defined as \verb!Q! columns with some keys.
+
+\begin{codehigh}
+\NewColumnType{l}{Q[l]}
+\NewColumnType{c}{Q[c]}
+\NewColumnType{r}{Q[r]}
+\NewColumnType{t}[1]{Q[t,wd=#1]}
+\NewColumnType{m}[1]{Q[m,wd=#1]}
+\NewColumnType{b}[1]{Q[b,wd=#1]}
+\NewColumnType{h}[1]{Q[h,wd=#1]}
+\NewColumnType{f}[1]{Q[f,wd=#1]}
+\NewColumnType{X}[1][]{Q[co=1,#1]}
+\end{codehigh}
+
+\begin{demohigh}
+\begin{tblr}{|t{15mm}|m{15mm}|b{20mm}|}
+ Alpha   & Beta  & {Gamma\\Gamma} \\
+ Epsilon & Zeta  & {Eta\\Eta} \\
+ Iota    & Kappa & {Lambda\\Lambda} \\
+\end{tblr}
+\end{demohigh}
+
+Any new column type must be defined with \verb!\NewColumnType! command.
+It can have an optional argument when it's defined.
+
+\section{Row Types}
+
+The \verb!tabularray! package has only one type of primitive row: the \verb!Q! row.
+Other types of rows are defined as \verb!Q! rows with some keys.
+
+\begin{codehigh}
+\NewRowType{l}{Q[l]}
+\NewRowType{c}{Q[c]}
+\NewRowType{r}{Q[r]}
+\NewRowType{t}[1]{Q[t,ht=#1]}
+\NewRowType{m}[1]{Q[m,ht=#1]}
+\NewRowType{b}[1]{Q[b,ht=#1]}
+\NewRowType{h}[1]{Q[h,ht=#1]}
+\NewRowType{f}[1]{Q[f,ht=#1]}
+\end{codehigh}
+
+\begin{demohigh}
+\begin{tblr}{rowspec={|t{12mm}|m{10mm}|b{10mm}|}}
+ Alpha   & Beta  & {Gamma\\Gamma} \\
+ Epsilon & Zeta  & {Eta\\Eta} \\
+ Iota    & Kappa & {Lambda\\Lambda} \\
+\end{tblr}
+\end{demohigh}
+
+Any new row type must be defined with \verb!\NewRowType! command.
+It can have an optional argument when it's defined.
+
 \chapter{The Source Code}
 
 %\CodeHigh{lite}
