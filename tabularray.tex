@@ -17,6 +17,13 @@
 \usepackage{tcolorbox}
 \tcbset{sharp corners, boxrule=0.5pt, colback=red9}
 
+\usepackage{float}
+
+\setcounter{tocdepth}{1}
+
+\newcommand*{\K}[1]{\texttt{#1}}
+\newcommand*{\V}[1]{\texttt{#1}}
+
 \newcommand*{\experimental}{{\color{red3}\bfseries experimental}\space}
 
 \renewcommand*{\thefootnote}{*}
@@ -477,6 +484,27 @@ With \verb!tabularray! package, you can separate style and content totally in ta
 
 \section{Hlines and Vlines}
 
+All available keys for hlines and vlines are described in Table \ref{key:hvline}.
+In mose cases, you can omit the underlined key names and write only their values.
+
+%\begin{center}
+\begin{table}[H]
+\caption{Keys for Hlines and Vlines}
+\label{key:hvline}
+\begin{tblr}{
+  hlines = {white},
+  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
+  column{2} = {co=1},
+}
+  Key & Description and Values & Initial Value \\
+  \underline{\K{dash}}
+    & dash style: \V{solid}, \V{dashed} or \V{dotted} & \V{solid} \\
+  \underline{\K{wd}} & rule width dimension & None \\
+  \underline{\K{fg}} & rule color name & None \\
+\end{tblr}
+\end{table}
+%\end{center}
+
 Options \verb!hlines! and \verb!vlines! are for setting all hlines and vlines, respectively.
 With empty value, all hlines/vlines will be solid.
 
@@ -576,6 +604,52 @@ Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlin
 
 \section{Cells and Spancells}
 
+All available keys for cells are described in Table \ref{key:cell} and Table \ref{key:cellspan}.
+In mose cases, you can omit the underlined key names and write only their values.
+
+%\begin{center}
+\begin{table}[H]
+\caption{Keys for the Content of Cells}
+\label{key:cell}
+\begin{tblr}{
+  hlines = {white},
+  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
+  column{2} = {co=1},
+}
+  Key & Description and Values & Initial Value \\
+  \underline{\K{halign}}
+    & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
+    & \V{l} \\
+  \underline{\K{valign}}
+    & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
+      \V{h} (head) or \V{f} (foot)
+    & \V{t} \\
+  \underline{\K{wd}} & width dimension & None \\
+  \underline{\K{bg}} & background color name & None \\
+  \K{fg} & foreground color name & None \\
+  \K{font} & font commands & None \\
+  \K{preto} & prepend text to the cell & None \\
+  \K{appto} & append text to the cell & None \\
+\end{tblr}
+\end{table}
+%\end{center}
+\vspace{-2em}
+%\begin{center}
+\begin{table}[H]
+\caption{Keys for Multispan of Cells}
+\label{key:cellspan}
+\begin{tblr}{
+  hlines = {white},
+  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
+  column{2} = {co=1},
+}
+  Key & Description and Values & Initial Value \\
+  \K{r} & number of rows the cell spans    & 1 \\
+  \K{c} & number of columns the cell spans & 1 \\
+\end{tblr}
+\end{table}
+%\end{center}
+
 Option \verb!cells! is for setting all cells.
 
 \begin{demohigh}
@@ -612,6 +686,72 @@ Option \verb!cell{i}{j}! is for setting some cells.
 
 \section{Rows and Columns}
 
+All available keys for rows and columns are described in Table \ref{key:row} and Table \ref{key:column}.
+In mose cases, you can omit the underlined key names and write only their values.
+
+%\begin{center}
+\begin{table}[H]
+\caption{Keys for Rows}
+\label{key:row}
+\begin{tblr}{
+  hlines = {white},
+  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
+  column{2} = {co=1},
+}
+  Key & Description and Values & Initial Value \\
+  \underline{\K{halign}}
+    & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
+    & \V{l} \\
+  \underline{\K{valign}}
+    & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
+      \V{h} (head) or \V{f} (foot)
+    & \V{t} \\
+  \underline{\K{ht}} & height dimension & None \\
+  \underline{\K{bg}} & background color name & None \\
+  \K{fg} & foreground color name & None \\
+  \K{font} & font commands & None \\
+  \K{abovesep} & set vertical space above the row & \V{2pt} \\
+  \K{abovesep+} & increase vertical space above the row & None \\
+  \K{belowsep} & set vertical space below the row & \V{2pt} \\
+  \K{belowsep+} & increase vertical space below the row & None \\
+  \K{rowsep} & set vertical space above and below the row & \V{2pt} \\
+  \K{rowsep+} & increase vertical space above and below the row & None \\
+\end{tblr}
+\end{table}
+%\end{center}
+\vspace{-2em}
+%\begin{center}
+\begin{table}[H]
+\caption{Keys for Columns}
+\label{key:column}
+\begin{tblr}{
+  hlines = {white},
+  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
+  column{2} = {co=1},
+}
+  Key & Description and Values & Initial Value \\
+  \underline{\K{halign}}
+    & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
+    & \V{l} \\
+  \underline{\K{valign}}
+    & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
+      \V{h} (head) or \V{f} (foot)
+    & \V{t} \\
+  \underline{\K{wd}} & width dimension & None \\
+  \underline{\K{co}} & coefficient for the extendable column (\V{X} column) & None \\
+  \underline{\K{bg}} & background color name & None \\
+  \K{fg} & foreground color name & None \\
+  \K{font} & font commands & None \\
+  \K{leftsep} & set horizontal space to the left of the column & \V{6pt} \\
+  \K{leftsep+} & increase horizontal space to the left of the column & None \\
+  \K{rightsep} & set horizontal space to the right of the column & \V{6pt} \\
+  \K{rightsep+} & increase horizontal space to the right of the column & None \\
+  \K{colsep} & set horizontal space to both sides of the column & \V{6pt} \\
+  \K{colsep+} & increase horizontal space to both sides of the column & None \\
+\end{tblr}
+\end{table}
+%\end{center}
+
 Options \verb!rows! and \verb!columns! are for setting all rows and columns, respectively.
 
 \begin{demohigh}
@@ -645,13 +785,10 @@ Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns
 \end{tblr}
 \end{demohigh}
 
-We can specify foreground colors, background colors and fonts with
-\verb!bg!, \verb!fg! and \verb!font! keys, respectively, for cells/rows/columns.
-In most cases, \verb!bg! key can be omitted, which you can see in the previous examples.
+The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!font! keys.
 
 \begin{demohigh}
 \begin{tblr}{
- colspec  = {lcr},
  row{odd} = {bg=azure8},
  row{1}   = {bg=azure3, fg=white, font=\sffamily},
 }
@@ -663,20 +800,8 @@ In most cases, \verb!bg! key can be omitted, which you can see in the previous e
 \end{tblr}
 \end{demohigh}
 
-\section{Space in Tables}
-
-Options \verb!rowsep! and \verb!colsep! are for setting padding for rows and columns, respectively.
-
-\begin{demohigh}
-\SetTblrDefault{rowsep=2pt,colsep=2pt}
-\begin{tblr}{hlines,vlines}
- Alpha   & Beta  & Gamma  & Delta \\
- Epsilon & Zeta  & Eta    & Theta \\
- Iota    & Kappa & Lambda & Mu    \\
-\end{tblr}
-\end{demohigh}
-
-Also \verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! options are available:
+The following example demonstrates the usages of
+\verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! keys.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -691,7 +816,7 @@ Also \verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! options a
 \end{tblr}
 \end{demohigh}
 
-And \verb!\\[dimen]! can be replaced by \verb!belowsep+! option:
+The following example shows that we can replace \verb!\\[dimen]! with \verb!belowsep+! key.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -703,7 +828,49 @@ And \verb!\\[dimen]! can be replaced by \verb!belowsep+! option:
 \end{tblr}
 \end{demohigh}
 
-Also \verb!\doublerulesep! parameter can be replaced by \verb!rulesep! option:
+\section{The Whole Table}
+
+All available keys for the whole table are described in Table \ref{key:table}.
+%In mose cases, you can omit the underlined key names and write only their values.
+
+%\begin{center}
+\begin{table}[H]
+\caption{Keys for the Whole Table}
+\label{key:table}
+\begin{tblr}{
+  hlines = {white},
+  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
+  column{2} = {co=1},
+}
+  Key & Description and Values & Initial Value \\
+  \K{rowspec} & set row specifications with row type specifiers & None \\
+  \K{colspec} & set column specifications with column type specifiers & None \\
+  \K{width} & width of the table with extendable columns & None \\
+  \K{rulesep} & space between two hlines or vlines & \V{2pt} \\
+  \K{stretch} & stretch ratio for struts added to cell text & \V{1} \\
+  \K{abovesep} & set vertical space above every row & \V{2pt} \\
+  \K{belowsep} & set vertical space below every row & \V{2pt} \\
+  \K{rowsep} & set vertical space above and below every row & \V{2pt} \\
+  \K{leftsep} & set horizontal space to the left of every column & \V{6pt} \\
+  \K{rightsep} & set horizontal space to the right of every column & \V{6pt} \\
+  \K{colsep} & set horizontal space to both sides of every column & \V{6pt} \\
+  \K{hspan} & horizontal span algorithm: \V{default}, \V{even}, or \V{minimal} & \V{default} \\
+  \K{vspan} & vertical span algorithm: \V{default} or \V{even} & \V{default} \\
+\end{tblr}
+\end{table}
+%\end{center}
+
+The following example demonstrates the usage of \verb!width! key.
+
+\begin{demohigh}
+\begin{tblr}{width=0.8\textwidth, colspec={|l|X[2]|X[3]|X[-1]|}}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+The following example shows that we can replace \verb!\doublerulesep! parameter with \verb!rulesep! key.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -715,13 +882,87 @@ Also \verb!\doublerulesep! parameter can be replaced by \verb!rulesep! option:
 \end{tblr}
 \end{demohigh}
 
-Also \verb!\arraystretch! parameter can be replaced by \verb!stretch! option:
+The following example shows that we can replace \verb!\arraystretch! parameter with \verb!stretch! key.
 
 \begin{demohigh}
 \begin{tblr}{hlines,stretch=1.5}
  Alpha   & Beta  & Gamma  & Delta \\
  Epsilon & Zeta  & Eta    & Theta \\
  Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+The following example uses \verb!rowsep! and \verb!colsep! keys to set padding for all rows and columns.
+\nopagebreak
+\begin{demohigh}
+\SetTblrDefault{rowsep=2pt,colsep=2pt}
+\begin{tblr}{hlines,vlines}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+With \verb!hspan=default! or \verb!hspan=even!,
+\verb!tabularray! package will compute column widths from span widths.
+But with \verb!hspan=minimal!, it will compute span widths from column widths.
+The following examples show the results from different \verb!hspan! values.
+
+\begin{demohigh}
+\SetTblrDefault{hlines, vlines, hspan=default}
+\begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
+ 111 111 & 222 222 & 333 333 \\
+ 12 Multi Columns Multi Columns 12 & & 333 \\
+ 13 Multi Columns Multi Columns Multi Columns 13 & & \\
+ 111 & 23 Multi Columns Multi Columns 23 & \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\SetTblrDefault{hlines, vlines, hspan=even}
+\begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
+ 111 111 & 222 222 & 333 333 \\
+ 12 Multi Columns Multi Columns 12 & & 333 \\
+ 13 Multi Columns Multi Columns Multi Columns 13 & & \\
+ 111 & 23 Multi Columns Multi Columns 23 & \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\SetTblrDefault{hlines, vlines, hspan=minimal}
+\begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
+ 111 111 & 222 222 & 333 333 \\
+ 12 Multi Columns Multi Columns 12 & & 333 \\
+ 13 Multi Columns Multi Columns Multi Columns 13 & & \\
+ 111 & 23 Multi Columns Multi Columns 23 & \\
+\end{tblr}
+\end{demohigh}
+
+The following examples show the results from different \verb!vspan! values.
+\nopagebreak
+\begin{demohigh}
+\SetTblrDefault{hlines, vlines, vspan=default}
+\begin{tblr}{column{2}={3.25cm}, cell{2}{2}={r=3}{l}}
+  Column1 & Column2 \\
+  Row1 & Long text that needs multiple lines.
+         Long text that needs multiple lines.
+         Long text that needs multiple lines. \\
+  Row2 & \\
+  Row3 & \\
+  Row4 & Short text \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\SetTblrDefault{hlines, vlines, vspan=even}
+\begin{tblr}{column{2}={3.25cm}, cell{2}{2}={r=3}{l}}
+  Column1 & Column2 \\
+  Row1 & Long text that needs multiple lines.
+         Long text that needs multiple lines.
+         Long text that needs multiple lines. \\
+  Row2 & \\
+  Row3 & \\
+  Row4 & Short text \\
 \end{tblr}
 \end{demohigh}
 
@@ -746,37 +987,13 @@ Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be u
 \end{tblr}
 \end{demohigh}
 
-\section{Experimental Interfaces}
+\section{Tracing Tabularray}
 
 \begin{tcolorbox}
 The interfaces in this section should be seen as \experimental
 and are likely to change in future releases, if necessary.
 Don’t use them in important documents.
 \end{tcolorbox}
-
-By default \verb!tabularray! package will compute column widths from span widths.
-By setting option \verb!hspan=minimal!, it will compute span widths from column widths.
-The following two examples show this difference:
-
-\begin{demohigh}
-\SetTblrDefault{hlines,vlines}
-\begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
- 111 111 & 222 222 & 333 333 \\
- 12 Multi Columns Multi Columns 12 & & 333 \\
- 13 Multi Columns Multi Columns Multi Columns 13 & & \\
- 111 & 23 Multi Columns Multi Columns 23 & \\
-\end{tblr}
-\end{demohigh}
-
-\begin{demohigh}
-\SetTblrDefault{hlines,vlines,hspan=minimal}
-\begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
- 111 111 & 222 222 & 333 333 \\
- 12 Multi Columns Multi Columns 12 & & 333 \\
- 13 Multi Columns Multi Columns Multi Columns 13 & & \\
- 111 & 23 Multi Columns Multi Columns 23 & \\
-\end{tblr}
-\end{demohigh}
 
 To trace internal data behind \verb!tblr! environment, you can use \verb!\SetTblrTracing! command.
 For example, \verb!\SetTblrTracing{all}! will turn on all tracings,
