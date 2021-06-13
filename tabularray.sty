@@ -3935,7 +3935,8 @@
   {
     \__tblr_build_row_head_foot:
     \LogTblrTracing { page }
-    \dim_set:Nn \l__tblr_remain_height_dim { \pagegoal - \pagetotal }
+    \dim_set:Nn \l__tblr_remain_height_dim
+      { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
     \tl_set:Nx \l__tblr_long_from_tl { \int_eval:n { \l__tblr_row_head_tl + 1 } }
     \tl_set:Nx \l__tblr_long_to_tl
       { \int_eval:n { \c@rowcount - ( \l__tblr_row_head_tl + 0 ) } }
@@ -3963,7 +3964,7 @@
             \leavevmode
             \LogTblrTracing { page }
             \dim_set:Nn \l__tblr_remain_height_dim
-              { \pagegoal - \pagetotal - \l_tmpa_dim }
+              { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim - \l_tmpa_dim }
             \tl_set_eq:NN \l__tblr_long_from_tl \l__tblr_i_tl
           }
           {
@@ -3978,6 +3979,7 @@
 \tl_new:N \l__tblr_row_foot_tl
 \box_new:N \l__tblr_row_head_box
 \box_new:N \l__tblr_row_foot_box
+\dim_new:N \l__tblr_row_head_foot_dim
 
 \cs_new_protected:Npn \__tblr_build_row_head_foot:
   {
@@ -3997,6 +3999,11 @@
         \box_set_eq:NN \l__tblr_row_foot_box \l__tblr_table_box
       }
       { \box_clear:N \l__tblr_row_foot_box }
+    \dim_set:Nn \l__tblr_row_head_foot_dim
+      {
+        \box_ht:N \l__tblr_row_head_box + \box_dp:N \l__tblr_row_head_box
+        + \box_ht:N \l__tblr_row_foot_box + \box_dp:N \l__tblr_row_foot_box
+      }
   }
 
 \cs_new_protected:Npn \__tblr_build_page_table:nnn #1 #2 #3
