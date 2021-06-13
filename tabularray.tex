@@ -465,7 +465,7 @@ Hlines and vlines can also have colors:
 All commands which change the specifications of tables \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
 The following example demonstrates how to define similar rules as in \verb!booktabs! package:
 
-\begin{demohigh}
+\begin{codehigh}
 \NewTableCommand\toprule{\hline[0.08em]}
 \NewTableCommand\midrule{\hline[0.05em]}
 \NewTableCommand\bottomrule{\hline[0.08em]}
@@ -478,7 +478,7 @@ The following example demonstrates how to define similar rules as in \verb!bookt
  Nu      & Xi    & Omicron & Pi    \\
 \bottomrule
 \end{tblr}
-\end{demohigh}
+\end{codehigh}
 
 \chapter{The New Interfaces}
 
@@ -1195,7 +1195,7 @@ inside \verb!tblr! environment.
 
 \section{Library \V{diagbox}}
 
-When using \verb!\UseTblrLibrary{booktabs}! in the preamble of the document,
+When using \verb!\UseTblrLibrary{diagbox}! in the preamble of the document,
 \verb!tabularray! package load \verb!diagbox! package,
 and you can use \verb!\diagbox! and \verb!\diagboxthree! commands inside \verb!tblr! environment.
 
