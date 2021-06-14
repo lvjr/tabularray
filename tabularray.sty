@@ -2671,55 +2671,6 @@
 \cs_new_eq:NN \SetTblrDefault \SetTabularrayDefault
 
 %%% --------------------------------------------------------
-%%> \section{Parse Table Outer Specifications}
-%%% --------------------------------------------------------
-
-\keys_define:nn { tblr-outer }
-  {
-    long    .code:n = \__tblr_keys_gput_outer:nn { long } {true},
-    caption .code:n = \__tblr_keys_gput_outer:nn { caption } {#1},
-    label   .code:n = \__tblr_keys_gput_outer:nn { label } {#1},
-    halign  .code:n = \__tblr_keys_gput_outer:nn { halign } {#1},
-    valign  .code:n = \__tblr_keys_gput_outer:nn { valign } {#1},
-    l .meta:n = { halign = l },
-    c .meta:n = { halign = c },
-    r .meta:n = { halign = r },
-    t .meta:n = { valign = t },
-    m .meta:n = { valign = m },
-    b .meta:n = { valign = b },
-    unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
-  }
-
-\cs_new_protected:Npn \__tblr_parse_table_outer_spec:n #1
-  {
-    \keys_set:nn { tblr-outer } { halign=c, valign=m, #1 }
-  }
-
-\cs_new_protected:Npn \__tblr_keys_gput_outer:nn #1 #2
-  {
-    \__tblr_prop_gput:nnn { outer } {#1} {#2}
-  }
-\cs_generate_variant:Nn \__tblr_keys_gput_outer:nn { nx }
-
-\cs_new_protected:Npn \__tblr_table_special_key:nn #1 #2
-  {
-    \regex_extract_once:NnNT \c__tblr_split_key_name_regex {#1} \l_tmpa_seq
-      {
-        \tl_set:Nx \l__tblr_a_tl { \seq_item:Nn \l_tmpa_seq {2} }
-        \tl_set_rescan:Nnx \l__tblr_b_tl {} { \seq_item:Nn \l_tmpa_seq {3} }
-        \cs:w __tblr_set_ \l__tblr_a_tl _aux:Vn \cs_end: \l__tblr_b_tl {#2}
-      }
-  }
-\cs_generate_variant:Nn \__tblr_table_special_key:nn { Vn }
-
-%% #1 always has a outer pair of braces
-\cs_new_protected:Npn \__tblr_set_note_aux:nn #1 #2
-  {
-    \__tblr_prop_gput:nnn { note } #1 {#2}
-  }
-\cs_generate_variant:Nn \__tblr_set_note_aux:nn { Vn }
-
-%%% --------------------------------------------------------
 %%> \section{Parse Table Inner Specifications}
 %%% --------------------------------------------------------
 
@@ -2759,6 +2710,17 @@
 
 \regex_const:Nn \c__tblr_split_key_name_regex { ^ ( [a-z] + ) ( . * ) }
 
+\cs_new_protected:Npn \__tblr_table_special_key:nn #1 #2
+  {
+    \regex_extract_once:NnNT \c__tblr_split_key_name_regex {#1} \l_tmpa_seq
+      {
+        \tl_set:Nx \l__tblr_a_tl { \seq_item:Nn \l_tmpa_seq {2} }
+        \tl_set_rescan:Nnx \l__tblr_b_tl {} { \seq_item:Nn \l_tmpa_seq {3} }
+        \cs:w __tblr_set_ \l__tblr_a_tl _aux:Vn \cs_end: \l__tblr_b_tl {#2}
+      }
+  }
+\cs_generate_variant:Nn \__tblr_table_special_key:nn { Vn }
+
 %% If the first key name is known, treat #1 is the table spec;
 %% otherwise, treat #1 as colspec.
 
@@ -2781,6 +2743,45 @@
     \__tblr_prop_gput:nnn { table } {#1} {#2}
   }
 \cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
+
+
+%%% --------------------------------------------------------
+%%> \section{Parse Table Outer Specifications}
+%%% --------------------------------------------------------
+
+\keys_define:nn { tblr-outer }
+  {
+    long    .code:n = \__tblr_keys_gput_outer:nn { long } {true},
+    caption .code:n = \__tblr_keys_gput_outer:nn { caption } {#1},
+    label   .code:n = \__tblr_keys_gput_outer:nn { label } {#1},
+    halign  .code:n = \__tblr_keys_gput_outer:nn { halign } {#1},
+    valign  .code:n = \__tblr_keys_gput_outer:nn { valign } {#1},
+    l .meta:n = { halign = l },
+    c .meta:n = { halign = c },
+    r .meta:n = { halign = r },
+    t .meta:n = { valign = t },
+    m .meta:n = { valign = m },
+    b .meta:n = { valign = b },
+    unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
+  }
+
+\cs_new_protected:Npn \__tblr_parse_table_outer_spec:n #1
+  {
+    \keys_set:nn { tblr-outer } { halign=c, valign=m, #1 }
+  }
+
+\cs_new_protected:Npn \__tblr_keys_gput_outer:nn #1 #2
+  {
+    \__tblr_prop_gput:nnn { outer } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_keys_gput_outer:nn { nx }
+
+%% #1 always has a outer pair of braces
+\cs_new_protected:Npn \__tblr_set_note_aux:nn #1 #2
+  {
+    \__tblr_prop_gput:nnn { note } #1 {#2}
+  }
+\cs_generate_variant:Nn \__tblr_set_note_aux:nn { Vn }
 
 %%% --------------------------------------------------------
 %%  \section{Typeset and Calculate Sizes}
