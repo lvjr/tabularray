@@ -3939,7 +3939,7 @@
       { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
     \tl_set:Nx \l__tblr_long_from_tl { \int_eval:n { \l__tblr_row_head_tl + 1 } }
     \tl_set:Nx \l__tblr_long_to_tl
-      { \int_eval:n { \c@rowcount - ( \l__tblr_row_head_tl + 0 ) } }
+      { \int_eval:n { \c@rowcount - ( \l__tblr_row_foot_tl + 0 ) } }
     \int_step_variable:nnNn
       { \l__tblr_long_from_tl } { \l__tblr_long_to_tl } \l__tblr_i_tl
       {
