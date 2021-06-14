@@ -2303,6 +2303,7 @@
     \LogTblrTracing { command }
     \LogTblrTracing { step = parse ~ table ~ outer ~ spec}
     \__tblr_parse_table_outer_spec:n {#1}
+    \LogTblrTracing { outer }
     \bool_if:NT \g__tblr_use_intarray_bool { \__tblr_initial_table_data: }
     \LogTblrTracing { step = initial ~ table ~ spec}
     \__tblr_initial_table_spec:
@@ -4628,6 +4629,7 @@
 
 \bool_new:N \g__tblr_tracing_text_bool
 \bool_new:N \g__tblr_tracing_command_bool
+\bool_new:N \g__tblr_tracing_outer_bool
 \bool_new:N \g__tblr_tracing_table_bool
 \bool_new:N \g__tblr_tracing_column_bool
 \bool_new:N \g__tblr_tracing_row_bool
@@ -4650,6 +4652,8 @@
     -text .code:n = \bool_gset_false:N \g__tblr_tracing_text_bool,
     +command .code:n = \bool_gset_true:N \g__tblr_tracing_command_bool,
     -command .code:n = \bool_gset_false:N \g__tblr_tracing_command_bool,
+    +outer .code:n = \bool_gset_true:N \g__tblr_tracing_outer_bool,
+    -outer .code:n = \bool_gset_false:N \g__tblr_tracing_outer_bool,
     +table .code:n = \bool_gset_true:N \g__tblr_tracing_table_bool,
     -table .code:n = \bool_gset_false:N \g__tblr_tracing_table_bool,
     +column .code:n = \bool_gset_true:N \g__tblr_tracing_column_bool,
@@ -4684,6 +4688,7 @@
   {
     \bool_gset_true:N \g__tblr_tracing_text_bool
     \bool_gset_true:N \g__tblr_tracing_command_bool
+    \bool_gset_true:N \g__tblr_tracing_outer_bool
     \bool_gset_true:N \g__tblr_tracing_table_bool
     \bool_gset_true:N \g__tblr_tracing_column_bool
     \bool_gset_true:N \g__tblr_tracing_row_bool
@@ -4703,6 +4708,7 @@
   {
     \bool_gset_false:N \g__tblr_tracing_text_bool
     \bool_gset_false:N \g__tblr_tracing_command_bool
+    \bool_gset_false:N \g__tblr_tracing_outer_bool
     \bool_gset_false:N \g__tblr_tracing_table_bool
     \bool_gset_false:N \g__tblr_tracing_column_bool
     \bool_gset_false:N \g__tblr_tracing_row_bool
@@ -4744,6 +4750,12 @@
 \cs_new_protected:Npn \__tblr_log_tracing_command:
   {
     \__tblr_prop_log:n { command }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_outer:
+  {
+    \__tblr_prop_log:n { outer }
+    \__tblr_prop_log:n { note }
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_table:
