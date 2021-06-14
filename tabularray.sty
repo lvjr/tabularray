@@ -2712,9 +2712,10 @@
   }
 \cs_generate_variant:Nn \__tblr_table_special_key:nn { Vn }
 
+%% #1 always has a outer pair of braces
 \cs_new_protected:Npn \__tblr_set_note_aux:nn #1 #2
   {
-    \__tblr_prop_gput:nnn { note } {#1} {#2}
+    \__tblr_prop_gput:nnn { note } #1 {#2}
   }
 \cs_generate_variant:Nn \__tblr_set_note_aux:nn { Vn }
 
@@ -4069,7 +4070,7 @@
       }
     \vbox_set:Nn \l__tblr_table_foot_box
       {
-        \hbox:n { $^{\hbox{a}}$ : ~ \__tblr_prop_item:nn { note } { {a} } }
+        \hbox:n { $^{\hbox{a}}$ ~ \__tblr_prop_item:nn { note } { a } }
       }
   }
 
