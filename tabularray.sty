@@ -119,6 +119,8 @@
   {
     \prop_gclear_new:c { g__tblr_text_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_command_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_outer_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_note_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_table_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_row_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_column_ \int_use:N \g_tblr_level_int _prop }
@@ -2297,14 +2299,16 @@
     \__tblr_clear_spec_lists:
     \__tblr_enable_table_commands:
     \LogTblrTracing { step = split ~ table}
-    \__tblr_split_table:n { #3 }
+    \__tblr_split_table:n {#3}
     \LogTblrTracing { command }
+    \LogTblrTracing { step = parse ~ table ~ outer ~ spec}
+    \__tblr_parse_table_outer_spec:n {#1}
     \bool_if:NT \g__tblr_use_intarray_bool { \__tblr_initial_table_data: }
     \LogTblrTracing { step = initial ~ table ~ spec}
     \__tblr_initial_table_spec:
     \LogTblrTracing { table }
     \LogTblrTracing { step = parse ~ table ~ spec}
-    \__tblr_parse_table_spec:n { #2 }
+    \__tblr_parse_table_spec:n {#2}
     \LogTblrTracing { step = execute ~ table ~ commands}
     \__tblr_execute_table_commands:
     \__tblr_disable_table_commands:
@@ -2312,7 +2316,7 @@
     \__tblr_enable_content_commands:
     \__tblr_calc_cell_and_line_sizes:
     \LogTblrTracing { step = build ~ the ~ whole ~ table}
-    \__tblr_build_whole:n { #1 }
+    \__tblr_build_whole:
     \int_gdecr:N \g_tblr_level_int
   }
 
@@ -2666,7 +2670,55 @@
 \cs_new_eq:NN \SetTblrDefault \SetTabularrayDefault
 
 %%% --------------------------------------------------------
-%%  \section{Parse Table Specifications}
+%%> \section{Parse Table Outer Specifications}
+%%% --------------------------------------------------------
+
+\keys_define:nn { tblr-outer }
+  {
+    long    .code:n = \__tblr_keys_gput_outer:nn { long } {true},
+    caption .code:n = \__tblr_keys_gput_outer:nn { caption } {#1},
+    label   .code:n = \__tblr_keys_gput_outer:nn { label } {#1},
+    halign  .code:n = \__tblr_keys_gput_outer:nn { halign } {#1},
+    valign  .code:n = \__tblr_keys_gput_outer:nn { valign } {#1},
+    l .meta:n = { halign = l },
+    c .meta:n = { halign = c },
+    r .meta:n = { halign = r },
+    t .meta:n = { valign = t },
+    m .meta:n = { valign = m },
+    b .meta:n = { valign = b },
+    unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
+  }
+
+\cs_new_protected:Npn \__tblr_parse_table_outer_spec:n #1
+  {
+    \keys_set:nn { tblr-outer } { halign=c, valign=m, #1 }
+  }
+
+\cs_new_protected:Npn \__tblr_keys_gput_outer:nn #1 #2
+  {
+    \__tblr_prop_gput:nnn { outer } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_keys_gput_outer:nn { nx }
+
+\cs_new_protected:Npn \__tblr_table_special_key:nn #1 #2
+  {
+    \regex_extract_once:NnNT \c__tblr_split_key_name_regex {#1} \l_tmpa_seq
+      {
+        \tl_set:Nx \l__tblr_a_tl { \seq_item:Nn \l_tmpa_seq {2} }
+        \tl_set_rescan:Nnx \l__tblr_b_tl {} { \seq_item:Nn \l_tmpa_seq {3} }
+        \cs:w __tblr_set_ \l__tblr_a_tl _aux:Vn \cs_end: \l__tblr_b_tl {#2}
+      }
+  }
+\cs_generate_variant:Nn \__tblr_table_special_key:nn { Vn }
+
+\cs_new_protected:Npn \__tblr_set_note_aux:nn #1 #2
+  {
+    \__tblr_prop_gput:nnn { note } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_set_note_aux:nn { Vn }
+
+%%% --------------------------------------------------------
+%%> \section{Parse Table Inner Specifications}
 %%% --------------------------------------------------------
 
 \clist_new:N \g__tblr_table_known_keys_clist
@@ -2678,11 +2730,8 @@
     rowhead, rowfoot,
   }
 
-\bool_new:N \l__tblr_long_table_bool
-
 \keys_define:nn { tblr }
   {
-    long .bool_set:N = \l__tblr_long_table_bool,
     colspec .code:n = \__tblr_parse_colrow_spec:nn { column } {#1},
     rowspec .code:n = \__tblr_parse_colrow_spec:nn { row } {#1},
     width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
@@ -2708,17 +2757,6 @@
 
 \regex_const:Nn \c__tblr_split_key_name_regex { ^ ( [a-z] + ) ( . * ) }
 
-\cs_new_protected:Npn \__tblr_table_special_key:nn #1 #2
-  {
-    \regex_extract_once:NnNT \c__tblr_split_key_name_regex {#1} \l_tmpa_seq
-      {
-        \tl_set:Nx \l__tblr_a_tl { \seq_item:Nn \l_tmpa_seq {2} }
-        \tl_set_rescan:Nnx \l__tblr_b_tl {} { \seq_item:Nn \l_tmpa_seq {3} }
-        \cs:w __tblr_set_ \l__tblr_a_tl _aux:Vn \cs_end: \l__tblr_b_tl {#2}
-      }
-  }
-\cs_generate_variant:Nn \__tblr_table_special_key:nn { Vn }
-
 %% If the first key name is known, treat #1 is the table spec;
 %% otherwise, treat #1 as colspec.
 
@@ -2736,7 +2774,7 @@
       { \__tblr_parse_colrow_spec:nn { column } {#1} }
   }
 
-\cs_new_protected:Npn  \__tblr_keys_gput:nn #1 #2
+\cs_new_protected:Npn \__tblr_keys_gput:nn #1 #2
   {
     \__tblr_prop_gput:nnn { table } {#1} {#2}
   }
@@ -3920,11 +3958,11 @@
 \box_new:N \l__tblr_table_box
 
 %% #1: table alignment
-\cs_new_protected:Npn \__tblr_build_whole:n #1
+\cs_new_protected:Npn \__tblr_build_whole:
   {
-    \bool_if:NTF \l__tblr_long_table_bool
-      { \__tblr_build_long_table:n {#1} }
-      { \__tblr_build_short_table:n {#1} }
+    \__tblr_prop_if_in:nnTF { outer } { long }
+      { \__tblr_build_long_table:e { \__tblr_prop_item:nn { outer} { halign } } }
+      { \__tblr_build_short_table:e { \__tblr_prop_item:nn { outer} { valign } } }
   }
 
 \dim_new:N \l__tblr_remain_height_dim
@@ -3974,6 +4012,7 @@
     \__tblr_build_page_table:nnn
       {#1} { \l__tblr_long_from_tl } { \l__tblr_long_to_tl }
   }
+\cs_generate_variant:Nn \__tblr_build_long_table:n { e }
 
 \tl_new:N \l__tblr_row_head_tl
 \tl_new:N \l__tblr_row_foot_tl
@@ -4037,6 +4076,7 @@
     \__tblr_build_one_table:nn {1} {\c@rowcount}
     \__tblr_valign_whole:Nn \l__tblr_table_box #1
   }
+\cs_generate_variant:Nn \__tblr_build_short_table:n { e }
 
 %% #1: row from; #2: row to
 \cs_new_protected:Npn \__tblr_build_one_table:nn #1 #2
