@@ -3969,13 +3969,16 @@
 \dim_new:N \l__tblr_remain_height_dim
 \tl_new:N \l__tblr_long_from_tl
 \tl_new:N \l__tblr_long_to_tl
+\int_new:N \l__tblr_table_page_int
 
 \cs_new_protected:Npn \__tblr_build_long_table:n #1
   {
-    \__tblr_build_row_head_foot:
+    \int_set:Nn \l__tblr_table_page_int {1}
+    \int_gincr:N \c@table
+    \__tblr_build_head_foot:
     \LogTblrTracing { page }
     \dim_set:Nn \l__tblr_remain_height_dim
-      { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
+      { \pagegoal - \pagetotal - \l__tblr_head_foot_dim }
     \tl_set:Nx \l__tblr_long_from_tl { \int_eval:n { \l__tblr_row_head_tl + 1 } }
     \tl_set:Nx \l__tblr_long_to_tl
       { \int_eval:n { \c@rowcount - ( \l__tblr_row_foot_tl + 0 ) } }
@@ -4003,7 +4006,7 @@
             \leavevmode
             \LogTblrTracing { page }
             \dim_set:Nn \l__tblr_remain_height_dim
-              { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim - \l_tmpa_dim }
+              { \pagegoal - \pagetotal - \l__tblr_head_foot_dim - \l_tmpa_dim }
             \tl_set_eq:NN \l__tblr_long_from_tl \l__tblr_i_tl
           }
           {
@@ -4015,11 +4018,25 @@
   }
 \cs_generate_variant:Nn \__tblr_build_long_table:n { e }
 
+\dim_new:N \l__tblr_head_foot_dim
+
+\cs_new_protected:Npn \__tblr_build_head_foot:
+  {
+    \__tblr_build_row_head_foot:
+    \__tblr_build_table_head_foot:
+    \dim_set:Nn \l__tblr_head_foot_dim
+      {
+          \box_ht:N \l__tblr_row_head_box + \box_dp:N \l__tblr_row_head_box
+        + \box_ht:N \l__tblr_row_foot_box + \box_dp:N \l__tblr_row_foot_box
+        + \box_ht:N \l__tblr_table_head_box + \box_dp:N \l__tblr_table_head_box
+        + \box_ht:N \l__tblr_table_foot_box + \box_dp:N \l__tblr_table_foot_box
+      }
+  }
+
 \tl_new:N \l__tblr_row_head_tl
 \tl_new:N \l__tblr_row_foot_tl
 \box_new:N \l__tblr_row_head_box
 \box_new:N \l__tblr_row_foot_box
-\dim_new:N \l__tblr_row_head_foot_dim
 
 \cs_new_protected:Npn \__tblr_build_row_head_foot:
   {
@@ -4039,10 +4056,20 @@
         \box_set_eq:NN \l__tblr_row_foot_box \l__tblr_table_box
       }
       { \box_clear:N \l__tblr_row_foot_box }
-    \dim_set:Nn \l__tblr_row_head_foot_dim
+  }
+
+\box_new:N \l__tblr_table_head_box
+\box_new:N \l__tblr_table_foot_box
+
+\cs_new_protected:Npn \__tblr_build_table_head_foot:
+  {
+    \vbox_set:Nn \l__tblr_table_head_box
       {
-        \box_ht:N \l__tblr_row_head_box + \box_dp:N \l__tblr_row_head_box
-        + \box_ht:N \l__tblr_row_foot_box + \box_dp:N \l__tblr_row_foot_box
+        \hbox:n { Table ~ \thetable : ~ \__tblr_prop_item:nn { outer } { caption } }
+      }
+    \vbox_set:Nn \l__tblr_table_foot_box
+      {
+        \hbox:n { $^{\hbox{a}}$ : ~ \__tblr_prop_item:nn { note } { {a} } }
       }
   }
 
@@ -4051,11 +4078,15 @@
     \__tblr_build_one_table:nn {#2} {#3}
     \vbox_set:Nn \l__tblr_table_box
       {
+        \box_use:N \l__tblr_table_head_box
+        \hrule height ~ 0pt
         \box_use:N \l__tblr_row_head_box
         \hrule height ~ 0pt
         \box_use:N \l__tblr_table_box
         \hrule height ~ 0pt
         \box_use:N \l__tblr_row_foot_box
+        \hrule height ~ 0pt
+        \box_use:N \l__tblr_table_foot_box
       }
     \__tblr_halign_whole:Nn \l__tblr_table_box #1
   }
