@@ -3960,7 +3960,7 @@
 \cs_generate_variant:Nn \__tblr_calc_span_widths:nnN { xxN }
 
 %%% --------------------------------------------------------
-%%  \section{Build the Whole Table}
+%%> \section{Build the Whole Table}
 %%% --------------------------------------------------------
 
 \tl_new:N \__tlbr_vbox_align_tl
@@ -4264,6 +4264,10 @@
     \box_set_dp:Nn #1 { \l__tblr_d_dim }
     \box_use_drop:N #1
   }
+
+%%% --------------------------------------------------------
+%%> \section{Build Table Components}
+%%% --------------------------------------------------------
 
 \dim_new:N \l__tblr_col_o_wd_dim
 \dim_new:N \l__tblr_col_b_wd_dim
