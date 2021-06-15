@@ -4147,12 +4147,27 @@
 \cs_new_protected:Npn \__tblr_build_table_head_foot:
   {
     \__tblr_get_table_width:
-    \vbox_set:Nn \l__tblr_table_everyhead_box { \UseHeadTemplate }
-    \vbox_set:Nn \l__tblr_table_firsthead_box { \UseHeadTemplate [ first ] }
-    \vbox_set:Nn \l__tblr_table_lasthead_box  { \UseHeadTemplate [ last ] }
-    \vbox_set:Nn \l__tblr_table_everyfoot_box { \UseFootTemplate }
-    \vbox_set:Nn \l__tblr_table_firstfoot_box { \UseFootTemplate [ first ] }
-    \vbox_set:Nn \l__tblr_table_lastfoot_box  { \UseFootTemplate [ last ] }
+    \__tblr_build_table_head_foot_aux:Nn
+      \l__tblr_table_everyhead_box { \UseHeadTemplate }
+    \__tblr_build_table_head_foot_aux:Nn
+      \l__tblr_table_firsthead_box { \UseHeadTemplate [ first ] }
+    \__tblr_build_table_head_foot_aux:Nn
+      \l__tblr_table_lasthead_box  { \UseHeadTemplate [ last ] }
+    \__tblr_build_table_head_foot_aux:Nn
+      \l__tblr_table_everyfoot_box { \UseFootTemplate }
+    \__tblr_build_table_head_foot_aux:Nn
+      \l__tblr_table_firstfoot_box { \UseFootTemplate [ first ] }
+    \__tblr_build_table_head_foot_aux:Nn
+      \l__tblr_table_lastfoot_box  { \UseFootTemplate [ last ] }
+  }
+
+\cs_new_protected:Npn \__tblr_build_table_head_foot_aux:Nn #1 #2
+  {
+    \vbox_set:Nn #1
+      {
+        \hsize = \tablewidth
+        \hbox_to_wd:nn { \tablewidth } { \hss #2 \hss }
+      }
   }
 
 \cs_new_protected:Npn \__tblr_build_whole:
