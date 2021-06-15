@@ -4091,6 +4091,7 @@
 \tl_new:N \l__tblr_long_to_tl
 \int_new:N \l__tblr_table_page_int
 \bool_new:N \l__tblr_table_page_last_bool
+\bool_new:N \l__tblr_table_page_break_bool
 
 \cs_new_protected:Npn \__tblr_build_long_table:n #1
   {
@@ -4100,7 +4101,7 @@
     \__tblr_build_head_foot:
     \LogTblrTracing { page }
     \dim_set:Nn \l__tblr_remain_height_dim
-      { \pagegoal - \pagetotal - \l__tblr_head_foot_dim }
+      { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
     \tl_set:Nx \l__tblr_long_from_tl { \int_eval:n { \l__tblr_row_head_tl + 1 } }
     \tl_set:Nx \l__tblr_long_to_tl
       { \int_eval:n { \c@rowcount - ( \l__tblr_row_foot_tl + 0 ) } }
@@ -4117,20 +4118,20 @@
             +
             \__tblr_data_item:nen { row } { \l__tblr_i_tl } { belowsep }
           }
-        \dim_compare:nNnTF
-          { \l_tmpa_dim } > { \l__tblr_remain_height_dim }
+        \__tblr_check_table_page_break:NNN
+          \l__tblr_remain_height_dim \l_tmpa_dim \l__tblr_table_page_break_bool
+        \bool_if:NTF \l__tblr_table_page_break_bool
           {
             \__tblr_do_if_tracing:nn { page } { \tl_log:N \l__tblr_i_tl }
             \__tblr_build_page_table:nnx {#1}
               { \l__tblr_long_from_tl } { \int_eval:n { \l__tblr_i_tl - 1 } }
             \newpage
             \int_incr:N \l__tblr_table_page_int
-            \__tblr_build_head_foot:
             \hbox{}\kern-\topskip\nobreak
             \leavevmode
             \LogTblrTracing { page }
             \dim_set:Nn \l__tblr_remain_height_dim
-              { \pagegoal - \pagetotal - \l__tblr_head_foot_dim - \l_tmpa_dim }
+              { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim - \l_tmpa_dim }
             \tl_set_eq:NN \l__tblr_long_from_tl \l__tblr_i_tl
           }
           {
@@ -4143,26 +4144,22 @@
   }
 \cs_generate_variant:Nn \__tblr_build_long_table:n { e }
 
-\dim_new:N \l__tblr_head_foot_dim
-
 \cs_new_protected:Npn \__tblr_build_head_foot:
   {
-    \int_compare:nNnT { \l__tblr_table_page_int } = {1}
-      { \__tblr_build_row_head_foot: }
+    \__tblr_build_row_head_foot:
     \__tblr_build_table_head_foot:
-    \dim_set:Nn \l__tblr_head_foot_dim
-      {
-          \box_ht:N \l__tblr_row_head_box + \box_dp:N \l__tblr_row_head_box
-        + \box_ht:N \l__tblr_row_foot_box + \box_dp:N \l__tblr_row_foot_box
-        + \box_ht:N \l__tblr_table_head_box + \box_dp:N \l__tblr_table_head_box
-        + \box_ht:N \l__tblr_table_foot_box + \box_dp:N \l__tblr_table_foot_box
-      }
+  }
+
+\cs_new:Npn \__tblr_box_height:N #1
+  {
+    \dim_eval:n { \box_ht:N #1 + \box_dp:N #1 }
   }
 
 \tl_new:N \l__tblr_row_head_tl
 \tl_new:N \l__tblr_row_foot_tl
 \box_new:N \l__tblr_row_head_box
 \box_new:N \l__tblr_row_foot_box
+\dim_new:N \l__tblr_row_head_foot_dim
 
 \cs_new_protected:Npn \__tblr_build_row_head_foot:
   {
@@ -4182,23 +4179,65 @@
         \box_set_eq:NN \l__tblr_row_foot_box \l__tblr_table_box
       }
       { \box_clear:N \l__tblr_row_foot_box }
+    \dim_set:Nn \l__tblr_row_head_foot_dim
+      {
+        \__tblr_box_height:N \l__tblr_row_head_box
+          + \__tblr_box_height:N \l__tblr_row_foot_box
+      }
   }
 
 \box_new:N \l__tblr_table_head_box
+\box_new:N \l__tblr_table_everyhead_box
 \box_new:N \l__tblr_table_firsthead_box
 \box_new:N \l__tblr_table_lasthead_box
 \box_new:N \l__tblr_table_foot_box
+\box_new:N \l__tblr_table_everyfoot_box
 \box_new:N \l__tblr_table_firstfoot_box
 \box_new:N \l__tblr_table_lastfoot_box
 
 \cs_new_protected:Npn \__tblr_build_table_head_foot:
   {
-    \vbox_set:Nn \l__tblr_table_head_box      { \UseHeadTemplate }
+    \vbox_set:Nn \l__tblr_table_everyhead_box { \UseHeadTemplate }
     \vbox_set:Nn \l__tblr_table_firsthead_box { \UseHeadTemplate [ first ] }
     \vbox_set:Nn \l__tblr_table_lasthead_box  { \UseHeadTemplate [ last ] }
-    \vbox_set:Nn \l__tblr_table_foot_box      { \UseFootTemplate }
+    \vbox_set:Nn \l__tblr_table_everyfoot_box { \UseFootTemplate }
     \vbox_set:Nn \l__tblr_table_firstfoot_box { \UseFootTemplate [ first ] }
     \vbox_set:Nn \l__tblr_table_lastfoot_box  { \UseFootTemplate [ last ] }
+  }
+
+\dim_new:N \l__tblr_table_head_foot_dim
+\dim_new:N \l__tblr_table_head_body_foot_dim
+
+%% #1: remain dimension; #2: row dimension; #3: break page or not
+\cs_new_protected:Npn \__tblr_check_table_page_break:NNN #1 #2 #3
+  {
+    \int_compare:nNnTF { \l__tblr_table_page_int } = {1}
+      {
+        \dim_set:Nn \l__tblr_table_head_body_foot_dim
+          {
+            \__tblr_box_height:N \l__tblr_table_firsthead_box
+              + #2 + \__tblr_box_height:N \l__tblr_table_firstfoot_box
+          }
+        \box_set_eq:NN \l__tblr_table_head_box \l__tblr_table_firsthead_box
+        \box_set_eq:NN \l__tblr_table_foot_box \l__tblr_table_firstfoot_box
+        \dim_compare:nNnTF
+          { \l__tblr_table_head_body_foot_dim } > {#1}
+          { \bool_set_true:N #3 }
+          { \bool_set_false:N #3 }
+      }
+      {
+        \dim_set:Nn \l__tblr_table_head_body_foot_dim
+          {
+            \__tblr_box_height:N \l__tblr_table_everyhead_box
+              + #2 + \__tblr_box_height:N \l__tblr_table_everyfoot_box
+          }
+        \box_set_eq:NN \l__tblr_table_head_box \l__tblr_table_everyhead_box
+        \box_set_eq:NN \l__tblr_table_foot_box \l__tblr_table_everyfoot_box
+        \dim_compare:nNnTF
+          { \l__tblr_table_head_body_foot_dim } > {#1}
+          { \bool_set_true:N #3 }
+          { \bool_set_false:N #3 }
+      }
   }
 
 \cs_new_protected:Npn \__tblr_build_page_table:nnn #1 #2 #3
