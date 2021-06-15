@@ -3982,14 +3982,28 @@
 
 \NewDocumentCommand \SetHeadTemplate { O{} m }
   {
-    \tl_set_eq:cc { g__tblr_template_ #1 head_tl }
-      { g__tblr_template_ #1 head_ #2 _tl }
+    \tl_if_exist:cTF { g__tblr_template_ #1 head_ #2 _tl }
+      {
+        \tl_set_eq:cc { g__tblr_template_ #1 head_tl }
+          { g__tblr_template_ #1 head_ #2 _tl }
+      }
+      {
+        \tl_set_eq:cc { g__tblr_template_ #1 head_tl }
+          { g__tblr_template_head_ #2 _tl }
+      }
   }
 
 \NewDocumentCommand \SetFootTemplate { O{} m }
   {
-    \tl_set_eq:cc { g__tblr_template_ #1 foot_tl }
-      { g__tblr_template_ #1 foot_ #2 _tl }
+    \tl_if_exist:cTF { g__tblr_template_ #1 foot_ #2 _tl }
+      {
+        \tl_set_eq:cc { g__tblr_template_ #1 foot_tl }
+          { g__tblr_template_ #1 foot_ #2 _tl }
+      }
+      {
+        \tl_set_eq:cc { g__tblr_template_ #1 foot_tl }
+          { g__tblr_template_foot_ #2 _tl }
+      }
   }
 
 \NewDocumentCommand \UseHeadTemplate { O{} }
@@ -4047,7 +4061,9 @@
 
 \SetHeadTemplate { default }
 \SetHeadTemplate [ first ] { default }
+\SetHeadTemplate [ last ] { default }
 \SetFootTemplate { default }
+\SetFootTemplate [ first ] { default }
 \SetFootTemplate [ last ] { default }
 
 %%% --------------------------------------------------------
