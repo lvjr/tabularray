@@ -3960,6 +3960,97 @@
 \cs_generate_variant:Nn \__tblr_calc_span_widths:nnN { xxN }
 
 %%% --------------------------------------------------------
+%%> \section{Header and Footer Templates}
+%%% --------------------------------------------------------
+
+\NewDocumentCommand \NewHeadTemplate { O{} m m }
+  {
+    \tl_gset:cn { g__tblr_template_ #1 head_ #2 _tl } { #3 }
+  }
+
+\NewDocumentCommand \NewFootTemplate { O{} m m }
+  {
+    \tl_gset:cn { g__tblr_template_ #1 foot_ #2 _tl } { #3 }
+  }
+
+\tl_new:N \g__tblr_template_head_tl
+\tl_new:N \g__tblr_template_firsthead_tl
+\tl_new:N \g__tblr_template_lasthead_tl
+\tl_new:N \g__tblr_template_foot_tl
+\tl_new:N \g__tblr_template_firstfoot_tl
+\tl_new:N \g__tblr_template_lastfoot_tl
+
+\NewDocumentCommand \SetHeadTemplate { O{} m }
+  {
+    \tl_set_eq:cc { g__tblr_template_ #1 head_tl }
+      { g__tblr_template_ #1 head_ #2 _tl }
+  }
+
+\NewDocumentCommand \SetFootTemplate { O{} m }
+  {
+    \tl_set_eq:cc { g__tblr_template_ #1 foot_tl }
+      { g__tblr_template_ #1 foot_ #2 _tl }
+  }
+
+\NewDocumentCommand \UseHeadTemplate { O{} }
+  {
+    \tl_use:c { g__tblr_template_ #1 head_tl }
+  }
+
+\NewDocumentCommand \UseFootTemplate { O{} }
+  {
+    \tl_use:c { g__tblr_template_ #1 foot_tl }
+  }
+
+\tl_new:N \l__tblr_caption_tl
+
+\NewHeadTemplate { default }
+  {
+    \tl_set:Nx \l__tblr_caption_tl
+      { \__tblr_prop_item:nn { outer } { caption } }
+    \hbox:n { Table ~ \thetable : ~ \l__tblr_caption_tl }
+  }
+
+\NewHeadTemplate [ first ] { default }
+  {
+    \tl_set:Nx \l__tblr_caption_tl
+      { \__tblr_prop_item:nn { outer } { caption } }
+    \hbox:n { Table ~ \thetable : ~ \l__tblr_caption_tl }
+    \int_compare:nNnT { \l__tblr_table_page_int } = {1}
+      {
+        \addcontentsline { lot } { table }
+          { \protect\numberline { \arabic { table } } { \l__tblr_caption_tl } }
+      }
+  }
+
+\NewFootTemplate { default }
+  {
+    \hbox:n { Continued ~ on ~ next ~ page }
+  }
+
+\NewFootTemplate [ last ] { default }
+  {
+    \hbox:n { \__tblr_build_table_note: }
+  }
+
+\cs_new_protected:Npn \__tblr_build_table_note:
+  {
+    \int_step_inline:nn { \l__tblr_note_count_int }
+      {
+        \hbox:n
+          {
+            \textsuperscript { \sffamily ##1 } ~
+            \__tblr_prop_item:nn { note } {##1}
+          }
+      }
+  }
+
+\SetHeadTemplate { default }
+\SetHeadTemplate [ first ] { default }
+\SetFootTemplate { default }
+\SetFootTemplate [ last ] { default }
+
+%%% --------------------------------------------------------
 %%> \section{Build the Whole Table}
 %%% --------------------------------------------------------
 
@@ -4078,41 +4169,20 @@
   }
 
 \box_new:N \l__tblr_table_head_box
+\box_new:N \l__tblr_table_firsthead_box
+\box_new:N \l__tblr_table_lasthead_box
 \box_new:N \l__tblr_table_foot_box
-
-\tl_new:N \l__tblr_caption_tl
+\box_new:N \l__tblr_table_firstfoot_box
+\box_new:N \l__tblr_table_lastfoot_box
 
 \cs_new_protected:Npn \__tblr_build_table_head_foot:
   {
-    \vbox_set:Nn \l__tblr_table_head_box
-      {
-        \tl_set:Nx \l__tblr_caption_tl
-          { \__tblr_prop_item:nn { outer } { caption } }
-        \hbox:n { Table ~ \thetable : ~ \l__tblr_caption_tl }
-        \int_compare:nNnT { \l__tblr_table_page_int } = {1}
-          {
-            \addcontentsline { lot } { table }
-              { \protect\numberline { \arabic { table } } { \l__tblr_caption_tl } }
-          }
-      }
-    \vbox_set:Nn \l__tblr_table_foot_box
-      {
-        \bool_if:NTF \l__tblr_table_page_last_bool
-          { Continued on next page }
-          { \__tblr_build_table_note: }
-      }
-  }
-
-\cs_new_protected:Npn \__tblr_build_table_note:
-  {
-    \int_step_inline:nn { \l__tblr_note_count_int }
-      {
-        \hbox:n
-          {
-            \textsuperscript { \sffamily ##1 } ~
-            \__tblr_prop_item:nn { note } {##1}
-          }
-      }
+    \vbox_set:Nn \l__tblr_table_head_box      { \UseHeadTemplate }
+    \vbox_set:Nn \l__tblr_table_firsthead_box { \UseHeadTemplate [ first ] }
+    \vbox_set:Nn \l__tblr_table_lasthead_box  { \UseHeadTemplate [ last ] }
+    \vbox_set:Nn \l__tblr_table_foot_box      { \UseFootTemplate }
+    \vbox_set:Nn \l__tblr_table_firstfoot_box { \UseFootTemplate [ first ] }
+    \vbox_set:Nn \l__tblr_table_lastfoot_box  { \UseFootTemplate [ last ] }
   }
 
 \cs_new_protected:Npn \__tblr_build_page_table:nnn #1 #2 #3
