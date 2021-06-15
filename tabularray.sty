@@ -4022,7 +4022,7 @@
   {
     \tl_set:Nx \l__tblr_caption_tl
       { \__tblr_prop_item:nn { outer } { caption } }
-    \hbox:n { Table ~ \thetable : ~ \l__tblr_caption_tl }
+    \hbox:n { Table ~ \thetable : ~ \l__tblr_caption_tl \space (Continued) }
   }
 
 \NewHeadTemplate [ first ] { default }
@@ -4189,7 +4189,15 @@
             \dim_add:Nn \l__tblr_remain_height_dim { -\l_tmpa_dim }
           }
       }
-    \bool_set_true:N \l__tblr_table_page_last_bool
+    \int_compare:nNnTF { \l__tblr_table_page_int } = {1}
+      {
+        \box_set_eq:NN \l__tblr_table_head_box \l__tblr_table_firsthead_box
+        \box_set_eq:NN \l__tblr_table_foot_box \l__tblr_table_lastfoot_box
+      }
+      {
+        \box_set_eq:NN \l__tblr_table_head_box \l__tblr_table_lasthead_box
+        \box_set_eq:NN \l__tblr_table_foot_box \l__tblr_table_lastfoot_box
+      }
     \__tblr_build_page_table:nnn
       {#1} { \l__tblr_long_from_tl } { \l__tblr_long_to_tl }
   }
@@ -4211,10 +4219,12 @@
               + #2 + \__tblr_box_height:N \l__tblr_table_firstfoot_box
           }
         \box_set_eq:NN \l__tblr_table_head_box \l__tblr_table_firsthead_box
-        \box_set_eq:NN \l__tblr_table_foot_box \l__tblr_table_firstfoot_box
         \dim_compare:nNnTF
           { \l__tblr_table_head_body_foot_dim } > {#1}
-          { \bool_set_true:N #3 }
+          {
+            \bool_set_true:N #3
+            \box_set_eq:NN \l__tblr_table_foot_box \l__tblr_table_firstfoot_box
+          }
           { \bool_set_false:N #3 }
       }
       {
@@ -4224,10 +4234,12 @@
               + #2 + \__tblr_box_height:N \l__tblr_table_everyfoot_box
           }
         \box_set_eq:NN \l__tblr_table_head_box \l__tblr_table_everyhead_box
-        \box_set_eq:NN \l__tblr_table_foot_box \l__tblr_table_everyfoot_box
         \dim_compare:nNnTF
           { \l__tblr_table_head_body_foot_dim } > {#1}
-          { \bool_set_true:N #3 }
+          {
+            \bool_set_true:N #3
+            \box_set_eq:NN \l__tblr_table_foot_box \l__tblr_table_everyfoot_box
+          }
           { \bool_set_false:N #3 }
       }
   }
