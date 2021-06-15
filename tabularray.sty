@@ -4070,15 +4070,65 @@
 %%> \section{Build the Whole Table}
 %%% --------------------------------------------------------
 
-\tl_new:N \__tlbr_vbox_align_tl
-\tl_const:Nn \__tlbr_vbox_t_tl {t}
-\tl_const:Nn \__tlbr_vbox_m_tl {m}
-\tl_const:Nn \__tlbr_vbox_c_tl {c}
-\tl_const:Nn \__tlbr_vbox_b_tl {b}
+\cs_new:Npn \__tblr_box_height:N #1
+  {
+    \dim_eval:n { \box_ht:N #1 + \box_dp:N #1 }
+  }
 
-\box_new:N \l__tblr_table_box
+\cs_new_protected:Npn \__tblr_build_head_foot:
+  {
+    \__tblr_build_row_head_foot:
+    \__tblr_build_table_head_foot:
+  }
 
-%% #1: table alignment
+\tl_new:N \l__tblr_row_head_tl
+\tl_new:N \l__tblr_row_foot_tl
+\box_new:N \l__tblr_row_head_box
+\box_new:N \l__tblr_row_foot_box
+\dim_new:N \l__tblr_row_head_foot_dim
+
+\cs_new_protected:Npn \__tblr_build_row_head_foot:
+  {
+    %% \l__tblr_row_head_tl and \l__tblr_row_foot_tl may be empty
+    \tl_set:Nx \l__tblr_row_head_tl { \__tblr_prop_item:ne { table } { rowhead } }
+    \int_compare:nNnTF { \l__tblr_row_head_tl + 0 } > { 0 }
+      {
+        \__tblr_build_one_table:nn {1} { \l__tblr_row_head_tl }
+        \box_set_eq:NN \l__tblr_row_head_box \l__tblr_table_box
+      }
+      { \box_clear:N \l__tblr_row_head_box }
+    \tl_set:Nx \l__tblr_row_foot_tl { \__tblr_prop_item:ne { table } { rowfoot } }
+    \int_compare:nNnTF { \l__tblr_row_foot_tl + 0 } > { 0 }
+      {
+        \__tblr_build_one_table:nn
+          { \c@rowcount - \l__tblr_row_foot_tl + 1 } { \c@rowcount }
+        \box_set_eq:NN \l__tblr_row_foot_box \l__tblr_table_box
+      }
+      { \box_clear:N \l__tblr_row_foot_box }
+    \dim_set:Nn \l__tblr_row_head_foot_dim
+      {
+        \__tblr_box_height:N \l__tblr_row_head_box
+          + \__tblr_box_height:N \l__tblr_row_foot_box
+      }
+  }
+
+\box_new:N \l__tblr_table_everyhead_box
+\box_new:N \l__tblr_table_firsthead_box
+\box_new:N \l__tblr_table_lasthead_box
+\box_new:N \l__tblr_table_everyfoot_box
+\box_new:N \l__tblr_table_firstfoot_box
+\box_new:N \l__tblr_table_lastfoot_box
+
+\cs_new_protected:Npn \__tblr_build_table_head_foot:
+  {
+    \vbox_set:Nn \l__tblr_table_everyhead_box { \UseHeadTemplate }
+    \vbox_set:Nn \l__tblr_table_firsthead_box { \UseHeadTemplate [ first ] }
+    \vbox_set:Nn \l__tblr_table_lasthead_box  { \UseHeadTemplate [ last ] }
+    \vbox_set:Nn \l__tblr_table_everyfoot_box { \UseFootTemplate }
+    \vbox_set:Nn \l__tblr_table_firstfoot_box { \UseFootTemplate [ first ] }
+    \vbox_set:Nn \l__tblr_table_lastfoot_box  { \UseFootTemplate [ last ] }
+  }
+
 \cs_new_protected:Npn \__tblr_build_whole:
   {
     \__tblr_prop_if_in:nnTF { outer } { long }
@@ -4093,6 +4143,7 @@
 \bool_new:N \l__tblr_table_page_last_bool
 \bool_new:N \l__tblr_table_page_break_bool
 
+%% #1: table alignment
 \cs_new_protected:Npn \__tblr_build_long_table:n #1
   {
     \int_set:Nn \l__tblr_table_page_int {1}
@@ -4144,67 +4195,8 @@
   }
 \cs_generate_variant:Nn \__tblr_build_long_table:n { e }
 
-\cs_new_protected:Npn \__tblr_build_head_foot:
-  {
-    \__tblr_build_row_head_foot:
-    \__tblr_build_table_head_foot:
-  }
-
-\cs_new:Npn \__tblr_box_height:N #1
-  {
-    \dim_eval:n { \box_ht:N #1 + \box_dp:N #1 }
-  }
-
-\tl_new:N \l__tblr_row_head_tl
-\tl_new:N \l__tblr_row_foot_tl
-\box_new:N \l__tblr_row_head_box
-\box_new:N \l__tblr_row_foot_box
-\dim_new:N \l__tblr_row_head_foot_dim
-
-\cs_new_protected:Npn \__tblr_build_row_head_foot:
-  {
-    %% \l__tblr_row_head_tl and \l__tblr_row_foot_tl may be empty
-    \tl_set:Nx \l__tblr_row_head_tl { \__tblr_prop_item:ne { table } { rowhead } }
-    \int_compare:nNnTF { \l__tblr_row_head_tl + 0 } > { 0 }
-      {
-        \__tblr_build_one_table:nn {1} { \l__tblr_row_head_tl }
-        \box_set_eq:NN \l__tblr_row_head_box \l__tblr_table_box
-      }
-      { \box_clear:N \l__tblr_row_head_box }
-    \tl_set:Nx \l__tblr_row_foot_tl { \__tblr_prop_item:ne { table } { rowfoot } }
-    \int_compare:nNnTF { \l__tblr_row_foot_tl + 0 } > { 0 }
-      {
-        \__tblr_build_one_table:nn
-          { \c@rowcount - \l__tblr_row_foot_tl + 1 } { \c@rowcount }
-        \box_set_eq:NN \l__tblr_row_foot_box \l__tblr_table_box
-      }
-      { \box_clear:N \l__tblr_row_foot_box }
-    \dim_set:Nn \l__tblr_row_head_foot_dim
-      {
-        \__tblr_box_height:N \l__tblr_row_head_box
-          + \__tblr_box_height:N \l__tblr_row_foot_box
-      }
-  }
-
 \box_new:N \l__tblr_table_head_box
-\box_new:N \l__tblr_table_everyhead_box
-\box_new:N \l__tblr_table_firsthead_box
-\box_new:N \l__tblr_table_lasthead_box
 \box_new:N \l__tblr_table_foot_box
-\box_new:N \l__tblr_table_everyfoot_box
-\box_new:N \l__tblr_table_firstfoot_box
-\box_new:N \l__tblr_table_lastfoot_box
-
-\cs_new_protected:Npn \__tblr_build_table_head_foot:
-  {
-    \vbox_set:Nn \l__tblr_table_everyhead_box { \UseHeadTemplate }
-    \vbox_set:Nn \l__tblr_table_firsthead_box { \UseHeadTemplate [ first ] }
-    \vbox_set:Nn \l__tblr_table_lasthead_box  { \UseHeadTemplate [ last ] }
-    \vbox_set:Nn \l__tblr_table_everyfoot_box { \UseFootTemplate }
-    \vbox_set:Nn \l__tblr_table_firstfoot_box { \UseFootTemplate [ first ] }
-    \vbox_set:Nn \l__tblr_table_lastfoot_box  { \UseFootTemplate [ last ] }
-  }
-
 \dim_new:N \l__tblr_table_head_foot_dim
 \dim_new:N \l__tblr_table_head_body_foot_dim
 
@@ -4240,6 +4232,9 @@
       }
   }
 
+\box_new:N \l__tblr_table_box
+
+%% #1: table alignment; #2: row from; #3: row to
 \cs_new_protected:Npn \__tblr_build_page_table:nnn #1 #2 #3
   {
     \__tblr_build_one_table:nn {#2} {#3}
@@ -4270,6 +4265,7 @@
       }
   }
 
+%% #1: table alignment
 \cs_new_protected:Npn \__tblr_build_short_table:n #1
   {
     \__tblr_build_one_table:nn {1} {\c@rowcount}
@@ -4292,6 +4288,12 @@
         \hbox:n { \__tblr_build_hline:n { \int_eval:n {#2 + 1} } }
       }
   }
+
+\tl_new:N \__tlbr_vbox_align_tl
+\tl_const:Nn \__tlbr_vbox_t_tl {t}
+\tl_const:Nn \__tlbr_vbox_m_tl {m}
+\tl_const:Nn \__tlbr_vbox_c_tl {c}
+\tl_const:Nn \__tlbr_vbox_b_tl {b}
 
 \cs_new_protected:Npn \__tblr_valign_whole:Nn #1 #2
   {
