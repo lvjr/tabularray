@@ -4112,6 +4112,31 @@
       }
   }
 
+\dim_new:N \tablewidth
+
+\cs_new_protected:Npn \__tblr_get_table_width:
+  {
+    \dim_zero:N \tablewidth
+    \int_step_inline:nn { \c@colcount }
+      {
+        \dim_add:Nn \tablewidth
+          {
+            \__tblr_spec_item:nn { vline } { [##1] / @vline-width }
+            +
+            \__tblr_data_item:nnn { column } {##1} { leftsep }
+            +
+            \__tblr_data_item:nnn { column } {##1} { @col-width }
+            +
+            \__tblr_data_item:nnn { column } {##1} { rightsep }
+          }
+      }
+    \dim_add:Nn \tablewidth
+      {
+        \__tblr_spec_item:ne { vline }
+          { [\int_eval:n { \c@colcount + 1 }] / @vline-width }
+      }
+  }
+
 \box_new:N \l__tblr_table_everyhead_box
 \box_new:N \l__tblr_table_firsthead_box
 \box_new:N \l__tblr_table_lasthead_box
@@ -4121,6 +4146,7 @@
 
 \cs_new_protected:Npn \__tblr_build_table_head_foot:
   {
+    \__tblr_get_table_width:
     \vbox_set:Nn \l__tblr_table_everyhead_box { \UseHeadTemplate }
     \vbox_set:Nn \l__tblr_table_firsthead_box { \UseHeadTemplate [ first ] }
     \vbox_set:Nn \l__tblr_table_lasthead_box  { \UseHeadTemplate [ last ] }
