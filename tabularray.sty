@@ -4234,8 +4234,12 @@
         \bool_if:NTF \l__tblr_table_page_break_bool
           {
             \__tblr_do_if_tracing:nn { page } { \tl_log:N \l__tblr_i_tl }
-            \__tblr_build_page_table:nnx {#1}
-              { \l__tblr_long_from_tl } { \int_eval:n { \l__tblr_i_tl - 1 } }
+            \int_compare:nNnT
+              { \l__tblr_i_tl - \l__tblr_long_from_tl } > {1}
+              {
+                \__tblr_build_page_table:nnx {#1}
+                  { \l__tblr_long_from_tl } { \int_eval:n { \l__tblr_i_tl - 1 } }
+              }
             \newpage
             \int_incr:N \l__tblr_table_page_int
             \hbox{}\kern-\topskip\nobreak
