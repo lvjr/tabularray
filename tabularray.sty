@@ -2763,6 +2763,8 @@
     t .meta:n = { valign = t },
     m .meta:n = { valign = m },
     b .meta:n = { valign = b },
+    conthead .code:n = \__tblr_keys_gput_outer:nn { conthead } {#1},
+    contfoot .code:n = \__tblr_keys_gput_outer:nn { contfoot } {#1},
     note .code:n = \__tblr_table_gput_note:n {#1},
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
@@ -2772,7 +2774,11 @@
 \cs_new_protected:Npn \__tblr_parse_table_outer_spec:n #1
   {
     \int_zero:N \l__tblr_note_count_int
-    \keys_set:nn { tblr-outer } { halign=c, valign=m, #1 }
+    \keys_set:nn { tblr-outer }
+      {
+        conthead = {Continued}, contfoot = {Continued ~ on ~ next ~ page},
+        halign=c, valign=m, #1
+      }
   }
 
 \cs_new_protected:Npn \__tblr_keys_gput_outer:nn #1 #2
@@ -4022,7 +4028,11 @@
   {
     \tl_set:Nx \l__tblr_caption_tl
       { \__tblr_prop_item:nn { outer } { caption } }
-    \hbox:n { Table ~ \thetable : ~ \l__tblr_caption_tl \space (Continued) }
+    \hbox:n
+      {
+        Table ~ \thetable : ~ \l__tblr_caption_tl
+        \space (\__tblr_prop_item:nn { outer } { conthead })
+      }
   }
 
 \NewHeadTemplate [ first ] { default }
@@ -4039,7 +4049,7 @@
 
 \NewFootTemplate { default }
   {
-    \hbox:n { Continued ~ on ~ next ~ page }
+    \hfill \__tblr_prop_item:nn { outer } { contfoot }
   }
 
 \NewFootTemplate [ last ] { default }
