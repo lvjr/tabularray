@@ -4044,19 +4044,28 @@
 
 \NewFootTemplate [ last ] { default }
   {
-    \hbox:n { \__tblr_build_table_note: }
+    \__tblr_build_table_notes:
   }
 
-\cs_new_protected:Npn \__tblr_build_table_note:
+\tl_new:N \l__tblr_table_notes_tl
+\tl_new:N \l__tblr_table_notes_body_tl
+
+\cs_new_protected:Npn \__tblr_build_table_notes:
   {
+    \tl_clear:N \l__tblr_table_notes_body_tl
     \int_step_inline:nn { \l__tblr_note_count_int }
       {
-        \hbox:n
-          {
-            \textsuperscript { \sffamily ##1 } ~
-            \__tblr_prop_item:nn { note } {##1}
-          }
+        \tl_put_right:Nn \l__tblr_table_notes_body_tl
+          { \textsuperscript { \sffamily ##1 } & }
+        \tl_put_right:Nx \l__tblr_table_notes_body_tl
+          { \__tblr_prop_item:nn { note } {##1} }
+        \tl_put_right:Nn \l__tblr_table_notes_body_tl { \\ }
       }
+    \tl_set:Nn \l__tblr_table_notes_tl
+      { \begin{tblr}{width=\tablewidth, colspec={l@{\space}X}, stretch=0} }
+    \tl_put_right:NV \l__tblr_table_notes_tl \l__tblr_table_notes_body_tl
+    \tl_put_right:Nn \l__tblr_table_notes_tl { \end{tblr} }
+    \l__tblr_table_notes_tl
   }
 
 \SetHeadTemplate { default }
