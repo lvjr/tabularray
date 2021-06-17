@@ -2774,6 +2774,8 @@
     b .meta:n = { valign = b },
     headsep .code:n = \__tblr_keys_gput_outer:nn { headsep } {#1},
     footsep .code:n = \__tblr_keys_gput_outer:nn { footsep } {#1},
+    presep  .code:n = \__tblr_keys_gput_outer:nn { presep }  {#1},
+    postsep .code:n = \__tblr_keys_gput_outer:nn { postsep } {#1},
     conthead .code:n = \__tblr_keys_gput_outer:nn { conthead } {#1},
     contfoot .code:n = \__tblr_keys_gput_outer:nn { contfoot } {#1},
     note .code:n = \__tblr_table_gput_note:n {#1},
@@ -2788,6 +2790,7 @@
     \keys_set:nn { tblr-outer }
       {
         halign = c, valign = m, headsep = 5pt, footsep = 5pt,
+        presep = \bigskipamount, postsep = \bigskipamount,
         conthead = {Continued}, contfoot = {Continued ~ on ~ next ~ page}, #1
       }
   }
