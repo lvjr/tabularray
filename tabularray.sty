@@ -4219,25 +4219,36 @@
 \cs_new_protected:Npn \__tblr_build_table_head_foot:
   {
     \__tblr_get_table_width:
-    \__tblr_build_table_head_foot_aux:Nn
+    \__tblr_build_table_head_aux:Nn
       \l__tblr_table_everyhead_box { \UseHeadTemplate }
-    \__tblr_build_table_head_foot_aux:Nn
+    \__tblr_build_table_head_aux:Nn
       \l__tblr_table_firsthead_box { \UseHeadTemplate [ first ] }
-    \__tblr_build_table_head_foot_aux:Nn
+    \__tblr_build_table_head_aux:Nn
       \l__tblr_table_lasthead_box  { \UseHeadTemplate [ last ] }
-    \__tblr_build_table_head_foot_aux:Nn
+    \__tblr_build_table_foot_aux:Nn
       \l__tblr_table_everyfoot_box { \UseFootTemplate }
-    \__tblr_build_table_head_foot_aux:Nn
+    \__tblr_build_table_foot_aux:Nn
       \l__tblr_table_firstfoot_box { \UseFootTemplate [ first ] }
-    \__tblr_build_table_head_foot_aux:Nn
+    \__tblr_build_table_foot_aux:Nn
       \l__tblr_table_lastfoot_box  { \UseFootTemplate [ last ] }
   }
 
-\cs_new_protected:Npn \__tblr_build_table_head_foot_aux:Nn #1 #2
+\cs_new_protected:Npn \__tblr_build_table_head_aux:Nn #1 #2
   {
     \vbox_set:Nn #1
       {
         \hsize = \tablewidth
+        \hbox_to_wd:nn { \tablewidth } { \hss #2 \hss }
+        \skip_vertical:n { \__tblr_prop_item:nn { outer } { headsep } }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_build_table_foot_aux:Nn #1 #2
+  {
+    \vbox_set:Nn #1
+      {
+        \hsize = \tablewidth
+        \skip_vertical:n { \__tblr_prop_item:nn { outer } { footsep } }
         \hbox_to_wd:nn { \tablewidth } { \hss #2 \hss }
       }
   }
@@ -4368,13 +4379,13 @@
     \vbox_set:Nn \l__tblr_table_box
       {
         \box_use:N \l__tblr_table_head_box
-        \skip_vertical:n { \__tblr_prop_item:nn { outer } { headsep } }
+        \hrule height ~ 0pt
         \box_use:N \l__tblr_row_head_box
         \hrule height ~ 0pt
         \box_use:N \l__tblr_table_box
         \hrule height ~ 0pt
         \box_use:N \l__tblr_row_foot_box
-        \skip_vertical:n { \__tblr_prop_item:nn { outer } { footsep } }
+        \hrule height ~ 0pt
         \box_use:N \l__tblr_table_foot_box
       }
     \__tblr_halign_whole:Nn \l__tblr_table_box #1
