@@ -4302,9 +4302,9 @@
               {
                 \__tblr_build_page_table:nnx {#1}
                   { \l__tblr_long_from_tl } { \int_eval:n { \l__tblr_i_tl - 1 } }
+                \int_incr:N \l__tblr_table_page_int
               }
             \newpage
-            \int_incr:N \l__tblr_table_page_int
             \hbox{}\kern-\topskip\nobreak
             \leavevmode
             \LogTblrTracing { page }
