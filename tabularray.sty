@@ -2772,6 +2772,8 @@
     t .meta:n = { valign = t },
     m .meta:n = { valign = m },
     b .meta:n = { valign = b },
+    headsep .code:n = \__tblr_keys_gput_outer:nn { headsep } {#1},
+    footsep .code:n = \__tblr_keys_gput_outer:nn { footsep } {#1},
     conthead .code:n = \__tblr_keys_gput_outer:nn { conthead } {#1},
     contfoot .code:n = \__tblr_keys_gput_outer:nn { contfoot } {#1},
     note .code:n = \__tblr_table_gput_note:n {#1},
@@ -2785,8 +2787,8 @@
     \int_zero:N \l__tblr_note_count_int
     \keys_set:nn { tblr-outer }
       {
-        conthead = {Continued}, contfoot = {Continued ~ on ~ next ~ page},
-        halign=c, valign=m, #1
+        halign = c, valign = m, headsep = 5pt, footsep = 5pt,
+        conthead = {Continued}, contfoot = {Continued ~ on ~ next ~ page}, #1
       }
   }
 
@@ -4363,13 +4365,13 @@
     \vbox_set:Nn \l__tblr_table_box
       {
         \box_use:N \l__tblr_table_head_box
-        \hrule height ~ 0pt
+        \skip_vertical:n { \__tblr_prop_item:nn { outer } { headsep } }
         \box_use:N \l__tblr_row_head_box
         \hrule height ~ 0pt
         \box_use:N \l__tblr_table_box
         \hrule height ~ 0pt
         \box_use:N \l__tblr_row_foot_box
-        \hrule height ~ 0pt
+        \skip_vertical:n { \__tblr_prop_item:nn { outer } { footsep } }
         \box_use:N \l__tblr_table_foot_box
       }
     \__tblr_halign_whole:Nn \l__tblr_table_box #1
