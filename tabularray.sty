@@ -4269,6 +4269,7 @@
 %% #1: table alignment
 \cs_new_protected:Npn \__tblr_build_long_table:n #1
   {
+    \skip_vertical:n { \__tblr_prop_item:nn { outer } { presep } }
     \int_set:Nn \l__tblr_table_page_int {1}
     \refstepcounter { table }
     \__tblr_build_head_foot:
@@ -4326,6 +4327,7 @@
       }
     \__tblr_build_page_table:nnn
       {#1} { \l__tblr_long_from_tl } { \l__tblr_long_to_tl }
+    \skip_vertical:n { \__tblr_prop_item:nn { outer } { postsep } }
   }
 \cs_generate_variant:Nn \__tblr_build_long_table:n { e }
 
