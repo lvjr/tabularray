@@ -4051,7 +4051,7 @@
     \tl_use:c { g__tblr_template_ #1 foot_tl }
   }
 
-\NewExpandableDocumentCommand \InsertTblr { m }
+\NewExpandableDocumentCommand \InsertTblrText { m }
   {
     \__tblr_prop_item:nn { more } {#1}
   }
@@ -4102,17 +4102,17 @@
 
 \NewHeadTemplate { default }
   {
-    \tl_set:Nx \l__tblr_caption_tl { \InsertTblr { caption } }
+    \tl_set:Nx \l__tblr_caption_tl { \InsertTblrText { caption } }
     \hbox:n
       {
         Table ~ \thetable : ~ \l__tblr_caption_tl
-        \space ( \InsertTblr { conthead } )
+        \space ( \InsertTblrText { conthead } )
       }
   }
 
 \NewHeadTemplate [ first ] { default }
   {
-    \tl_set:Nx \l__tblr_caption_tl { \InsertTblr { caption } }
+    \tl_set:Nx \l__tblr_caption_tl { \InsertTblrText { caption } }
     \hbox:n { Table ~ \thetable : ~ \l__tblr_caption_tl }
     \int_compare:nNnT { \l__tblr_table_page_int } = {1}
       {
@@ -4123,7 +4123,7 @@
 
 \NewFootTemplate { default }
   {
-    \hfill \InsertTblr { contfoot }
+    \hfill \InsertTblrText { contfoot }
   }
 
 \NewFootTemplate [ last ] { default }
