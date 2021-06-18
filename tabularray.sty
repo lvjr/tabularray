@@ -4092,7 +4092,7 @@
       \hsize = \tablewidth
       \__tblr_prop_map_inline:nn { note }
         {
-          \mode_leave_vertical:
+          \noindent
           \hangindent = 0.7em
           \hangafter = 1
           \hbox_to_wd:nn { 0.7em }
@@ -4111,6 +4111,7 @@
       \hsize = \tablewidth
       \__tblr_prop_map_inline:nn { note }
         {
+          \noindent
           \textsuperscript { \sffamily ##1 }
             \__tblr_hyper_target:n {##1} ~ ##2 \par
         }
@@ -4121,6 +4122,7 @@
   {
     \vbox:n {
       \hsize = \tablewidth
+      \noindent
       \__tblr_prop_map_inline:nn { note }
         {
           \textsuperscript { \sffamily ##1 }
@@ -4335,7 +4337,7 @@
               }
             \newpage
             \hbox{}\kern-\topskip\nobreak
-            \leavevmode \hskip-\parindent
+            \noindent
             \LogTblrTracing { page }
             \dim_set:Nn \l__tblr_remain_height_dim
               { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim - \l_tmpa_dim }
