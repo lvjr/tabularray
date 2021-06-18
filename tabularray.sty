@@ -4195,19 +4195,17 @@
     %% \l__tblr_row_head_tl and \l__tblr_row_foot_tl may be empty
     \tl_set:Nx \l__tblr_row_head_tl { \__tblr_prop_item:ne { table } { rowhead } }
     \int_compare:nNnTF { \l__tblr_row_head_tl + 0 } > { 0 }
-      {
-        \__tblr_build_one_table:nn {1} { \l__tblr_row_head_tl }
-        \box_set_eq:NN \l__tblr_row_head_box \l__tblr_table_box
-      }
-      { \box_clear:N \l__tblr_row_head_box }
+      { \__tblr_build_one_table:nn {1} { \l__tblr_row_head_tl } }
+      { \__tblr_build_one_hline:n {1} }
+    \box_set_eq:NN \l__tblr_row_head_box \l__tblr_table_box
     \tl_set:Nx \l__tblr_row_foot_tl { \__tblr_prop_item:ne { table } { rowfoot } }
     \int_compare:nNnTF { \l__tblr_row_foot_tl + 0 } > { 0 }
       {
         \__tblr_build_one_table:nn
           { \c@rowcount - \l__tblr_row_foot_tl + 1 } { \c@rowcount }
-        \box_set_eq:NN \l__tblr_row_foot_box \l__tblr_table_box
       }
-      { \box_clear:N \l__tblr_row_foot_box }
+      { \__tblr_build_one_hline:n { \int_eval:n { \c@rowcount + 1 } } }
+    \box_set_eq:NN \l__tblr_row_foot_box \l__tblr_table_box
     \dim_set:Nn \l__tblr_row_head_foot_dim
       {
         \__tblr_box_height:N \l__tblr_row_head_box
@@ -4458,6 +4456,12 @@
           }
         \hbox:n { \__tblr_build_hline:n { \int_eval:n {#2 + 1} } }
       }
+  }
+
+%% #1: hline number
+\cs_new_protected:Npn \__tblr_build_one_hline:n #1
+  {
+    \vbox_set:Nn \l__tblr_table_box { \hbox:n { \__tblr_build_hline:n { #1 } } }
   }
 
 \tl_new:N \__tlbr_vbox_align_tl
