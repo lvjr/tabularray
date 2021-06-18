@@ -5229,9 +5229,9 @@
 
 \NewTblrLibrary { booktabs }
   {
-    \NewTableCommand\toprule{\hline[0.08em]}
-    \NewTableCommand\midrule{\hline[0.05em]}
-    \NewTableCommand\bottomrule{\hline[0.08em]}
+    \NewTableCommand \toprule [1] []    { \hline [0.08em, ##1] }
+    \NewTableCommand \midrule [1] []    { \hline [0.05em, ##1] }
+    \NewTableCommand \bottomrule [1] [] { \hline [0.08em, ##1] }
   }
 
 %% Library diagbox and command \diagbox
