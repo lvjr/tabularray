@@ -4054,6 +4054,13 @@
       { \tl_gset:cn { g__tblr_template_ #2 _ #1 _tl } {#3} }
   }
 
+\NewDocumentCommand \UseTblrTemplate { O{} m }
+  {
+    \tl_if_empty:nTF {#1}
+      { \tl_use:c { g__tblr_template_ #2 _tl } }
+      { \tl_use:c { g__tblr_template_ #2 _ #1 _tl } }
+  }
+
 \cs_new_protected:Npn \__tblr_set_head_template:n #1
   {
     \tl_if_exist:cTF { g__tblr_template_ #1 head_ \l__tblr_template_name_tl _tl }
@@ -4100,11 +4107,6 @@
   {
     \tl_set:Nn \l__tblr_template_name_tl {#2}
     \keys_set:nn { tblr-template } {#1}
-  }
-
-\NewDocumentCommand \UseTblrTemplate { m }
-  {
-    \tl_use:c { g__tblr_template_ #1 _tl }
   }
 
 \NewExpandableDocumentCommand \InsertTblrText { m }
