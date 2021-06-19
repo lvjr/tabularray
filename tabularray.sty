@@ -1527,6 +1527,7 @@
                   { background } {#1},
     preto .code:n = \__tblr_cell_preto_text:n {#1},
     appto .code:n = \__tblr_cell_appto_text:n {#1},
+    cmd .code:n = \__tblr_cell_process_text:n {#1},
     fg .code:n = \__tblr_cell_preto_text:n { \color{#1} },
     font .code:n = \__tblr_cell_gput:nn { font } { #1 \selectfont },
     unknown .code:n = \__tblr_cell_unknown_key:V \l_keys_key_str,
@@ -1575,6 +1576,23 @@
     \__tblr_spec_gput:neV { text } { [#1][#2] } \l__tblr_cell_text_tl
   }
 \cs_generate_variant:Nn \__tblr_cell_appto_text:nnn { nen, enn, een }
+
+\cs_new_protected:Npn \__tblr_cell_process_text:n #1
+  {
+    \__tblr_cell_process_text:een
+      { \int_use:N \c@rownum } { \int_use:N \c@colnum } {#1}
+  }
+
+\cs_new_protected:Npn \__tblr_cell_process_text:nnn #1 #2 #3
+  {
+    \tl_set:Nx \l__tblr_cell_text_tl
+      {
+        { \__tblr_spec_item:nn { text } { [#1][#2] } }
+      }
+    \tl_put_left:Nn \l__tblr_cell_text_tl {#3}
+    \__tblr_spec_gput:nnV { text } { [#1][#2] } \l__tblr_cell_text_tl
+  }
+\cs_generate_variant:Nn \__tblr_cell_process_text:nnn { nen, enn, een }
 
 \cs_new_protected:Npn \__tblr_cell_unknown_key:n #1
   {
@@ -1783,6 +1801,7 @@
                    { \int_use:N \c@colnum } { coefficient } {#1},
     preto .code:n = \__tblr_preto_text_for_every_column_cell:n {#1},
     appto .code:n = \__tblr_appto_text_for_every_column_cell:n {#1},
+    cmd .code:n = \__tblr_process_text_for_every_column_cell:n {#1},
     leftsep .code:n = \__tblr_data_gput:nene { column }
                    { \int_use:N \c@colnum } { leftsep } { \dim_eval:n {#1} },
     rightsep .code:n = \__tblr_data_gput:nene { column }
@@ -1818,6 +1837,14 @@
     \int_step_inline:nn { \c@rowcount }
       {
         \__tblr_cell_appto_text:nen {##1} { \int_use:N \c@colnum } {#1}
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_process_text_for_every_column_cell:n #1
+  {
+    \int_step_inline:nn { \c@rowcount }
+      {
+        \__tblr_cell_process_text:nen {##1} { \int_use:N \c@colnum } {#1}
       }
   }
 
@@ -1938,6 +1965,7 @@
                    { coefficient } {#1},
     preto .code:n = \__tblr_preto_text_for_every_row_cell:n {#1},
     appto .code:n = \__tblr_appto_text_for_every_row_cell:n {#1},
+    cmd .code:n = \__tblr_process_text_for_every_row_cell:n {#1},
     abovesep .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
                          { abovesep } { \dim_eval:n {#1} },
     belowsep .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
@@ -1975,6 +2003,14 @@
     \int_step_inline:nn { \c@colcount }
       {
         \__tblr_cell_appto_text:enn { \int_use:N \c@rownum } {##1} {#1}
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_process_text_for_every_row_cell:n #1
+  {
+    \int_step_inline:nn { \c@colcount }
+      {
+        \__tblr_cell_process_text:enn { \int_use:N \c@rownum } {##1} {#1}
       }
   }
 
