@@ -4038,57 +4038,73 @@
 %%> \section{Header and Footer Templates}
 %%% --------------------------------------------------------
 
-\NewDocumentCommand \NewHeadTemplate { O{} m m }
-  {
-    \tl_gset:cn { g__tblr_template_ #1 head_ #2 _tl } { #3 }
-  }
-
-\NewDocumentCommand \NewFootTemplate { O{} m m }
-  {
-    \tl_gset:cn { g__tblr_template_ #1 foot_ #2 _tl } { #3 }
-  }
-
-\tl_new:N \g__tblr_template_head_tl
+\tl_new:N \g__tblr_template_everyhead_tl
 \tl_new:N \g__tblr_template_firsthead_tl
 \tl_new:N \g__tblr_template_lasthead_tl
-\tl_new:N \g__tblr_template_foot_tl
+\tl_new:N \g__tblr_template_everyfoot_tl
 \tl_new:N \g__tblr_template_firstfoot_tl
 \tl_new:N \g__tblr_template_lastfoot_tl
 
-\NewDocumentCommand \SetHeadTemplate { O{} m }
+%% If the optional argument is not empty, save the template with the name #1
+%% If the optional argument is empty, set the template as the default
+\NewDocumentCommand \NewTblrTemplate { O{} m m }
   {
-    \tl_if_exist:cTF { g__tblr_template_ #1 head_ #2 _tl }
+    \tl_if_empty:nTF {#1}
+      { \tl_gset:cn { g__tblr_template_ #2 _tl } {#3} }
+      { \tl_gset:cn { g__tblr_template_ #2 _ #1 _tl } {#3} }
+  }
+
+\cs_new_protected:Npn \__tblr_set_head_template:n #1
+  {
+    \tl_if_exist:cTF { g__tblr_template_ #1 head_ \l__tblr_template_name_tl _tl }
       {
         \tl_set_eq:cc { g__tblr_template_ #1 head_tl }
-          { g__tblr_template_ #1 head_ #2 _tl }
+          { g__tblr_template_ #1 head_ \l__tblr_template_name_tl _tl }
       }
       {
         \tl_set_eq:cc { g__tblr_template_ #1 head_tl }
-          { g__tblr_template_head_ #2 _tl }
+          { g__tblr_template_everyhead_ \l__tblr_template_name_tl _tl }
       }
   }
 
-\NewDocumentCommand \SetFootTemplate { O{} m }
+\cs_new_protected:Npn \__tblr_set_foot_template:n #1
   {
-    \tl_if_exist:cTF { g__tblr_template_ #1 foot_ #2 _tl }
+    \tl_if_exist:cTF { g__tblr_template_ #1 foot_ \l__tblr_template_name_tl _tl }
       {
         \tl_set_eq:cc { g__tblr_template_ #1 foot_tl }
-          { g__tblr_template_ #1 foot_ #2 _tl }
+          { g__tblr_template_ #1 foot_ \l__tblr_template_name_tl _tl }
       }
       {
         \tl_set_eq:cc { g__tblr_template_ #1 foot_tl }
-          { g__tblr_template_foot_ #2 _tl }
+          { g__tblr_template_everyfoot_ \l__tblr_template_name_tl _tl }
       }
   }
 
-\NewDocumentCommand \UseHeadTemplate { O{} }
+\keys_define:nn { tblr-template }
   {
-    \tl_use:c { g__tblr_template_ #1 head_tl }
+    everyhead .code:n = \__tblr_set_head_template:n { every },
+    firsthead .code:n = \__tblr_set_head_template:n { first },
+     lasthead .code:n = \__tblr_set_head_template:n { last },
+    everyfoot .code:n = \__tblr_set_foot_template:n { every },
+    firstfoot .code:n = \__tblr_set_foot_template:n { first },
+     lastfoot .code:n = \__tblr_set_foot_template:n { last },
+         head .meta:n = { everyhead, firsthead, lasthead },
+         foot .meta:n = { everyfoot, firstfoot, lastfoot },
+     headfoot .meta:n =
+                { everyhead, firsthead, lasthead, everyfoot, firstfoot, lastfoot },
   }
 
-\NewDocumentCommand \UseFootTemplate { O{} }
+\tl_new:N \l__tblr_template_name_tl
+
+\NewDocumentCommand \SetTblrTemplate { m m }
   {
-    \tl_use:c { g__tblr_template_ #1 foot_tl }
+    \tl_set:Nn \l__tblr_template_name_tl {#2}
+    \keys_set:nn { tblr-template } {#1}
+  }
+
+\NewDocumentCommand \UseTblrTemplate { m }
+  {
+    \tl_use:c { g__tblr_template_ #1 _tl }
   }
 
 \NewExpandableDocumentCommand \InsertTblrText { m }
@@ -4173,7 +4189,7 @@
 
 \tl_new:N \l__tblr_caption_tl
 
-\NewHeadTemplate { default }
+\NewTblrTemplate [ normal ] { everyhead }
   {
     \tl_set:Nx \l__tblr_caption_tl { \InsertTblrText { caption } }
     \hbox:n
@@ -4183,7 +4199,7 @@
       }
   }
 
-\NewHeadTemplate [ first ] { default }
+\NewTblrTemplate [ normal ] { firsthead }
   {
     \tl_set:Nx \l__tblr_caption_tl { \InsertTblrText { caption } }
     \hbox:n { Table ~ \thetable : ~ \l__tblr_caption_tl }
@@ -4194,22 +4210,17 @@
       }
   }
 
-\NewFootTemplate { default }
+\NewTblrTemplate [ normal ] { everyfoot }
   {
     \hfill \InsertTblrText { contfoot }
   }
 
-\NewFootTemplate [ last ] { default }
+\NewTblrTemplate [ normal ] { lastfoot }
   {
     \InsertTblrNotes { hang }
   }
 
-\SetHeadTemplate { default }
-\SetHeadTemplate [ first ] { default }
-\SetHeadTemplate [ last ] { default }
-\SetFootTemplate { default }
-\SetFootTemplate [ first ] { default }
-\SetFootTemplate [ last ] { default }
+\SetTblrTemplate { headfoot } { normal }
 
 %%% --------------------------------------------------------
 %%> \section{Build the Whole Table}
@@ -4291,17 +4302,17 @@
   {
     \__tblr_get_table_width:
     \__tblr_build_table_head_aux:Nn
-      \l__tblr_table_everyhead_box { \UseHeadTemplate }
+      \l__tblr_table_everyhead_box { \UseTblrTemplate { everyhead } }
     \__tblr_build_table_head_aux:Nn
-      \l__tblr_table_firsthead_box { \UseHeadTemplate [ first ] }
+      \l__tblr_table_firsthead_box { \UseTblrTemplate { firsthead } }
     \__tblr_build_table_head_aux:Nn
-      \l__tblr_table_lasthead_box  { \UseHeadTemplate [ last ] }
+      \l__tblr_table_lasthead_box  { \UseTblrTemplate { lasthead } }
     \__tblr_build_table_foot_aux:Nn
-      \l__tblr_table_everyfoot_box { \UseFootTemplate }
+      \l__tblr_table_everyfoot_box { \UseTblrTemplate { everyfoot } }
     \__tblr_build_table_foot_aux:Nn
-      \l__tblr_table_firstfoot_box { \UseFootTemplate [ first ] }
+      \l__tblr_table_firstfoot_box { \UseTblrTemplate { firstfoot } }
     \__tblr_build_table_foot_aux:Nn
-      \l__tblr_table_lastfoot_box  { \UseFootTemplate [ last ] }
+      \l__tblr_table_lastfoot_box  { \UseTblrTemplate { lastfoot } }
   }
 
 \cs_new_protected:Npn \__tblr_build_table_head_aux:Nn #1 #2
