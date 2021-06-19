@@ -5329,23 +5329,11 @@
 \NewTblrLibrary { siunitx }
   {
     \RequirePackage { siunitx }
+    \NewColumnType { S } [1] [] { Q[si = {##1}] }
     \__tblr_data_new_key:nnn { cell } { si } { str }
     \keys_define:nn { tblr-column }
       {
         si .code:n = \__tblr_siunitx_setcolumn:n {##1}
-      }
-    \str_gput_right:Nn \c_tblr_primitive_colrow_types_str { S } % dirty hack
-    \str_gput_right:Nn \g_tblr_used_column_types_str { S }
-    \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ S } { O{} }
-      {
-        \keys_set:nn { tblr-column } { si = {##1} }
-        \int_incr:N \c@colnum
-        \__tblr_execute_colrow_spec_next:N
-      }
-    \exp_args:Nc \NewDocumentCommand { tblr_column_type_ S } { O{} }
-      {
-        \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { S[##1] }
-        \__tblr_expand_colrow_spec_next:N
       }
     \cs_new_protected:Npn \__tblr_siunitx_setcolumn:n ##1
       {
