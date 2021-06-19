@@ -5324,4 +5324,63 @@
     \box_use:N \l__tblr_diag_box
   }
 
+%% Library siunitx with S column and S row
+
+\__tblr_data_new_key:nnn { cell } { si } { str }
+
+\keys_define:nn { tblr-column }
+  {
+    si .code:n = \__tblr_set_key_for_every_column_cell:nnn
+                   { \int_use:N \c@colnum } { si } {#1}
+  }
+
+\keys_define:nn { tblr-row }
+  {
+    si .code:n = \__tblr_set_key_for_every_row_cell:nnn
+                   { \int_use:N \c@rownum } { si } {#1}
+  }
+
+\str_gput_right:Nn \c_tblr_primitive_colrow_types_str { S } % dirty hack
+\str_gput_right:Nn \g_tblr_used_column_types_str { S }
+\str_gput_right:Nn \g_tblr_used_row_types_str { S }
+
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ S } { O{} }
+  {
+    \keys_set:nn { tblr-column } { si = {#1} }
+    \__tblr_process_text_for_every_column_cell:n { \__tblr_siunitx_tablenum:n }
+    \int_incr:N \c@colnum
+    \__tblr_execute_colrow_spec_next:N
+  }
+\exp_args:Nc \NewDocumentCommand { tblr_column_type_ S } { O{} }
+  {
+    \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { S[#1] }
+    \__tblr_expand_colrow_spec_next:N
+  }
+
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_row_type_ S } { O{} }
+  {
+    \keys_set:nn { tblr-row } { si = {#1} }
+    \__tblr_process_text_for_every_row_cell:n { \__tblr_siunitx_tablenum:n }
+    \int_incr:N \c@rownum
+    \__tblr_execute_colrow_spec_next:N
+  }
+\exp_args:Nc \NewDocumentCommand { tblr_row_type_ S } { O{} }
+  {
+    \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { S[#1] }
+    \__tblr_expand_colrow_spec_next:N
+  }
+
+\cs_new_protected:Npn \__tblr_siunitx_tablenum:n #1
+  {
+    \group_begin:
+    \tl_set:Nx \l_tmpa_tl
+      {
+        \__tblr_data_item:neen { cell }
+          { \int_use:N \c@rownum } { \int_use:N \c@colnum } { si }
+      }
+    \exp_args:NV \sisetup \l_tmpa_tl
+    \tablenum {#1}
+    \group_end:
+  }
+
 \ExplSyntaxOff
