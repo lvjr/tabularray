@@ -5284,7 +5284,7 @@
 
 \NewTblrLibrary { diagbox }
   {
-    \RequirePackage{diagbox}
+    \RequirePackage{ diagbox }
     \cs_set_eq:NN \__tblr_lib_saved_diagbox:w \diagbox
     \NewContentCommand \diagbox [3] []
       {
@@ -5326,41 +5326,41 @@
 
 %% Library siunitx and S columns
 
-\__tblr_data_new_key:nnn { cell } { si } { str }
-
-\keys_define:nn { tblr-column }
+\NewTblrLibrary { siunitx }
   {
-    si .code:n = \__tblr_set_key_for_every_column_cell:nnn
-                   { \int_use:N \c@colnum } { si } {#1}
-  }
-
-\str_gput_right:Nn \c_tblr_primitive_colrow_types_str { S } % dirty hack
-\str_gput_right:Nn \g_tblr_used_column_types_str { S }
-
-\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ S } { O{} }
-  {
-    \keys_set:nn { tblr-column } { si = {#1} }
-    \__tblr_process_text_for_every_column_cell:n { \__tblr_siunitx_tablenum:n }
-    \int_incr:N \c@colnum
-    \__tblr_execute_colrow_spec_next:N
-  }
-\exp_args:Nc \NewDocumentCommand { tblr_column_type_ S } { O{} }
-  {
-    \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { S[#1] }
-    \__tblr_expand_colrow_spec_next:N
-  }
-
-\cs_new_protected:Npn \__tblr_siunitx_tablenum:n #1
-  {
-    \group_begin:
-    \tl_set:Nx \l_tmpa_tl
+    \RequirePackage { siunitx }
+    \__tblr_data_new_key:nnn { cell } { si } { str }
+    \keys_define:nn { tblr-column }
       {
-        \__tblr_data_item:neen { cell }
-          { \int_use:N \c@rownum } { \int_use:N \c@colnum } { si }
+        si .code:n = \__tblr_set_key_for_every_column_cell:nnn
+                       { \int_use:N \c@colnum } { si } {##1}
       }
-    \exp_args:NV \sisetup \l_tmpa_tl
-    \tablenum {#1}
-    \group_end:
+    \str_gput_right:Nn \c_tblr_primitive_colrow_types_str { S } % dirty hack
+    \str_gput_right:Nn \g_tblr_used_column_types_str { S }
+    \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ S } { O{} }
+      {
+        \keys_set:nn { tblr-column } { si = {##1} }
+        \__tblr_process_text_for_every_column_cell:n { \__tblr_siunitx_tablenum:n }
+        \int_incr:N \c@colnum
+        \__tblr_execute_colrow_spec_next:N
+      }
+    \exp_args:Nc \NewDocumentCommand { tblr_column_type_ S } { O{} }
+      {
+        \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { S[##1] }
+        \__tblr_expand_colrow_spec_next:N
+      }
+    \cs_new_protected:Npn \__tblr_siunitx_tablenum:n ##1
+      {
+        \group_begin:
+        \tl_set:Nx \l_tmpa_tl
+          {
+            \__tblr_data_item:neen { cell }
+              { \int_use:N \c@rownum } { \int_use:N \c@colnum } { si }
+          }
+        \exp_args:NV \sisetup \l_tmpa_tl
+        \tablenum {##1}
+        \group_end:
+      }
   }
 
 \ExplSyntaxOff
