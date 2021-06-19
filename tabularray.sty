@@ -1781,6 +1781,8 @@
                    { \int_use:N \c@colnum } { width } { \dim_eval:n {#1} },
     co .code:n = \__tblr_data_gput:nene { column }
                    { \int_use:N \c@colnum } { coefficient } {#1},
+    preto .code:n = \__tblr_preto_text_for_every_column_cell:n {#1},
+    appto .code:n = \__tblr_appto_text_for_every_column_cell:n {#1},
     leftsep .code:n = \__tblr_data_gput:nene { column }
                    { \int_use:N \c@colnum } { leftsep } { \dim_eval:n {#1} },
     rightsep .code:n = \__tblr_data_gput:nene { column }
@@ -1934,6 +1936,8 @@
                    { height } { \dim_eval:n {#1} },
     co .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
                    { coefficient } {#1},
+    preto .code:n = \__tblr_preto_text_for_every_row_cell:n {#1},
+    appto .code:n = \__tblr_appto_text_for_every_row_cell:n {#1},
     abovesep .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
                          { abovesep } { \dim_eval:n {#1} },
     belowsep .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
