@@ -4368,13 +4368,14 @@
       {
         \dim_set:Nn \l_tmpa_dim
           {
-            \__tblr_spec_item:ne { hline } { [\l__tblr_i_tl] / @hline-height }
-            +
             \__tblr_data_item:nen { row } { \l__tblr_i_tl } { abovesep }
             +
             \__tblr_data_item:nen { row } { \l__tblr_i_tl } { @row-height }
             +
             \__tblr_data_item:nen { row } { \l__tblr_i_tl } { belowsep }
+            +
+            \__tblr_spec_item:ne { hline }
+              { [ \int_eval:n { \l__tblr_i_tl + 1} ] / @hline-height }
           }
         \__tblr_check_table_page_break:NNN
           \l__tblr_remain_height_dim \l_tmpa_dim \l__tblr_table_page_break_bool
@@ -4461,6 +4462,8 @@
 %% #1: table alignment; #2: row from; #3: row to
 \cs_new_protected:Npn \__tblr_build_page_table:nnn #1 #2 #3
   {
+    \bool_set_false:N \l__tblr_build_first_hline_bool
+    \bool_set_false:N \l__tblr_build_last_hline_bool
     \__tblr_build_one_table:nn {#2} {#3}
     \vbox_set:Nn \l__tblr_table_box
       {
@@ -4497,6 +4500,11 @@
   }
 \cs_generate_variant:Nn \__tblr_build_short_table:n { e }
 
+\bool_new:N \l__tblr_build_first_hline_bool
+\bool_new:N \l__tblr_build_last_hline_bool
+\bool_set_true:N \l__tblr_build_first_hline_bool
+\bool_set_true:N \l__tblr_build_last_hline_bool
+
 %% #1: row from; #2: row to
 \cs_new_protected:Npn \__tblr_build_one_table:nn #1 #2
   {
@@ -4504,13 +4512,19 @@
       {
         \int_step_variable:nnNn {#1} {#2} \l__tblr_i_tl
           {
-            \hbox:n { \__tblr_build_hline:V \l__tblr_i_tl }
+            \bool_lazy_or:nnT
+              { \int_compare_p:nNn { \l__tblr_i_tl } > {#1} }
+              { \bool_if_p:N \l__tblr_build_first_hline_bool }
+              { \hbox:n { \__tblr_build_hline:V \l__tblr_i_tl } }
             \hrule height ~ 0pt % remove lineskip between hlines and rows
             \hbox:n { \__tblr_build_row:N \l__tblr_i_tl }
             \hrule height ~ 0pt
           }
-        \hbox:n { \__tblr_build_hline:n { \int_eval:n {#2 + 1} } }
+        \bool_if:NT \l__tblr_build_last_hline_bool
+          { \hbox:n { \__tblr_build_hline:n { \int_eval:n {#2 + 1} } } }
       }
+    \bool_set_true:N \l__tblr_build_first_hline_bool
+    \bool_set_true:N \l__tblr_build_last_hline_bool
   }
 
 %% #1: hline number
