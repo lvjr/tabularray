@@ -2343,7 +2343,6 @@
 
 \cs_new_protected:Npn \buildtblr #1 #2 #3
   {
-    \mode_leave_vertical:
     \int_gincr:N \g_tblr_level_int
     \__tblr_clear_prop_lists:
     \__tblr_clear_spec_lists:
@@ -4351,8 +4350,13 @@
 \bool_new:N \l__tblr_table_page_break_bool
 
 %% #1: table alignment
+%% For long table, we need to leave hmode first to get correct \pagetotal
 \cs_new_protected:Npn \__tblr_build_long_table:n #1
   {
+    \par
+    \LogTblrTracing { page }
+    \mode_leave_vertical:
+    \LogTblrTracing { page }
     \skip_vertical:n { \__tblr_prop_item:nn { outer } { presep } }
     \int_set:Nn \l__tblr_table_page_int {1}
     \refstepcounter { table }
@@ -4493,8 +4497,10 @@
   }
 
 %% #1: table alignment
+%% For short table, we need to leave vmode first
 \cs_new_protected:Npn \__tblr_build_short_table:n #1
   {
+    \mode_leave_vertical:
     \__tblr_build_one_table:nn {1} {\c@rowcount}
     \__tblr_valign_whole:Nn \l__tblr_table_box #1
   }
