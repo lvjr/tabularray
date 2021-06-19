@@ -4353,15 +4353,20 @@
 %% For long table, we need to leave hmode first to get correct \pagetotal
 \cs_new_protected:Npn \__tblr_build_long_table:n #1
   {
+    \LogTblrTracing { page }
     \par
     \LogTblrTracing { page }
+    %% The following vskip will be omitted if it's at the beginning of the page
+    \skip_vertical:n { \__tblr_prop_item:nn { outer } { presep } }
+    \LogTblrTracing { page }
+    \nointerlineskip
     \mode_leave_vertical:
     \LogTblrTracing { page }
-    \skip_vertical:n { \__tblr_prop_item:nn { outer } { presep } }
+    \hrule height ~ 0pt
+    \LogTblrTracing { page }
     \int_set:Nn \l__tblr_table_page_int {1}
     \refstepcounter { table }
     \__tblr_build_head_foot:
-    \LogTblrTracing { page }
     \dim_set:Nn \l__tblr_remain_height_dim
       { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
     \tl_set:Nx \l__tblr_long_from_tl { \int_eval:n { \l__tblr_row_head_tl + 1 } }
