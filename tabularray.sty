@@ -4052,39 +4052,38 @@
     \tl_gset:cn { g__tblr_template_ #1 _ #2 _tl } {#3}
   }
 
+\keys_define:nn { tblr-use-template }
+  {
+    unknown .code:n = \__tblr_save_template_option:Vn \l_keys_key_str {#1},
+  }
+
+\prop_new:N \l__tblr_template_options_prop
+
+\cs_new_protected:Npn \__tblr_save_template_option:nn #1 #2
+  {
+    \prop_put:Nnn \l__tblr_template_options_prop {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_save_template_option:nn { Vn }
+
+\NewExpandableDocumentCommand \TblrGetValue { m }
+  {
+    \prop_item:Nn \l__tblr_template_options_prop {#1}
+  }
+
+\NewExpandableDocumentCommand \TblrIfValueEmpty { m m m }
+  {
+    \prop_if_in:NnTF \l__tblr_template_options_prop {#1} {#3} {#2}
+  }
+
 %% #1: head/foot element; #2: template name
 \NewDocumentCommand \UseTblrTemplate { m m }
   {
+    \exp_args:Nnv \keys_set:nn { tblr-use-template }
+      { l__tblr_template_ #1 _ #2 _options_tl }
     \tl_use:c { g__tblr_template_ #1 _ #2 _tl }
   }
 
-\cs_new_protected:Npn \__tblr_set_head_template:n #1
-  {
-    \tl_if_exist:cTF { g__tblr_template_ #1 head_ \l__tblr_template_name_tl _tl }
-      {
-        \tl_set_eq:cc { g__tblr_template_ #1 head_default_tl }
-          { g__tblr_template_ #1 head_ \l__tblr_template_name_tl _tl }
-      }
-      {
-        \tl_set_eq:cc { g__tblr_template_ #1 head_default_tl }
-          { g__tblr_template_everyhead_ \l__tblr_template_name_tl _tl }
-      }
-  }
-
-\cs_new_protected:Npn \__tblr_set_foot_template:n #1
-  {
-    \tl_if_exist:cTF { g__tblr_template_ #1 foot_ \l__tblr_template_name_tl _tl }
-      {
-        \tl_set_eq:cc { g__tblr_template_ #1 foot_default_tl }
-          { g__tblr_template_ #1 foot_ \l__tblr_template_name_tl _tl }
-      }
-      {
-        \tl_set_eq:cc { g__tblr_template_ #1 foot_default_tl }
-          { g__tblr_template_everyfoot_ \l__tblr_template_name_tl _tl }
-      }
-  }
-
-\keys_define:nn { tblr-template }
+\keys_define:nn { tblr-set-template }
   {
     everyhead .code:n = \__tblr_set_head_template:n { every },
     firsthead .code:n = \__tblr_set_head_template:n { first },
@@ -4112,7 +4111,37 @@
   {
     \tl_set:Nn \l__tblr_template_options_tl {#1}
     \tl_set:Nn \l__tblr_template_name_tl {#3}
-    \keys_set:nn { tblr-template } {#2}
+    \keys_set:nn { tblr-set-template } {#2}
+  }
+
+\cs_new_protected:Npn \__tblr_set_head_template:n #1
+  {
+    \tl_set_eq:cN { l__tblr_template_ #1 head_default_options_tl }
+      \l__tblr_template_options_tl
+    \tl_if_exist:cTF { g__tblr_template_ #1 head_ \l__tblr_template_name_tl _tl }
+      {
+        \tl_set_eq:cc { g__tblr_template_ #1 head_default_tl }
+          { g__tblr_template_ #1 head_ \l__tblr_template_name_tl _tl }
+      }
+      {
+        \tl_set_eq:cc { g__tblr_template_ #1 head_default_tl }
+          { g__tblr_template_everyhead_ \l__tblr_template_name_tl _tl }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_set_foot_template:n #1
+  {
+    \tl_set_eq:cN { l__tblr_template_ #1 foot_default_options_tl }
+      \l__tblr_template_options_tl
+    \tl_if_exist:cTF { g__tblr_template_ #1 foot_ \l__tblr_template_name_tl _tl }
+      {
+        \tl_set_eq:cc { g__tblr_template_ #1 foot_default_tl }
+          { g__tblr_template_ #1 foot_ \l__tblr_template_name_tl _tl }
+      }
+      {
+        \tl_set_eq:cc { g__tblr_template_ #1 foot_default_tl }
+          { g__tblr_template_everyfoot_ \l__tblr_template_name_tl _tl }
+      }
   }
 
 \NewExpandableDocumentCommand \InsertTblrText { m }
@@ -4220,7 +4249,10 @@
 
 \DefTblrTemplate { everyfoot } { normal }
   {
-    \hfill \InsertTblrText { contfoot }
+    \hfill
+    \TblrGetValue { font } \selectfont
+    \TblrIfValueEmpty {color} {} { \color{ \TblrGetValue{color} } }
+    \InsertTblrText { contfoot }
   }
 
 \DefTblrTemplate { lastfoot } { normal }
@@ -4229,6 +4261,7 @@
   }
 
 \SetTblrTemplate { headfoot } { normal }
+\SetTblrTemplate [font=\itshape,color=blue] { everyfoot } { normal }
 
 %%% --------------------------------------------------------
 %%> \section{Build the Whole Table}
