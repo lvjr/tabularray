@@ -4351,13 +4351,15 @@
 
 %% #1: table alignment
 %% For long table, we need to leave hmode first to get correct \pagetotal
+%% Also remove topskip and presep if we are at the beginning of the page
 \cs_new_protected:Npn \__tblr_build_long_table:n #1
   {
     \LogTblrTracing { page }
     \par
     \LogTblrTracing { page }
-    %% The following vskip will be omitted if it's at the beginning of the page
-    \skip_vertical:n { \__tblr_prop_item:nn { outer } { presep } }
+    \dim_compare:nNnTF { \pagegoal } = { \maxdimen }
+      { \hbox{}\kern-\topskip\nobreak }
+      { \skip_vertical:n { \__tblr_prop_item:nn { outer } { presep } } }
     \LogTblrTracing { page }
     \nointerlineskip
     \mode_leave_vertical:
