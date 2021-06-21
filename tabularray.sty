@@ -4153,9 +4153,14 @@
     \prop_if_in:NnTF \l__tblr_template_options_prop {#1} {#3} {#2}
   }
 
-\NewDocumentCommand \TblrMap { m +m }
+\NewDocumentCommand \TblrMapNote { +m }
   {
-    \__tblr_prop_map_inline:nn {#1} {#2}
+    \__tblr_prop_map_inline:nn { note }
+      {
+        \tl_set:Nn \InsertTblrNoteTag {##1}
+        \tl_set:Nn \InsertTblrNoteText {##2}
+        #1
+      }
   }
 
 \NewExpandableDocumentCommand \InsertTblrText { m }
@@ -4192,51 +4197,76 @@
     \__tblr_hyper_link:nn {#1} { \textsuperscript { \sffamily #1 } }
   }
 
+\DefTblrTemplate { note-tag } { normal }
+  {
+    \textsuperscript { \sffamily \InsertTblrNoteTag }
+  }
+\SetTblrTemplate { note-tag } { normal }
+
+\DefTblrTemplate { note-target } { normal }
+  {
+    \__tblr_hyper_target:n { \InsertTblrNoteTag }
+  }
+\SetTblrTemplate { note-target } { normal }
+
+\DefTblrTemplate { note-separator } { normal } { \space }
+\SetTblrTemplate { note-separator } { normal }
+
+\DefTblrTemplate { note-text } { normal } { \InsertTblrNoteText }
+\SetTblrTemplate { note-text } { normal }
+
 \DefTblrTemplate { note } { hang }
   {
-    \vbox:n {
-      \hsize = \tablewidth
-      \TblrMap { note }
-        {
-          \noindent
-          \hangindent = 0.7em
-          \hangafter = 1
-          \hbox_to_wd:nn { 0.7em }
-            {
-              \textsuperscript { \sffamily #1 }
-              \__tblr_hyper_target:n {#1}
-            }
-            #2 \par
-        }
-    }
+    \vbox:n
+      {
+        \hsize = \tablewidth
+        \TblrMapNote
+          {
+            \noindent
+            \hangindent = 0.7em
+            \hangafter = 1
+            \hbox_to_wd:nn { 0.7em }
+              {
+                \UseTblrTemplate { note-tag } { default }
+                \UseTblrTemplate { note-target } { default }
+                \hfil
+              }
+            \UseTblrTemplate { note-text } { default } \par
+          }
+      }
   }
-
 \DefTblrTemplate { note } { left }
   {
-    \vbox:n {
-      \hsize = \tablewidth
-      \TblrMap { note }
-        {
-          \noindent
-          \textsuperscript { \sffamily #1 }
-            \__tblr_hyper_target:n {#1} ~ #2 \par
-        }
-    }
+    \vbox:n
+      {
+        \hsize = \tablewidth
+        \TblrMapNote
+          {
+            \noindent
+            \UseTblrTemplate { note-tag } { default }
+            \UseTblrTemplate { note-target } { default }
+            \UseTblrTemplate { note-separator } { default }
+            \UseTblrTemplate { note-text } { default }
+            \par
+          }
+      }
   }
-
 \DefTblrTemplate { note } { para }
   {
-    \vbox:n {
-      \hsize = \tablewidth
-      \noindent
-      \TblrMap { note }
-        {
-          \textsuperscript { \sffamily #1 }
-            \__tblr_hyper_target:n {#1} ~ #2 \quad
-        }
-    }
+    \vbox:n
+      {
+        \hsize = \tablewidth
+        \noindent
+        \TblrMapNote
+          {
+            \UseTblrTemplate { note-tag } { default }
+            \UseTblrTemplate { note-target } { default }
+            \UseTblrTemplate { note-separator } { default }
+            \UseTblrTemplate { note-text } { default }
+            \quad
+          }
+      }
   }
-
 \SetTblrTemplate { note } { hang }
 
 \tl_new:N \l__tblr_caption_tl
