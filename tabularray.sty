@@ -4124,18 +4124,23 @@
 
 \prop_new:N \l__tblr_template_options_prop
 
-\NewDocumentCommand  \UseTblrFont { m }
+\NewDocumentCommand \UseTblrFont { m }
   {
     \prop_item:Nn \l__tblr_template_options_prop { #1 : font } \selectfont
   }
 
 \tl_new:N \l__tblr_use_color_tl
 
-\NewDocumentCommand  \UseTblrColor { m }
+\NewDocumentCommand \UseTblrColor { m }
   {
     \tl_set:Nx \l__tblr_use_color_tl
       { \prop_item:Nn \l__tblr_template_options_prop { #1 : fg } }
     \tl_if_empty:NF \l__tblr_use_color_tl { \color { \l__tblr_use_color_tl } }
+  }
+
+\AtBeginDocument
+  {
+    \@ifpackageloaded{xcolor}{}{\RenewDocumentCommand \UseTblrColor {m} {}}
   }
 
 \keys_define:nn { tblr-use-template }
