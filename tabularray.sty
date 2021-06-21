@@ -4195,10 +4195,10 @@
           \hangafter = 1
           \hbox_to_wd:nn { 0.7em }
             {
-              \textsuperscript { \sffamily ##1 }
-              \__tblr_hyper_target:n {##1}
+              \textsuperscript { \sffamily #1 }
+              \__tblr_hyper_target:n {#1}
             }
-            ##2 \par
+            #2 \par
         }
     }
   }
@@ -4210,8 +4210,8 @@
       \__tblr_prop_map_inline:nn { note }
         {
           \noindent
-          \textsuperscript { \sffamily ##1 }
-            \__tblr_hyper_target:n {##1} ~ ##2 \par
+          \textsuperscript { \sffamily #1 }
+            \__tblr_hyper_target:n {#1} ~ #2 \par
         }
     }
   }
@@ -4223,8 +4223,8 @@
       \noindent
       \__tblr_prop_map_inline:nn { note }
         {
-          \textsuperscript { \sffamily ##1 }
-            \__tblr_hyper_target:n {##1} ~ ##2 \quad
+          \textsuperscript { \sffamily #1 }
+            \__tblr_hyper_target:n {#1} ~ #2 \quad
         }
     }
   }
