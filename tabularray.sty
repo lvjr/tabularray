@@ -4045,27 +4045,6 @@
     \tl_gset:cn { g__tblr_template_ #1 _ #2 _tl } {#3}
   }
 
-\keys_define:nn { tblr-use-template }
-  {
-    unknown .code:n = \__tblr_save_template_option:Vn \l_keys_key_str {#1},
-  }
-
-%% #1: head/foot element; #2: template name
-\NewDocumentCommand \UseTblrTemplate { m m }
-  {
-    \exp_args:Nnv \keys_set:nn { tblr-use-template }
-      { l__tblr_template_ #1 _ #2 _options_tl }
-    \tl_use:c { g__tblr_template_ #1 _ #2 _tl }
-  }
-
-\prop_new:N \l__tblr_template_options_prop
-
-\cs_new_protected:Npn \__tblr_save_template_option:nn #1 #2
-  {
-    \prop_put:Nnn \l__tblr_template_options_prop {#1} {#2}
-  }
-\cs_generate_variant:Nn \__tblr_save_template_option:nn { Vn }
-
 \keys_define:nn { tblr-set-template }
   {
     everyhead .code:n = \__tblr_set_head_template:n { every },
@@ -4143,6 +4122,8 @@
   }
 \cs_generate_variant:Nn \__tblr_set_template:n { V }
 
+\prop_new:N \l__tblr_template_options_prop
+
 \NewDocumentCommand  \UseTblrFont { m }
   {
     \prop_item:Nn \l__tblr_template_options_prop { #1 : font } \selectfont
@@ -4156,6 +4137,25 @@
       { \prop_item:Nn \l__tblr_template_options_prop { #1 : fg } }
     \tl_if_empty:NF \l__tblr_use_color_tl { \color { \l__tblr_use_color_tl } }
   }
+
+\keys_define:nn { tblr-use-template }
+  {
+    unknown .code:n = \__tblr_save_template_option:Vn \l_keys_key_str {#1},
+  }
+
+%% #1: head/foot element; #2: template name
+\NewDocumentCommand \UseTblrTemplate { m m }
+  {
+    \exp_args:Nnv \keys_set:nn { tblr-use-template }
+      { l__tblr_template_ #1 _ #2 _options_tl }
+    \tl_use:c { g__tblr_template_ #1 _ #2 _tl }
+  }
+
+\cs_new_protected:Npn \__tblr_save_template_option:nn #1 #2
+  {
+    \prop_put:Nnn \l__tblr_template_options_prop {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_save_template_option:nn { Vn }
 
 \NewExpandableDocumentCommand \TblrTemplateOption { m }
   {
