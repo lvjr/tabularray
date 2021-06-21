@@ -4342,16 +4342,20 @@
 \cs_new_protected:Npn \__tblr_build_table_head_foot:
   {
     \__tblr_get_table_width:
+    \__tblr_build_table_head_aux:Nn \l__tblr_table_firsthead_box
+      {
+        \tl_set:Nn \l_tmpa_tl { \__tblr_prop_item:nn { outer } { label } }
+        \tl_if_empty:NF \l_tmpa_tl { \exp_args:NV \label \l_tmpa_tl }
+        \UseTblrTemplate { firsthead } { default }
+      }
     \__tblr_build_table_head_aux:Nn
       \l__tblr_table_everyhead_box { \UseTblrTemplate { everyhead } { default } }
     \__tblr_build_table_head_aux:Nn
-      \l__tblr_table_firsthead_box { \UseTblrTemplate { firsthead } { default } }
-    \__tblr_build_table_head_aux:Nn
       \l__tblr_table_lasthead_box  { \UseTblrTemplate { lasthead } { default } }
     \__tblr_build_table_foot_aux:Nn
-      \l__tblr_table_everyfoot_box { \UseTblrTemplate { everyfoot } { default } }
-    \__tblr_build_table_foot_aux:Nn
       \l__tblr_table_firstfoot_box { \UseTblrTemplate { firstfoot } { default } }
+    \__tblr_build_table_foot_aux:Nn
+      \l__tblr_table_everyfoot_box { \UseTblrTemplate { everyfoot } { default } }
     \__tblr_build_table_foot_aux:Nn
       \l__tblr_table_lastfoot_box  { \UseTblrTemplate { lastfoot } { default } }
   }
@@ -4408,8 +4412,6 @@
     \LogTblrTracing { page }
     \int_set:Nn \l__tblr_table_page_int {1}
     \refstepcounter { table }
-    \tl_set:Nn \l_tmpa_tl { \__tblr_prop_item:nn { outer } { label } }
-    \tl_if_empty:NF \l_tmpa_tl { \exp_args:NV \label \l_tmpa_tl }
     \__tblr_build_head_foot:
     \dim_set:Nn \l__tblr_remain_height_dim
       { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
