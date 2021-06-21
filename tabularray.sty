@@ -4143,6 +4143,20 @@
   }
 \cs_generate_variant:Nn \__tblr_set_template:n { V }
 
+\NewDocumentCommand  \UseTblrFont { m }
+  {
+    \prop_item:Nn \l__tblr_template_options_prop { #1 : font } \selectfont
+  }
+
+\tl_new:N \l__tblr_use_color_tl
+
+\NewDocumentCommand  \UseTblrColor { m }
+  {
+    \tl_set:Nx \l__tblr_use_color_tl
+      { \prop_item:Nn \l__tblr_template_options_prop { #1 : fg } }
+    \tl_if_empty:NF \l__tblr_use_color_tl { \color { \l__tblr_use_color_tl } }
+  }
+
 \NewExpandableDocumentCommand \TblrTemplateOption { m }
   {
     \prop_item:Nn \l__tblr_template_options_prop {#1}
@@ -4295,8 +4309,8 @@
 \DefTblrTemplate { everyfoot } { normal }
   {
     \hfill
-    \TblrTemplateOption { font } \selectfont
-    \TblrTemplateIfOptionEmpty {color} {} { \color{ \TblrTemplateOption{color} } }
+    \UseTblrFont { everyfoot }
+    \UseTblrColor { everyfoot }
     \InsertTblrText { contfoot }
   }
 
@@ -4306,7 +4320,7 @@
   }
 
 \SetTblrTemplate { head } { normal }
-\SetTblrTemplate [font=\itshape, color=blue] { foot } { normal }
+\SetTblrTemplate [everyfoot:font=\itshape, everyfoot:fg=blue] { foot } { normal }
 
 %%% --------------------------------------------------------
 %%> \section{Build the Whole Table}
