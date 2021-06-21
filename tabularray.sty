@@ -4143,17 +4143,17 @@
   }
 \cs_generate_variant:Nn \__tblr_set_template:n { V }
 
-\NewExpandableDocumentCommand \TblrGetValue { m }
+\NewExpandableDocumentCommand \TblrTemplateOption { m }
   {
     \prop_item:Nn \l__tblr_template_options_prop {#1}
   }
 
-\NewExpandableDocumentCommand \TblrIfValueEmpty { m m m }
+\NewExpandableDocumentCommand \TblrTemplateIfOptionEmpty { m m m }
   {
     \prop_if_in:NnTF \l__tblr_template_options_prop {#1} {#3} {#2}
   }
 
-\NewDocumentCommand \TblrMapNote { +m }
+\NewDocumentCommand \TblrTemplateMapNote { +m }
   {
     \__tblr_prop_map_inline:nn { note }
       {
@@ -4220,7 +4220,7 @@
     \vbox:n
       {
         \hsize = \tablewidth
-        \TblrMapNote
+        \TblrTemplateMapNote
           {
             \noindent
             \hangindent = 0.7em
@@ -4240,7 +4240,7 @@
     \vbox:n
       {
         \hsize = \tablewidth
-        \TblrMapNote
+        \TblrTemplateMapNote
           {
             \noindent
             \UseTblrTemplate { note-tag } { default }
@@ -4257,7 +4257,7 @@
       {
         \hsize = \tablewidth
         \noindent
-        \TblrMapNote
+        \TblrTemplateMapNote
           {
             \UseTblrTemplate { note-tag } { default }
             \UseTblrTemplate { note-target } { default }
@@ -4295,8 +4295,8 @@
 \DefTblrTemplate { everyfoot } { normal }
   {
     \hfill
-    \TblrGetValue { font } \selectfont
-    \TblrIfValueEmpty {color} {} { \color{ \TblrGetValue{color} } }
+    \TblrTemplateOption { font } \selectfont
+    \TblrTemplateIfOptionEmpty {color} {} { \color{ \TblrTemplateOption{color} } }
     \InsertTblrText { contfoot }
   }
 
