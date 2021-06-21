@@ -2809,13 +2809,13 @@
     t .meta:n = { valign = t },
     m .meta:n = { valign = m },
     b .meta:n = { valign = b },
+    label   .code:n = \__tblr_keys_gput_outer:nn { label } {#1},
     headsep .code:n = \__tblr_keys_gput_outer:nn { headsep } {#1},
     footsep .code:n = \__tblr_keys_gput_outer:nn { footsep } {#1},
     presep  .code:n = \__tblr_keys_gput_outer:nn { presep }  {#1},
     postsep .code:n = \__tblr_keys_gput_outer:nn { postsep } {#1},
     note .code:n = \__tblr_table_gput_note:n {#1},
     caption .code:n = \__tblr_keys_gput_more:nn { caption } {#1},
-    label   .code:n = \__tblr_keys_gput_more:nn { label } {#1},
     conthead .code:n = \__tblr_keys_gput_more:nn { conthead } {#1},
     contfoot .code:n = \__tblr_keys_gput_more:nn { contfoot } {#1},
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
@@ -4408,6 +4408,8 @@
     \LogTblrTracing { page }
     \int_set:Nn \l__tblr_table_page_int {1}
     \refstepcounter { table }
+    \tl_set:Nn \l_tmpa_tl { \__tblr_prop_item:nn { outer } { label } }
+    \tl_if_empty:NF \l_tmpa_tl { \exp_args:NV \label \l_tmpa_tl }
     \__tblr_build_head_foot:
     \dim_set:Nn \l__tblr_remain_height_dim
       { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
