@@ -4089,14 +4089,14 @@
     \keys_set:nn { tblr-set-template } {#2}
   }
 
-\tl_new:N \l__tblr_template_name_tl
-\tl_new:N \l__tblr_template_options_tl
 \tl_new:N \g__tblr_template_everyhead_default_tl
 \tl_new:N \g__tblr_template_firsthead_default_tl
 \tl_new:N \g__tblr_template_lasthead_default_tl
 \tl_new:N \g__tblr_template_everyfoot_default_tl
 \tl_new:N \g__tblr_template_firstfoot_default_tl
 \tl_new:N \g__tblr_template_lastfoot_default_tl
+\tl_new:N \l__tblr_template_name_tl
+\tl_new:N \l__tblr_template_options_tl
 \tl_new:N \l__tblr_template_everyhead_default_options_tl
 \tl_new:N \l__tblr_template_firsthead_default_options_tl
 \tl_new:N \l__tblr_template_lasthead_default_options_tl
@@ -4110,11 +4110,11 @@
       \l__tblr_template_options_tl
     \tl_if_exist:cTF { g__tblr_template_ #1 head_ \l__tblr_template_name_tl _tl }
       {
-        \tl_set_eq:cc { g__tblr_template_ #1 head_default_tl }
+        \tl_gset_eq:cc { g__tblr_template_ #1 head_default_tl }
           { g__tblr_template_ #1 head_ \l__tblr_template_name_tl _tl }
       }
       {
-        \tl_set_eq:cc { g__tblr_template_ #1 head_default_tl }
+        \tl_gset_eq:cc { g__tblr_template_ #1 head_default_tl }
           { g__tblr_template_everyhead_ \l__tblr_template_name_tl _tl }
       }
   }
@@ -4125,11 +4125,11 @@
       \l__tblr_template_options_tl
     \tl_if_exist:cTF { g__tblr_template_ #1 foot_ \l__tblr_template_name_tl _tl }
       {
-        \tl_set_eq:cc { g__tblr_template_ #1 foot_default_tl }
+        \tl_gset_eq:cc { g__tblr_template_ #1 foot_default_tl }
           { g__tblr_template_ #1 foot_ \l__tblr_template_name_tl _tl }
       }
       {
-        \tl_set_eq:cc { g__tblr_template_ #1 foot_default_tl }
+        \tl_gset_eq:cc { g__tblr_template_ #1 foot_default_tl }
           { g__tblr_template_everyfoot_ \l__tblr_template_name_tl _tl }
       }
   }
@@ -4138,7 +4138,7 @@
   {
     \tl_set_eq:cN { l__tblr_template_ #1 _default_options_tl }
       \l__tblr_template_options_tl
-    \tl_set_eq:cc { g__tblr_template_ #1 _default_tl }
+    \tl_gset_eq:cc { g__tblr_template_ #1 _default_tl }
       { g__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
   }
 \cs_generate_variant:Nn \__tblr_set_template:n { V }
