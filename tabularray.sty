@@ -4146,9 +4146,13 @@
 %% #1: head/foot element; #2: template name
 \NewDocumentCommand \UseTblrTemplate { m m }
   {
+    \group_begin:
     \exp_args:Nnv \keys_set:nn { tblr-use-template }
       { l__tblr_template_ #1 _ #2 _options_tl }
+    \UseTblrFont {#1}
+    \UseTblrColor {#1}
     \tl_use:c { g__tblr_template_ #1 _ #2 _tl }
+    \group_end:
   }
 
 \cs_new_protected:Npn \__tblr_save_template_option:nn #1 #2
@@ -4309,8 +4313,6 @@
 \DefTblrTemplate { everyfoot } { normal }
   {
     \hfill
-    \UseTblrFont { everyfoot }
-    \UseTblrColor { everyfoot }
     \InsertTblrText { contfoot }
   }
 
