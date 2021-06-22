@@ -4182,8 +4182,8 @@
 \DefTblrTemplate { caption-tag } { normal } { Table \hspace{0.25em} \thetable }
 \SetTblrTemplate { caption-tag } { normal }
 
-\DefTblrTemplate { caption-separator } { normal } { : \enskip }
-\SetTblrTemplate { caption-separator } { normal }
+\DefTblrTemplate { caption-sep } { normal } { : \enskip }
+\SetTblrTemplate { caption-sep } { normal }
 
 \DefTblrTemplate { caption-text } { normal } { \InsertTblrText { caption } }
 \SetTblrTemplate { caption-text } { normal }
@@ -4202,7 +4202,7 @@
     \hbox_set:Nn \l__tblr_caption_box
       {
         \UseTblrTemplate { caption-tag } { default }
-        \UseTblrTemplate { caption-separator } { default }
+        \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
@@ -4210,7 +4210,7 @@
         \hbox_set:Nn \l__tblr_caption_left_box
           {
             \UseTblrTemplate { caption-tag } { default }
-            \UseTblrTemplate { caption-separator } { default }
+            \UseTblrTemplate { caption-sep } { default }
           }
         \noindent
         \hangindent = \box_wd:N \l__tblr_caption_left_box
@@ -4230,7 +4230,7 @@
     \hbox_set:Nn \l__tblr_caption_box
       {
         \UseTblrTemplate { caption-tag } { default }
-        \UseTblrTemplate { caption-separator } { default }
+        \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
@@ -4252,7 +4252,7 @@
     \hbox_set:Nn \l__tblr_caption_box
       {
         \UseTblrTemplate { caption-tag } { default }
-        \UseTblrTemplate { caption-separator } { default }
+        \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
         \UseTblrTemplate { conthead } { default }
       }
@@ -4261,7 +4261,7 @@
         \hbox_set:Nn \l__tblr_caption_left_box
           {
             \UseTblrTemplate { caption-tag } { default }
-            \UseTblrTemplate { caption-separator } { default }
+            \UseTblrTemplate { caption-sep } { default }
           }
         \noindent
         \hangindent = \box_wd:N \l__tblr_caption_left_box
@@ -4283,7 +4283,7 @@
     \hbox_set:Nn \l__tblr_caption_box
       {
         \UseTblrTemplate { caption-tag } { default }
-        \UseTblrTemplate { caption-separator } { default }
+        \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
         \space
         \UseTblrTemplate { conthead } { default }
@@ -4343,8 +4343,8 @@
   }
 \SetTblrTemplate { note-target } { normal }
 
-\DefTblrTemplate { note-separator } { normal } { \space }
-\SetTblrTemplate { note-separator } { normal }
+\DefTblrTemplate { note-sep } { normal } { \space }
+\SetTblrTemplate { note-sep } { normal }
 
 \DefTblrTemplate { note-text } { normal } { \InsertTblrNoteText }
 \SetTblrTemplate { note-text } { normal }
@@ -4377,7 +4377,7 @@
             \noindent
             \UseTblrTemplate { note-tag } { default }
             \UseTblrTemplate { note-target } { default }
-            \UseTblrTemplate { note-separator } { default }
+            \UseTblrTemplate { note-sep } { default }
             \UseTblrTemplate { note-text } { default }
             \par
           }
@@ -4392,7 +4392,7 @@
           {
             \UseTblrTemplate { note-tag } { default }
             \UseTblrTemplate { note-target } { default }
-            \UseTblrTemplate { note-separator } { default }
+            \UseTblrTemplate { note-sep } { default }
             \UseTblrTemplate { note-text } { default }
             \quad
           }
@@ -4410,8 +4410,8 @@
   }
 \SetTblrTemplate { remark-tag } { normal }
 
-\DefTblrTemplate { remark-separator } { normal } { : \space }
-\SetTblrTemplate { remark-separator } { normal }
+\DefTblrTemplate { remark-sep } { normal } { : \space }
+\SetTblrTemplate { remark-sep } { normal }
 
 \DefTblrTemplate { remark-text } { normal } { \InsertTblrRemarkText }
 \SetTblrTemplate { remark-text } { normal }
@@ -4426,7 +4426,7 @@
             \hangindent = 0.7em
             \hangafter = 1
             \UseTblrTemplate { remark-tag } { default }
-            \UseTblrTemplate { remark-separator } { default }
+            \UseTblrTemplate { remark-sep } { default }
             \UseTblrTemplate { remark-text } { default } \par
           }
       }
@@ -4439,7 +4439,7 @@
           {
             \noindent
             \UseTblrTemplate { remark-tag } { default }
-            \UseTblrTemplate { remark-separator } { default }
+            \UseTblrTemplate { remark-sep } { default }
             \UseTblrTemplate { remark-text } { default }
             \par
           }
@@ -4453,7 +4453,7 @@
         \TblrTemplateMapRemarks
           {
             \UseTblrTemplate { remark-tag } { default }
-            \UseTblrTemplate { remark-separator } { default }
+            \UseTblrTemplate { remark-sep } { default }
             \UseTblrTemplate { remark-text } { default }
             \quad
           }
