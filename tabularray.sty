@@ -4037,44 +4037,41 @@
 %%> \section{Helper Functions for Templates}
 %%% --------------------------------------------------------
 
-%% #1: head/foot element; #2: template name; #3: template code
-%% If the template name = default, we enable the template at once
-%% Otherwise, we may enable the template by using \SetTblrTemplate command
-\NewDocumentCommand \DefTblrTemplate { m m +m }
-  {
-    \tl_gset:cn { g__tblr_template_ #1 _ #2 _tl } {#3}
-  }
-
-\keys_define:nn { tblr-set-template }
-  {
-     firsthead .code:n = \__tblr_set_head_template:n { first },
-    middlehead .code:n = \__tblr_set_head_template:n { middle },
-      lasthead .code:n = \__tblr_set_head_template:n { last },
-     firstfoot .code:n = \__tblr_set_foot_template:n { first },
-    middlefoot .code:n = \__tblr_set_foot_template:n { middle },
-      lastfoot .code:n = \__tblr_set_foot_template:n { last },
-          head .meta:n = { firsthead, middlehead, lasthead },
-          foot .meta:n = { firstfoot, middlefoot, lastfoot },
-      headfoot .meta:n =
-             { firsthead, middlehead, lasthead, firstfoot, middlefoot, lastfoot },
-      unknown .code:n = \__tblr_set_template:V \l_keys_key_str,
-  }
-
-%% #1: template options, #2: head/foot element; #3: template name
-\NewDocumentCommand \SetTblrTemplate { O{} m m }
-  {
-    \tl_set:Nn \l__tblr_template_options_tl {#1}
-    \tl_set:Nn \l__tblr_template_name_tl {#3}
-    \keys_set:nn { tblr-set-template } {#2}
-  }
-
+\tl_new:N \l__tblr_template_name_tl
+\tl_new:N \l__tblr_template_code_tl
 \tl_new:N \g__tblr_template_firsthead_default_tl
 \tl_new:N \g__tblr_template_middlehead_default_tl
 \tl_new:N \g__tblr_template_lasthead_default_tl
 \tl_new:N \g__tblr_template_firstfoot_default_tl
 \tl_new:N \g__tblr_template_middlefoot_default_tl
 \tl_new:N \g__tblr_template_lastfoot_default_tl
-\tl_new:N \l__tblr_template_name_tl
+
+\keys_define:nn { tblr-def-template }
+  {
+    head .meta:n = { firsthead, middlehead, lasthead },
+    foot .meta:n = { firstfoot, middlefoot, lastfoot },
+    headfoot .meta:n =
+             { firsthead, middlehead, lasthead, firstfoot, middlefoot, lastfoot },
+    unknown .code:n = \__tblr_def_template:V \l_keys_key_str,
+  }
+
+%% #1: head/foot element; #2: template name; #3: template code
+%% If the template name = default, we enable the template at once
+%% Otherwise, we may enable the template by using \SetTblrTemplate command
+\NewDocumentCommand \DefTblrTemplate { m m +m }
+  {
+    \tl_set:Nn \l__tblr_template_name_tl {#2}
+    \tl_set:Nn \l__tblr_template_code_tl {#3}
+    \keys_set:nn { tblr-def-template } {#1}
+  }
+
+\cs_new_protected:Npn \__tblr_def_template:n #1
+  {
+    \tl_gset_eq:cN { g__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+      \l__tblr_template_code_tl
+  }
+\cs_generate_variant:Nn \__tblr_def_template:n { V }
+
 \tl_new:N \l__tblr_template_options_tl
 \tl_new:N \l__tblr_template_firsthead_default_options_tl
 \tl_new:N \l__tblr_template_middlehead_default_options_tl
@@ -4083,20 +4080,21 @@
 \tl_new:N \l__tblr_template_middlefoot_default_options_tl
 \tl_new:N \l__tblr_template_lastfoot_default_options_tl
 
-\cs_new_protected:Npn \__tblr_set_head_template:n #1
+\keys_define:nn { tblr-set-template }
   {
-    \tl_set_eq:cN { l__tblr_template_ #1 head_default_options_tl }
-      \l__tblr_template_options_tl
-    \tl_gset_eq:cc { g__tblr_template_ #1 head_default_tl }
-      { g__tblr_template_ #1 head_ \l__tblr_template_name_tl _tl }
+    head .meta:n = { firsthead, middlehead, lasthead },
+    foot .meta:n = { firstfoot, middlefoot, lastfoot },
+    headfoot .meta:n =
+             { firsthead, middlehead, lasthead, firstfoot, middlefoot, lastfoot },
+    unknown .code:n = \__tblr_set_template:V \l_keys_key_str,
   }
 
-\cs_new_protected:Npn \__tblr_set_foot_template:n #1
+%% #1: template options, #2: head/foot element; #3: template name
+\NewDocumentCommand \SetTblrTemplate { O{} m m }
   {
-    \tl_set_eq:cN { l__tblr_template_ #1 foot_default_options_tl }
-      \l__tblr_template_options_tl
-    \tl_gset_eq:cc { g__tblr_template_ #1 foot_default_tl }
-      { g__tblr_template_ #1 foot_ \l__tblr_template_name_tl _tl }
+    \tl_set:Nn \l__tblr_template_options_tl {#1}
+    \tl_set:Nn \l__tblr_template_name_tl {#3}
+    \keys_set:nn { tblr-set-template } {#2}
   }
 
 \cs_new_protected:Npn \__tblr_set_template:n #1
@@ -4301,7 +4299,7 @@
       }
   }
 
-\DefTblrTemplate { middlehead } { normal }
+\DefTblrTemplate { middlehead, lasthead } { normal }
   {
     \tl_set:Nx \l__tblr_caption_tl { \InsertTblrText { caption } }
     \hbox:n
@@ -4311,23 +4309,7 @@
       }
   }
 
-\DefTblrTemplate { lasthead } { normal }
-  {
-    \tl_set:Nx \l__tblr_caption_tl { \InsertTblrText { caption } }
-    \hbox:n
-      {
-        Table ~ \thetable : ~ \l__tblr_caption_tl
-        \space ( \InsertTblrText { conthead } )
-      }
-  }
-
-\DefTblrTemplate { firstfoot } { normal }
-  {
-    \hfill
-    \InsertTblrText { contfoot }
-  }
-
-\DefTblrTemplate { middlefoot } { normal }
+\DefTblrTemplate { firstfoot, middlefoot } { normal }
   {
     \hfill
     \InsertTblrText { contfoot }
@@ -4339,7 +4321,7 @@
   }
 
 \SetTblrTemplate { head } { normal }
-\SetTblrTemplate [middlefoot:font=\itshape, middlefoot:fg=blue] { foot } { normal }
+\SetTblrTemplate [firstfoot:font=\itshape, middlefoot:fg=blue] { foot } { normal }
 
 %%% --------------------------------------------------------
 %%> \section{Build the Whole Table}
