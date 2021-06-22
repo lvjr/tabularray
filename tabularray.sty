@@ -4166,6 +4166,146 @@
   }
 
 %%% --------------------------------------------------------
+%%> \section{Caption and Continuation Templates}
+%%% --------------------------------------------------------
+
+\DefTblrTemplate { caption-lot } { normal }
+  {
+    \addcontentsline { lot } { table }
+      { \protect\numberline { \arabic { table } } { \InsertTblrText { caption } } }
+  }
+\SetTblrTemplate { caption-lot } { normal }
+
+\DefTblrTemplate { caption-tag } { normal } { Table ~ \thetable }
+\SetTblrTemplate { caption-tag } { normal }
+
+\DefTblrTemplate { caption-separator } { normal } { : \space }
+\SetTblrTemplate { caption-separator } { normal }
+
+\DefTblrTemplate { caption-text } { normal } { \InsertTblrText { caption } }
+\SetTblrTemplate { caption-text } { normal }
+
+\DefTblrTemplate { conthead } { normal } { ( \InsertTblrText { conthead } ) }
+\SetTblrTemplate { conthead } { normal }
+
+\DefTblrTemplate { contfoot } { normal } { \InsertTblrText { contfoot } }
+\SetTblrTemplate { contfoot } { normal }
+
+\box_new:N \l__tblr_caption_box
+\box_new:N \l__tblr_caption_left_box
+
+\DefTblrTemplate { caption } { normal }
+  {
+    \hbox_set:Nn \l__tblr_caption_box
+      {
+        \UseTblrTemplate { caption-tag } { default }
+        \UseTblrTemplate { caption-separator } { default }
+        \UseTblrTemplate { caption-text } { default }
+      }
+    \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
+      {
+        \hbox_set:Nn \l__tblr_caption_left_box
+          {
+            \UseTblrTemplate { caption-tag } { default }
+            \UseTblrTemplate { caption-separator } { default }
+            \kern 0pt
+          }
+        \noindent
+        %\raggedright
+        \hangindent = \box_wd:N \l__tblr_caption_left_box
+        \hangafter = 1
+        \hbox_unpack:N \l__tblr_caption_left_box
+        \UseTblrTemplate { caption-text } { default }
+        \hfill
+        \par
+      }
+      {
+        \centering
+        \makebox [\hsize] [c] { \box_use:N \l__tblr_caption_box }
+        \par
+      }
+  }
+\DefTblrTemplate { caption } { plain }
+  {
+    \hbox_set:Nn \l__tblr_caption_box
+      {
+        \UseTblrTemplate { caption-tag } { default }
+        \UseTblrTemplate { caption-separator } { default }
+        \UseTblrTemplate { caption-text } { default }
+      }
+    \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
+      {
+        \noindent
+        \hbox_unpack:N \l__tblr_caption_box
+        \par
+      }
+      {
+        \centering
+        \makebox [\hsize] [c] { \box_use:N \l__tblr_caption_box }
+        \par
+      }
+  }
+\SetTblrTemplate { caption } { normal }
+
+\DefTblrTemplate { capcont } { normal }
+  {
+    \hbox_set:Nn \l__tblr_caption_box
+      {
+        \UseTblrTemplate { caption-tag } { default }
+        \UseTblrTemplate { caption-separator } { default }
+        \UseTblrTemplate { caption-text } { default }
+        \UseTblrTemplate { conthead } { default }
+      }
+    \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
+      {
+        \hbox_set:Nn \l__tblr_caption_left_box
+          {
+            \UseTblrTemplate { caption-tag } { default }
+            \UseTblrTemplate { caption-separator } { default }
+            \kern 0pt
+          }
+        \noindent
+        %\raggedright
+        \hangindent = \box_wd:N \l__tblr_caption_left_box
+        \hangafter = 1
+        \hbox_unpack:N \l__tblr_caption_left_box
+        \UseTblrTemplate { caption-text } { default }
+        \space
+        \UseTblrTemplate { conthead } { default }
+        \hfill
+        \par
+      }
+      {
+        \centering
+        \makebox [\hsize] [c] { \box_use:N \l__tblr_caption_box }
+        \par
+      }
+  }
+\DefTblrTemplate { capcont } { plain }
+  {
+    \hbox_set:Nn \l__tblr_caption_box
+      {
+        \UseTblrTemplate { caption-tag } { default }
+        \UseTblrTemplate { caption-separator } { default }
+        \UseTblrTemplate { caption-text } { default }
+        \space
+        \UseTblrTemplate { conthead } { default }
+      }
+    \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
+      {
+        \noindent
+        \hbox_unpack:N \l__tblr_caption_box
+        \par
+      }
+      {
+        \centering
+        \makebox [\hsize] [c] { \box_use:N \l__tblr_caption_box }
+        \par
+      }
+  }
+\SetTblrTemplate { capcont} { normal }
+
+%%% --------------------------------------------------------
 %%> \section{Table Notes Templates}
 %%% --------------------------------------------------------
 
@@ -4357,33 +4497,21 @@
              { firsthead, middlehead, lasthead, firstfoot, middlefoot, lastfoot },
   }
 
-\tl_new:N \l__tblr_caption_tl
-
 \DefTblrTemplate { firsthead } { normal }
   {
-    \tl_set:Nx \l__tblr_caption_tl { \InsertTblrText { caption } }
-    \hbox:n { Table ~ \thetable : ~ \l__tblr_caption_tl }
-    \int_compare:nNnT { \l__tblr_table_page_int } = {1}
-      {
-        \addcontentsline { lot } { table }
-          { \protect\numberline { \arabic { table } } { \l__tblr_caption_tl } }
-      }
+    \UseTblrTemplate { caption } { default }
+    \UseTblrTemplate { caption-lot } { default }
   }
 
 \DefTblrTemplate { middlehead, lasthead } { normal }
   {
-    \tl_set:Nx \l__tblr_caption_tl { \InsertTblrText { caption } }
-    \hbox:n
-      {
-        Table ~ \thetable : ~ \l__tblr_caption_tl
-        \space ( \InsertTblrText { conthead } )
-      }
+    \UseTblrTemplate { capcont } { default }
   }
 
 \DefTblrTemplate { firstfoot, middlefoot } { normal }
   {
     \hfill
-    \InsertTblrText { contfoot }
+    \UseTblrTemplate { contfoot } { default }
   }
 
 \DefTblrTemplate { lastfoot } { normal }
