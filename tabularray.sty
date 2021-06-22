@@ -4039,19 +4039,9 @@
 
 \tl_new:N \l__tblr_template_name_tl
 \tl_new:N \l__tblr_template_code_tl
-\tl_new:N \g__tblr_template_firsthead_default_tl
-\tl_new:N \g__tblr_template_middlehead_default_tl
-\tl_new:N \g__tblr_template_lasthead_default_tl
-\tl_new:N \g__tblr_template_firstfoot_default_tl
-\tl_new:N \g__tblr_template_middlefoot_default_tl
-\tl_new:N \g__tblr_template_lastfoot_default_tl
 
 \keys_define:nn { tblr-def-template }
   {
-    head .meta:n = { firsthead, middlehead, lasthead },
-    foot .meta:n = { firstfoot, middlefoot, lastfoot },
-    headfoot .meta:n =
-             { firsthead, middlehead, lasthead, firstfoot, middlefoot, lastfoot },
     unknown .code:n = \__tblr_def_template:V \l_keys_key_str,
   }
 
@@ -4073,19 +4063,9 @@
 \cs_generate_variant:Nn \__tblr_def_template:n { V }
 
 \tl_new:N \l__tblr_template_options_tl
-\tl_new:N \l__tblr_template_firsthead_default_options_tl
-\tl_new:N \l__tblr_template_middlehead_default_options_tl
-\tl_new:N \l__tblr_template_lasthead_default_options_tl
-\tl_new:N \l__tblr_template_firstfoot_default_options_tl
-\tl_new:N \l__tblr_template_middlefoot_default_options_tl
-\tl_new:N \l__tblr_template_lastfoot_default_options_tl
 
 \keys_define:nn { tblr-set-template }
   {
-    head .meta:n = { firsthead, middlehead, lasthead },
-    foot .meta:n = { firstfoot, middlefoot, lastfoot },
-    headfoot .meta:n =
-             { firsthead, middlehead, lasthead, firstfoot, middlefoot, lastfoot },
     unknown .code:n = \__tblr_set_template:V \l_keys_key_str,
   }
 
@@ -4285,6 +4265,35 @@
 %%% --------------------------------------------------------
 %%> \section{Header and Footer Templates}
 %%% --------------------------------------------------------
+
+\tl_new:N \g__tblr_template_firsthead_default_tl
+\tl_new:N \g__tblr_template_middlehead_default_tl
+\tl_new:N \g__tblr_template_lasthead_default_tl
+\tl_new:N \g__tblr_template_firstfoot_default_tl
+\tl_new:N \g__tblr_template_middlefoot_default_tl
+\tl_new:N \g__tblr_template_lastfoot_default_tl
+\tl_new:N \l__tblr_template_firsthead_default_options_tl
+\tl_new:N \l__tblr_template_middlehead_default_options_tl
+\tl_new:N \l__tblr_template_lasthead_default_options_tl
+\tl_new:N \l__tblr_template_firstfoot_default_options_tl
+\tl_new:N \l__tblr_template_middlefoot_default_options_tl
+\tl_new:N \l__tblr_template_lastfoot_default_options_tl
+
+\keys_define:nn { tblr-def-template }
+  {
+    head .meta:n = { firsthead, middlehead, lasthead },
+    foot .meta:n = { firstfoot, middlefoot, lastfoot },
+    headfoot .meta:n =
+             { firsthead, middlehead, lasthead, firstfoot, middlefoot, lastfoot },
+  }
+
+\keys_define:nn { tblr-set-template }
+  {
+    head .meta:n = { firsthead, middlehead, lasthead },
+    foot .meta:n = { firstfoot, middlefoot, lastfoot },
+    headfoot .meta:n =
+             { firsthead, middlehead, lasthead, firstfoot, middlefoot, lastfoot },
+  }
 
 \tl_new:N \l__tblr_caption_tl
 
