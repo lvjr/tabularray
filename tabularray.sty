@@ -2816,8 +2816,6 @@
     postsep .code:n = \__tblr_keys_gput_outer:nn { postsep } {#1},
     note .code:n = \__tblr_table_gput_note:n {#1},
     caption .code:n = \__tblr_keys_gput_outer:nn { caption } {#1},
-    conthead .code:n = \__tblr_keys_gput_outer:nn { conthead } {#1},
-    contfoot .code:n = \__tblr_keys_gput_outer:nn { contfoot } {#1},
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
 
@@ -2829,8 +2827,7 @@
     \keys_set:nn { tblr-outer }
       {
         halign = c, valign = m, headsep = 6pt, footsep = 6pt,
-        presep = 1.5\bigskipamount, postsep = 1.5\bigskipamount,
-        conthead = {Continued}, contfoot = {Continued ~ on ~ next ~ page}, #1
+        presep = 1.5\bigskipamount, postsep = 1.5\bigskipamount, #1
       }
   }
 
@@ -4188,10 +4185,10 @@
 \DefTblrTemplate { caption-text } { normal } { \InsertTblrText { caption } }
 \SetTblrTemplate { caption-text } { normal }
 
-\DefTblrTemplate { conthead } { normal } { ( \InsertTblrText { conthead } ) }
+\DefTblrTemplate { conthead } { normal } { ( Continued ) }
 \SetTblrTemplate { conthead } { normal }
 
-\DefTblrTemplate { contfoot } { normal } { \InsertTblrText { contfoot } }
+\DefTblrTemplate { contfoot } { normal } { Continued ~ on ~ next ~ page }
 \SetTblrTemplate { contfoot } { normal }
 
 \box_new:N \l__tblr_caption_box
