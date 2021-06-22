@@ -4176,10 +4176,13 @@
   }
 \SetTblrTemplate { caption-lot } { normal }
 
-\DefTblrTemplate { caption-tag } { normal } { Table ~ \thetable }
+%% We need to use \hspace and \enskip, but not ~ or \space,
+%% since we want a correct hangindent caption paragraph.
+
+\DefTblrTemplate { caption-tag } { normal } { Table \hspace{0.25em} \thetable }
 \SetTblrTemplate { caption-tag } { normal }
 
-\DefTblrTemplate { caption-separator } { normal } { : \space }
+\DefTblrTemplate { caption-separator } { normal } { : \enskip }
 \SetTblrTemplate { caption-separator } { normal }
 
 \DefTblrTemplate { caption-text } { normal } { \InsertTblrText { caption } }
@@ -4208,15 +4211,12 @@
           {
             \UseTblrTemplate { caption-tag } { default }
             \UseTblrTemplate { caption-separator } { default }
-            \kern 0pt
           }
         \noindent
-        %\raggedright
         \hangindent = \box_wd:N \l__tblr_caption_left_box
         \hangafter = 1
         \hbox_unpack:N \l__tblr_caption_left_box
         \UseTblrTemplate { caption-text } { default }
-        \hfill
         \par
       }
       {
@@ -4262,17 +4262,14 @@
           {
             \UseTblrTemplate { caption-tag } { default }
             \UseTblrTemplate { caption-separator } { default }
-            \kern 0pt
           }
         \noindent
-        %\raggedright
         \hangindent = \box_wd:N \l__tblr_caption_left_box
         \hangafter = 1
         \hbox_unpack:N \l__tblr_caption_left_box
         \UseTblrTemplate { caption-text } { default }
         \space
         \UseTblrTemplate { conthead } { default }
-        \hfill
         \par
       }
       {
