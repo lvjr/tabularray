@@ -4216,7 +4216,6 @@
   {
     \vbox:n
       {
-        \hsize = \tablewidth
         \TblrTemplateMapNotes
           {
             \noindent
@@ -4231,13 +4230,11 @@
             \UseTblrTemplate { note-text } { default } \par
           }
       }
-    \par
   }
 \DefTblrTemplate { note } { flushleft }
   {
     \vbox:n
       {
-        \hsize = \tablewidth
         \TblrTemplateMapNotes
           {
             \noindent
@@ -4253,7 +4250,6 @@
   {
     \vbox:n
       {
-        \hsize = \tablewidth
         \noindent
         \TblrTemplateMapNotes
           {
@@ -4287,7 +4283,6 @@
   {
     \vbox:n
       {
-        \hsize = \tablewidth
         \TblrTemplateMapRemarks
           {
             \noindent
@@ -4303,7 +4298,6 @@
   {
     \vbox:n
       {
-        \hsize = \tablewidth
         \TblrTemplateMapRemarks
           {
             \noindent
@@ -4318,7 +4312,6 @@
   {
     \vbox:n
       {
-        \hsize = \tablewidth
         \noindent
         \TblrTemplateMapRemarks
           {
@@ -4396,6 +4389,7 @@
 \DefTblrTemplate { lastfoot } { normal }
   {
     \UseTblrTemplate { note } { default }
+    \vspace { 0.4em }
     \UseTblrTemplate { remark } { default }
   }
 
@@ -4504,7 +4498,7 @@
     \vbox_set:Nn #1
       {
         \hsize = \tablewidth
-        \hbox_to_wd:nn { \tablewidth } { \hss #2 \hss }
+        \vbox:n {#2}
         \skip_vertical:n { \__tblr_prop_item:nn { outer } { headsep } }
       }
   }
@@ -4515,7 +4509,7 @@
       {
         \hsize = \tablewidth
         \skip_vertical:n { \__tblr_prop_item:nn { outer } { footsep } }
-        \hbox_to_wd:nn { \tablewidth } { \hss #2 \hss }
+        \vbox:n {#2}
       }
   }
 
