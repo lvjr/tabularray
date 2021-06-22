@@ -4149,6 +4149,12 @@
   }
 
 %% #1: head/foot element; #2: template name
+\NewExpandableDocumentCommand \ExpTblrTemplate { m m }
+  {
+    \tl_use:c { g__tblr_template_ #1 _ #2 _tl }
+  }
+
+%% #1: head/foot element; #2: template name
 \NewDocumentCommand \UseTblrTemplate { m m }
   {
     \group_begin:
