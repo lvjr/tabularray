@@ -4146,7 +4146,7 @@
     \prop_if_in:NnTF \l__tblr_template_options_prop {#1} {#3} {#2}
   }
 
-\NewDocumentCommand \TblrTemplateMapNote { +m }
+\NewDocumentCommand \TblrTemplateMapNotes { +m }
   {
     \__tblr_prop_map_inline:nn { note }
       {
@@ -4213,7 +4213,7 @@
     \vbox:n
       {
         \hsize = \tablewidth
-        \TblrTemplateMapNote
+        \TblrTemplateMapNotes
           {
             \noindent
             \hangindent = 0.7em
@@ -4233,7 +4233,7 @@
     \vbox:n
       {
         \hsize = \tablewidth
-        \TblrTemplateMapNote
+        \TblrTemplateMapNotes
           {
             \noindent
             \UseTblrTemplate { note-tag } { default }
@@ -4250,7 +4250,7 @@
       {
         \hsize = \tablewidth
         \noindent
-        \TblrTemplateMapNote
+        \TblrTemplateMapNotes
           {
             \UseTblrTemplate { note-tag } { default }
             \UseTblrTemplate { note-target } { default }
