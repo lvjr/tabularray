@@ -294,12 +294,16 @@
   {
     \clist_gremove_duplicates:c
       { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
-    \tl_log:n { ----------~----------~----------~----------~---------- }
+    \tl_log:x
+      {
+        The ~ spec ~ list ~ #1 _ \int_use:N \g_tblr_level_int
+              \space contains ~ the ~ pairs:
+      }
     \clist_map_inline:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
       {
         \tl_log:x
           {
-            \space { #1 ##1 } ~\space=>~\space { \__tblr_spec_item:nn {#1} {##1} }
+            \space { ##1 } ~\space=>~\space { \__tblr_spec_item:nn {#1} {##1} }
           }
       }
   }
@@ -4090,7 +4094,6 @@
   {
     \__tblr_spec_gput:nen { element }
       { \l__tblr_outer_element_name_tl / #1 } {#2}
-    \__tblr_spec_log:n { element }
   }
 
 %%% --------------------------------------------------------
