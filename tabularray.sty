@@ -240,6 +240,7 @@
     \__tblr_clear_one_spec_lists:n { text }
     \__tblr_clear_one_spec_lists:n { hline }
     \__tblr_clear_one_spec_lists:n { vline }
+    \__tblr_clear_one_spec_lists:n { element }
   }
 
 \cs_new_protected:Npn \__tblr_clear_one_spec_lists:n #1
@@ -2352,6 +2353,7 @@
     \LogTblrTracing { command }
     \LogTblrTracing { step = parse ~ table ~ outer ~ spec}
     \__tblr_parse_table_outer_spec:n {#1}
+    \__tblr_parse_table_outer_style:
     \LogTblrTracing { outer }
     \bool_if:NT \g__tblr_use_intarray_bool { \__tblr_initial_table_data: }
     \LogTblrTracing { step = initial ~ table ~ spec}
@@ -4030,6 +4032,68 @@
 \cs_generate_variant:Nn \__tblr_calc_span_widths:nnN { xxN }
 
 %%% --------------------------------------------------------
+%%> \section{Template Elements and Their Options}
+%%% --------------------------------------------------------
+
+\tl_new:N \l__tblr_default_tblr_outer_tl
+
+\NewDocumentCommand \SetTblrOuter { m }
+  {
+    \tl_put_right:Nn \l__tblr_default_tblr_outer_tl {#1}
+  }
+
+\cs_new_protected:Npn \__tblr_parse_table_outer_style:
+  {
+    \keys_set:nV { tblr-set-outer } \l__tblr_default_tblr_outer_tl
+  }
+
+\keys_define:nn { tblr-set-outer }
+  {
+    caption      .code:n = \__tblr_keys_set_outer_style:nn { caption } {#1},
+    caption-tag  .code:n = \__tblr_keys_set_outer_style:nn { caption-tag } {#1},
+    caption-sep  .code:n = \__tblr_keys_set_outer_style:nn { caption-sep }  {#1},
+    caption-text .code:n = \__tblr_keys_set_outer_style:nn { caption-text } {#1},
+    conthead     .code:n = \__tblr_keys_set_outer_style:nn { conthead } {#1},
+    contfoot     .code:n = \__tblr_keys_set_outer_style:nn { contfoot } {#1},
+    note         .code:n = \__tblr_keys_set_outer_style:nn { note } {#1},
+    note-tag     .code:n = \__tblr_keys_set_outer_style:nn { note-tag } {#1},
+    note-sep     .code:n = \__tblr_keys_set_outer_style:nn { note-sep } {#1},
+    note-text    .code:n = \__tblr_keys_set_outer_style:nn { note-text } {#1},
+    remark       .code:n = \__tblr_keys_set_outer_style:nn { remark } {#1},
+    remark-tag   .code:n = \__tblr_keys_set_outer_style:nn { remark-tag } {#1},
+    remark-sep   .code:n = \__tblr_keys_set_outer_style:nn { remark-sep } {#1},
+    remark-text  .code:n = \__tblr_keys_set_outer_style:nn { remark-text } {#1},
+    firsthead    .code:n = \__tblr_keys_set_outer_style:nn { firsthead } {#1},
+    middlehead   .code:n = \__tblr_keys_set_outer_style:nn { middlehead } {#1},
+    lasthead     .code:n = \__tblr_keys_set_outer_style:nn { lasthead } {#1},
+    firstfoot    .code:n = \__tblr_keys_set_outer_style:nn { firstfoot } {#1},
+    middlefoot   .code:n = \__tblr_keys_set_outer_style:nn { middlefoot } {#1},
+    lastfoot     .code:n = \__tblr_keys_set_outer_style:nn { lastfoot } {#1},
+  }
+
+\keys_define:nn { tblr-outer-element }
+  {
+    halign .code:n = \__tblr_gput_element_option:nn { halign } {#1},
+    fg     .code:n = \__tblr_gput_element_option:nn { fg } {#1},
+    font   .code:n = \__tblr_gput_element_option:nn { font }  {#1},
+  }
+
+\tl_new:N \l__tblr_outer_element_name_tl
+
+\cs_new_protected:Npn \__tblr_keys_set_outer_style:nn #1 #2
+  {
+    \tl_set:Nn \l__tblr_outer_element_name_tl {#1}
+    \keys_set:nn { tblr-outer-element } {#2}
+  }
+
+\cs_new_protected:Npn \__tblr_gput_element_option:nn #1 #2
+  {
+    \__tblr_spec_gput:nen { element }
+      { \l__tblr_outer_element_name_tl / #1 } {#2}
+    \__tblr_spec_log:n { element }
+  }
+
+%%% --------------------------------------------------------
 %%> \section{Helper Functions for Templates}
 %%% --------------------------------------------------------
 
@@ -4086,7 +4150,7 @@
 
 \NewDocumentCommand \UseTblrFont { m }
   {
-    \prop_item:Nn \l__tblr_template_options_prop { #1 : font } \selectfont
+    \__tblr_spec_item:nn { element } { #1 / font } \selectfont
   }
 
 \tl_new:N \l__tblr_use_color_tl
@@ -4094,7 +4158,7 @@
 \NewDocumentCommand \UseTblrColor { m }
   {
     \tl_set:Nx \l__tblr_use_color_tl
-      { \prop_item:Nn \l__tblr_template_options_prop { #1 : fg } }
+      { \__tblr_spec_item:nn { element } { #1 / fg } }
     \tl_if_empty:NF \l__tblr_use_color_tl { \color { \l__tblr_use_color_tl } }
   }
 
@@ -4526,7 +4590,7 @@
   }
 
 \SetTblrTemplate { head } { normal }
-\SetTblrTemplate [firstfoot:font=\itshape, middlefoot:fg=blue] { foot } { normal }
+\SetTblrTemplate { foot } { normal }
 
 %%% --------------------------------------------------------
 %%> \section{Build the Whole Table}
@@ -5528,6 +5592,7 @@
     \__tblr_prop_log:n { outer }
     \__tblr_prop_log:n { note }
     \__tblr_prop_log:n { remark }
+    \__tblr_spec_log:n { element }
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_table:
