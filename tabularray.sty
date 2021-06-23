@@ -4142,7 +4142,7 @@
     \prop_if_in:NnTF \l__tblr_template_options_prop {#1} {#3} {#2}
   }
 
-\NewDocumentCommand \TblrTemplateMapNotes { +m }
+\NewDocumentCommand \MapTblrNotes { +m }
   {
     \__tblr_prop_map_inline:nn { note }
       {
@@ -4152,7 +4152,7 @@
       }
   }
 
-\NewDocumentCommand \TblrTemplateMapRemarks { +m }
+\NewDocumentCommand \MapTblrRemarks { +m }
   {
     \__tblr_prop_map_inline:nn { remark }
       {
@@ -4360,7 +4360,7 @@
   {
     \vbox:n
       {
-        \TblrTemplateMapNotes
+        \MapTblrNotes
           {
             \noindent
             \hangindent = 0.7em
@@ -4379,7 +4379,7 @@
   {
     \vbox:n
       {
-        \TblrTemplateMapNotes
+        \MapTblrNotes
           {
             \noindent
             \UseTblrTemplate { note-tag } { default }
@@ -4395,7 +4395,7 @@
     \vbox:n
       {
         \noindent
-        \TblrTemplateMapNotes
+        \MapTblrNotes
           {
             \UseTblrTemplate { note-tag } { default }
             \UseTblrTemplate { note-target } { default }
@@ -4427,7 +4427,7 @@
   {
     \vbox:n
       {
-        \TblrTemplateMapRemarks
+        \MapTblrRemarks
           {
             \noindent
             \hangindent = 0.7em
@@ -4442,7 +4442,7 @@
   {
     \vbox:n
       {
-        \TblrTemplateMapRemarks
+        \MapTblrRemarks
           {
             \noindent
             \UseTblrTemplate { remark-tag } { default }
@@ -4457,7 +4457,7 @@
     \vbox:n
       {
         \noindent
-        \TblrTemplateMapRemarks
+        \MapTblrRemarks
           {
             \UseTblrTemplate { remark-tag } { default }
             \UseTblrTemplate { remark-sep } { default }
