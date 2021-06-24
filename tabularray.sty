@@ -127,7 +127,7 @@
   {
     \prop_gclear_new:c { g__tblr_text_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_command_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_table_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_inner_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_option_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_note_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_remark_ \int_use:N \g_tblr_level_int _prop }
@@ -1223,13 +1223,13 @@
   {
     \tl_if_eq:nnTF {#1} {above}
       {
-        \__tblr_prop_gput:nnx { table }
+        \__tblr_prop_gput:nnx { inner }
           { baseline } { \int_eval:n { \c@rownum - 1 } }
       }
       {
         \tl_if_eq:nnT {#1} {below}
           {
-            \__tblr_prop_gput:nnx { table } { baseline } { \int_use:N \c@rownum }
+            \__tblr_prop_gput:nnx { inner } { baseline } { \int_use:N \c@rownum }
           }
       }
   }
@@ -1619,13 +1619,13 @@
   {
     \int_compare:nNnT { #1 } > { 1 }
       {
-        \__tblr_prop_gput:nnn {table} {rowspan} {true}
+        \__tblr_prop_gput:nnn { inner } { rowspan } { true }
         \__tblr_data_gput:neenn { cell }
           { \int_use:N \c@rownum } { \int_use:N \c@colnum } { rowspan } {#1}
       }
     \int_compare:nNnT { #2 } > { 1 }
       {
-        \__tblr_prop_gput:nnn {table} {colspan} {true}
+        \__tblr_prop_gput:nnn { inner } { colspan } { true }
         \__tblr_data_gput:neenn { cell }
           { \int_use:N \c@rownum } { \int_use:N \c@colnum } { colspan } {#2}
       }
@@ -2364,8 +2364,8 @@
     \bool_if:NT \g__tblr_use_intarray_bool { \__tblr_initial_table_data: }
     \LogTblrTracing { step = initial ~ table ~ inner ~ spec}
     \__tblr_initial_table_spec:
-    \LogTblrTracing { table }
-    \LogTblrTracing { step = parse ~ table ~ spec}
+    \LogTblrTracing { inner }
+    \LogTblrTracing { step = parse ~ table ~ inner ~ spec}
     \__tblr_parse_table_spec:n {#2}
     \LogTblrTracing { step = execute ~ table ~ commands}
     \__tblr_execute_table_commands:
@@ -2672,7 +2672,7 @@
   {
     \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _table_prop }
       {
-        \__tblr_prop_gput:nxn { table } { ##1 } {##2}
+        \__tblr_prop_gput:nxn { inner } { ##1 } {##2}
       }
     \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
       {
@@ -2797,7 +2797,7 @@
 
 \cs_new_protected:Npn \__tblr_keys_gput:nn #1 #2
   {
-    \__tblr_prop_gput:nnn { table } {#1} {#2}
+    \__tblr_prop_gput:nnn { inner } {#1} {#2}
   }
 \cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
 
@@ -2955,7 +2955,7 @@
 
 \cs_new_protected:Npn \__tblr_make_strut_box:
   {
-    \tl_set:Nx \l__tblr_s_tl { \__tblr_prop_item:ne { table } { stretch } }
+    \tl_set:Nx \l__tblr_s_tl { \__tblr_prop_item:ne { inner } { stretch } }
     \hbox_set:Nn \l__tblr_strut_ht_box
       { \vrule height \l__tblr_s_tl \box_ht:N \strutbox width ~ 0pt }
     \hbox_set:Nn \l__tblr_strut_dp_box
@@ -2997,7 +2997,7 @@
     \int_compare:nNnT { \l__tblr_n_tl } > {0}
       {
         \tl_set:Nx \l__tblr_s_tl
-          { \__tblr_prop_item:ne { table } { rulesep } }
+          { \__tblr_prop_item:ne { inner } { rulesep } }
         \int_step_inline:nn { \l__tblr_n_tl }
           {
             \vbox_set_to_ht:Nnn \l__tblr_b_box {1pt}
@@ -3055,7 +3055,7 @@
     \int_compare:nNnT { \l__tblr_n_tl } > {0}
       {
         \tl_set:Nx \l__tblr_s_tl
-          { \__tblr_prop_item:ne { table } { rulesep } }
+          { \__tblr_prop_item:ne { inner } { rulesep } }
         \int_step_inline:nn { \l__tblr_n_tl }
           {
             \hbox_set_to_wd:Nnn \l__tblr_b_box {1pt}
@@ -3536,7 +3536,7 @@
 
 \cs_new_protected:Npn \__tblr_collect_extendable_column_width:
   {
-    \tl_set:Nx \l_tmpa_tl { \__tblr_prop_item:nn {table} {width} }
+    \tl_set:Nx \l_tmpa_tl { \__tblr_prop_item:nn { inner } { width } }
     \tl_if_empty:NTF \l_tmpa_tl
       { \dim_set_eq:NN \l__column_target_dim \linewidth }
       { \dim_set:Nn \l__column_target_dim { \l_tmpa_tl } }
@@ -3676,11 +3676,11 @@
 
 \cs_new_protected:Npn \__tblr_adjust_sizes_for_span_cells:
   {
-    \__tblr_prop_if_in:nnT {table} {colspan}
+    \__tblr_prop_if_in:nnT { inner } { colspan }
       {
         \__tblr_collect_column_widths_skips:
         \str_if_eq:xnTF
-          { \__tblr_prop_item:ne {table} {hspan} } {minimal}
+          { \__tblr_prop_item:ne { inner } { hspan } } { minimal }
           {
             \__tblr_set_span_widths_from_column_widths:
           }
@@ -3691,12 +3691,12 @@
         \LogTblrTracing { column }
         \__tblr_calculate_cell_sizes:
       }
-    \__tblr_prop_if_in:nnT {table} {rowspan}
+    \__tblr_prop_if_in:nnT { inner } { rowspan }
       {
         \__tblr_collect_row_heights_skips:
         \__tblr_collect_span_heights:
         \__tblr_set_row_heights_from_span_heights:
-        \LogTblrTracing {row}
+        \LogTblrTracing { row }
       }
   }
 
@@ -3884,7 +3884,7 @@
 \cs_new_protected:Npn \__tblr_set_column_widths_from_span_widths:
   {
     \str_if_eq:xnTF
-      { \__tblr_prop_item:ne {table} {hspan} }
+      { \__tblr_prop_item:ne { inner } { hspan } }
       { even }
       {
         \__tblr_distribute_span_sizes_even:xNN
@@ -3905,7 +3905,7 @@
 \cs_new_protected:Npn \__tblr_set_row_heights_from_span_heights:
   {
     \str_if_eq:xnTF
-      { \__tblr_prop_item:ne {table} {vspan} }
+      { \__tblr_prop_item:ne { inner } { vspan } }
       { even }
       {
         \__tblr_distribute_span_sizes_even:nNN
@@ -4589,12 +4589,12 @@
 \cs_new_protected:Npn \__tblr_build_row_head_foot:
   {
     %% \l__tblr_row_head_tl and \l__tblr_row_foot_tl may be empty
-    \tl_set:Nx \l__tblr_row_head_tl { \__tblr_prop_item:ne { table } { rowhead } }
+    \tl_set:Nx \l__tblr_row_head_tl { \__tblr_prop_item:ne { inner } { rowhead } }
     \int_compare:nNnTF { \l__tblr_row_head_tl + 0 } > { 0 }
       { \__tblr_build_one_table:nn {1} { \l__tblr_row_head_tl } }
       { \__tblr_build_one_hline:n {1} }
     \box_set_eq:NN \l__tblr_row_head_box \l__tblr_table_box
-    \tl_set:Nx \l__tblr_row_foot_tl { \__tblr_prop_item:ne { table } { rowfoot } }
+    \tl_set:Nx \l__tblr_row_foot_tl { \__tblr_prop_item:ne { inner } { rowfoot } }
     \int_compare:nNnTF { \l__tblr_row_foot_tl + 0 } > { 0 }
       {
         \__tblr_build_one_table:nn
@@ -4930,7 +4930,7 @@
       { \__tblr_spec_item:ne { hline } { [1] / @hline-height } }
     %% Note that \l__tblr_b_tl may be empty
     \tl_set:Nx \l__tblr_b_tl
-      { \__tblr_prop_item:ne { table } { baseline } }
+      { \__tblr_prop_item:ne { inner } { baseline } }
     \bool_lazy_or:nnTF
       { \dim_compare_p:nNn { \l__tblr_a_tl } = { 0pt } }
       { \int_compare_p:nNn { \l__tblr_b_tl + 0 } = { 1 } }
@@ -4966,7 +4966,7 @@
       }
     %% Note that \l__tblr_b_tl may be empty
     \tl_set:Nx \l__tblr_b_tl
-      { \__tblr_prop_item:ne { table } { baseline } }
+      { \__tblr_prop_item:ne { inner } { baseline } }
     \bool_lazy_or:nnTF
       { \dim_compare_p:nNn { \l__tblr_a_tl } = { 0pt } }
       { \int_compare_p:nNn { \l__tblr_b_tl + 0 } = { \c@rowcount } }
@@ -5038,7 +5038,7 @@
 \cs_new_protected:Npn \__tblr_build_hline_segment_real:nn #1 #2
   {
     \tl_set:Nx \l__tblr_s_tl
-      { \__tblr_prop_item:ne { table } { rulesep } }
+      { \__tblr_prop_item:ne { inner } { rulesep } }
     \vbox_set:Nn \l__tblr_c_box
       {
         %% add an empty hbox to support vbox width
@@ -5168,7 +5168,7 @@
 \cs_new_protected:Npn \__tblr_build_vline_segment_real:nn #1 #2
   {
     \tl_set:Nx \l__tblr_s_tl
-      { \__tblr_prop_item:ne { table } { rulesep } }
+      { \__tblr_prop_item:ne { inner } { rulesep } }
     \tl_set:Nx \l__tblr_b_tl
       {
         \__tblr_spec_item:ne { hline }
@@ -5438,7 +5438,8 @@
 \bool_new:N \g__tblr_tracing_text_bool
 \bool_new:N \g__tblr_tracing_command_bool
 \bool_new:N \g__tblr_tracing_option_bool
-\bool_new:N \g__tblr_tracing_table_bool
+\bool_new:N \g__tblr_tracing_outer_bool
+\bool_new:N \g__tblr_tracing_inner_bool
 \bool_new:N \g__tblr_tracing_column_bool
 \bool_new:N \g__tblr_tracing_row_bool
 \bool_new:N \g__tblr_tracing_cell_bool
@@ -5464,8 +5465,8 @@
     -option .code:n = \bool_gset_false:N \g__tblr_tracing_option_bool,
     +outer .code:n = \bool_gset_true:N \g__tblr_tracing_outer_bool,
     -outer .code:n = \bool_gset_false:N \g__tblr_tracing_outer_bool,
-    +table .code:n = \bool_gset_true:N \g__tblr_tracing_table_bool,
-    -table .code:n = \bool_gset_false:N \g__tblr_tracing_table_bool,
+    +inner .code:n = \bool_gset_true:N \g__tblr_tracing_inner_bool,
+    -inner .code:n = \bool_gset_false:N \g__tblr_tracing_inner_bool,
     +column .code:n = \bool_gset_true:N \g__tblr_tracing_column_bool,
     -column .code:n = \bool_gset_false:N \g__tblr_tracing_column_bool,
     +row .code:n = \bool_gset_true:N \g__tblr_tracing_row_bool,
@@ -5500,7 +5501,7 @@
     \bool_gset_true:N \g__tblr_tracing_command_bool
     \bool_gset_true:N \g__tblr_tracing_option_bool
     \bool_gset_true:N \g__tblr_tracing_outer_bool
-    \bool_gset_true:N \g__tblr_tracing_table_bool
+    \bool_gset_true:N \g__tblr_tracing_inner_bool
     \bool_gset_true:N \g__tblr_tracing_column_bool
     \bool_gset_true:N \g__tblr_tracing_row_bool
     \bool_gset_true:N \g__tblr_tracing_cell_bool
@@ -5521,7 +5522,7 @@
     \bool_gset_false:N \g__tblr_tracing_command_bool
     \bool_gset_false:N \g__tblr_tracing_option_bool
     \bool_gset_false:N \g__tblr_tracing_outer_bool
-    \bool_gset_false:N \g__tblr_tracing_table_bool
+    \bool_gset_false:N \g__tblr_tracing_inner_bool
     \bool_gset_false:N \g__tblr_tracing_column_bool
     \bool_gset_false:N \g__tblr_tracing_row_bool
     \bool_gset_false:N \g__tblr_tracing_cell_bool
@@ -5576,9 +5577,9 @@
     \__tblr_spec_log:n { outer }
   }
 
-\cs_new_protected:Npn \__tblr_log_tracing_table:
+\cs_new_protected:Npn \__tblr_log_tracing_inner:
   {
-    \__tblr_prop_log:n { table }
+    \__tblr_prop_log:n { inner }
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_column:
