@@ -62,6 +62,7 @@
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { xn } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T, TF }
+\prg_generate_conditional_variant:Nnn \tl_if_head_eq_catcode:nN { VN } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_head_eq_meaning:nN { VN } { T, TF }
 
 \tl_new:N  \l__tblr_a_tl
@@ -2885,8 +2886,6 @@
       { \l__tblr_outer_element_name_tl / #1 } {#2}
   }
 
-\regex_const:Nn \c__tblr_head_is_command_regex { ^\\ }
-
 \cs_new_protected:Npn \__tblr_element_unknown_key:nn #1 #2
   {
     \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
@@ -2896,10 +2895,11 @@
       }
       {
         %% unknown key name has been changed to string in \l_keys_key_str
-        \regex_match:NnTF \c__tblr_head_is_command_regex {#1}
+        \tl_set_rescan:Nnn \l__tblr_f_tl {} {#1}
+        \tl_if_head_eq_catcode:VNTF \l__tblr_f_tl \scan_stop:
           {
-            \__tblr_spec_gput:nen { outer }
-              { \l__tblr_outer_element_name_tl / font } {#1}
+            \__tblr_spec_gput:neV { outer }
+              { \l__tblr_outer_element_name_tl / font } \l__tblr_f_tl
           }
           {
             \__tblr_spec_gput:nen { outer }
