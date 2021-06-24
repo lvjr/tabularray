@@ -2851,6 +2851,8 @@
     firstfoot    .code:n = \__tblr_parse_element_keys:nn { firstfoot } {#1},
     middlefoot   .code:n = \__tblr_parse_element_keys:nn { middlefoot } {#1},
     lastfoot     .code:n = \__tblr_parse_element_keys:nn { lastfoot } {#1},
+    head         .meta:n = { firsthead, middlehead, lasthead },
+    foot         .meta:n = { firstfoot, middlefoot, lastfoot },
   }
 
 \cs_new_protected:Npn \__tblr_keys_gput_outer:nn #1 #2
@@ -2860,9 +2862,13 @@
 
 \keys_define:nn { tblr-element }
   {
-    halign .code:n = \__tblr_keys_gput_element:nn { halign } {#1},
-    fg     .code:n = \__tblr_keys_gput_element:nn { fg } {#1},
-    font   .code:n = \__tblr_keys_gput_element:nn { font }  {#1},
+    halign  .code:n = \__tblr_keys_gput_element:nn { halign } {#1},
+    l       .meta:n = { halign = l },
+    c       .meta:n = { halign = c },
+    r       .meta:n = { halign = r },
+    fg      .code:n = \__tblr_keys_gput_element:nn { fg } {#1},
+    font    .code:n = \__tblr_keys_gput_element:nn { font } {#1},
+    unknown .code:n = \__tblr_element_unknown_key:Vn \l_keys_key_str {#1},
   }
 
 \tl_new:N \l__tblr_outer_element_name_tl
@@ -2878,6 +2884,30 @@
     \__tblr_spec_gput:nen { outer }
       { \l__tblr_outer_element_name_tl / #1 } {#2}
   }
+
+\regex_const:Nn \c__tblr_head_is_command_regex { ^\\ }
+
+\cs_new_protected:Npn \__tblr_element_unknown_key:nn #1 #2
+  {
+    \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+      {
+        \__tblr_spec_gput:nen { outer }
+          { \l__tblr_outer_element_name_tl / fg } {#1}
+      }
+      {
+        %% unknown key name has been changed to string in \l_keys_key_str
+        \regex_match:NnTF \c__tblr_head_is_command_regex {#1}
+          {
+            \__tblr_spec_gput:nen { outer }
+              { \l__tblr_outer_element_name_tl / font } {#1}
+          }
+          {
+            \__tblr_spec_gput:nen { outer }
+              { \l__tblr_outer_element_name_tl / #1 } {#2}
+          }
+      }
+  }
+\cs_generate_variant:Nn \__tblr_element_unknown_key:nn { Vn }
 
 %%% --------------------------------------------------------
 %%> \section{Parse Table Optional Argument}
@@ -4536,16 +4566,12 @@
   {
     head .meta:n = { firsthead, middlehead, lasthead },
     foot .meta:n = { firstfoot, middlefoot, lastfoot },
-    headfoot .meta:n =
-             { firsthead, middlehead, lasthead, firstfoot, middlefoot, lastfoot },
   }
 
 \keys_define:nn { tblr-set-template }
   {
     head .meta:n = { firsthead, middlehead, lasthead },
     foot .meta:n = { firstfoot, middlefoot, lastfoot },
-    headfoot .meta:n =
-             { firsthead, middlehead, lasthead, firstfoot, middlefoot, lastfoot },
   }
 
 \DefTblrTemplate { firsthead } { normal }
