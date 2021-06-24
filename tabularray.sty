@@ -2354,15 +2354,15 @@
 
 \tl_new:N \l__tblr_new_env_name_tl
 
-%% #1: env name; #2: argument number; #3: optional argument; #4: env specs
-\NewDocumentCommand \NewTblrEnviron { m O{0} o m }
+%% #1: env name; #2: env specs
+\NewDocumentCommand \NewTblrEnviron { m m }
   {
     \tl_set:Nn \l__tblr_new_env_name_tl {#1}
     \tl_new:c { l__tblr_default_ \l__tblr_new_env_name_tl _outer_tl }
     \tl_set_eq:cN { l__tblr_default_ \l__tblr_new_env_name_tl _outer_tl }
       \l__tblr_initial_tblr_outer_tl
     \tl_new:c { l__tblr_default_ \l__tblr_new_env_name_tl _inner_tl }
-    \keys_set:nn { new-tblr-env } {#4}
+    \keys_set:nn { new-tblr-env } {#2}
     \NewDocumentEnvironment { \l__tblr_new_env_name_tl } { O{c} m +b }
       {
         \__tblr_environ_code:Vnnn \l__tblr_new_env_name_tl {##1} {##2} {##3}
@@ -2395,12 +2395,12 @@
     \mode_if_math:TF
       { \bool_set_true:N \l__tblr_math_mode_bool }
       { \bool_set_false:N \l__tblr_math_mode_bool }
-    \buildtblr {#2} {#3} {#4}
+    \__tblr_builder {#2} {#3} {#4}
   }
 \cs_generate_variant:Nn \__tblr_environ_code:nnnn { V }
 
 %% Read, split and build the table
-\cs_new_protected:Npn \buildtblr #1 #2 #3
+\cs_new_protected:Npn \__tblr_builder #1 #2 #3
   {
     \int_gincr:N \g_tblr_level_int
     \__tblr_clear_prop_lists:
@@ -2434,6 +2434,7 @@
 
 %% Create tblr environment
 \NewTblrEnviron { tblr } {}
+\NewTblrEnviron { longtblr } { outer = { long } }
 
 %%% --------------------------------------------------------
 %%  \section{Split Table Contents}
