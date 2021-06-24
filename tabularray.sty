@@ -2721,11 +2721,11 @@
 \tl_new:N \l__tblr_default_tblr_tl
 
 %% #1: env name; #2: options
-\NewDocumentCommand \SetTabularrayDefault { O{tblr} m }
+\NewDocumentCommand \SetTblrInner { O{tblr} m }
   {
     \tl_put_right:cn { l__tblr_default_ #1 _tl } { , #2 }
   }
-\cs_new_eq:NN \SetTblrDefault \SetTabularrayDefault
+\cs_new_eq:NN \SetTblrDefault \SetTblrInner
 
 %%% --------------------------------------------------------
 %%> \section{Parse Table Inner Specifications}
