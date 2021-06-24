@@ -2355,12 +2355,12 @@
     \LogTblrTracing { step = split ~ table}
     \__tblr_split_table:n {#3}
     \LogTblrTracing { command }
-    \LogTblrTracing { step = parse ~ table ~ options }
-    \__tblr_parse_table_option:n {#1}
-    \LogTblrTracing { option }
     \LogTblrTracing { step = initial ~ table ~ outer ~ spec}
     \__tblr_initial_table_outer_spec:
     \LogTblrTracing { outer }
+    \LogTblrTracing { step = parse ~ table ~ options }
+    \__tblr_parse_table_option:n {#1}
+    \LogTblrTracing { option }
     \bool_if:NT \g__tblr_use_intarray_bool { \__tblr_initial_table_data: }
     \LogTblrTracing { step = initial ~ table ~ inner ~ spec}
     \__tblr_initial_table_spec:
@@ -2824,6 +2824,9 @@
 
 \keys_define:nn { tblr-outer }
   {
+    long         .code:n = \__tblr_keys_gput_outer:nn { long } {true},
+    halign       .code:n = \__tblr_keys_gput_outer:nn { halign } {#1},
+    valign       .code:n = \__tblr_keys_gput_outer:nn { valign } {#1},
     headsep      .code:n = \__tblr_keys_gput_outer:nn { headsep } {#1},
     footsep      .code:n = \__tblr_keys_gput_outer:nn { footsep } {#1},
     presep       .code:n = \__tblr_keys_gput_outer:nn { presep }  {#1},
@@ -2880,11 +2883,12 @@
 %%> \section{Parse Table Optional Argument}
 %%% --------------------------------------------------------
 
+%% You can set long/halign/valign in both \SetTblrOuter and optional argument
 \keys_define:nn { tblr-option }
   {
-    long    .code:n = \__tblr_keys_gput_option:nn { long } {true},
-    halign  .code:n = \__tblr_keys_gput_option:nn { halign } {#1},
-    valign  .code:n = \__tblr_keys_gput_option:nn { valign } {#1},
+    long    .code:n = \__tblr_keys_gput_outer:nn { long } {true},
+    halign  .code:n = \__tblr_keys_gput_outer:nn { halign } {#1},
+    valign  .code:n = \__tblr_keys_gput_outer:nn { valign } {#1},
     l .meta:n = { halign = l },
     c .meta:n = { halign = c },
     r .meta:n = { halign = r },
@@ -4690,9 +4694,9 @@
 
 \cs_new_protected:Npn \__tblr_build_whole:
   {
-    \__tblr_prop_if_in:nnTF { option } { long }
-      { \__tblr_build_long_table:e { \__tblr_prop_item:nn { option } { halign } } }
-      { \__tblr_build_short_table:e { \__tblr_prop_item:nn { option } { valign } } }
+    \tl_if_eq:enTF { \__tblr_spec_item:nn { outer } { long } } { true }
+      { \__tblr_build_long_table:e { \__tblr_spec_item:nn { outer } { halign } } }
+      { \__tblr_build_short_table:e { \__tblr_spec_item:nn { outer } { valign } } }
   }
 
 \dim_new:N \l__tblr_remain_height_dim
