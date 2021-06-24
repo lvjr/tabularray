@@ -2329,24 +2329,77 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Tabularray Environments}
+%%  \section{Set Environments and New Environments}
 %%% --------------------------------------------------------
+
+\tl_new:N \l__tblr_initial_tblr_outer_tl
+\tl_set:Nn \l__tblr_initial_tblr_outer_tl
+  {
+    headsep = 6pt, footsep = 6pt,
+    presep = 1.5\bigskipamount, postsep = 1.5\bigskipamount,
+  }
+
+%% #1: env name; #2: specifications
+\NewDocumentCommand \SetTblrInner { O{tblr} m }
+  {
+    \tl_put_right:cn { l__tblr_default_ #1 _inner_tl } { , #2 }
+  }
+\cs_new_eq:NN \SetTblrDefault \SetTblrInner
+
+%% #1: env name; #2: specifications
+\NewDocumentCommand \SetTblrOuter { O{tblr} m }
+  {
+    \tl_put_right:cn { l__tblr_default_ #1 _outer_tl } { , #2 }
+  }
+
+\tl_new:N \l__tblr_new_env_name_tl
+
+%% #1: env name; #2: argument number; #3: optional argument; #4: env specs
+\NewDocumentCommand \NewTblrEnviron { m O{0} o m }
+  {
+    \tl_set:Nn \l__tblr_new_env_name_tl {#1}
+    \tl_new:c { l__tblr_default_ \l__tblr_new_env_name_tl _outer_tl }
+    \tl_set_eq:cN { l__tblr_default_ \l__tblr_new_env_name_tl _outer_tl }
+      \l__tblr_initial_tblr_outer_tl
+    \tl_new:c { l__tblr_default_ \l__tblr_new_env_name_tl _inner_tl }
+    \keys_set:nn { new-tblr-env } {#4}
+    \NewDocumentEnvironment { \l__tblr_new_env_name_tl } { O{c} m +b }
+      {
+        \__tblr_environ_code:Vnnn \l__tblr_new_env_name_tl {##1} {##2} {##3}
+      } { }
+  }
+
+\keys_define:nn { new-tblr-env }
+  {
+    outer .code:n = \__tblr_new_env_set_outer:n {#1},
+    inner .code:n = \__tblr_new_env_set_inner:n {#1},
+  }
+
+\cs_new_protected:Npn \__tblr_new_env_set_outer:n #1
+  {
+    \SetTblrOuter[\l__tblr_new_env_name_tl]{#1}
+  }
+
+\cs_new_protected:Npn \__tblr_new_env_set_inner:n #1
+  {
+    \SetTblrInner[\l__tblr_new_env_name_tl]{#1}
+  }
 
 \tl_new:N \l__tblr_env_name_tl
 \bool_new:N \l__tblr_math_mode_bool
 
-\NewDocumentEnvironment { tblr } { O{c} m +b }
+\cs_new_protected:Npn \__tblr_environ_code:nnnn #1 #2 #3 #4
   {
     \int_gincr:N \g__tblr_table_count_int
-    \tl_set:Nn \l__tblr_env_name_tl { tblr }
+    \tl_set:Nn \l__tblr_env_name_tl {#1}
     \mode_if_math:TF
       { \bool_set_true:N \l__tblr_math_mode_bool }
       { \bool_set_false:N \l__tblr_math_mode_bool }
-    \buildtblr {#1} {#2} {#3}
-  } { }
+    \buildtblr {#2} {#3} {#4}
+  }
+\cs_generate_variant:Nn \__tblr_environ_code:nnnn { V }
 
 %% Read, split and build the table
-
 \cs_new_protected:Npn \buildtblr #1 #2 #3
   {
     \int_gincr:N \g_tblr_level_int
@@ -2378,6 +2431,13 @@
     \__tblr_build_whole:
     \int_gdecr:N \g_tblr_level_int
   }
+
+%% Create tblr environment
+\NewTblrEnviron { tblr } {}
+
+%%% --------------------------------------------------------
+%%  \section{Split Table Contents}
+%%% --------------------------------------------------------
 
 %% Insert and remove braces for nesting environments inside cells
 %% These make line split and cell split workable
@@ -2623,13 +2683,13 @@
 %%  \section{Initial Table Inner Specifications}
 %%% --------------------------------------------------------
 
-\prop_gset_from_keyval:Nn \g__tblr_default_tblr_table_prop
+\prop_gset_from_keyval:Nn \g__tblr_initial_table_prop
   {
     stretch = 1,
     rulesep = 2pt,
   }
 
-\prop_gset_from_keyval:Nn \g__tblr_default_tblr_rows_prop
+\prop_gset_from_keyval:Nn \g__tblr_initial_rows_prop
   {
     abovesep = 2pt,
     belowsep = 2pt,
@@ -2640,7 +2700,7 @@
     @row-lower = 0pt,
   }
 
-\prop_gset_from_keyval:Nn \g__tblr_default_tblr_columns_prop
+\prop_gset_from_keyval:Nn \g__tblr_initial_columns_prop
   {
     leftsep = 6pt,
     rightsep = 6pt,
@@ -2649,7 +2709,7 @@
     @col-width = 0pt,
   }
 
-\prop_gset_from_keyval:Nn \g__tblr_default_tblr_cells_prop
+\prop_gset_from_keyval:Nn \g__tblr_initial_cells_prop
   {
     halign = l,
     valign = t,
@@ -2659,74 +2719,64 @@
     omit = 0,
   }
 
-\prop_gset_from_keyval:Nn \g__tblr_default_tblr_hlines_prop
+\prop_gset_from_keyval:Nn \g__tblr_initial_hlines_prop
   {
     @hline-count = 0,
   }
 
-\prop_gset_from_keyval:Nn \g__tblr_default_tblr_vlines_prop
+\prop_gset_from_keyval:Nn \g__tblr_initial_vlines_prop
   {
     @vline-count = 0,
   }
 
 \cs_new_protected:Npn \__tblr_initial_table_spec:
   {
-    \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _table_prop }
+    \prop_map_inline:Nn \g__tblr_initial_table_prop
       {
         \__tblr_prop_gput:nxn { inner } { ##1 } {##2}
       }
     \int_step_variable:nNn { \c@rowcount } \l__tblr_i_tl
       {
-        \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _rows_prop }
+        \prop_map_inline:Nn \g__tblr_initial_rows_prop
           {
             \__tblr_data_gput:nVnn { row } \l__tblr_i_tl {##1} {##2}
           }
-        \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _hlines_prop }
+        \prop_map_inline:Nn \g__tblr_initial_hlines_prop
           {
             \__tblr_spec_gput:nen { hline } { [\l__tblr_i_tl] / ##1 } {##2}
           }
         \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
           {
-            \prop_map_inline:cn
-              { g__tblr_default_ \l__tblr_env_name_tl _cells_prop }
+            \prop_map_inline:Nn \g__tblr_initial_cells_prop
               {
                 \__tblr_data_gput:neeen { cell }
                   { \l__tblr_i_tl } { \l__tblr_j_tl } {##1} {##2}
               }
           }
       }
-    \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _hlines_prop }
+    \prop_map_inline:Nn \g__tblr_initial_hlines_prop
       {
         \__tblr_spec_gput:nen { hline }
           { [\int_eval:n { \c@rowcount + 1}] / ##1 } {##2}
       }
     \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
-        \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _columns_prop }
+        \prop_map_inline:Nn \g__tblr_initial_columns_prop
           {
             \__tblr_data_gput:nenn { column } { \l__tblr_j_tl } {##1} {##2}
           }
-        \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _vlines_prop }
+        \prop_map_inline:Nn \g__tblr_initial_vlines_prop
           {
             \__tblr_spec_gput:nen { vline } { [\l__tblr_j_tl] / ##1 } {##2}
           }
       }
-    \prop_map_inline:cn { g__tblr_default_ \l__tblr_env_name_tl _vlines_prop }
+    \prop_map_inline:Nn \g__tblr_initial_vlines_prop
       {
         \__tblr_spec_gput:nen { vline }
           { [\int_eval:n { \c@colcount + 1}] / ##1 } {##2}
       }
-    \keys_set:nv { tblr } { l__tblr_default_ \l__tblr_env_name_tl _tl }
+    \keys_set:nv { tblr } { l__tblr_default_ \l__tblr_env_name_tl _inner_tl }
   }
-
-\tl_new:N \l__tblr_default_tblr_tl
-
-%% #1: env name; #2: options
-\NewDocumentCommand \SetTblrInner { O{tblr} m }
-  {
-    \tl_put_right:cn { l__tblr_default_ #1 _tl } { , #2 }
-  }
-\cs_new_eq:NN \SetTblrDefault \SetTblrInner
 
 %%% --------------------------------------------------------
 %%> \section{Parse Table Inner Specifications}
@@ -2806,21 +2856,9 @@
 %%  \section{Initial and Parse Table Outer Specifications}
 %%% --------------------------------------------------------
 
-\tl_new:N \l__tblr_default_tblr_outer_tl
-\tl_set:Nn \l__tblr_default_tblr_outer_tl
-  {
-    headsep = 6pt, footsep = 6pt,
-    presep = 1.5\bigskipamount, postsep = 1.5\bigskipamount,
-  }
-
-\NewDocumentCommand \SetTblrOuter { m }
-  {
-    \tl_put_right:Nn \l__tblr_default_tblr_outer_tl {#1}
-  }
-
 \cs_new_protected:Npn \__tblr_initial_table_outer_spec:
   {
-    \keys_set:nV { tblr-outer } \l__tblr_default_tblr_outer_tl
+    \keys_set:nv { tblr-outer } { l__tblr_default_ \l__tblr_env_name_tl _outer_tl }
   }
 
 \keys_define:nn { tblr-outer }
