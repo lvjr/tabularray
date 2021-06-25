@@ -4412,14 +4412,23 @@
     \cs_if_exist:NT \hypertarget
       {
         \use:c { Hy@raisedlink }
-          { \hypertarget { tblr / \int_use:N \g__tblr_table_count_int / #1 } {} }
+          {
+            \hypertarget
+              { tblr / \int_use:N \g__tblr_table_count_int / \tl_to_str:n {#1} }
+              { }
+          }
       }
   }
+\cs_generate_variant:Nn \__tblr_hyper_target:n { V }
 
 \cs_new_protected:Npn \__tblr_hyper_link:nn #1 #2
   {
     \cs_if_exist:NTF \hyperlink
-      { \hyperlink { tblr / \int_use:N \g__tblr_table_count_int / #1 } {#2} }
+      {
+        \hyperlink
+          { tblr / \int_use:N \g__tblr_table_count_int / \tl_to_str:n {#1} }
+          { #2 }
+      }
       { #2 }
   }
 
@@ -4436,7 +4445,7 @@
 
 \DefTblrTemplate { note-target } { normal }
   {
-    \__tblr_hyper_target:n { \InsertTblrNoteTag }
+    \__tblr_hyper_target:V \InsertTblrNoteTag
   }
 \SetTblrTemplate { note-target } { normal }
 
