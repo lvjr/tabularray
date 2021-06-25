@@ -2842,15 +2842,26 @@
     \keys_set:nv { tblr-outer } { l__tblr_default_ \l__tblr_env_name_tl _outer_tl }
   }
 
+\cs_new_protected:Npn \__tblr_parse_table_option:n #1
+  {
+    \keys_set:nn { tblr-outer } {#1}
+  }
+
 \keys_define:nn { tblr-outer }
   {
-    long         .code:n = \__tblr_keys_gput_outer:nn { long } {true},
-    halign       .code:n = \__tblr_keys_gput_outer:nn { halign } {#1},
-    valign       .code:n = \__tblr_keys_gput_outer:nn { valign } {#1},
-    headsep      .code:n = \__tblr_keys_gput_outer:nn { headsep } {#1},
-    footsep      .code:n = \__tblr_keys_gput_outer:nn { footsep } {#1},
-    presep       .code:n = \__tblr_keys_gput_outer:nn { presep }  {#1},
-    postsep      .code:n = \__tblr_keys_gput_outer:nn { postsep } {#1},
+    long         .code:n = \__tblr_outer_gput_spec:nn { long } {true},
+    halign       .code:n = \__tblr_outer_gput_spec:nn { halign } {#1},
+    valign       .code:n = \__tblr_outer_gput_spec:nn { valign } {#1},
+    l            .meta:n = { halign = l },
+    c            .meta:n = { halign = c },
+    r            .meta:n = { halign = r },
+    t            .meta:n = { valign = t },
+    m            .meta:n = { valign = m },
+    b            .meta:n = { valign = b },
+    headsep      .code:n = \__tblr_outer_gput_spec:nn { headsep } {#1},
+    footsep      .code:n = \__tblr_outer_gput_spec:nn { footsep } {#1},
+    presep       .code:n = \__tblr_outer_gput_spec:nn { presep }  {#1},
+    postsep      .code:n = \__tblr_outer_gput_spec:nn { postsep } {#1},
     caption      .code:n = \__tblr_parse_element_keys:nn { caption } {#1},
     caption-tag  .code:n = \__tblr_parse_element_keys:nn { caption-tag } {#1},
     caption-sep  .code:n = \__tblr_parse_element_keys:nn { caption-sep }  {#1},
@@ -2873,21 +2884,22 @@
     lastfoot     .code:n = \__tblr_parse_element_keys:nn { lastfoot } {#1},
     head         .meta:n = { firsthead, middlehead, lasthead },
     foot         .meta:n = { firstfoot, middlefoot, lastfoot },
+    unknown  .code:n = \__tblr_table_option_key:Vn \l_keys_key_str {#1},
   }
 
-\cs_new_protected:Npn \__tblr_keys_gput_outer:nn #1 #2
+\cs_new_protected:Npn \__tblr_outer_gput_spec:nn #1 #2
   {
     \__tblr_spec_gput:nen { outer } {#1} {#2}
   }
 
 \keys_define:nn { tblr-element }
   {
-    halign  .code:n = \__tblr_keys_gput_element:nn { halign } {#1},
+    halign  .code:n = \__tblr_outer_gput_element:nn { halign } {#1},
     l       .meta:n = { halign = l },
     c       .meta:n = { halign = c },
     r       .meta:n = { halign = r },
-    fg      .code:n = \__tblr_keys_gput_element:nn { fg } {#1},
-    font    .code:n = \__tblr_keys_gput_element:nn { font } {#1},
+    fg      .code:n = \__tblr_outer_gput_element:nn { fg } {#1},
+    font    .code:n = \__tblr_outer_gput_element:nn { font } {#1},
     unknown .code:n = \__tblr_element_unknown_key:Vn \l_keys_key_str {#1},
   }
 
@@ -2899,7 +2911,7 @@
     \keys_set:nn { tblr-element } {#2}
   }
 
-\cs_new_protected:Npn \__tblr_keys_gput_element:nn #1 #2
+\cs_new_protected:Npn \__tblr_outer_gput_element:nn #1 #2
   {
     \__tblr_spec_gput:nen { outer }
       { \l__tblr_outer_element_name_tl / #1 } {#2}
@@ -2928,33 +2940,6 @@
   }
 \cs_generate_variant:Nn \__tblr_element_unknown_key:nn { Vn }
 
-%%% --------------------------------------------------------
-%%> \section{Parse Table Optional Argument}
-%%% --------------------------------------------------------
-
-%% You can set long/halign/valign in both \SetTblrOuter and optional argument
-\keys_define:nn { tblr-option }
-  {
-    long    .code:n = \__tblr_keys_gput_outer:nn { long } {true},
-    halign  .code:n = \__tblr_keys_gput_outer:nn { halign } {#1},
-    valign  .code:n = \__tblr_keys_gput_outer:nn { valign } {#1},
-    l .meta:n = { halign = l },
-    c .meta:n = { halign = c },
-    r .meta:n = { halign = r },
-    t .meta:n = { valign = t },
-    m .meta:n = { valign = m },
-    b .meta:n = { valign = b },
-    caption  .code:n = \__tblr_keys_gput_option:nn { caption } {#1},
-    capshort .code:n = \__tblr_keys_gput_option:nn { capshort } {#1},
-    label    .code:n = \__tblr_keys_gput_option:nn { label } {#1},
-    unknown  .code:n = \__tblr_table_option_key:Vn \l_keys_key_str {#1},
-  }
-
-\cs_new_protected:Npn \__tblr_parse_table_option:n #1
-  {
-    \keys_set:nn { tblr-option } {#1}
-  }
-
 \regex_const:Nn \c__tblr_option_key_name_regex { ^ [A-Za-z\-] + $ }
 
 \cs_new_protected:Npn \__tblr_table_option_key:nn #1 #2
@@ -2967,29 +2952,29 @@
             \tl_set:Nx \l__tblr_a_tl { \seq_item:Nn \l_tmpa_seq {2} }
             \tl_set_rescan:Nnx \l__tblr_b_tl {} { \seq_item:Nn \l_tmpa_seq {3} }
             \tl_set:Nx \l__tblr_c_tl { \tl_head:N \l__tblr_b_tl }
-            \use:c { __tblr_keys_gput_ \l__tblr_a_tl :Vn } \l__tblr_c_tl {#2}
+            \use:c { __tblr_outer_gput_ \l__tblr_a_tl :Vn } \l__tblr_c_tl {#2}
           }
       }
   }
 \cs_generate_variant:Nn \__tblr_table_option_key:nn { Vn }
 
-\cs_new_protected:Npn \__tblr_keys_gput_option:nn #1 #2
+\cs_new_protected:Npn \__tblr_outer_gput_text:nn #1 #2
   {
     \__tblr_prop_gput:nnn { option } {#1} {#2}
   }
-\cs_generate_variant:Nn \__tblr_keys_gput_option:nn { nx }
+\cs_generate_variant:Nn \__tblr_outer_gput_text:nn { Vn }
 
-\cs_new_protected:Npn \__tblr_keys_gput_note:nn #1 #2
+\cs_new_protected:Npn \__tblr_outer_gput_note:nn #1 #2
   {
     \__tblr_prop_gput:nxn { note } {#1} {#2}
   }
-\cs_generate_variant:Nn \__tblr_keys_gput_note:nn { Vn }
+\cs_generate_variant:Nn \__tblr_outer_gput_note:nn { Vn }
 
-\cs_new_protected:Npn \__tblr_keys_gput_remark:nn #1 #2
+\cs_new_protected:Npn \__tblr_outer_gput_remark:nn #1 #2
   {
     \__tblr_prop_gput:nnn { remark } {#1} {#2}
   }
-\cs_generate_variant:Nn \__tblr_keys_gput_remark:nn { Vn }
+\cs_generate_variant:Nn \__tblr_outer_gput_remark:nn { Vn }
 
 %%% --------------------------------------------------------
 %%  \section{Typeset and Calculate Sizes}
