@@ -695,7 +695,8 @@
       { \__tblr_data_key_to_int:nnn {#1} {#2} {#3} }
       { \g__tblr_data_int_from_value_tl }
   }
-\cs_generate_variant:Nn \__tblr_data_gadd_dimen_value:nnnn { nnne, nnnV, nene }
+\cs_generate_variant:Nn \__tblr_data_gadd_dimen_value:nnnn
+  { nnne, nnnV, nenn, nene }
 
 \cs_new_protected:Npn \__tblr_array_gadd_value:Nnn #1 #2 #3
   {
@@ -1932,59 +1933,58 @@
 
 \keys_define:nn { tblr-row }
   {
-    l .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \c@rownum } { halign } {l},
-    c .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \c@rownum } { halign } {c},
-    r .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \c@rownum } { halign } {r},
-    t .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \c@rownum } { valign } {t},
-    p .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \c@rownum } { valign } {t},
-    m .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \c@rownum } { valign } {m},
-    b .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \c@rownum } { valign } {b},
-    h .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \c@rownum } { valign } {h},
-    f .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \c@rownum } { valign } {f},
-    bg .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                  { \int_use:N \c@rownum } { background } {#1},
-    fg .code:n = \__tblr_preto_text_for_every_row_cell:n { \color{#1} },
-    font .code:n = \__tblr_set_key_for_every_row_cell:nnn
-                     { \int_use:N \c@rownum } { font } { #1 \selectfont },
-    ht .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
-                   { height } { \dim_eval:n {#1} },
-    co .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
-                   { coefficient } {#1},
-    preto .code:n = \__tblr_preto_text_for_every_row_cell:n {#1},
-    appto .code:n = \__tblr_appto_text_for_every_row_cell:n {#1},
-    cmd .code:n = \__tblr_process_text_for_every_row_cell:n {#1},
-    abovesep .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
-                         { abovesep } { \dim_eval:n {#1} },
-    belowsep .code:n = \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
-                         { belowsep } { \dim_eval:n {#1} },
-    rowsep .meta:n = { abovesep = #1, belowsep = #1},
-    abovesep+ .code:n = \__tblr_data_gadd_dimen_value:nene { row }
-                   { \int_use:N \c@rownum } { abovesep } { \dim_eval:n {#1} },
-    belowsep+ .code:n = \__tblr_data_gadd_dimen_value:nene { row }
-                   { \int_use:N \c@rownum } { belowsep } { \dim_eval:n {#1} },
-    rowsep+ .meta:n = { abovesep+ = #1, belowsep+ = #1},
-    nobreak .code:n = \__tblr_prop_gput:nxx { row }
-                   { [\int_eval:n {\c@rownum - 1}] / nobreak } { true },
-    unknown .code:n = \__tblr_row_unknown_key:V \l_keys_key_str,
+    halign    .code:n = \__tblr_row_gput_cell:nn { halign } {#1},
+    valign    .code:n = \__tblr_row_gput_cell:nn { valign } {#1},
+    l         .meta:n = { halign = l },
+    c         .meta:n = { halign = c },
+    r         .meta:n = { halign = r },
+    t         .meta:n = { valign = t },
+    p         .meta:n = { valign = t },
+    m         .meta:n = { valign = m },
+    b         .meta:n = { valign = b },
+    h         .meta:n = { valign = h },
+    f         .meta:n = { valign = f },
+    bg        .code:n = \__tblr_row_gput_cell:nn { background } {#1},
+    fg        .code:n = \__tblr_preto_text_for_every_row_cell:n { \color{#1} },
+    font      .code:n = \__tblr_row_gput_cell:nn { font } { #1 \selectfont },
+    ht        .code:n = \__tblr_row_gput:ne { height } { \dim_eval:n {#1} },
+    co        .code:n = \__tblr_row_gput:ne { coefficient } {#1},
+    preto     .code:n = \__tblr_preto_text_for_every_row_cell:n {#1},
+    appto     .code:n = \__tblr_appto_text_for_every_row_cell:n {#1},
+    cmd       .code:n = \__tblr_process_text_for_every_row_cell:n {#1},
+    abovesep  .code:n = \__tblr_row_gput:ne { abovesep } { \dim_eval:n {#1} },
+    belowsep  .code:n = \__tblr_row_gput:ne { belowsep } { \dim_eval:n {#1} },
+    rowsep    .meta:n = { abovesep = #1, belowsep = #1},
+    abovesep+ .code:n = \__tblr_row_gadd_dimen:ne { abovesep } { \dim_eval:n {#1} },
+    belowsep+ .code:n = \__tblr_row_gadd_dimen:ne { belowsep } { \dim_eval:n {#1} },
+    rowsep+   .meta:n = { abovesep+ = #1, belowsep+ = #1},
+    nobreak   .code:n = \__tblr_prop_gput:nxx { row }
+                          { [\int_eval:n {\c@rownum - 1}] / nobreak } { true },
+    unknown   .code:n = \__tblr_row_unknown_key:V \l_keys_key_str,
   }
 
-%% #1: row number; #2: key; #3: value
-\cs_new_protected:Npn \__tblr_set_key_for_every_row_cell:nnn #1 #2 #3
+%% #1: key; #2: value
+\cs_new_protected:Npn \__tblr_row_gput:nn #1 #2
+  {
+    \__tblr_data_gput:nenn { row } { \int_use:N \c@rownum } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_row_gput:nn { ne }
+
+\cs_new_protected:Npn \__tblr_row_gadd_dimen:nn #1 #2
+  {
+    \__tblr_data_gadd_dimen_value:nenn { row } { \int_use:N \c@rownum } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_row_gadd_dimen:nn { ne }
+
+%% #1: key; #2: value
+\cs_new_protected:Npn \__tblr_row_gput_cell:nn #1 #2
   {
     \int_step_inline:nn { \c@colcount }
       {
-        \__tblr_data_gput:neenn { cell } {#1} {##1} {#2} {#3}
+        \__tblr_cell_gput:ennn { \int_use:N \c@rownum } {##1} {#1} {#2}
       }
   }
+\cs_generate_variant:Nn \__tblr_row_gput_cell:nn { ne }
 
 \cs_new_protected:Npn \__tblr_preto_text_for_every_row_cell:n #1
   {
@@ -2019,14 +2019,10 @@
       }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+          { \__tblr_row_gput_cell:nn { background } {#1} }
           {
-            \__tblr_set_key_for_every_row_cell:nnn
-              { \int_use:N \c@rownum } { background } {#1}
-          }
-          {
-          \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
-            \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
-              { height } { \dim_eval:n { \l__tblr_v_tl } }
+            \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
+            \__tblr_row_gput:ne { height } { \dim_eval:n { \l__tblr_v_tl } }
           }
       }
   }
