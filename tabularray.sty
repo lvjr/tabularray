@@ -1508,34 +1508,24 @@
 
 \keys_define:nn { tblr-cell-spec }
   {
-    l .code:n = \__tblr_data_gput:neenn { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { halign } {l},
-    c .code:n = \__tblr_data_gput:neenn { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { halign } {c},
-    r .code:n = \__tblr_data_gput:neenn { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { halign } {r},
-    t .code:n = \__tblr_data_gput:neenn { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { valign } {t},
-    p .code:n = \__tblr_data_gput:neenn { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { valign } {t},
-    m .code:n = \__tblr_data_gput:neenn { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { valign } {m},
-    b .code:n = \__tblr_data_gput:neenn { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { valign } {b},
-    h .code:n = \__tblr_data_gput:neenn { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { valign } {h},
-    f .code:n = \__tblr_data_gput:neenn { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { valign } {f},
-    wd .code:n = \__tblr_data_gput:neene { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { width } {#1},
-    bg .code:n = \__tblr_data_gput:neene { cell }
-                  { \int_use:N \c@rownum } { \int_use:N \c@colnum }
-                  { background } {#1},
-    preto .code:n = \__tblr_cell_preto_text:n {#1},
-    appto .code:n = \__tblr_cell_appto_text:n {#1},
-    cmd .code:n = \__tblr_cell_process_text:n {#1},
-    fg .code:n = \__tblr_cell_preto_text:n { \color{#1} },
-    font .code:n = \__tblr_cell_gput:nn { font } { #1 \selectfont },
+    halign  .code:n = \__tblr_cell_gput:nn { halign } {#1},
+    valign  .code:n = \__tblr_cell_gput:nn { valign } {#1},
+    l       .meta:n = { halign = l },
+    c       .meta:n = { halign = c },
+    r       .meta:n = { halign = r },
+    t       .meta:n = { valign = t },
+    p       .meta:n = { valign = t },
+    m       .meta:n = { valign = m },
+    b       .meta:n = { valign = b },
+    h       .meta:n = { valign = h },
+    f       .meta:n = { valign = f },
+    wd      .code:n = \__tblr_cell_gput:ne { width } {#1},
+    bg      .code:n = \__tblr_cell_gput:ne { background } {#1},
+    preto   .code:n = \__tblr_cell_preto_text:n {#1},
+    appto   .code:n = \__tblr_cell_appto_text:n {#1},
+    cmd     .code:n = \__tblr_cell_process_text:n {#1},
+    fg      .code:n = \__tblr_cell_preto_text:n { \color{#1} },
+    font    .code:n = \__tblr_cell_gput:nn { font } { #1 \selectfont },
     unknown .code:n = \__tblr_cell_unknown_key:V \l_keys_key_str,
   }
 
