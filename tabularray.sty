@@ -2335,7 +2335,7 @@
 \tl_new:N \l__tblr_initial_tblr_outer_tl
 \tl_set:Nn \l__tblr_initial_tblr_outer_tl
   {
-    headsep = 6pt, footsep = 6pt,
+    halign = c, valign = m, headsep = 6pt, footsep = 6pt,
     presep = 1.5\bigskipamount, postsep = 1.5\bigskipamount,
   }
 
@@ -2952,7 +2952,7 @@
 
 \cs_new_protected:Npn \__tblr_parse_table_option:n #1
   {
-    \keys_set:nn { tblr-option } { halign = c, valign = m, #1 }
+    \keys_set:nn { tblr-option } {#1}
   }
 
 \regex_const:Nn \c__tblr_option_key_name_regex { ^ [A-Za-z\-] + $ }
