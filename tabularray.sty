@@ -2969,7 +2969,7 @@
 
 \cs_new_protected:Npn \__tblr_outer_gput_note:nn #1 #2
   {
-    \__tblr_prop_gput:nxn { note } {#1} {#2}
+    \__tblr_prop_gput:nnn { note } {#1} {#2}
   }
 \cs_generate_variant:Nn \__tblr_outer_gput_note:nn { Vn }
 
@@ -4236,7 +4236,7 @@
   {
     \__tblr_prop_map_inline:nn { note }
       {
-        \tl_set:Nn \InsertTblrNoteTag {##1}
+        \tl_set_rescan:Nnn \InsertTblrNoteTag {} {##1}
         \tl_set:Nn \InsertTblrNoteText {##2}
         #1
       }
@@ -4246,7 +4246,7 @@
   {
     \__tblr_prop_map_inline:nn { remark }
       {
-        \tl_set:Nn \InsertTblrRemarkTag {##1}
+        \tl_set_rescan:Nnn \InsertTblrRemarkTag {} {##1}
         \tl_set:Nn \InsertTblrRemarkText {##2}
         #1
       }
