@@ -384,12 +384,12 @@
 \tl_const:Nn \g__tblr_data_cell_index_number_tl {2}
 \int_new:N \g__tblr_array_int
 
-\cs_new_protected:Npn \__tblr_initial_table_data:
+\cs_new_protected:Npn \__tblr_init_table_data:
   {
-    \clist_map_function:NN \g__tblr_data_clist \__tblr_initial_one_data:n
+    \clist_map_function:NN \g__tblr_data_clist \__tblr_init_one_data:n
   }
 
-\cs_new_protected:Npn \__tblr_initial_one_data:n #1
+\cs_new_protected:Npn \__tblr_init_one_data:n #1
   {
     \int_gincr:N \g__tblr_array_int
     \intarray_new:cn { g__tblr_#1_ \int_use:N \g__tblr_array_int _intarray }
@@ -2393,15 +2393,15 @@
     \LogTblrTracing { step = split ~ table}
     \__tblr_split_table:n {#3}
     \LogTblrTracing { command }
-    \LogTblrTracing { step = initial ~ table ~ outer ~ spec}
-    \__tblr_initial_table_outer_spec:
+    \LogTblrTracing { step = init ~ table ~ outer ~ spec}
+    \__tblr_init_table_outer_spec:
     \LogTblrTracing { outer }
     \LogTblrTracing { step = parse ~ table ~ options }
     \__tblr_parse_table_option:n {#1}
     \LogTblrTracing { option }
-    \bool_if:NT \g__tblr_use_intarray_bool { \__tblr_initial_table_data: }
-    \LogTblrTracing { step = initial ~ table ~ inner ~ spec}
-    \__tblr_initial_table_spec:
+    \bool_if:NT \g__tblr_use_intarray_bool { \__tblr_init_table_data: }
+    \LogTblrTracing { step = init ~ table ~ inner ~ spec}
+    \__tblr_init_table_inner_spec:
     \LogTblrTracing { inner }
     \LogTblrTracing { step = parse ~ table ~ inner ~ spec}
     \__tblr_parse_table_spec:n {#2}
@@ -2661,7 +2661,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Initial Table Inner Specifications}
+%%  \section{Initialize Table Inner Specifications}
 %%% --------------------------------------------------------
 
 \prop_gset_from_keyval:Nn \g__tblr_initial_table_prop
@@ -2710,7 +2710,7 @@
     @vline-count = 0,
   }
 
-\cs_new_protected:Npn \__tblr_initial_table_spec:
+\cs_new_protected:Npn \__tblr_init_table_inner_spec:
   {
     \prop_map_inline:Nn \g__tblr_initial_table_prop
       {
@@ -2834,10 +2834,10 @@
 \cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
 
 %%% --------------------------------------------------------
-%%  \section{Initial and Parse Table Outer Specifications}
+%%  \section{Initialize and Parse Table Outer Specifications}
 %%% --------------------------------------------------------
 
-\cs_new_protected:Npn \__tblr_initial_table_outer_spec:
+\cs_new_protected:Npn \__tblr_init_table_outer_spec:
   {
     \keys_set:nv { tblr-outer } { l__tblr_default_ \l__tblr_env_name_tl _outer_tl }
   }
