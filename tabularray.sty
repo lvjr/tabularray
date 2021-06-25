@@ -2352,41 +2352,27 @@
     \tl_put_right:cn { l__tblr_default_ #1 _outer_tl } { , #2 }
   }
 
-\tl_new:N \l__tblr_new_env_name_tl
-
 %% #1: env name; #2: env specs
-\NewDocumentCommand \NewTblrEnviron { m m }
+\NewDocumentCommand \NewTblrEnviron { m }
   {
     \tl_new:c { l__tblr_default_ #1 _outer_tl }
     \tl_set_eq:cN { l__tblr_default_ #1 _outer_tl } \l__tblr_initial_tblr_outer_tl
     \tl_new:c { l__tblr_default_ #1 _inner_tl }
-    \tl_set:Nn \l__tblr_new_env_name_tl {#1}
-    \keys_set:nn { new-tblr-env } {#2}
-    \NewDocumentEnvironment { \l__tblr_new_env_name_tl } { O{c} m +b }
+    \NewDocumentEnvironment {#1} { O{c} m +b }
       {
         \__tblr_environ_code:nnnn {#1} {##1} {##2} {##3}
       } { }
   }
 
-\keys_define:nn { new-tblr-env }
-  {
-    outer .code:n = \__tblr_new_env_set_outer:n {#1},
-    inner .code:n = \__tblr_new_env_set_inner:n {#1},
-  }
-
-\cs_new_protected:Npn \__tblr_new_env_set_outer:n #1
-  {
-    \SetTblrOuter[\l__tblr_new_env_name_tl]{#1}
-  }
-
-\cs_new_protected:Npn \__tblr_new_env_set_inner:n #1
-  {
-    \SetTblrInner[\l__tblr_new_env_name_tl]{#1}
-  }
+%% Create tblr and longtblr environments
+\NewTblrEnviron { tblr }
+\NewTblrEnviron { longtblr }
+\SetTblrOuter [ longtblr ] { long }
 
 \tl_new:N \l__tblr_env_name_tl
 \bool_new:N \l__tblr_math_mode_bool
 
+%% Main environment code
 \cs_new_protected:Npn \__tblr_environ_code:nnnn #1 #2 #3 #4
   {
     \int_gincr:N \g__tblr_table_count_int
@@ -2429,10 +2415,6 @@
     \__tblr_build_whole:
     \int_gdecr:N \g_tblr_level_int
   }
-
-%% Create tblr environment
-\NewTblrEnviron { tblr } {}
-\NewTblrEnviron { longtblr } { outer = { long } }
 
 %%% --------------------------------------------------------
 %%  \section{Split Table Contents}
