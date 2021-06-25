@@ -2942,10 +2942,13 @@
 
 \regex_const:Nn \c__tblr_option_key_name_regex { ^ [A-Za-z\-] + $ }
 
+\msg_new:nnn { tabularray } { unknown-outer-key }
+  { Unknown ~ outer ~ key ~ name ~ #1! }
+
 \cs_new_protected:Npn \__tblr_table_option_key:nn #1 #2
   {
     \regex_match:NnTF \c__tblr_option_key_name_regex {#1}
-      { \__tblr_keys_gput_option:nn {#1} {#2} }
+      { \msg_error:nnn { tabularray } { unknown-outer-key } {#1} }
       {
         \regex_extract_once:NnNT \c__tblr_split_key_name_regex {#1} \l_tmpa_seq
           {
