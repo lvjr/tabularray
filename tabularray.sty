@@ -129,9 +129,9 @@
     \prop_gclear_new:c { g__tblr_text_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_command_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_inner_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_option_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_note_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_remark_ \int_use:N \g_tblr_level_int _prop }
+    \prop_gclear_new:c { g__tblr_more_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_row_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_column_ \int_use:N \g_tblr_level_int _prop }
     \prop_gclear_new:c { g__tblr_cell_ \int_use:N \g_tblr_level_int _prop }
@@ -2857,6 +2857,9 @@
     presep  .code:n = \__tblr_outer_gput_spec:nn { presep }  {#1},
     postsep .code:n = \__tblr_outer_gput_spec:nn { postsep } {#1},
     theme   .code:n = \__tblr_use_theme:n {#1},
+    caption .code:n = \__tblr_outer_gput_spec:nn { caption } {#1},
+    entry   .code:n = \__tblr_outer_gput_spec:nn { entry } {#1},
+    label   .code:n = \__tblr_outer_gput_spec:nn { label } {#1},
     unknown .code:n = \__tblr_table_option_key:Vn \l_keys_key_str {#1},
   }
 
@@ -2886,12 +2889,6 @@
   }
 \cs_generate_variant:Nn \__tblr_table_option_key:nn { Vn }
 
-\cs_new_protected:Npn \__tblr_outer_gput_text:nn #1 #2
-  {
-    \__tblr_prop_gput:nnn { option } {#1} {#2}
-  }
-\cs_generate_variant:Nn \__tblr_outer_gput_text:nn { Vn }
-
 \cs_new_protected:Npn \__tblr_outer_gput_note:nn #1 #2
   {
     \__tblr_prop_gput:nnn { note } {#1} {#2}
@@ -2903,6 +2900,12 @@
     \__tblr_prop_gput:nnn { remark } {#1} {#2}
   }
 \cs_generate_variant:Nn \__tblr_outer_gput_remark:nn { Vn }
+
+\cs_new_protected:Npn \__tblr_outer_gput_more:nn #1 #2
+  {
+    \__tblr_prop_gput:nnn { more } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_outer_gput_more:nn { Vn }
 
 %%% --------------------------------------------------------
 %%  \section{Typeset and Calculate Sizes}
@@ -4261,7 +4264,12 @@
 
 \NewExpandableDocumentCommand \InsertTblrText { m }
   {
-    \__tblr_prop_item:nn { option } {#1}
+    \__tblr_spec_item:nn { outer } {#1}
+  }
+
+\NewExpandableDocumentCommand \InsertTblrMore { m }
+  {
+    \__tblr_prop_item:nn { more } {#1}
   }
 
 %%% --------------------------------------------------------
@@ -4272,7 +4280,7 @@
 
 \DefTblrTemplate { caption-lot } { normal }
   {
-    \tl_set:Nx \l__tblr_caption_short_tl { \InsertTblrText { capshort } }
+    \tl_set:Nx \l__tblr_caption_short_tl { \InsertTblrText { entry } }
     \tl_if_empty:NT \l__tblr_caption_short_tl
       { \tl_set:Nx \l__tblr_caption_short_tl { \InsertTblrText { caption } } }
     \addcontentsline { lot } { table }
@@ -4705,7 +4713,7 @@
     \__tblr_get_table_width:
     \__tblr_build_table_head_aux:Nn \l__tblr_table_firsthead_box
       {
-        \tl_set:Nn \l_tmpa_tl { \__tblr_prop_item:nn { option } { label } }
+        \tl_set:Nn \l_tmpa_tl { \InsertTblrText { label } }
         \tl_if_empty:NF \l_tmpa_tl { \exp_args:NV \label \l_tmpa_tl }
         \UseTblrTemplate { firsthead } { default }
       }
@@ -5631,9 +5639,9 @@
 
 \cs_new_protected:Npn \__tblr_log_tracing_option:
   {
-    \__tblr_prop_log:n { option }
     \__tblr_prop_log:n { note }
     \__tblr_prop_log:n { remark }
+    \__tblr_prop_log:n { more }
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_theme:
