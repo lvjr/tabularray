@@ -4075,11 +4075,11 @@
 
 \prop_new:N \l__tblr_element_styles_prop
 
-\cs_new_protected:Npn \__tblr_style_gput:nn #1 #2
+\cs_new_protected:Npn \__tblr_style_put:nn #1 #2
   {
-    \prop_gput:Nnn \l__tblr_element_styles_prop {#1} {#2}
+    \prop_put:Nnn \l__tblr_element_styles_prop {#1} {#2}
   }
-\cs_generate_variant:Nn \__tblr_style_gput:nn { nV, ne, en }
+\cs_generate_variant:Nn \__tblr_style_put:nn { nV, ne, en }
 
 \cs_new:Npn \__tblr_style_item:n #1
   {
@@ -4129,22 +4129,22 @@
 
 \cs_new_protected:Npn \__tblr_element_gput_style:nn #1 #2
   {
-    \__tblr_style_gput:en { \l__tblr_element_name_tl / #1 } {#2}
+    \__tblr_style_put:en { \l__tblr_element_name_tl / #1 } {#2}
   }
 
 \cs_new_protected:Npn \__tblr_element_unknown_key:nn #1 #2
   {
     \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
-      { \__tblr_style_gput:en { \l__tblr_element_name_tl / fg } {#1} }
+      { \__tblr_style_put:en { \l__tblr_element_name_tl / fg } {#1} }
       {
         %% unknown key name has been changed to string in \l_keys_key_str
         \tl_set_rescan:Nnn \l__tblr_f_tl {} {#1}
         \tl_if_head_eq_catcode:VNTF \l__tblr_f_tl \scan_stop:
           {
-            \__tblr_style_gput:en { \l__tblr_element_name_tl / font } \l__tblr_f_tl
+            \__tblr_style_put:en { \l__tblr_element_name_tl / font } \l__tblr_f_tl
           }
           {
-            \__tblr_style_gput:en { \l__tblr_element_name_tl / #1 } {#2}
+            \__tblr_style_put:en { \l__tblr_element_name_tl / #1 } {#2}
           }
       }
   }
