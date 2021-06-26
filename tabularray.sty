@@ -2830,96 +2830,26 @@
 
 \keys_define:nn { tblr-outer }
   {
-    long         .code:n = \__tblr_outer_gput_spec:nn { long } {true},
-    halign       .code:n = \__tblr_outer_gput_spec:nn { halign } {#1},
-    valign       .code:n = \__tblr_outer_gput_spec:nn { valign } {#1},
-    l            .meta:n = { halign = l },
-    c            .meta:n = { halign = c },
-    r            .meta:n = { halign = r },
-    t            .meta:n = { valign = t },
-    m            .meta:n = { valign = m },
-    b            .meta:n = { valign = b },
-    headsep      .code:n = \__tblr_outer_gput_spec:nn { headsep } {#1},
-    footsep      .code:n = \__tblr_outer_gput_spec:nn { footsep } {#1},
-    presep       .code:n = \__tblr_outer_gput_spec:nn { presep }  {#1},
-    postsep      .code:n = \__tblr_outer_gput_spec:nn { postsep } {#1},
-    caption      .code:n = \__tblr_parse_element_keys:nn { caption } {#1},
-    caption-tag  .code:n = \__tblr_parse_element_keys:nn { caption-tag } {#1},
-    caption-sep  .code:n = \__tblr_parse_element_keys:nn { caption-sep }  {#1},
-    caption-text .code:n = \__tblr_parse_element_keys:nn { caption-text } {#1},
-    conthead     .code:n = \__tblr_parse_element_keys:nn { conthead } {#1},
-    contfoot     .code:n = \__tblr_parse_element_keys:nn { contfoot } {#1},
-    note         .code:n = \__tblr_parse_element_keys:nn { note } {#1},
-    note-tag     .code:n = \__tblr_parse_element_keys:nn { note-tag } {#1},
-    note-sep     .code:n = \__tblr_parse_element_keys:nn { note-sep } {#1},
-    note-text    .code:n = \__tblr_parse_element_keys:nn { note-text } {#1},
-    remark       .code:n = \__tblr_parse_element_keys:nn { remark } {#1},
-    remark-tag   .code:n = \__tblr_parse_element_keys:nn { remark-tag } {#1},
-    remark-sep   .code:n = \__tblr_parse_element_keys:nn { remark-sep } {#1},
-    remark-text  .code:n = \__tblr_parse_element_keys:nn { remark-text } {#1},
-    firsthead    .code:n = \__tblr_parse_element_keys:nn { firsthead } {#1},
-    middlehead   .code:n = \__tblr_parse_element_keys:nn { middlehead } {#1},
-    lasthead     .code:n = \__tblr_parse_element_keys:nn { lasthead } {#1},
-    firstfoot    .code:n = \__tblr_parse_element_keys:nn { firstfoot } {#1},
-    middlefoot   .code:n = \__tblr_parse_element_keys:nn { middlefoot } {#1},
-    lastfoot     .code:n = \__tblr_parse_element_keys:nn { lastfoot } {#1},
-    head         .meta:n = { firsthead, middlehead, lasthead },
-    foot         .meta:n = { firstfoot, middlefoot, lastfoot },
-    unknown  .code:n = \__tblr_table_option_key:Vn \l_keys_key_str {#1},
+    long    .code:n = \__tblr_outer_gput_spec:nn { long } {true},
+    halign  .code:n = \__tblr_outer_gput_spec:nn { halign } {#1},
+    valign  .code:n = \__tblr_outer_gput_spec:nn { valign } {#1},
+    l       .meta:n = { halign = l },
+    c       .meta:n = { halign = c },
+    r       .meta:n = { halign = r },
+    t       .meta:n = { valign = t },
+    m       .meta:n = { valign = m },
+    b       .meta:n = { valign = b },
+    headsep .code:n = \__tblr_outer_gput_spec:nn { headsep } {#1},
+    footsep .code:n = \__tblr_outer_gput_spec:nn { footsep } {#1},
+    presep  .code:n = \__tblr_outer_gput_spec:nn { presep }  {#1},
+    postsep .code:n = \__tblr_outer_gput_spec:nn { postsep } {#1},
+    unknown .code:n = \__tblr_table_option_key:Vn \l_keys_key_str {#1},
   }
 
 \cs_new_protected:Npn \__tblr_outer_gput_spec:nn #1 #2
   {
     \__tblr_spec_gput:nen { outer } {#1} {#2}
   }
-
-\keys_define:nn { tblr-element }
-  {
-    halign  .code:n = \__tblr_outer_gput_element:nn { halign } {#1},
-    l       .meta:n = { halign = l },
-    c       .meta:n = { halign = c },
-    r       .meta:n = { halign = r },
-    fg      .code:n = \__tblr_outer_gput_element:nn { fg } {#1},
-    font    .code:n = \__tblr_outer_gput_element:nn { font } {#1},
-    unknown .code:n = \__tblr_element_unknown_key:Vn \l_keys_key_str {#1},
-  }
-
-\tl_new:N \l__tblr_outer_element_name_tl
-
-\cs_new_protected:Npn \__tblr_parse_element_keys:nn #1 #2
-  {
-    \tl_set:Nn \l__tblr_outer_element_name_tl {#1}
-    \keys_set:nn { tblr-element } {#2}
-  }
-
-\cs_new_protected:Npn \__tblr_outer_gput_element:nn #1 #2
-  {
-    \__tblr_spec_gput:nen { outer }
-      { \l__tblr_outer_element_name_tl / #1 } {#2}
-  }
-
-\cs_new_protected:Npn \__tblr_element_unknown_key:nn #1 #2
-  {
-    \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
-      {
-        \__tblr_spec_gput:nen { outer }
-          { \l__tblr_outer_element_name_tl / fg } {#1}
-      }
-      {
-        %% unknown key name has been changed to string in \l_keys_key_str
-        \tl_set_rescan:Nnn \l__tblr_f_tl {} {#1}
-        \tl_if_head_eq_catcode:VNTF \l__tblr_f_tl \scan_stop:
-          {
-            \__tblr_spec_gput:neV { outer }
-              { \l__tblr_outer_element_name_tl / font } \l__tblr_f_tl
-          }
-          {
-            \__tblr_spec_gput:nen { outer }
-              { \l__tblr_outer_element_name_tl / #1 } {#2}
-          }
-      }
-  }
-\cs_generate_variant:Nn \__tblr_element_unknown_key:nn { Vn }
 
 \regex_const:Nn \c__tblr_option_key_name_regex { ^ [A-Za-z\-] + $ }
 
@@ -4126,6 +4056,87 @@
 \cs_generate_variant:Nn \__tblr_calc_span_widths:nnN { xxN }
 
 %%% --------------------------------------------------------
+%%> \section{Header and Footer Styles}
+%%% --------------------------------------------------------
+
+\prop_new:N \l__tblr_element_styles_prop
+
+\cs_new_protected:Npn \__tblr_style_gput:nn #1 #2
+  {
+    \prop_gput:Nnn \l__tblr_element_styles_prop {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_style_gput:nn { nV, ne, en }
+
+\cs_new:Npn \__tblr_style_item:n #1
+  {
+    \prop_item:Nn \l__tblr_element_styles_prop {#1}
+  }
+
+\cs_new_protected:Npn \__tblr_style_log:
+  {
+    \prop_log:N \l__tblr_element_styles_prop
+  }
+
+\tl_new:N \l__tblr_element_name_tl
+\tl_new:N \l__tblr_element_styles_tl
+
+%% #1: list of element names; #2: element styles
+\NewDocumentCommand \SetTblrStyle { m +m }
+  {
+    \tl_set:Nn \l__tblr_element_styles_tl {#2}
+    \keys_set:nn { tblr-element } {#1}
+    \ignorespaces
+  }
+
+\keys_define:nn { tblr-element }
+  {
+    head    .meta:n = { firsthead, middlehead, lasthead },
+    foot    .meta:n = { firstfoot, middlefoot, lastfoot },
+    unknown .code:n = \__tblr_set_element_styles:V \l_keys_key_str,
+  }
+
+\cs_new_protected:Npn \__tblr_set_element_styles:n #1
+  {
+    \tl_set:Nn \l__tblr_element_name_tl {#1}
+    \keys_set:nV { tblr-style } \l__tblr_element_styles_tl
+  }
+\cs_generate_variant:Nn \__tblr_set_element_styles:n { V }
+
+\keys_define:nn { tblr-style }
+  {
+    halign  .code:n = \__tblr_element_gput_style:nn { halign } {#1},
+    l       .meta:n = { halign = l },
+    c       .meta:n = { halign = c },
+    r       .meta:n = { halign = r },
+    fg      .code:n = \__tblr_element_gput_style:nn { fg } {#1},
+    font    .code:n = \__tblr_element_gput_style:nn { font } {#1},
+    unknown .code:n = \__tblr_element_unknown_key:Vn \l_keys_key_str {#1},
+  }
+
+\cs_new_protected:Npn \__tblr_element_gput_style:nn #1 #2
+  {
+    \__tblr_style_gput:en { \l__tblr_element_name_tl / #1 } {#2}
+  }
+
+\cs_new_protected:Npn \__tblr_element_unknown_key:nn #1 #2
+  {
+    \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+      { \__tblr_style_gput:en { \l__tblr_element_name_tl / fg } {#1} }
+      {
+        %% unknown key name has been changed to string in \l_keys_key_str
+        \tl_set_rescan:Nnn \l__tblr_f_tl {} {#1}
+        \tl_if_head_eq_catcode:VNTF \l__tblr_f_tl \scan_stop:
+          {
+            \__tblr_style_gput:en { \l__tblr_element_name_tl / font } \l__tblr_f_tl
+          }
+          {
+            \__tblr_style_gput:en { \l__tblr_element_name_tl / #1 } {#2}
+          }
+      }
+  }
+\cs_generate_variant:Nn \__tblr_element_unknown_key:nn { Vn }
+
+%%% --------------------------------------------------------
 %%> \section{Helper Functions for Templates}
 %%% --------------------------------------------------------
 
@@ -4175,15 +4186,14 @@
 
 \NewDocumentCommand \UseTblrFont { m }
   {
-    \__tblr_spec_item:nn { outer } { #1 / font } \selectfont
+    \__tblr_style_item:n { #1 / font } \selectfont
   }
 
 \tl_new:N \l__tblr_use_color_tl
 
 \NewDocumentCommand \UseTblrColor { m }
   {
-    \tl_set:Nx \l__tblr_use_color_tl
-      { \__tblr_spec_item:nn { outer } { #1 / fg } }
+    \tl_set:Nx \l__tblr_use_color_tl { \__tblr_style_item:n { #1 / fg } }
     \tl_if_empty:NF \l__tblr_use_color_tl { \color { \l__tblr_use_color_tl } }
   }
 
@@ -4208,9 +4218,9 @@
     \group_end:
   }
 
-\NewExpandableDocumentCommand \GetTblrValue { m }
+\NewExpandableDocumentCommand \GetTblrStyle { m }
   {
-    \__tblr_spec_item:nn { outer } {#1}
+    \__tblr_style_item:n {#1}
   }
 
 \NewDocumentCommand \MapTblrNotes { +m }
@@ -5471,6 +5481,7 @@
 \bool_new:N \g__tblr_tracing_text_bool
 \bool_new:N \g__tblr_tracing_command_bool
 \bool_new:N \g__tblr_tracing_option_bool
+\bool_new:N \g__tblr_tracing_theme_bool
 \bool_new:N \g__tblr_tracing_outer_bool
 \bool_new:N \g__tblr_tracing_inner_bool
 \bool_new:N \g__tblr_tracing_column_bool
@@ -5496,6 +5507,8 @@
     -command .code:n = \bool_gset_false:N \g__tblr_tracing_command_bool,
     +option .code:n = \bool_gset_true:N \g__tblr_tracing_option_bool,
     -option .code:n = \bool_gset_false:N \g__tblr_tracing_option_bool,
+    +theme .code:n = \bool_gset_true:N \g__tblr_tracing_theme_bool,
+    -theme .code:n = \bool_gset_false:N \g__tblr_tracing_theme_bool,
     +outer .code:n = \bool_gset_true:N \g__tblr_tracing_outer_bool,
     -outer .code:n = \bool_gset_false:N \g__tblr_tracing_outer_bool,
     +inner .code:n = \bool_gset_true:N \g__tblr_tracing_inner_bool,
@@ -5533,6 +5546,7 @@
     \bool_gset_true:N \g__tblr_tracing_text_bool
     \bool_gset_true:N \g__tblr_tracing_command_bool
     \bool_gset_true:N \g__tblr_tracing_option_bool
+    \bool_gset_true:N \g__tblr_tracing_theme_bool
     \bool_gset_true:N \g__tblr_tracing_outer_bool
     \bool_gset_true:N \g__tblr_tracing_inner_bool
     \bool_gset_true:N \g__tblr_tracing_column_bool
@@ -5554,6 +5568,7 @@
     \bool_gset_false:N \g__tblr_tracing_text_bool
     \bool_gset_false:N \g__tblr_tracing_command_bool
     \bool_gset_false:N \g__tblr_tracing_option_bool
+    \bool_gset_false:N \g__tblr_tracing_theme_bool
     \bool_gset_false:N \g__tblr_tracing_outer_bool
     \bool_gset_false:N \g__tblr_tracing_inner_bool
     \bool_gset_false:N \g__tblr_tracing_column_bool
@@ -5603,6 +5618,11 @@
     \__tblr_prop_log:n { option }
     \__tblr_prop_log:n { note }
     \__tblr_prop_log:n { remark }
+  }
+
+\cs_new_protected:Npn \__tblr_log_tracing_theme:
+  {
+    \__tblr_style_log:
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_outer:
