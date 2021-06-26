@@ -4,7 +4,7 @@ module = "tabularray"
 sourcefiles = {"tabularray.sty"}
 
 checkengines = {"pdftex","xetex"}
-checkruns = 1
+checkruns = 2
 
 lvtext = ".tex"
 
