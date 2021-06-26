@@ -2324,6 +2324,7 @@
 \NewDocumentCommand \SetTblrInner { O{tblr} m }
   {
     \tl_put_right:cn { l__tblr_default_ #1 _inner_tl } { , #2 }
+    \ignorespaces
   }
 \cs_new_eq:NN \SetTblrDefault \SetTblrInner
 
@@ -2331,10 +2332,11 @@
 \NewDocumentCommand \SetTblrOuter { O{tblr} m }
   {
     \tl_put_right:cn { l__tblr_default_ #1 _outer_tl } { , #2 }
+    \ignorespaces
   }
 
-%% #1: env name; #2: env specs
-\NewDocumentCommand \NewTblrEnviron { m }
+%% #1: env name; #2: env spec commands
+\NewDocumentCommand \NewTblrEnviron { m +m }
   {
     \tl_new:c { l__tblr_default_ #1 _outer_tl }
     \tl_set_eq:cN { l__tblr_default_ #1 _outer_tl } \l__tblr_initial_tblr_outer_tl
@@ -2343,12 +2345,12 @@
       {
         \__tblr_environ_code:nnnn {#1} {##1} {##2} {##3}
       } { }
+    \ignorespaces #2
   }
 
 %% Create tblr and longtblr environments
-\NewTblrEnviron { tblr }
-\NewTblrEnviron { longtblr }
-\SetTblrOuter [ longtblr ] { long }
+\NewTblrEnviron { tblr } { }
+\NewTblrEnviron { longtblr } { \SetTblrOuter [ longtblr ] { long } }
 
 \tl_new:N \l__tblr_env_name_tl
 \bool_new:N \l__tblr_math_mode_bool
