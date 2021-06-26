@@ -4170,11 +4170,12 @@
     \tl_set:Nn \l__tblr_template_name_tl {#2}
     \tl_set:Nn \l__tblr_template_code_tl {#3}
     \keys_set:nn { tblr-def-template } {#1}
+    \ignorespaces
   }
 
 \cs_new_protected:Npn \__tblr_def_template:n #1
   {
-    \tl_gset_eq:cN { g__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+    \tl_set_eq:cN { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
       \l__tblr_template_code_tl
   }
 \cs_generate_variant:Nn \__tblr_def_template:n { V }
@@ -4189,12 +4190,13 @@
   {
     \tl_set:Nn \l__tblr_template_name_tl {#2}
     \keys_set:nn { tblr-set-template } {#1}
+    \ignorespaces
   }
 
 \cs_new_protected:Npn \__tblr_set_template:n #1
   {
-    \tl_gset_eq:cc { g__tblr_template_ #1 _default_tl }
-      { g__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+    \tl_set_eq:cc { l__tblr_template_ #1 _default_tl }
+      { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
   }
 \cs_generate_variant:Nn \__tblr_set_template:n { V }
 
@@ -4219,7 +4221,7 @@
 %% #1: head/foot element; #2: template name
 \NewExpandableDocumentCommand \ExpTblrTemplate { m m }
   {
-    \tl_use:c { g__tblr_template_ #1 _ #2 _tl }
+    \tl_use:c { l__tblr_template_ #1 _ #2 _tl }
   }
 
 %% #1: head/foot element; #2: template name
@@ -4228,7 +4230,7 @@
     \group_begin:
     \UseTblrFont {#1}
     \UseTblrColor {#1}
-    \tl_use:c { g__tblr_template_ #1 _ #2 _tl }
+    \tl_use:c { l__tblr_template_ #1 _ #2 _tl }
     \group_end:
   }
 
