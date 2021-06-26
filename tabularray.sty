@@ -2818,6 +2818,19 @@
 %%  \section{Initialize and Parse Table Outer Specifications}
 %%% --------------------------------------------------------
 
+%% #1: theme names; #2: template and style commands
+\NewDocumentCommand \NewTblrTheme { m +m }
+  {
+    \tl_set:cn { g__tblr_theme_ #1 _code_tl } {#2}
+    \ignorespaces
+  }
+
+\cs_new_protected:Npn \__tblr_use_theme:n #1
+  {
+    \ignorespaces
+    \tl_use:c { g__tblr_theme_ #1 _code_tl }
+  }
+
 \cs_new_protected:Npn \__tblr_init_table_outer_spec:
   {
     \keys_set:nv { tblr-outer } { l__tblr_default_ \l__tblr_env_name_tl _outer_tl }
@@ -2843,6 +2856,7 @@
     footsep .code:n = \__tblr_outer_gput_spec:nn { footsep } {#1},
     presep  .code:n = \__tblr_outer_gput_spec:nn { presep }  {#1},
     postsep .code:n = \__tblr_outer_gput_spec:nn { postsep } {#1},
+    theme   .code:n = \__tblr_use_theme:n {#1},
     unknown .code:n = \__tblr_table_option_key:Vn \l_keys_key_str {#1},
   }
 
