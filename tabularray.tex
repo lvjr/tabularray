@@ -1149,6 +1149,299 @@ and \verb!\SetTblrTracing{none}! will turn off all tracings.
 \verb!\SetTblrTracing{+row,+column}! will only tracing row and column data.
 All tracing messages will be written to the log files.
 
+\chapter{Use Long Tables}
+
+\begin{tcolorbox}
+The interfaces in this chapter should be seen as \experimental
+and are likely to change in future releases, if necessary.
+Don’t use them in important documents.
+\end{tcolorbox}
+
+\section{A Simple Example}
+
+In fact, to make a decent long table with header and footer, it is better to separate header/footer as
+\underline{table head/foot} (which includes caption, footnotes, continuation text)
+and \underline{row head/foot} (which includes some rows of the table that should appear in every page).
+By this approch, alternating row colors should work as expected.
+
+\NewTblrTheme{fancy}{
+  \SetTblrStyle{firsthead}{font=\bfseries}
+  \SetTblrStyle{firstfoot}{fg=blue2}
+  \SetTblrStyle{middlefoot}{\itshape}
+  \SetTblrStyle{caption-tag}{red2}
+}
+\begin{longtblr}[
+  theme = fancy,
+  caption = {A Long Long Long Long Long Long Long Table},
+  entry = {Short Caption},
+  label = {tblr:test},
+  note{a} = {It is the first footnote.},
+  note{$\dag$} = {It is the second long long long long long long footnote.},
+  remark{Note} = {Some general note. Some general note. Some general note.},
+  remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
+]{
+  colspec = {XXX}, width = 0.85\linewidth,
+  row{odd} = {gray8}, rowhead = 2, rowfoot = 1,
+}
+\hline
+ \SetRow{purple7} Head & Head & Head \\
+\hline
+ \SetRow{purple7} Head & Head & Head \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta\TblrNote{a} & Eta \\
+\hline
+ Iota    & Kappa\TblrNote{$\dag$} & Lambda \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma\footnote{Hello}   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+%\hline
+% Alpha   & Beta  & Gamma   \\
+%\hline
+% Epsilon & Zeta  & Eta     \\
+%\hline
+% Iota    & Kappa & Lambda  \\
+%\hline
+% Nu      & Xi    & Omicron \\
+%\hline
+% Rho     & Sigma & Tau     \\
+%\hline
+% Phi     & Chi   & Psi     \\
+\hline
+ \SetRow{blue7} Foot & Foot & Foot \\
+\hline
+\end{longtblr}
+
+As you can see in the above example, the appearance of long tables of \verb!tabularray! package
+are similar to that of \verb!threeparttable! and \verb!threeparttablex! packages.
+We support table footnotes, but not page footnotes in \verb!tabularray! package.
+
+Table head consists of the caption and the last table foot consists of footnotes and remarks by default.
+We can customize both of them to make them include other text, or appear in different pages.
+
+\newpage
+
+The source code for the above long table is shown below. It is mainly self-explanatory.
+
+\begin{codehigh}
+\NewTblrTheme{fancy}{
+  \SetTblrStyle{firsthead}{font=\bfseries}
+  \SetTblrStyle{firstfoot}{fg=blue2}
+  \SetTblrStyle{middlefoot}{\itshape}
+  \SetTblrStyle{caption-tag}{red2}
+}
+\begin{longtblr}[
+  theme = fancy,
+  caption = {A Long Long Long Long Long Long Long Table},
+  entry = {Short Caption},
+  label = {tblr:test},
+  note{a} = {It is the first footnote.},
+  note{$\dag$} = {It is the second long long long long long long footnote.},
+  remark{Note} = {Some general note. Some general note. Some general note.},
+  remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
+]{
+  colspec = {XXX}, width = 0.85\linewidth,
+  row{odd} = {gray8}, rowhead = 2, rowfoot = 1,
+}
+\hline
+ \SetRow{purple7} Head & Head & Head \\
+\hline
+ \SetRow{purple7} Head & Head & Head \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta\TblrNote{a} & Eta \\
+\hline
+ Iota    & Kappa\TblrNote{$\dag$} & Lambda \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+......
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ \SetRow{blue7} Foot & Foot & Foot \\
+\hline
+\end{longtblr}
+\end{codehigh}
+
+Row head and row foot consist of some lines of the table and should appear in every page.
+In the above code, We add \verb!rowhead=2! and \verb!rowfoot=1! to set the total lines of row head and row foot.
+
 \chapter{Use Some Libraries}
 
 \begin{tcolorbox}
