@@ -1181,7 +1181,7 @@ By this approch, alternating row colors should work as expected.
   remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
 ]{
   colspec = {XXX}, width = 0.85\linewidth,
-  row{odd} = {gray8}, rowhead = 2, rowfoot = 1,
+  row{odd} = {gray9}, row{even} = {brown9}, rowhead = 2, rowfoot = 1,
 }
 \hline
  \SetRow{purple7} Head & Head & Head \\
@@ -1401,7 +1401,7 @@ The source code for the above long table is shown below. It is mainly self-expla
   remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
 ]{
   colspec = {XXX}, width = 0.85\linewidth,
-  row{odd} = {gray8}, rowhead = 2, rowfoot = 1,
+  row{odd} = {gray9}, row{even} = {brown9}, rowhead = 2, rowfoot = 1,
 }
 \hline
  \SetRow{purple7} Head & Head & Head \\
@@ -1441,6 +1441,210 @@ The source code for the above long table is shown below. It is mainly self-expla
 
 Row head and row foot consist of some lines of the table and should appear in every page.
 In the above code, We add \verb!rowhead=2! and \verb!rowfoot=1! to set the total lines of row head and row foot.
+
+\section{Customize Templates}
+
+\subsection{Overview of Templates}
+
+The template system for table heads and table foots in \verb!tabularray! is largely inspired by \verb!beamer!,
+\verb!caption! and \verb!longtable! packages. You can use \verb!\DefTblrTemplate! command to define and
+modify templates, and \verb!\SetTblrTemplate! command to choose default templates. In defining templates,
+you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrTemplate! commands.
+
+\begin{longtblr}[
+  caption = {Templates for Headers and Footers}
+]{
+  hlines = {white},
+  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
+  column{2} = {co=1},
+  rowhead = 1,
+}
+  Template Name    & Template Description \\
+  \V{contfoot}     & continuation text in the foot, normally ``Continued on next page'' \\
+  \V{conthead}     & continuation text in the head, normally ``(Continued)'' \\
+  \V{caption-tag}  & caption tag, normally like ``Table 4.2'' \\
+  \V{caption-sep}  & caption separator, normally like ``:\quad'' \\
+  \V{caption-text} & caption text, normally using user provided value \\
+  \V{caption}      & including \V{caption-tag} + \V{caption-sep} + \V{caption-text} \\
+  \V{note-tag}     & note tag, normally using user provided value \\
+  \V{note-sep}     & note separator, normally like ``\enskip'' \\
+  \V{note-text}    & note tag, normally using user provided value \\
+  \V{note}         & including \V{note-tag} + \V{note-sep} + \V{note-text} \\
+  \V{remark-tag}   & remark tag, normally using user provided value \\
+  \V{remark-sep}   & remark separator, normally like ``:\enskip'' \\
+  \V{remark-text}  & remark text, normally using user provided value\\
+  \V{remark}       & including \V{remark-tag} + \V{remark-sep} + \V{remark-text} \\
+  \V{firsthead}    & table head on the first page, normally including \V{caption} template \\
+  \V{middlehead}   & table head on middle pages, normally including \V{caption} and \V{conthead} templates \\
+  \V{lasthead}     & table head on the last page, normally including \V{caption} and \V{conthead} templates \\
+  \V{head}         & setting all of \V{firsthead}, \V{middlehead} and \V{lasthead} \\
+  \V{firstfoot}    & table foot on the first page, normally including \V{contfoot} template \\
+  \V{middlefoot}   & table foot on middle pages, normally including \V{contfoot} template \\
+  \V{lastfoot}     & table foot on the last page, normally including \V{note} and \V{remark} templates \\
+  \V{foot}         & setting all of \V{firstfoot}, \V{middlefoot} and \V{lastfoot} \\
+\end{longtblr}
+
+\subsection{Continuation Templates}
+
+Let us have a look at the code for defining templates of continuation text first:
+
+\begin{codehigh}
+\DefTblrTemplate{contfoot}{normal}{Continued on next page}
+\SetTblrTemplate{contfoot}{normal}
+\DefTblrTemplate{conthead}{normal}{(Continued)}
+\SetTblrTemplate{conthead}{normal}
+\end{codehigh}
+
+In the above code, command \verb!\DefTblrTemplate! defines the templates with name \verb!normal!,
+and then command \verb!\SetTblrTemplate! sets the templates with name \verb!normal! as default.
+The \verb!normal! template is always defined and set as default for any template element in \verb!tabularray!.
+Therefore you had better use another name when defining new templates.
+
+If you use \verb!default! as template name in \verb!\DefTblrTemplate!,
+you define and set it as default at the same time.
+Therefore the above code can be written in another way:
+
+\begin{codehigh}
+\DefTblrTemplate{contfoot}{default}{Continued on next page}
+\DefTblrTemplate{conthead}{default}{(Continued)}
+\end{codehigh}
+
+You may modify the code to customize continuation text to fit your needs.
+
+\subsection{Caption Templates}
+
+Normally a caption consists of three parts, and their templates are defined with the follow code:
+
+\begin{codehigh}
+\DefTblrTemplate{caption-tag}{default}{Table\hspace{0.25em}\thetable}
+\DefTblrTemplate{caption-sep}{default}{:\enskip}
+\DefTblrTemplate{caption-text}{default}{\InsertTblrText{caption}}
+\end{codehigh}
+
+The command \verb!\InsertTblrText{caption}! inserts the value of \verb!caption! key,
+which you could write in the optional argument of \verb!longtblr! environment.
+
+The \verb!caption! template normally includes three sub templates with \verb!\UseTblrTemplate! commands:
+The \verb!caption! template will be used in \verb!firsthead! template.
+
+\begin{codehigh}
+\DefTblrTemplate{caption}{default}{
+  \UseTblrTemplate{caption-tag}{default}
+  \UseTblrTemplate{caption-sep}{default}
+  \UseTblrTemplate{caption-text}{default}
+}
+\end{codehigh}
+
+Furthermore \verb!capcont! template includes \verb!conthead! template as well.
+The \verb!capcont! template will be used in \verb!middlehead! and \verb!lasthead! templates.
+
+\begin{codehigh}
+\DefTblrTemplate{capcont}{default}{
+  \UseTblrTemplate{caption-tag}{default}
+  \UseTblrTemplate{caption-sep}{default}
+  \UseTblrTemplate{caption-text}{default}
+  \UseTblrTemplate{conthead}{default}
+}
+\end{codehigh}
+
+\subsection{Note and Remark Templates}
+
+The templates for table notes can be defined like this:
+
+\begin{codehigh}
+\DefTblrTemplate{note-tag}{default}{\textsuperscript{\InsertTblrNoteTag}}
+\DefTblrTemplate{note-sep}{default}{\space}
+\DefTblrTemplate{note-text}{default}{\InsertTblrNoteText}
+\DefTblrTemplate{note}{default}{
+  \MapTblrNotes{
+    \noindent
+    \UseTblrTemplate{note-tag}{default}
+    \UseTblrTemplate{note-sep}{default}
+    \UseTblrTemplate{note-text}{default}
+    \par
+  }
+}
+\end{codehigh}
+
+The \verb!\MapTblrNotes! command loops for all table notes,
+which are written in the optional argument of \verb!longtblr! environment.
+Inside the loop, you can use \verb!\InsertTblrNoteTag! and \verb!\InsertTblrNoteText!
+commands to insert current note tag and note text, respectively.
+
+The definition of remark templates are similar to note templates.
+\nopagebreak
+\begin{codehigh}
+\DefTblrTemplate{remark-tag}{default}{\InsertTblrRemarkTag}
+\DefTblrTemplate{remark-sep}{default}{:\space}
+\DefTblrTemplate{remark-text}{default}{\InsertTblrRemarkText}
+\DefTblrTemplate{remark}{default}{
+  \MapTblrRemarks{
+    \noindent
+    \UseTblrTemplate{remark-tag}{default}
+    \UseTblrTemplate{remark-sep}{default}
+    \UseTblrTemplate{remark-text}{default}
+    \par
+  }
+}
+\end{codehigh}
+
+\subsection{Head and Foot Templates}
+
+The templates for table heads and foots are defined as including other templates:
+
+\begin{codehigh}
+\DefTblrTemplate{firsthead}{default}{
+  \UseTblrTemplate{caption}{default}
+}
+\DefTblrTemplate{middlehead,lasthead}{default}{
+  \UseTblrTemplate{capcont}{default}
+}
+\DefTblrTemplate{firstfoot,middlefoot}{default}{
+  \UseTblrTemplate{contfoot}{default}
+}
+\DefTblrTemplate{lastfoot}{default}{
+  \UseTblrTemplate{note}{default}
+  \UseTblrTemplate{remark}{default}
+}
+\end{codehigh}
+
+Note that you can define the same template for multiple elements in \verb!\DefTblrTemplate! command.
+
+\section{Change Styles}
+
+You may change the styles of template elements.
+At this moment, foreground colors and font commands are supported.
+And in most cases the keys \verb!fg! and \verb!font! can be omitted.
+
+\begin{codehigh}
+\SetTblrStyle{firsthead}{font=\bfseries}
+\SetTblrStyle{firstfoot}{fg=blue2}
+\SetTblrStyle{middlefoot}{\itshape}
+\SetTblrStyle{caption-tag}{red2}
+\end{codehigh}
+
+When you write \verb!\UseTblrTemplate{element}{default}! in defining a template,
+beside including the code of template \verb!element!, the foreground color and font commands
+of the template \verb!element! will be set up automatically.
+In contrast, \verb!\ExpTblrTemplate{element}{default}! will only include template code.
+
+\section{Define Themes}
+
+You may define your own themes for table heads and foots with \verb!\NewTblrTheme! command.
+a theme consists of some template and style settings. For example:
+\nopagebreak
+\begin{codehigh}
+\NewTblrTheme{fancy}{
+  \DefTblrTemplate{conthead}{default}{[Continued]}
+  \SetTblrStyle{firsthead}{font=\bfseries}
+  \SetTblrStyle{firstfoot}{fg=blue2}
+  \SetTblrStyle{middlefoot}{\itshape}
+  \SetTblrStyle{caption-tag}{red2}
+}
+\end{codehigh}
+
+After defining the theme \verb!fancy!, you can use it
+by writing \verb!theme=fancy! in the optional argument of \verb!longtblr! environment.
 
 \chapter{Use Some Libraries}
 
