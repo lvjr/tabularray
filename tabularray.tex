@@ -490,7 +490,7 @@ Also, new table commands \textcolor{red3}{must} be defined with \verb!\NewTableC
 \section{Hline Commands}
 
 The \verb!\hline! command has an optional argument which accepts key-value options.
-The available keys are the same as Table \ref{key:hvline}.
+The available keys are described in Table \ref{key:hvline}.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -535,7 +535,7 @@ You can use child selectors in the mandatory argument of \verb!\cline!.
 \section{Cell Commands}
 
 The \verb!\SetCell! command has a mandatory argument for setting the styles of current cell.
-The available keys are the same as Table \ref{key:cell}.
+The available keys are described in Table \ref{key:cell}.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -550,7 +550,7 @@ The available keys are the same as Table \ref{key:cell}.
 \end{demohigh}
 
 The \verb!\SetCell! command also has an optional argument for setting the multispan of current cell.
-The available keys are the same as Table \ref{key:cellspan}.
+The available keys are described in Table \ref{key:cellspan}.
 
 \begin{demohigh}
 \begin{tblr}{|X|X|X|X|X|X|}
@@ -572,7 +572,7 @@ The available keys are the same as Table \ref{key:cellspan}.
 \section{Row Commands}
 
 The \verb!\SetRow! command has a mandatory argument for setting the styles of current row.
-The available keys are the same as Table \ref{key:row}.
+The available keys are described in Table \ref{key:row}.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -648,13 +648,12 @@ With \verb!tabularray! package, you can separate style and content totally in ta
 \section{Hlines and Vlines}
 
 All available keys for hlines and vlines are described in Table \ref{key:hvline}.
-In mose cases, you can omit the underlined key names and write only their values.
 
-%\begin{center}
-\begin{table}[H]
-\caption{Keys for Hlines and Vlines}
-\label{key:hvline}
-\begin{tblr}{
+\begin{longtblr}[
+  caption = {Keys for Hlines and Vlines},
+  label = {key:hvline},
+  remark{Note} = {In mose cases, you can omit the underlined key names and write only their values.}
+]{
   hlines = {white},
   row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
   column{2} = {co=1},
@@ -664,9 +663,7 @@ In mose cases, you can omit the underlined key names and write only their values
     & dash style: \V{solid}, \V{dashed} or \V{dotted} & \V{solid} \\
   \underline{\K{wd}} & rule width dimension & None \\
   \underline{\K{fg}} & rule color name & None \\
-\end{tblr}
-\end{table}
-%\end{center}
+\end{longtblr}
 
 Options \verb!hlines! and \verb!vlines! are for setting all hlines and vlines, respectively.
 With empty value, all hlines/vlines will be solid.
@@ -768,13 +765,12 @@ Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlin
 \section{Cells and Spancells}
 
 All available keys for cells are described in Table \ref{key:cell} and Table \ref{key:cellspan}.
-In mose cases, you can omit the underlined key names and write only their values.
-
-%\begin{center}
-\begin{table}[H]
-\caption{Keys for the Content of Cells}
-\label{key:cell}
-\begin{tblr}{
+\nopagebreak
+\begin{longtblr}[
+  caption = {Keys for the Content of Cells},
+  label = {key:cell},
+  remark{Note} = {In mose cases, you can omit the underlined key names and write only their values.}
+]{
   hlines = {white},
   row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
   column{2} = {co=1},
@@ -793,15 +789,12 @@ In mose cases, you can omit the underlined key names and write only their values
   \K{font} & font commands & None \\
   \K{preto} & prepend text to the cell & None \\
   \K{appto} & append text to the cell & None \\
-\end{tblr}
-\end{table}
-%\end{center}
+\end{longtblr}
 \vspace{-2em}
-%\begin{center}
-\begin{table}[H]
-\caption{Keys for Multispan of Cells}
-\label{key:cellspan}
-\begin{tblr}{
+\begin{longtblr}[
+  caption = {Keys for Multispan of Cells},
+  label = {key:cellspan},
+]{
   hlines = {white},
   row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
   column{2} = {co=1},
@@ -809,9 +802,7 @@ In mose cases, you can omit the underlined key names and write only their values
   Key & Description and Values & Initial Value \\
   \K{r} & number of rows the cell spans    & 1 \\
   \K{c} & number of columns the cell spans & 1 \\
-\end{tblr}
-\end{table}
-%\end{center}
+\end{longtblr}
 
 Option \verb!cells! is for setting all cells.
 
@@ -850,13 +841,13 @@ Option \verb!cell{i}{j}! is for setting some cells.
 \section{Rows and Columns}
 
 All available keys for rows and columns are described in Table \ref{key:row} and Table \ref{key:column}.
-In mose cases, you can omit the underlined key names and write only their values.
 
-%\begin{center}
-\begin{table}[H]
-\caption{Keys for Rows}
-\label{key:row}
-\begin{tblr}{
+\begin{longtblr}[
+  caption = {Keys for Rows},
+  label = {key:row},
+  remark{Note} = {In mose cases, you can omit the underlined key names and write only their values.}
+]{
+  rowhead = 1,
   hlines = {white},
   row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
   column{2} = {co=1},
@@ -879,15 +870,14 @@ In mose cases, you can omit the underlined key names and write only their values
   \K{belowsep+} & increase vertical space below the row & None \\
   \K{rowsep} & set vertical space above and below the row & \V{2pt} \\
   \K{rowsep+} & increase vertical space above and below the row & None \\
-\end{tblr}
-\end{table}
-%\end{center}
+\end{longtblr}
 \vspace{-2em}
-%\begin{center}
-\begin{table}[H]
-\caption{Keys for Columns}
-\label{key:column}
-\begin{tblr}{
+\begin{longtblr}[
+  caption = {Keys for Columns},
+  label = {key:column},
+  remark{Note} = {In mose cases, you can omit the underlined key names and write only their values.}
+]{
+  rowhead = 1,
   hlines = {white},
   row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
   column{2} = {co=1},
@@ -911,9 +901,7 @@ In mose cases, you can omit the underlined key names and write only their values
   \K{rightsep+} & increase horizontal space to the right of the column & None \\
   \K{colsep} & set horizontal space to both sides of the column & \V{6pt} \\
   \K{colsep+} & increase horizontal space to both sides of the column & None \\
-\end{tblr}
-\end{table}
-%\end{center}
+\end{longtblr}
 
 Options \verb!rows! and \verb!columns! are for setting all rows and columns, respectively.
 
@@ -994,13 +982,12 @@ The following example shows that we can replace \verb!\\[dimen]! with \verb!belo
 \section{The Whole Table}
 
 All available keys for the whole table are described in Table \ref{key:table}.
-%In mose cases, you can omit the underlined key names and write only their values.
 
-%\begin{center}
-\begin{table}[H]
-\caption{Keys for the Whole Table}
-\label{key:table}
-\begin{tblr}{
+\begin{longtblr}[
+  caption = {Keys for the Whole Table},
+  label = {key:table},
+]{
+  rowhead = 1,
   hlines = {white},
   row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
   column{2} = {co=1},
@@ -1019,9 +1006,7 @@ All available keys for the whole table are described in Table \ref{key:table}.
   \K{colsep} & set horizontal space to both sides of every column & \V{6pt} \\
   \K{hspan} & horizontal span algorithm: \V{default}, \V{even}, or \V{minimal} & \V{default} \\
   \K{vspan} & vertical span algorithm: \V{default} or \V{even} & \V{default} \\
-\end{tblr}
-\end{table}
-%\end{center}
+\end{longtblr}
 
 The following example demonstrates the usage of \verb!width! key.
 
