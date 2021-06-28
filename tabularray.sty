@@ -4205,16 +4205,21 @@
   }
 \cs_generate_variant:Nn \__tblr_set_template:n { V }
 
+\NewExpandableDocumentCommand \GetTblrStyle { m m }
+  {
+    \__tblr_style_item:n { #1 / #2 }
+  }
+
 \NewDocumentCommand \UseTblrFont { m }
   {
-    \__tblr_style_item:n { #1 / font } \selectfont
+    \GetTblrStyle {#1} { font } \selectfont
   }
 
 \tl_new:N \l__tblr_use_color_tl
 
 \NewDocumentCommand \UseTblrColor { m }
   {
-    \tl_set:Nx \l__tblr_use_color_tl { \__tblr_style_item:n { #1 / fg } }
+    \tl_set:Nx \l__tblr_use_color_tl { \GetTblrStyle {#1} { fg } }
     \tl_if_empty:NF \l__tblr_use_color_tl { \color { \l__tblr_use_color_tl } }
   }
 
@@ -4237,11 +4242,6 @@
     \UseTblrColor {#1}
     \tl_use:c { l__tblr_template_ #1 _ #2 _tl }
     \group_end:
-  }
-
-\NewExpandableDocumentCommand \GetTblrStyle { m }
-  {
-    \__tblr_style_item:n {#1}
   }
 
 \NewDocumentCommand \MapTblrNotes { +m }
