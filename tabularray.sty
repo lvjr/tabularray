@@ -4341,11 +4341,15 @@
 \DefTblrTemplate { contfoot } { normal }
   {
     \noindent
+    \raggedleft
     Continued ~ on ~ next ~ page
     \par
   }
 \DefTblrTemplate { contfoot } { plain }
   {
+    %% need to set parindent after alignment
+    \raggedleft
+    \UseTblrAlign{contfoot}
     \UseTblrIndent{contfoot}
     \leavevmode
     Continued ~ on ~ next ~ page
@@ -4394,6 +4398,7 @@
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
       {
+        \UseTblrAlign{caption}
         \UseTblrIndent{caption}
         \leavevmode
         \hbox_unpack:N \l__tblr_caption_box
@@ -4450,6 +4455,7 @@
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
       {
+        \UseTblrAlign{capcont}
         \UseTblrIndent{capcont}
         \leavevmode
         \hbox_unpack:N \l__tblr_caption_box
@@ -4538,6 +4544,7 @@
   }
 \DefTblrTemplate { note } { plain }
   {
+    \UseTblrAlign{note}
     \UseTblrIndent{note}
     \MapTblrNotes
       {
@@ -4551,6 +4558,7 @@
   }
 \DefTblrTemplate { note } { inline }
   {
+    \UseTblrAlign{note}
     \UseTblrIndent{note}
     \leavevmode
     \MapTblrNotes
@@ -4596,6 +4604,7 @@
   }
 \DefTblrTemplate { remark } { plain }
   {
+    \UseTblrAlign{remark}
     \UseTblrIndent{remark}
     \MapTblrRemarks
       {
@@ -4608,6 +4617,7 @@
   }
 \DefTblrTemplate { remark } { inline }
   {
+    \UseTblrAlign{remark}
     \UseTblrIndent{remark}
     \leavevmode
     \MapTblrRemarks
@@ -4657,7 +4667,6 @@
 
 \DefTblrTemplate { firstfoot, middlefoot } { normal }
   {
-    \hfill
     \UseTblrTemplate { contfoot } { default }
   }
 
