@@ -1454,7 +1454,7 @@ modify templates, and \verb!\SetTblrTemplate! command to choose default template
 you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrTemplate! commands.
 
 \begin{longtblr}[
-  caption = {Templates for Headers and Footers}
+  caption = {Templates for Table Heads and Table Foots}
 ]{
   hlines = {white},
   row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
@@ -1462,8 +1462,10 @@ you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrT
   rowhead = 1,
 }
   Template Name    & Template Description \\
-  \V{contfoot}     & continuation text in the foot, normally ``Continued on next page'' \\
-  \V{conthead}     & continuation text in the head, normally ``(Continued)'' \\
+  \V{contfoot-text}& continuation text in the foot, normally ``Continued on next page'' \\
+  \V{contfoot}     & continuation paragraph in the foot, normally including \V{contfoot-text} template \\
+  \V{conthead-text}& continuation text in the head, normally ``(Continued)'' \\
+  \V{conthead}     & continuation paragraph in the head, normally including \V{conthead-text} template \\
   \V{caption-tag}  & caption tag, normally like ``Table 4.2'' \\
   \V{caption-sep}  & caption separator, normally like ``:\quad'' \\
   \V{caption-text} & caption text, normally using user provided value \\
@@ -1486,15 +1488,20 @@ you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrT
   \V{foot}         & setting all of \V{firstfoot}, \V{middlefoot} and \V{lastfoot} \\
 \end{longtblr}
 
+A template which only includes short text is called a \underline{sub template}.
+Normally there is one \verb!-! in the name of a sub template.
+A template which includes one or more paragraphs is called a \underline{main template}.
+Normally there isn't any \verb!-! in the name of a main template.
+
 \subsection{Continuation Templates}
 
 Let us have a look at the code for defining templates of continuation text first:
 
 \begin{codehigh}
-\DefTblrTemplate{contfoot}{normal}{Continued on next page}
-\SetTblrTemplate{contfoot}{normal}
-\DefTblrTemplate{conthead}{normal}{(Continued)}
-\SetTblrTemplate{conthead}{normal}
+\DefTblrTemplate{contfoot-text}{normal}{Continued on next page}
+\SetTblrTemplate{contfoot-text}{normal}
+\DefTblrTemplate{conthead-text}{normal}{(Continued)}
+\SetTblrTemplate{conthead-text}{normal}
 \end{codehigh}
 
 In the above code, command \verb!\DefTblrTemplate! defines the templates with name \verb!normal!,
@@ -1507,11 +1514,20 @@ you define and set it as default at the same time.
 Therefore the above code can be written in another way:
 
 \begin{codehigh}
-\DefTblrTemplate{contfoot}{default}{Continued on next page}
-\DefTblrTemplate{conthead}{default}{(Continued)}
+\DefTblrTemplate{contfoot-text}{default}{Continued on next page}
+\DefTblrTemplate{conthead-text}{default}{(Continued)}
 \end{codehigh}
 
 You may modify the code to customize continuation text to fit your needs.
+
+The \verb!contfoot! and \verb!conthead! templates normally
+include their sub templates with \verb!\UseTblrTemplate! commands.
+But you can also handle user settings such as horizontal alignment here.
+
+\begin{codehigh}
+\DefTblrTemplate{contfoot}{default}{\UseTblrTemplate{contfoot-text}{default}}
+\DefTblrTemplate{conthead}{default}{\UseTblrTemplate{conthead-text}{default}}
+\end{codehigh}
 
 \subsection{Caption Templates}
 
@@ -1557,6 +1573,8 @@ The templates for table notes can be defined like this:
 \DefTblrTemplate{note-tag}{default}{\textsuperscript{\InsertTblrNoteTag}}
 \DefTblrTemplate{note-sep}{default}{\space}
 \DefTblrTemplate{note-text}{default}{\InsertTblrNoteText}
+\end{codehigh}
+\begin{codehigh}
 \DefTblrTemplate{note}{default}{
   \MapTblrNotes{
     \noindent
@@ -1579,6 +1597,8 @@ The definition of remark templates are similar to note templates.
 \DefTblrTemplate{remark-tag}{default}{\InsertTblrRemarkTag}
 \DefTblrTemplate{remark-sep}{default}{:\space}
 \DefTblrTemplate{remark-text}{default}{\InsertTblrRemarkText}
+\end{codehigh}
+\begin{codehigh}
 \DefTblrTemplate{remark}{default}{
   \MapTblrRemarks{
     \noindent
@@ -1615,8 +1635,6 @@ Note that you can define the same template for multiple elements in \verb!\DefTb
 \section{Change Styles}
 
 You may change the styles of template elements.
-At this moment, foreground colors and font commands are supported.
-And in most cases the keys \verb!fg! and \verb!font! can be omitted.
 
 \begin{codehigh}
 \SetTblrStyle{firsthead}{font=\bfseries}
@@ -1624,6 +1642,28 @@ And in most cases the keys \verb!fg! and \verb!font! can be omitted.
 \SetTblrStyle{middlefoot}{\itshape}
 \SetTblrStyle{caption-tag}{red2}
 \end{codehigh}
+
+\newpage %TODO: fix pagebreak bug
+
+All available keys for template elements are described in Table \ref{key:element}.
+
+\begin{longtblr}[
+  caption = {Keys for the Styles of Template Elements},
+  label = {key:element},
+  remark{Note} = {In most cases, you can omit the underlined key names and write only their values.
+                  The keys \K{halign}, \K{indent} and \K{hang} are only for main templates.}
+]{
+  hlines = {white}, rowhead = 1,
+  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
+  column{2} = {co=1},
+}
+  Key Name               & Key Description \\
+  \underline{\K{fg}}     & foreground color \\
+  \underline{\K{font}}   & font commands \\
+  \underline{\K{halign}} & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right) \\
+  \K{indent}             & parindent value \\
+  \K{hang}               & hangindent value \\
+\end{longtblr}
 
 When you write \verb!\UseTblrTemplate{element}{default}! in defining a template,
 beside including the code of template \verb!element!, the foreground color and font commands
