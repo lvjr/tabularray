@@ -4314,14 +4314,14 @@
 \DefTblrTemplate { contfoot-text } { normal } { Continued ~ on ~ next ~ page }
 \SetTblrTemplate { contfoot-text } { normal }
 
-\DefTblrTemplate { contfoot } { normal }
+\DefTblrTemplate { contfoot } { plain }
   {
     \noindent
     \raggedleft
     \UseTblrTemplate { contfoot-text } { default }
     \par
   }
-\DefTblrTemplate { contfoot } { plain }
+\DefTblrTemplate { contfoot } { normal }
   {
     %% need to set parindent after alignment
     \raggedleft
@@ -4337,14 +4337,14 @@
 \DefTblrTemplate { conthead-text } { normal } { ( Continued ) }
 \SetTblrTemplate { conthead-text } { normal }
 
-\DefTblrTemplate { conthead } { normal }
+\DefTblrTemplate { conthead } { plain }
   {
     \noindent
     \raggedright
     \UseTblrTemplate { conthead-text } { default }
     \par
   }
-\DefTblrTemplate { conthead } { plain }
+\DefTblrTemplate { conthead } { normal }
   {
     %% need to set parindent after alignment
     \raggedright
@@ -4388,7 +4388,7 @@
 \box_new:N \l__tblr_caption_box
 \box_new:N \l__tblr_caption_left_box
 
-\DefTblrTemplate { caption } { normal }
+\DefTblrTemplate { caption } { plain }
   {
     \hbox_set:Nn \l__tblr_caption_box
       {
@@ -4416,7 +4416,7 @@
         \par
       }
   }
-\DefTblrTemplate { caption } { plain }
+\DefTblrTemplate { caption } { normal }
   {
     \hbox_set:Nn \l__tblr_caption_box
       {
@@ -4441,7 +4441,7 @@
   }
 \SetTblrTemplate { caption } { normal }
 
-\DefTblrTemplate { capcont } { normal }
+\DefTblrTemplate { capcont } { plain }
   {
     \hbox_set:Nn \l__tblr_caption_box
       {
@@ -4472,7 +4472,7 @@
         \par
       }
   }
-\DefTblrTemplate { capcont } { plain }
+\DefTblrTemplate { capcont } { normal }
   {
     \hbox_set:Nn \l__tblr_caption_box
       {
@@ -4555,7 +4555,7 @@
 \DefTblrTemplate { note-text } { normal } { \InsertTblrNoteText }
 \SetTblrTemplate { note-text } { normal }
 
-\DefTblrTemplate { note } { normal }
+\DefTblrTemplate { note } { plain }
   {
     \MapTblrNotes
       {
@@ -4572,7 +4572,7 @@
         \par
       }
   }
-\DefTblrTemplate { note } { plain }
+\DefTblrTemplate { note } { normal }
   {
     \UseTblrAlign { note }
     \UseTblrIndent { note }
@@ -4621,7 +4621,7 @@
 \DefTblrTemplate { remark-text } { normal } { \InsertTblrRemarkText }
 \SetTblrTemplate { remark-text } { normal }
 
-\DefTblrTemplate { remark } { normal }
+\DefTblrTemplate { remark } { plain }
   {
     \MapTblrRemarks
       {
@@ -4634,7 +4634,7 @@
         \par
       }
   }
-\DefTblrTemplate { remark } { plain }
+\DefTblrTemplate { remark } { normal }
   {
     \UseTblrAlign { remark }
     \UseTblrIndent { remark }
