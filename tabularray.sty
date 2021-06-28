@@ -4131,6 +4131,8 @@
     r       .meta:n = { halign = r },
     fg      .code:n = \__tblr_element_gput_style:nn { fg } {#1},
     font    .code:n = \__tblr_element_gput_style:nn { font } {#1},
+    hang    .code:n = \__tblr_element_gput_style:nn { hang } {#1},
+    indent  .code:n = \__tblr_element_gput_style:nn { indent } {#1},
     unknown .code:n = \__tblr_element_unknown_key:Vn \l_keys_key_str {#1},
   }
 
@@ -4223,6 +4225,35 @@
   {
     \tl_set:Nx \l__tblr_use_color_tl { \GetTblrStyle {#1} { fg } }
     \tl_if_empty:NF \l__tblr_use_color_tl { \color { \l__tblr_use_color_tl } }
+  }
+
+%% All halign commands are defined at the beginning of the file
+\NewDocumentCommand \UseTblrAlign { m }
+  {
+    \use:c { __tblr_halign_command_ \GetTblrStyle {#1} { halign } }
+  }
+
+\tl_new:N \l__tblr_use_hang_tl
+
+\NewDocumentCommand \UseTblrHang { m }
+  {
+    \tl_set:Nx \l__tblr_use_hang_tl { \GetTblrStyle {#1} { hang } }
+    \tl_if_empty:NF \l__tblr_use_hang_tl
+      {
+        \tl_put_left:Nn \l__tblr_use_hang_tl
+          { \hangafter = 1 \relax \hangindent = }
+        \tl_put_right:Nn \l__tblr_use_hang_tl { \relax }
+        \exp_args:NV \everypar \l__tblr_use_hang_tl
+      }
+  }
+
+\tl_new:N \l__tblr_use_indent_tl
+
+\NewDocumentCommand \UseTblrIndent { m }
+  {
+    \tl_set:Nx \l__tblr_use_indent_tl { \GetTblrStyle {#1} { indent } }
+    \tl_if_empty:NF \l__tblr_use_indent_tl
+      { \exp_args:NNV \setlength \parindent \l__tblr_use_indent_tl }
   }
 
 \AtBeginDocument
