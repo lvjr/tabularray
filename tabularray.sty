@@ -4754,6 +4754,7 @@
     \vbox_set:Nn #1
       {
         \hsize = \tablewidth
+        \parindent = 0pt \relax
         \vbox:n {#2}
         \skip_vertical:n { \__tblr_spec_item:nn { outer } { headsep } }
       }
@@ -4765,6 +4766,7 @@
       {
         \hsize = \tablewidth
         \skip_vertical:n { \__tblr_spec_item:nn { outer } { footsep } }
+        \parindent = 0pt \relax
         \vbox:n {#2}
       }
   }
