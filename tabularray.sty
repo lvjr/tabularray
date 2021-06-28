@@ -4558,14 +4558,9 @@
     \MapTblrNotes
       {
         \noindent
-        \hangindent = 0.7em
-        \hangafter = 1
-        \hbox_to_wd:nn { 0.7em }
-          {
-            \UseTblrTemplate { note-tag } { default }
-            \UseTblrTemplate { note-target } { default }
-            \hfil
-          }
+        \UseTblrTemplate { note-tag } { default }
+        \UseTblrTemplate { note-target } { default }
+        \UseTblrTemplate { note-sep } { default }
         \UseTblrTemplate { note-text } { default }
         \par
       }
@@ -4574,13 +4569,18 @@
   {
     \UseTblrAlign { note }
     \UseTblrIndent { note }
-    \UseTblrHang { note }
     \MapTblrNotes
       {
+        \hangindent = 0.7em
+        \hangafter = 1
+        \UseTblrHang { note }
         \leavevmode
-        \UseTblrTemplate { note-tag } { default }
-        \UseTblrTemplate { note-target } { default }
-        \UseTblrTemplate { note-sep } { default }
+        \hbox_to_wd:nn { \the\hangindent }
+          {
+            \UseTblrTemplate { note-tag } { default }
+            \UseTblrTemplate { note-target } { default }
+            \hfil
+          }
         \UseTblrTemplate { note-text } { default }
         \par
       }
@@ -4624,8 +4624,6 @@
     \MapTblrRemarks
       {
         \noindent
-        \hangindent = 0.7em
-        \hangafter = 1
         \UseTblrTemplate { remark-tag } { default }
         \UseTblrTemplate { remark-sep } { default }
         \UseTblrTemplate { remark-text } { default }
@@ -4636,9 +4634,11 @@
   {
     \UseTblrAlign { remark }
     \UseTblrIndent { remark }
-    \UseTblrHang { remark }
     \MapTblrRemarks
       {
+        \hangindent = 0.7em
+        \hangafter = 1
+        \UseTblrHang { remark }
         \leavevmode
         \UseTblrTemplate { remark-tag } { default }
         \UseTblrTemplate { remark-sep } { default }
