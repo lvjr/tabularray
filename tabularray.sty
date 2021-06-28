@@ -4230,7 +4230,7 @@
 %% All halign commands are defined at the beginning of the file
 \NewDocumentCommand \UseTblrAlign { m }
   {
-    \use:c { __tblr_halign_command_ \GetTblrStyle {#1} { halign } }
+    \use:c { __tblr_halign_command_ \GetTblrStyle {#1} { halign } : }
   }
 
 \tl_new:N \l__tblr_use_hang_tl
