@@ -1116,6 +1116,32 @@ The following examples show the results from different \verb!vspan! values.
 \end{tblr}
 \end{demohigh}
 
+\section{Default Specifications}
+
+\verb!Tabularray! package provides \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
+for you to change the default inner and outer specifications of tables.
+Inner specifications are all options written in the mandatory argument of the \verb!tblr! environment,
+while outer specifications are all options written in the optional argument of the \verb!tblr! environment.
+
+In the below example, the first line draws all hlines and vlines for all tables created afterwards,
+while the second line makes all tables created afterwards breakable.
+
+\begin{codehigh}
+\SetTblrInner{hlines,vlines}
+\SetTblrOuter{long}
+\end{codehigh}
+
+You can define new \verb!tabularray! environments using \verb!\NewTblrEnviron! command:
+
+\begin{codehigh}
+\NewTblrEnviron{mylinetblr}{
+  \SetTblrInner{hlines,vlines}
+}
+\NewTblrEnviron{mylongtblr}{
+  \SetTblrOuter{long}
+}
+\end{codehigh}
+
 \section{Counters in Tables}
 
 Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be used in cell text:
