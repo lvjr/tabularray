@@ -4474,52 +4474,45 @@
 
 \DefTblrTemplate { note } { normal }
   {
-    \vbox:n
+    \MapTblrNotes
       {
-        \MapTblrNotes
+        \noindent
+        \hangindent = 0.7em
+        \hangafter = 1
+        \hbox_to_wd:nn { 0.7em }
           {
-            \noindent
-            \hangindent = 0.7em
-            \hangafter = 1
-            \hbox_to_wd:nn { 0.7em }
-              {
-                \UseTblrTemplate { note-tag } { default }
-                \UseTblrTemplate { note-target } { default }
-                \hfil
-              }
-            \UseTblrTemplate { note-text } { default } \par
+            \UseTblrTemplate { note-tag } { default }
+            \UseTblrTemplate { note-target } { default }
+            \hfil
           }
+        \UseTblrTemplate { note-text } { default }
+        \par
       }
   }
 \DefTblrTemplate { note } { flushleft }
   {
-    \vbox:n
+    \MapTblrNotes
       {
-        \MapTblrNotes
-          {
-            \noindent
-            \UseTblrTemplate { note-tag } { default }
-            \UseTblrTemplate { note-target } { default }
-            \UseTblrTemplate { note-sep } { default }
-            \UseTblrTemplate { note-text } { default }
-            \par
-          }
+        \noindent
+        \UseTblrTemplate { note-tag } { default }
+        \UseTblrTemplate { note-target } { default }
+        \UseTblrTemplate { note-sep } { default }
+        \UseTblrTemplate { note-text } { default }
+        \par
       }
   }
 \DefTblrTemplate { note } { paragraph }
   {
-    \vbox:n
+    \noindent
+    \MapTblrNotes
       {
-        \noindent
-        \MapTblrNotes
-          {
-            \UseTblrTemplate { note-tag } { default }
-            \UseTblrTemplate { note-target } { default }
-            \UseTblrTemplate { note-sep } { default }
-            \UseTblrTemplate { note-text } { default }
-            \quad
-          }
+        \UseTblrTemplate { note-tag } { default }
+        \UseTblrTemplate { note-target } { default }
+        \UseTblrTemplate { note-sep } { default }
+        \UseTblrTemplate { note-text } { default }
+        \quad
       }
+    \par
   }
 \SetTblrTemplate { note } { normal }
 
@@ -4541,46 +4534,39 @@
 
 \DefTblrTemplate { remark } { normal }
   {
-    \vbox:n
+    \MapTblrRemarks
       {
-        \MapTblrRemarks
-          {
-            \noindent
-            \hangindent = 0.7em
-            \hangafter = 1
-            \UseTblrTemplate { remark-tag } { default }
-            \UseTblrTemplate { remark-sep } { default }
-            \UseTblrTemplate { remark-text } { default } \par
-          }
+        \noindent
+        \hangindent = 0.7em
+        \hangafter = 1
+        \UseTblrTemplate { remark-tag } { default }
+        \UseTblrTemplate { remark-sep } { default }
+        \UseTblrTemplate { remark-text } { default }
+        \par
       }
   }
 \DefTblrTemplate { remark } { flushleft }
   {
-    \vbox:n
+    \MapTblrRemarks
       {
-        \MapTblrRemarks
-          {
-            \noindent
-            \UseTblrTemplate { remark-tag } { default }
-            \UseTblrTemplate { remark-sep } { default }
-            \UseTblrTemplate { remark-text } { default }
-            \par
-          }
+        \noindent
+        \UseTblrTemplate { remark-tag } { default }
+        \UseTblrTemplate { remark-sep } { default }
+        \UseTblrTemplate { remark-text } { default }
+        \par
       }
   }
 \DefTblrTemplate { remark } { paragraph }
   {
-    \vbox:n
+    \noindent
+    \MapTblrRemarks
       {
-        \noindent
-        \MapTblrRemarks
-          {
-            \UseTblrTemplate { remark-tag } { default }
-            \UseTblrTemplate { remark-sep } { default }
-            \UseTblrTemplate { remark-text } { default }
-            \quad
-          }
+        \UseTblrTemplate { remark-tag } { default }
+        \UseTblrTemplate { remark-sep } { default }
+        \UseTblrTemplate { remark-text } { default }
+        \quad
       }
+    \par
   }
 \SetTblrTemplate { remark } { normal }
 
@@ -4627,7 +4613,6 @@
 \DefTblrTemplate { lastfoot } { normal }
   {
     \UseTblrTemplate { note } { default }
-    \vspace { 0.4em }
     \UseTblrTemplate { remark } { default }
   }
 
