@@ -3304,16 +3304,16 @@
     \group_end:
   }
 
-\cs_new_eq:NN \__tlbr_halign_l: \raggedright
-\cs_new_eq:NN \__tlbr_halign_c: \centering
-\cs_new_eq:NN \__tlbr_halign_r: \raggedleft
+\cs_new_eq:NN \__tblr_halign_l: \raggedright
+\cs_new_eq:NN \__tblr_halign_c: \centering
+\cs_new_eq:NN \__tblr_halign_r: \raggedleft
 
 %% #1: cell text; #2: box width
 \cs_new_protected:Npn \__tblr_make_vcell_text:nN #1 #2
   {
     \dim_set:Nn \tex_hsize:D { #2 }
     \@arrayparboxrestore
-    \cs:w __tlbr_halign_ \g__tblr_cell_halign_tl : \cs_end:
+    \cs:w __tblr_halign_ \g__tblr_cell_halign_tl : \cs_end:
     \mode_leave_vertical:
     \box_use:N \l__tblr_strut_ht_box
     \bool_if:NTF \l__tblr_math_mode_bool { $#1$ } { #1 }
@@ -4947,26 +4947,26 @@
     \vbox_set:Nn \l__tblr_table_box { \hbox:n { \__tblr_build_hline:n { #1 } } }
   }
 
-\tl_new:N \__tlbr_vbox_align_tl
-\tl_const:Nn \__tlbr_vbox_t_tl {t}
-\tl_const:Nn \__tlbr_vbox_m_tl {m}
-\tl_const:Nn \__tlbr_vbox_c_tl {c}
-\tl_const:Nn \__tlbr_vbox_b_tl {b}
+\tl_new:N \__tblr_vbox_align_tl
+\tl_const:Nn \__tblr_vbox_t_tl {t}
+\tl_const:Nn \__tblr_vbox_m_tl {m}
+\tl_const:Nn \__tblr_vbox_c_tl {c}
+\tl_const:Nn \__tblr_vbox_b_tl {b}
 
 \cs_new_protected:Npn \__tblr_valign_whole:Nn #1 #2
   {
     \group_begin:
-    \tl_set:Nn \__tlbr_vbox_align_tl {#2}
+    \tl_set:Nn \__tblr_vbox_align_tl {#2}
     \dim_set:Nn \l__tblr_t_dim { \box_ht:N #1 + \box_dp:N #1 }
-    \tl_case:NnF \__tlbr_vbox_align_tl
+    \tl_case:NnF \__tblr_vbox_align_tl
       {
-        \__tlbr_vbox_m_tl
+        \__tblr_vbox_m_tl
           { \__tblr_valign_whole_middle:N #1 }
-        \__tlbr_vbox_c_tl
+        \__tblr_vbox_c_tl
           { \__tblr_valign_whole_middle:N #1 }
-        \__tlbr_vbox_t_tl
+        \__tblr_vbox_t_tl
           { \__tblr_valign_whole_top:N #1 }
-        \__tlbr_vbox_b_tl
+        \__tblr_vbox_b_tl
           { \__tblr_valign_whole_bottom:N #1 }
       }
       { \__tblr_valign_whole_middle:N #1 }
