@@ -86,10 +86,10 @@ The following is our first example:
 
 You may notice that there is extra space above and below the table rows with \verb!tblr! envirenment.
 This space makes the table look better.
-If you don't like it, you could use \verb!\SetTblrDefault! command:
+If you don't like it, you could use \verb!\SetTblrInner! command:
 
 \begin{demohigh}
-\SetTblrDefault{rowsep=0pt}
+\SetTblrInner{rowsep=0pt}
 \begin{tblr}{lccr}
 \hline
  Alpha   & Beta  & Gamma  & Delta \\
@@ -1045,7 +1045,7 @@ The following example shows that we can replace \verb!\arraystretch! parameter w
 The following example uses \verb!rowsep! and \verb!colsep! keys to set padding for all rows and columns.
 \nopagebreak
 \begin{demohigh}
-\SetTblrDefault{rowsep=2pt,colsep=2pt}
+\SetTblrInner{rowsep=2pt,colsep=2pt}
 \begin{tblr}{hlines,vlines}
  Alpha   & Beta  & Gamma  & Delta \\
  Epsilon & Zeta  & Eta    & Theta \\
@@ -1059,7 +1059,7 @@ But with \verb!hspan=minimal!, it will compute span widths from column widths.
 The following examples show the results from different \verb!hspan! values.
 
 \begin{demohigh}
-\SetTblrDefault{hlines, vlines, hspan=default}
+\SetTblrInner{hlines, vlines, hspan=default}
 \begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
  111 111 & 222 222 & 333 333 \\
  12 Multi Columns Multi Columns 12 & & 333 \\
@@ -1069,7 +1069,7 @@ The following examples show the results from different \verb!hspan! values.
 \end{demohigh}
 
 \begin{demohigh}
-\SetTblrDefault{hlines, vlines, hspan=even}
+\SetTblrInner{hlines, vlines, hspan=even}
 \begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
  111 111 & 222 222 & 333 333 \\
  12 Multi Columns Multi Columns 12 & & 333 \\
@@ -1079,7 +1079,7 @@ The following examples show the results from different \verb!hspan! values.
 \end{demohigh}
 
 \begin{demohigh}
-\SetTblrDefault{hlines, vlines, hspan=minimal}
+\SetTblrInner{hlines, vlines, hspan=minimal}
 \begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
  111 111 & 222 222 & 333 333 \\
  12 Multi Columns Multi Columns 12 & & 333 \\
@@ -1091,7 +1091,7 @@ The following examples show the results from different \verb!hspan! values.
 The following examples show the results from different \verb!vspan! values.
 \nopagebreak
 \begin{demohigh}
-\SetTblrDefault{hlines, vlines, vspan=default}
+\SetTblrInner{hlines, vlines, vspan=default}
 \begin{tblr}{column{2}={3.25cm}, cell{2}{2}={r=3}{l}}
   Column1 & Column2 \\
   Row1 & Long text that needs multiple lines.
@@ -1104,7 +1104,7 @@ The following examples show the results from different \verb!vspan! values.
 \end{demohigh}
 
 \begin{demohigh}
-\SetTblrDefault{hlines, vlines, vspan=even}
+\SetTblrInner{hlines, vlines, vspan=even}
 \begin{tblr}{column{2}={3.25cm}, cell{2}{2}={r=3}{l}}
   Column1 & Column2 \\
   Row1 & Long text that needs multiple lines.
