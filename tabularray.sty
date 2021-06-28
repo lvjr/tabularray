@@ -4338,7 +4338,19 @@
 \DefTblrTemplate { conthead } { normal } { ( Continued ) }
 \SetTblrTemplate { conthead } { normal }
 
-\DefTblrTemplate { contfoot } { normal } { Continued ~ on ~ next ~ page }
+\DefTblrTemplate { contfoot } { normal }
+  {
+    \noindent
+    Continued ~ on ~ next ~ page
+    \par
+  }
+\DefTblrTemplate { contfoot } { plain }
+  {
+    \UseTblrIndent{contfoot}
+    \leavevmode
+    Continued ~ on ~ next ~ page
+    \par
+  }
 \SetTblrTemplate { contfoot } { normal }
 
 \box_new:N \l__tblr_caption_box
@@ -4382,7 +4394,8 @@
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
       {
-        \noindent
+        \UseTblrIndent{caption}
+        \leavevmode
         \hbox_unpack:N \l__tblr_caption_box
         \par
       }
@@ -4437,7 +4450,8 @@
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
       {
-        \noindent
+        \UseTblrIndent{capcont}
+        \leavevmode
         \hbox_unpack:N \l__tblr_caption_box
         \par
       }
@@ -4522,11 +4536,12 @@
         \par
       }
   }
-\DefTblrTemplate { note } { flushleft }
+\DefTblrTemplate { note } { plain }
   {
+    \UseTblrIndent{note}
     \MapTblrNotes
       {
-        \noindent
+        \leavevmode
         \UseTblrTemplate { note-tag } { default }
         \UseTblrTemplate { note-target } { default }
         \UseTblrTemplate { note-sep } { default }
@@ -4534,9 +4549,10 @@
         \par
       }
   }
-\DefTblrTemplate { note } { paragraph }
+\DefTblrTemplate { note } { inline }
   {
-    \noindent
+    \UseTblrIndent{note}
+    \leavevmode
     \MapTblrNotes
       {
         \UseTblrTemplate { note-tag } { default }
@@ -4578,20 +4594,22 @@
         \par
       }
   }
-\DefTblrTemplate { remark } { flushleft }
+\DefTblrTemplate { remark } { plain }
   {
+    \UseTblrIndent{remark}
     \MapTblrRemarks
       {
-        \noindent
+        \leavevmode
         \UseTblrTemplate { remark-tag } { default }
         \UseTblrTemplate { remark-sep } { default }
         \UseTblrTemplate { remark-text } { default }
         \par
       }
   }
-\DefTblrTemplate { remark } { paragraph }
+\DefTblrTemplate { remark } { inline }
   {
-    \noindent
+    \UseTblrIndent{remark}
+    \leavevmode
     \MapTblrRemarks
       {
         \UseTblrTemplate { remark-tag } { default }
