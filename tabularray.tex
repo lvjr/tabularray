@@ -762,6 +762,8 @@ Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlin
 \end{tblr}
 \end{demohigh}
 
+\newpage %TODO: fix pagebreak bug
+
 \section{Cells and Spancells}
 
 All available keys for cells are described in Table \ref{key:cell} and Table \ref{key:cellspan}.
@@ -904,7 +906,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
 \end{longtblr}
 
 Options \verb!rows! and \verb!columns! are for setting all rows and columns, respectively.
-
+\nopagebreak
 \begin{demohigh}
 \begin{tblr}{
  hlines,
@@ -953,7 +955,7 @@ The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!
 
 The following example demonstrates the usages of
 \verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! keys.
-
+\nopagebreak
 \begin{demohigh}
 \begin{tblr}{
  hlines,
@@ -1019,7 +1021,7 @@ The following example demonstrates the usage of \verb!width! key.
 \end{demohigh}
 
 The following example shows that we can replace \verb!\doublerulesep! parameter with \verb!rulesep! key.
-
+\nopagebreak
 \begin{demohigh}
 \begin{tblr}{
  colspec={||llll||},rowspec={|QQQ|},rulesep=4pt,
@@ -1117,7 +1119,7 @@ The following examples show the results from different \verb!vspan! values.
 \section{Counters in Tables}
 
 Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be used in cell text:
-
+\nopagebreak
 \begin{demohigh}
 \begin{tblr}{hlines}
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
@@ -1162,7 +1164,7 @@ Don’t use them in important documents.
 In fact, to make a decent long table with header and footer, it is better to separate header/footer as
 \underline{table head/foot} (which includes caption, footnotes, continuation text)
 and \underline{row head/foot} (which includes some rows of the table that should appear in every page).
-By this approch, alternating row colors should work as expected.
+By this approach, alternating row colors should work as expected.
 
 \NewTblrTheme{fancy}{
   \SetTblrStyle{firsthead}{font=\bfseries}
@@ -1373,7 +1375,7 @@ Alpha   & Beta  & Gamma   \\
 \end{longtblr}
 
 As you can see in the above example, the appearance of long tables of \verb!tabularray! package
-are similar to that of \verb!threeparttable! and \verb!threeparttablex! packages.
+is similar to that of \verb!threeparttable! and \verb!threeparttablex! packages.
 We support table footnotes, but not page footnotes in \verb!tabularray! package.
 
 Table head consists of the caption and the last table foot consists of footnotes and remarks by default.
