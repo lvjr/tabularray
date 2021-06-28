@@ -4308,7 +4308,33 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Caption and Continuation Templates}
+%%> \section{Table Continuation Templates}
+%%% --------------------------------------------------------
+
+\DefTblrTemplate { conthead } { normal } { ( Continued ) }
+\SetTblrTemplate { conthead } { normal }
+
+\DefTblrTemplate { contfoot } { normal }
+  {
+    \noindent
+    \raggedleft
+    Continued ~ on ~ next ~ page
+    \par
+  }
+\DefTblrTemplate { contfoot } { plain }
+  {
+    %% need to set parindent after alignment
+    \raggedleft
+    \UseTblrAlign { contfoot }
+    \UseTblrIndent { contfoot }
+    \leavevmode
+    Continued ~ on ~ next ~ page
+    \par
+  }
+\SetTblrTemplate { contfoot } { normal }
+
+%%% --------------------------------------------------------
+%%> \section{Table Caption Templates}
 %%% --------------------------------------------------------
 
 \tl_new:N \l__tblr_caption_short_tl
@@ -4334,28 +4360,6 @@
 
 \DefTblrTemplate { caption-text } { normal } { \InsertTblrText { caption } }
 \SetTblrTemplate { caption-text } { normal }
-
-\DefTblrTemplate { conthead } { normal } { ( Continued ) }
-\SetTblrTemplate { conthead } { normal }
-
-\DefTblrTemplate { contfoot } { normal }
-  {
-    \noindent
-    \raggedleft
-    Continued ~ on ~ next ~ page
-    \par
-  }
-\DefTblrTemplate { contfoot } { plain }
-  {
-    %% need to set parindent after alignment
-    \raggedleft
-    \UseTblrAlign { contfoot }
-    \UseTblrIndent { contfoot }
-    \leavevmode
-    Continued ~ on ~ next ~ page
-    \par
-  }
-\SetTblrTemplate { contfoot } { normal }
 
 \box_new:N \l__tblr_caption_box
 \box_new:N \l__tblr_caption_left_box
