@@ -3304,16 +3304,16 @@
     \group_end:
   }
 
-\cs_new_eq:NN \__tblr_halign_l: \raggedright
-\cs_new_eq:NN \__tblr_halign_c: \centering
-\cs_new_eq:NN \__tblr_halign_r: \raggedleft
+\cs_new_eq:NN \__tblr_halign_command_l: \raggedright
+\cs_new_eq:NN \__tblr_halign_command_c: \centering
+\cs_new_eq:NN \__tblr_halign_command_r: \raggedleft
 
 %% #1: cell text; #2: box width
 \cs_new_protected:Npn \__tblr_make_vcell_text:nN #1 #2
   {
     \dim_set:Nn \tex_hsize:D { #2 }
     \@arrayparboxrestore
-    \cs:w __tblr_halign_ \g__tblr_cell_halign_tl : \cs_end:
+    \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
     \mode_leave_vertical:
     \box_use:N \l__tblr_strut_ht_box
     \bool_if:NTF \l__tblr_math_mode_bool { $#1$ } { #1 }
