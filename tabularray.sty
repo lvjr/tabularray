@@ -4398,16 +4398,8 @@
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
       {
-        \hbox_set:Nn \l__tblr_caption_left_box
-          {
-            \UseTblrTemplate { caption-tag } { default }
-            \UseTblrTemplate { caption-sep } { default }
-          }
         \noindent
-        \hangindent = \box_wd:N \l__tblr_caption_left_box
-        \hangafter = 1
-        \hbox_unpack:N \l__tblr_caption_left_box
-        \UseTblrTemplate { caption-text } { default }
+        \hbox_unpack:N \l__tblr_caption_box
         \par
       }
       {
@@ -4428,6 +4420,13 @@
       {
         \UseTblrAlign { caption }
         \UseTblrIndent { caption }
+        \hbox_set:Nn \l__tblr_caption_left_box
+          {
+            \UseTblrTemplate { caption-tag } { default }
+            \UseTblrTemplate { caption-sep } { default }
+          }
+        \hangindent = \box_wd:N \l__tblr_caption_left_box
+        \hangafter = 1
         \UseTblrHang { caption }
         \leavevmode
         \hbox_unpack:N \l__tblr_caption_box
@@ -4448,22 +4447,13 @@
         \UseTblrTemplate { caption-tag } { default }
         \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
+        \space
         \UseTblrTemplate { conthead-text } { default }
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
       {
-        \hbox_set:Nn \l__tblr_caption_left_box
-          {
-            \UseTblrTemplate { caption-tag } { default }
-            \UseTblrTemplate { caption-sep } { default }
-          }
         \noindent
-        \hangindent = \box_wd:N \l__tblr_caption_left_box
-        \hangafter = 1
-        \hbox_unpack:N \l__tblr_caption_left_box
-        \UseTblrTemplate { caption-text } { default }
-        \space
-        \UseTblrTemplate { conthead-text } { default }
+        \hbox_unpack:N \l__tblr_caption_box
         \par
       }
       {
@@ -4486,6 +4476,13 @@
       {
         \UseTblrAlign { capcont }
         \UseTblrIndent { capcont }
+        \hbox_set:Nn \l__tblr_caption_left_box
+          {
+            \UseTblrTemplate { caption-tag } { default }
+            \UseTblrTemplate { caption-sep } { default }
+          }
+        \hangindent = \box_wd:N \l__tblr_caption_left_box
+        \hangafter = 1
         \UseTblrHang { capcont }
         \leavevmode
         \hbox_unpack:N \l__tblr_caption_box
