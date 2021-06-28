@@ -4311,14 +4311,14 @@
 %%> \section{Table Continuation Templates}
 %%% --------------------------------------------------------
 
-\DefTblrTemplate { conthead } { normal } { ( Continued ) }
-\SetTblrTemplate { conthead } { normal }
+\DefTblrTemplate { contfoot-text } { normal } { Continued ~ on ~ next ~ page }
+\SetTblrTemplate { contfoot-text } { normal }
 
 \DefTblrTemplate { contfoot } { normal }
   {
     \noindent
     \raggedleft
-    Continued ~ on ~ next ~ page
+    \UseTblrTemplate { contfoot-text } { default }
     \par
   }
 \DefTblrTemplate { contfoot } { plain }
@@ -4328,10 +4328,32 @@
     \UseTblrAlign { contfoot }
     \UseTblrIndent { contfoot }
     \leavevmode
-    Continued ~ on ~ next ~ page
+    \UseTblrTemplate { contfoot-text } { default }
     \par
   }
 \SetTblrTemplate { contfoot } { normal }
+
+\DefTblrTemplate { conthead-text } { normal } { ( Continued ) }
+\SetTblrTemplate { conthead-text } { normal }
+
+\DefTblrTemplate { conthead } { normal }
+  {
+    \noindent
+    \raggedright
+    \UseTblrTemplate { conthead-text } { default }
+    \par
+  }
+\DefTblrTemplate { conthead } { plain }
+  {
+    %% need to set parindent after alignment
+    \raggedright
+    \UseTblrAlign { conthead }
+    \UseTblrIndent { conthead }
+    \leavevmode
+    \UseTblrTemplate { conthead-text } { default }
+    \par
+  }
+\SetTblrTemplate { conthead } { normal }
 
 %%% --------------------------------------------------------
 %%> \section{Table Caption Templates}
@@ -4423,7 +4445,7 @@
         \UseTblrTemplate { caption-tag } { default }
         \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
-        \UseTblrTemplate { conthead } { default }
+        \UseTblrTemplate { conthead-text } { default }
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
       {
@@ -4438,7 +4460,7 @@
         \hbox_unpack:N \l__tblr_caption_left_box
         \UseTblrTemplate { caption-text } { default }
         \space
-        \UseTblrTemplate { conthead } { default }
+        \UseTblrTemplate { conthead-text } { default }
         \par
       }
       {
@@ -4455,7 +4477,7 @@
         \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
         \space
-        \UseTblrTemplate { conthead } { default }
+        \UseTblrTemplate { conthead-text } { default }
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
       {
