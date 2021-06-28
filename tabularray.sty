@@ -4534,12 +4534,13 @@
 
 \NewDocumentCommand \TblrNote { m }
   {
-    \__tblr_hyper_link:nn {#1} { \textsuperscript { \sffamily #1 } }
+    \__tblr_hyper_link:nn {#1}
+      { \textsuperscript { \sffamily \UseTblrFont { note-tag } #1 } }
   }
 
 \DefTblrTemplate { note-tag } { normal }
   {
-    \textsuperscript { \sffamily \InsertTblrNoteTag }
+    \textsuperscript { \sffamily \UseTblrFont { note-tag } \InsertTblrNoteTag }
   }
 \SetTblrTemplate { note-tag } { normal }
 
@@ -4611,7 +4612,7 @@
 
 \DefTblrTemplate { remark-tag } { normal }
   {
-    \itshape \InsertTblrRemarkTag
+    \itshape \UseTblrFont { remark-tag } \InsertTblrRemarkTag
   }
 \SetTblrTemplate { remark-tag } { normal }
 
