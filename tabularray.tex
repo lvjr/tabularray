@@ -1756,9 +1756,28 @@ inside \verb!tblr! environment.
  Alpha   & Beta  & Gamma   & Delta \\
 \midrule
  Epsilon & Zeta  & Eta     & Theta \\
+\cmidrule{1-3}
  Iota    & Kappa & Lambda  & Mu    \\
+\cmidrule{2-4}
  Nu      & Xi    & Omicron & Pi    \\
 \bottomrule
+\end{tblr}
+\end{demohigh}
+
+At this moment, \verb!trim! options for \verb!\cmidrule! command are not supported.
+But rule colors are possible just like \verb!\hline! and \verb!\cline! commands.
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\toprule[purple3]
+ Alpha   & Beta  & Gamma   & Delta \\
+\midrule[blue3]
+ Epsilon & Zeta  & Eta     & Theta \\
+\cmidrule[azure3]{1-3}
+ Iota    & Kappa & Lambda  & Mu    \\
+\cmidrule[azure3]{2-4}
+ Nu      & Xi    & Omicron & Pi    \\
+\bottomrule[purple3]
 \end{tblr}
 \end{demohigh}
 
