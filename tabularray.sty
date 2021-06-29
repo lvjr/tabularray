@@ -5898,15 +5898,19 @@
       }
     \cs_new_protected:Npn \__tblr_siunitx_tablenum:n ##1
       {
-        \group_begin:
-        \tl_set:Nx \l_tmpa_tl
+        \tl_if_head_is_group:nTF {##1}
+          { ##1 }
           {
-            \__tblr_data_item:neen { cell }
-              { \int_use:N \c@rownum } { \int_use:N \c@colnum } { si }
+            \group_begin:
+            \tl_set:Nx \l_tmpa_tl
+              {
+                \__tblr_data_item:neen { cell }
+                  { \int_use:N \c@rownum } { \int_use:N \c@colnum } { si }
+              }
+            \exp_args:NV \sisetup \l_tmpa_tl
+            \tablenum {##1}
+            \group_end:
           }
-        \exp_args:NV \sisetup \l_tmpa_tl
-        \tablenum {##1}
-        \group_end:
       }
   }
 
