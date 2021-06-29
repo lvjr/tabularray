@@ -6,8 +6,9 @@
 \usepackage{codehigh} % https://ctan.org/pkg/codehigh
 \usepackage{tabularray}
 \usepackage{array,multirow,amsmath}
+\usepackage{chemmacros}
 
-\UseTblrLibrary{booktabs,diagbox}
+\UseTblrLibrary{booktabs,diagbox,siunitx}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -26,7 +27,14 @@
 \newcommand*{\K}[1]{\texttt{#1}}
 \newcommand*{\V}[1]{\texttt{#1}}
 
-\newcommand*{\experimental}{{\color{red3}\bfseries experimental}\space}
+\newcommand{\mywarning}[1]{%
+  \begin{tcolorbox}
+  The interfaces in this #1 should be seen as
+  \textcolor{red3}{\bfseries experimental}
+  and are likely to change in future releases, if necessary.
+  Don’t use them in important documents.
+  \end{tcolorbox}
+}
 
 \renewcommand*{\thefootnote}{*}
 
@@ -659,10 +667,10 @@ All available keys for hlines and vlines are described in Table \ref{key:hvline}
   column{2} = {co=1},
 }
   Key & Description and Values & Initial Value \\
-  \underline{\K{dash}}
-    & dash style: \V{solid}, \V{dashed} or \V{dotted} & \V{solid} \\
-  \underline{\K{wd}} & rule width dimension & None \\
-  \underline{\K{fg}} & rule color name & None \\
+  \underline{\K{dash}} & dash style: \V{solid}, \V{dashed} or \V{dotted} & \V{solid} \\
+  \K{text}             & replace hline/vline with text (like \V{!} specifier in \K{colspec}) & None \\
+  \underline{\K{wd}}   & rule width dimension & None \\
+  \underline{\K{fg}}   & rule color name & None \\
 \end{longtblr}
 
 Options \verb!hlines! and \verb!vlines! are for setting all hlines and vlines, respectively.
@@ -762,7 +770,25 @@ Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlin
 \end{tblr}
 \end{demohigh}
 
-\newpage %TODO: fix pagebreak bug
+At last we show the usage of \verb!text! key by the following example%
+\footnote{Code from \url{https://tex.stackexchange.com/questions/603023/tabularray-and-tabularx-column-separator}.}:
+
+\begin{demohigh}
+\begin{tblr}{
+  vlines, hlines,
+  colspec = {lX[c]X[c]X[c]X[c]},
+  vline{2} = {1}{text=\clap{:}},
+  vline{3} = {1}{text=\clap{\ch{+}}},
+  vline{4} = {1}{text=\clap{\ch{->}}},
+  vline{5} = {1}{text=\clap{\ch{+}}},
+}
+  Equation & \ch{CH4} & \ch{2 O2} & \ch{CO2} & \ch{2 H2O} \\
+  Initial  & $n_1$    & $n_2$     & 0        & 0 \\
+  Final    & $n_1-x$  & $n_2-2x$  & $x$      & $2x$ \\
+\end{tblr}
+\end{demohigh}
+
+You need to load \verb!chemmacros! package for the \verb!\ch! command.
 
 \section{Cells and Spancells}
 
@@ -787,10 +813,11 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
     & \V{t} \\
   \underline{\K{wd}} & width dimension & None \\
   \underline{\K{bg}} & background color name & None \\
-  \K{fg} & foreground color name & None \\
-  \K{font} & font commands & None \\
+  \K{fg}    & foreground color name & None \\
+  \K{font}  & font commands & None \\
   \K{preto} & prepend text to the cell & None \\
   \K{appto} & append text to the cell & None \\
+  \K{cmd}   & execute command for the cell text & None \\
 \end{longtblr}
 \vspace{-2em}
 \begin{longtblr}[
@@ -807,15 +834,13 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
 \end{longtblr}
 
 Option \verb!cells! is for setting all cells.
-
+\nopagebreak
 \begin{demohigh}
 \begin{tblr}{hlines={white},cells={c,blue7}}
  Alpha   & Beta  & Gamma   & Delta   \\
  Epsilon & Zeta  & Eta     & Theta   \\
  Iota    & Kappa & Lambda  & Mu      \\
  Nu      & Xi    & Omicron & Pi      \\
- Rho     & Sigma & Tau     & Upsilon \\
- Phi     & Chi   & Psi     & Omega   \\
 \end{tblr}
 \end{demohigh}
 
@@ -872,6 +897,9 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{belowsep+} & increase vertical space below the row & None \\
   \K{rowsep} & set vertical space above and below the row & \V{2pt} \\
   \K{rowsep+} & increase vertical space above and below the row & None \\
+  \K{preto} & prepend text to every cell (like \V{>} specifier in \K{rowspec}) & None \\
+  \K{appto} & append text to every cell (like \V{<} specifier in \K{rowspec}) & None \\
+  \K{cmd}   & execute command for every cell text & None \\
 \end{longtblr}
 \vspace{-2em}
 \begin{longtblr}[
@@ -903,6 +931,9 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{rightsep+} & increase horizontal space to the right of the column & None \\
   \K{colsep} & set horizontal space to both sides of the column & \V{6pt} \\
   \K{colsep+} & increase horizontal space to both sides of the column & None \\
+  \K{preto} & prepend text to every cell (like \V{>} specifier in \K{colspec}) & None \\
+  \K{appto} & append text to every cell (like \V{<} specifier in \K{colspec}) & None \\
+  \K{cmd}   & execute command for every cell text & None \\
 \end{longtblr}
 
 Options \verb!rows! and \verb!columns! are for setting all rows and columns, respectively.
@@ -939,7 +970,7 @@ Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns
 \end{demohigh}
 
 The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!font! keys.
-
+\nopagebreak
 \begin{demohigh}
 \begin{tblr}{
  row{odd} = {bg=azure8},
@@ -1120,36 +1151,37 @@ The following examples show the results from different \verb!vspan! values.
 
 \verb!Tabularray! package provides \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
 for you to change the default inner and outer specifications of tables.
-Inner specifications are all options written in the mandatory argument of the \verb!tblr! environment,
-while outer specifications are all options written in the optional argument of the \verb!tblr! environment.
+Inner specifications are all specifications written in the mandatory argument of the \verb!tblr! environment,
+while outer specifications are all specifications written in the optional argument of the \verb!tblr! environment.
+At this time, most of the outer specifications are used for long tables (see Chapter \ref{chap:long}).
 
 In the below example, the first line draws all hlines and vlines for all tables created afterwards,
-while the second line makes all tables created afterwards breakable.
+while the second line makes all tables created afterwards vertically align at bottom.
 
 \begin{codehigh}
 \SetTblrInner{hlines,vlines}
-\SetTblrOuter{long}
+\SetTblrOuter{valign=b}
 \end{codehigh}
 
 You can define new \verb!tabularray! environments using \verb!\NewTblrEnviron! command:
 
-\begin{codehigh}
-\NewTblrEnviron{mylinetblr}{
-  \SetTblrInner{hlines,vlines}
-}
-\NewTblrEnviron{mylongtblr}{
-  \SetTblrOuter{long}
-}
-\end{codehigh}
+\begin{demohigh}
+\NewTblrEnviron{mytblr}
+\SetTblrInner[mytblr]{hlines,vlines}
+\SetTblrOuter[mytblr]{valign=b}
+Text \begin{mytblr}{cccc}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{mytblr} Text
+\end{demohigh}
 
-\section{Counters in Tables}
+\section{Counters and Lengths}
 
 Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be used in cell text:
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{hlines}
- Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
- Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
  Row=\arabic{rowcount}, Col=\arabic{colcount} &
@@ -1158,18 +1190,12 @@ Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be u
  Row=\arabic{rowcount}, Col=\arabic{colcount} \\
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
  Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
- Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
- Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
 \end{tblr}
 \end{demohigh}
 
-\section{Tracing Tabularray}
+Also, lengths \verb!\leftsep!, \verb!\rightsep!, \verb!\abovesep!, \verb!\belowsep! can be used in cell text.
 
-\begin{tcolorbox}
-The interfaces in this section should be seen as \experimental
-and are likely to change in future releases, if necessary.
-Don’t use them in important documents.
-\end{tcolorbox}
+\section{Tracing Tabularray}
 
 To trace internal data behind \verb!tblr! environment, you can use \verb!\SetTblrTracing! command.
 For example, \verb!\SetTblrTracing{all}! will turn on all tracings,
@@ -1178,12 +1204,9 @@ and \verb!\SetTblrTracing{none}! will turn off all tracings.
 All tracing messages will be written to the log files.
 
 \chapter{Use Long Tables}
+\label{chap:long}
 
-\begin{tcolorbox}
-The interfaces in this chapter should be seen as \experimental
-and are likely to change in future releases, if necessary.
-Don’t use them in important documents.
-\end{tcolorbox}
+\mywarning{chapter}
 
 \section{A Simple Example}
 
@@ -1716,18 +1739,14 @@ by writing \verb!theme=fancy! in the optional argument of \verb!longtblr! enviro
 
 \chapter{Use Some Libraries}
 
-\begin{tcolorbox}
-The interfaces in this chapter should be seen as \experimental
-and are likely to change in future releases, if necessary.
-Don’t use them in important documents.
-\end{tcolorbox}
+\mywarning{chapter}
 
 The \verb!tabularray! package emulates or fixes some commands in other packages.
 To avoid potential conflict, you need to enable them with \verb!\UseTblrLibrary! command.
 
 \section{Library \V{booktabs}}
 
-When using \verb!\UseTblrLibrary{booktabs}!,
+When writing \verb!\UseTblrLibrary{booktabs}!,
 \verb!tabularray! package defines commands \verb!\toprule!, \verb!\midrule! and \verb!\bottomrule!
 inside \verb!tblr! environment.
 
@@ -1745,8 +1764,8 @@ inside \verb!tblr! environment.
 
 \section{Library \V{diagbox}}
 
-When using \verb!\UseTblrLibrary{diagbox}! in the preamble of the document,
-\verb!tabularray! package load \verb!diagbox! package,
+When writing \verb!\UseTblrLibrary{diagbox}! in the preamble of the document,
+\verb!tabularray! package loads \verb!diagbox! package,
 and you can use \verb!\diagbox! and \verb!\diagboxthree! commands inside \verb!tblr! environment.
 
 \begin{demohigh}
@@ -1776,6 +1795,45 @@ $\begin{tblr}{|c|cc|}
   1 & 0.3 & 0.4 \\
 \hline
 \end{tblr}$
+\end{demohigh}
+
+\section{Library \V{siunitx}}
+
+When writing \verb!\UseTblrLibrary{siunitx}! in the preamble of the document,
+\verb!tabularray! package loads \verb!siunitx! package,
+and defines \verb!S! column for \verb!tblr! environment.
+
+\begin{demohigh}
+\begin{tblr}{
+  hlines, vlines,
+  colspec={
+    S[table-format=2.2]
+    S[table-format=2.2]
+    S[table-format=2.2]
+  }
+}
+  11    & 11    &  11   \\
+   2.1  &  2.2   &  2.3 \\
+  33.11 & 33.22 & 33.33 \\
+\end{tblr}
+\end{demohigh}
+
+If you need to apply other specifications for the \verb!S! columns,
+you need to move \verb!siunitx! options into \verb!si! keys of the \verb!Q! columns.
+
+\begin{demohigh}
+\begin{tblr}{
+  hlines, vlines,
+  colspec={
+    Q[si={table-format=2.2},blue7]
+    Q[si={table-format=2.2},teal7]
+    Q[si={table-format=2.2},purple7]
+  }
+}
+  11    & 11    &  11   \\
+   2.1  &  2.2   &  2.3 \\
+  33.11 & 33.22 & 33.33 \\
+\end{tblr}
 \end{demohigh}
 
 \chapter{The Source Code}
