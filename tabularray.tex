@@ -1812,12 +1812,14 @@ and defines \verb!S! column for \verb!tblr! environment.
     S[table-format=2.2]
   }
 }
-  11    & 11    &  11   \\
-   2.1  &  2.2   &  2.3 \\
-  33.11 & 33.22 & 33.33 \\
+ {{{Head}}} & {{{Head}}} & {{{Head}}} \\
+    11      &    11      &    11      \\
+     2.1    &     2.2    &     2.3    \\
+    33.11   &    33.22   &    33.33   \\
 \end{tblr}
 \end{demohigh}
 
+Note that you need to use \underline{triple} pairs of braces to guard non-numeric cells.
 If you need to apply other specifications for the \verb!S! columns,
 you need to move \verb!siunitx! options into \verb!si! keys of the \verb!Q! columns.
 
@@ -1830,9 +1832,10 @@ you need to move \verb!siunitx! options into \verb!si! keys of the \verb!Q! colu
     Q[si={table-format=2.2},purple7]
   }
 }
-  11    & 11    &  11   \\
-   2.1  &  2.2   &  2.3 \\
-  33.11 & 33.22 & 33.33 \\
+ {{{Head}}} & {{{Head}}} & {{{Head}}} \\
+    11      &    11      &    11      \\
+     2.1    &     2.2    &     2.3    \\
+    33.11   &    33.22   &    33.33   \\
 \end{tblr}
 \end{demohigh}
 
