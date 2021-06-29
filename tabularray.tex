@@ -27,6 +27,15 @@
 \newcommand*{\K}[1]{\texttt{#1}}
 \newcommand*{\V}[1]{\texttt{#1}}
 
+\NewTblrEnviron{spectblr}
+\SetTblrOuter[spectblr]{long}
+\SetTblrInner[spectblr]{
+  hlines = {white},
+  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
+  column{2} = {co=1},
+  rowhead = 1,
+}
+
 \newcommand{\mywarning}[1]{%
   \begin{tcolorbox}
   The interfaces in this #1 should be seen as
@@ -657,21 +666,17 @@ With \verb!tabularray! package, you can separate style and content totally in ta
 
 All available keys for hlines and vlines are described in Table \ref{key:hvline}.
 
-\begin{longtblr}[
+\begin{spectblr}[
   caption = {Keys for Hlines and Vlines},
   label = {key:hvline},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{
-  hlines = {white},
-  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
-  column{2} = {co=1},
-}
+]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{dash}} & dash style: \V{solid}, \V{dashed} or \V{dotted} & \V{solid} \\
   \K{text}             & replace hline/vline with text (like \V{!} specifier in \K{colspec}) & None \\
   \underline{\K{wd}}   & rule width dimension & None \\
   \underline{\K{fg}}   & rule color name & None \\
-\end{longtblr}
+\end{spectblr}
 
 Options \verb!hlines! and \verb!vlines! are for setting all hlines and vlines, respectively.
 With empty value, all hlines/vlines will be solid.
@@ -794,15 +799,11 @@ You need to load \verb!chemmacros! package for the \verb!\ch! command.
 
 All available keys for cells are described in Table \ref{key:cell} and Table \ref{key:cellspan}.
 \nopagebreak
-\begin{longtblr}[
+\begin{spectblr}[
   caption = {Keys for the Content of Cells},
   label = {key:cell},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{
-  hlines = {white},
-  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
-  column{2} = {co=1},
-}
+]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
@@ -818,20 +819,16 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
   \K{preto} & prepend text to the cell & None \\
   \K{appto} & append text to the cell & None \\
   \K{cmd}   & execute command for the cell text & None \\
-\end{longtblr}
+\end{spectblr}
 \vspace{-2em}
-\begin{longtblr}[
+\begin{spectblr}[
   caption = {Keys for Multispan of Cells},
   label = {key:cellspan},
-]{
-  hlines = {white},
-  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
-  column{2} = {co=1},
-}
+]{}
   Key & Description and Values & Initial Value \\
   \K{r} & number of rows the cell spans    & 1 \\
   \K{c} & number of columns the cell spans & 1 \\
-\end{longtblr}
+\end{spectblr}
 
 Option \verb!cells! is for setting all cells.
 \nopagebreak
@@ -869,16 +866,11 @@ Option \verb!cell{i}{j}! is for setting some cells.
 
 All available keys for rows and columns are described in Table \ref{key:row} and Table \ref{key:column}.
 
-\begin{longtblr}[
+\begin{spectblr}[
   caption = {Keys for Rows},
   label = {key:row},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{
-  rowhead = 1,
-  hlines = {white},
-  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
-  column{2} = {co=1},
-}
+]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
@@ -900,18 +892,13 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{preto} & prepend text to every cell (like \V{>} specifier in \K{rowspec}) & None \\
   \K{appto} & append text to every cell (like \V{<} specifier in \K{rowspec}) & None \\
   \K{cmd}   & execute command for every cell text & None \\
-\end{longtblr}
+\end{spectblr}
 \vspace{-2em}
-\begin{longtblr}[
+\begin{spectblr}[
   caption = {Keys for Columns},
   label = {key:column},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{
-  rowhead = 1,
-  hlines = {white},
-  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
-  column{2} = {co=1},
-}
+]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
@@ -934,7 +921,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{preto} & prepend text to every cell (like \V{>} specifier in \K{colspec}) & None \\
   \K{appto} & append text to every cell (like \V{<} specifier in \K{colspec}) & None \\
   \K{cmd}   & execute command for every cell text & None \\
-\end{longtblr}
+\end{spectblr}
 
 Options \verb!rows! and \verb!columns! are for setting all rows and columns, respectively.
 \nopagebreak
@@ -1016,15 +1003,10 @@ The following example shows that we can replace \verb!\\[dimen]! with \verb!belo
 
 All available keys for the whole table are described in Table \ref{key:table}.
 
-\begin{longtblr}[
+\begin{spectblr}[
   caption = {Keys for the Whole Table},
   label = {key:table},
-]{
-  rowhead = 1,
-  hlines = {white},
-  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
-  column{2} = {co=1},
-}
+]{}
   Key & Description and Values & Initial Value \\
   \K{rowspec} & set row specifications with row type specifiers & None \\
   \K{colspec} & set column specifications with column type specifiers & None \\
@@ -1039,7 +1021,7 @@ All available keys for the whole table are described in Table \ref{key:table}.
   \K{colsep} & set horizontal space to both sides of every column & \V{6pt} \\
   \K{hspan} & horizontal span algorithm: \V{default}, \V{even}, or \V{minimal} & \V{default} \\
   \K{vspan} & vertical span algorithm: \V{default} or \V{even} & \V{default} \\
-\end{longtblr}
+\end{spectblr}
 
 The following example demonstrates the usage of \verb!width! key.
 \nopagebreak
@@ -1427,9 +1409,6 @@ As you can see in the above example, the appearance of long tables of \verb!tabu
 is similar to that of \verb!threeparttable! and \verb!threeparttablex! packages.
 We support table footnotes, but not page footnotes in \verb!tabularray! package.
 
-Table head consists of the caption and the last table foot consists of footnotes and remarks by default.
-We can customize both of them to make them include other text, or appear in different pages.
-
 \newpage
 
 The source code for the above long table is shown below. It is mainly self-explanatory.
@@ -1490,8 +1469,39 @@ The source code for the above long table is shown below. It is mainly self-expla
 \end{longtblr}
 \end{codehigh}
 
+As you can see in the above code, we typeset long tables with \verb!longtblr! environemnt.
+And we can totally separate contents and styles of long tables with \verb!tabularray! package.
+
 Row head and row foot consist of some lines of the table and should appear in every page.
-In the above code, We add \verb!rowhead=2! and \verb!rowfoot=1! to set the total lines of row head and row foot.
+Their options are inner specifications and should be put in the mandatory argument of the \verb!longtblr! environment.
+In the above example, We set \verb!rowhead=2! and \verb!rowfoot=1!.
+
+\begin{spectblr}[
+  caption = {Inner Specifications for Row Heads and Row Foots}
+]{}
+  Key Nama    & Key Description & Initial Value \\
+  \V{rowhead} & number of the first rows of the table appear in every page & \V{0} \\
+  \V{rowfoot} & number of the last rows of the table appear in every page  & \V{0} \\
+\end{spectblr}
+
+Table head and table foot consist of the caption, continuation text, footnotes and remarks.
+Their options are outer specifications and should be put in the optional argument of the \verb!longtblr! environment.
+
+\begin{spectblr}[
+  caption = {Outer Specifications for Table Heads and Table Foots}
+]{}
+  Key Nama            & Key Description & Initial Value \\
+  \V{headsep}         & vertical space between table head and table body & \V{6pt} \\
+  \V{footsep}         & vertical space between table foot and table body & \V{6pt} \\
+  \V{presep}          & vertical space between table head and the above text & \texttt{1.5\string\bigskipamount} \\
+  \V{postsep}         & vertical space between table foot and the below text & \texttt{1.5\string\bigskipamount} \\
+  \V{theme}           & table theme (including settings for templates and sytles) & None \\
+  \V{caption}         & table caption & None \\
+  \V{entry}           & short table caption to be put in List of Tables & None \\
+  \V{label}           & table label & None \\
+  \V{note\{<name>\}}   & table note with \V{<name>} as tag & None \\
+  \V{remark\{<name>\}} & table remark with \V{<name>} as tag & None \\
+\end{spectblr}
 
 \section{Customize Templates}
 
@@ -1502,14 +1512,9 @@ The template system for table heads and table foots in \verb!tabularray! is larg
 modify templates, and \verb!\SetTblrTemplate! command to choose default templates. In defining templates,
 you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrTemplate! commands.
 
-\begin{longtblr}[
+\begin{spectblr}[
   caption = {Templates for Table Heads and Table Foots}
-]{
-  hlines = {white},
-  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
-  column{2} = {co=1},
-  rowhead = 1,
-}
+]{}
   Template Name    & Template Description \\
   \V{contfoot-text}& continuation text in the foot, normally ``Continued on next page'' \\
   \V{contfoot}     & continuation paragraph in the foot, normally including \V{contfoot-text} template \\
@@ -1535,7 +1540,7 @@ you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrT
   \V{middlefoot}   & table foot on middle pages, normally including \V{contfoot} template \\
   \V{lastfoot}     & table foot on the last page, normally including \V{note} and \V{remark} templates \\
   \V{foot}         & setting all of \V{firstfoot}, \V{middlefoot} and \V{lastfoot} \\
-\end{longtblr}
+\end{spectblr}
 
 A template which only includes short text is called a \underline{sub template}.
 Normally there is one \verb!-! in the name of a sub template.
@@ -1692,27 +1697,21 @@ You may change the styles of template elements.
 \SetTblrStyle{caption-tag}{red2}
 \end{codehigh}
 
-\newpage %TODO: fix pagebreak bug
-
 All available keys for template elements are described in Table \ref{key:element}.
 
-\begin{longtblr}[
+\begin{spectblr}[
   caption = {Keys for the Styles of Template Elements},
   label = {key:element},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.
                   The keys \K{halign}, \K{indent} and \K{hang} are only for main templates.}
-]{
-  hlines = {white}, rowhead = 1,
-  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
-  column{2} = {co=1},
-}
+]{}
   Key Name               & Key Description \\
   \underline{\K{fg}}     & foreground color \\
   \underline{\K{font}}   & font commands \\
   \underline{\K{halign}} & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right) \\
   \K{indent}             & parindent value \\
   \K{hang}               & hangindent value \\
-\end{longtblr}
+\end{spectblr}
 
 When you write \verb!\UseTblrTemplate{element}{default}! in defining a template,
 beside including the code of template \verb!element!, the foreground color and font commands
