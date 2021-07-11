@@ -2378,16 +2378,16 @@
     \int_gincr:N \g_tblr_level_int
     \__tblr_clear_prop_lists:
     \__tblr_clear_spec_lists:
+    \LogTblrTracing { step = init ~ table ~ outer ~ spec}
+    \__tblr_init_table_outer_spec:
+    \LogTblrTracing { step = parse ~ table ~ options }
+    \__tblr_parse_table_option:n {#1}
+    \LogTblrTracing { outer }
+    \LogTblrTracing { option }
     \__tblr_enable_table_commands:
     \LogTblrTracing { step = split ~ table}
     \__tblr_split_table:n {#3}
     \LogTblrTracing { command }
-    \LogTblrTracing { step = init ~ table ~ outer ~ spec}
-    \__tblr_init_table_outer_spec:
-    \LogTblrTracing { outer }
-    \LogTblrTracing { step = parse ~ table ~ options }
-    \__tblr_parse_table_option:n {#1}
-    \LogTblrTracing { option }
     \bool_if:NT \g__tblr_use_intarray_bool { \__tblr_init_table_data: }
     \LogTblrTracing { step = init ~ table ~ inner ~ spec}
     \__tblr_init_table_inner_spec:
@@ -2439,17 +2439,34 @@
     \regex_replace_all:NVN \c__tblr_remove_braces_regex \c__tblr_remove_braces_tl #1
   }
 
-\tl_new:N \tblrbody
 \tl_new:N \l__tblr_body_tl
+\tl_new:N \l__tblr_expand_tl
 \seq_new:N \l__tblr_lines_seq
+
+%% Expand every occurrence of the specified macro once
+%% #1: table content; #2: macro to be expanded
+\cs_new_protected:Npn \__tblr_expand_table_body:nN #1 #2
+  {
+    \tl_clear:N \l__tblr_body_tl
+    \cs_set_protected:Npn \__tblr_expand_table_body_aux:w ##1 #2
+      {
+        \tl_put_right:Nn \l__tblr_body_tl {##1}
+        \peek_meaning:NTF \q_stop
+          { \use_none:n }
+          { \exp_last_unbraced:NV \__tblr_expand_table_body_aux:w #2 }
+      }
+    \__tblr_expand_table_body_aux:w #1 #2 \q_stop
+  }
 
 %% Split table content to cells and store them
 %% #1: table content
 \cs_new_protected:Npn \__tblr_split_table:n #1
   {
-    \tl_if_head_eq_meaning:nNTF {#1} \tblrbody
-      { \tl_set:No \l__tblr_body_tl {#1} }
+    \tl_set:Nx \l__tblr_expand_tl { \__tblr_spec_item:nn { outer } { expand } }
+    \tl_set:Nx \l__tblr_expand_tl { \tl_head:N \l__tblr_expand_tl }
+    \tl_if_empty:NTF \l__tblr_expand_tl
       { \tl_set:Nn \l__tblr_body_tl {#1} }
+      { \exp_args:NnV \__tblr_expand_table_body:nN {#1} \l__tblr_expand_tl }
     \int_zero:N \c@rowcount
     \int_zero:N \c@colcount
     \__tblr_split_table_to_lines:NN \l__tblr_body_tl \l__tblr_lines_seq
@@ -2863,6 +2880,7 @@
     t       .meta:n = { valign = t },
     m       .meta:n = { valign = m },
     b       .meta:n = { valign = b },
+    expand  .code:n = \__tblr_outer_gput_spec:nn { expand } {#1},
     headsep .code:n = \__tblr_outer_gput_spec:nn { headsep } {#1},
     footsep .code:n = \__tblr_outer_gput_spec:nn { footsep } {#1},
     presep  .code:n = \__tblr_outer_gput_spec:nn { presep }  {#1},
