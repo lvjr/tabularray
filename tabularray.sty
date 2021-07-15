@@ -2719,6 +2719,8 @@
     @vline-count = 0,
   }
 
+\tl_new:N \l__tblr_inner_spec_verb_tl
+
 \cs_new_protected:Npn \__tblr_init_table_inner_spec:
   {
     \prop_map_inline:Nn \g__tblr_initial_table_prop
@@ -2765,6 +2767,7 @@
         \__tblr_spec_gput:nen { vline }
           { [\int_eval:n { \c@colcount + 1}] / ##1 } {##2}
       }
+    \tl_clear:N \l__tblr_inner_spec_verb_tl
     \keys_set:nv { tblr } { l__tblr_default_ \l__tblr_env_name_tl _inner_tl }
   }
 
@@ -2775,7 +2778,7 @@
 \clist_new:N \g__tblr_table_known_keys_clist
 \clist_gset:Nn \g__tblr_table_known_keys_clist
   {
-    colspec, rowspec, width, hspan, vspan, stretch,
+    colspec, rowspec, width, hspan, vspan, stretch, verb,
     column, row, cell, vline, hline, columns, rows, cells, vlines, hlines,
     leftsep, rightsep, colsep, abovesep, belowsep, rowsep, rulesep,
     rowhead, rowfoot,
@@ -2789,6 +2792,8 @@
     hspan .code:n = \__tblr_keys_gput:nn { hspan } {#1},
     vspan .code:n = \__tblr_keys_gput:nn { vspan } {#1},
     stretch .code:n = \__tblr_keys_gput:nn { stretch } {#1},
+    verb   .tl_set:N = \l__tblr_inner_spec_verb_tl,
+    verb  .default:n = lite,
     columns .code:n = \__tblr_set_every_column_aux:n {#1},
     rows    .code:n = \__tblr_set_every_row_aux:n {#1},
     cells   .code:n = \__tblr_set_every_cell_aux:n {#1},
@@ -3273,7 +3278,11 @@
             \seq_map_variable:NNn \l_tmpa_seq \l_tmpa_tl
               {
                 \__tblr_remove_braces:N \l_tmpa_tl
-                \hbox_set:Nn \l_tmpa_box { \l__tblr_f_tl \l_tmpa_tl }
+                \hbox_set:Nn \l_tmpa_box
+                  {
+                    \l__tblr_f_tl
+                    \__tblr_rescan_cell_tokens:V \l_tmpa_tl
+                  }
                 \tl_set:Nx \l__tblr_w_tl
                   { \dim_max:nn { \l__tblr_w_tl } { \box_wd:N \l_tmpa_box } }
               }
@@ -3288,8 +3297,8 @@
 \cs_new_protected:Npn \__tblr_get_vcell_and_sizes:NN #1 #2
   {
     \group_begin:
-    \vbox_set_top:Nn \l_tmpa_box { \__tblr_make_vcell_text:nN #1 #2 }
-    \vbox_set:Nn \l_tmpb_box { \__tblr_make_vcell_text:nN #1 #2 }
+    \vbox_set_top:Nn \l_tmpa_box { \__tblr_make_vcell_text:NN #1 #2 }
+    \vbox_set:Nn \l_tmpb_box { \__tblr_make_vcell_text:NN #1 #2 }
     \dim_gset:Nn \g__tblr_cell_wd_dim { \box_wd:N \l_tmpb_box }
     \dim_gset:Nn \g__tblr_cell_ht_dim
       { \box_ht:N \l_tmpb_box + \box_dp:N \l_tmpb_box }
@@ -3333,16 +3342,26 @@
 
 %% #1: cell text; #2: box width
 %% All halign commands are defined at the beginning of the file
-\cs_new_protected:Npn \__tblr_make_vcell_text:nN #1 #2
+\cs_new_protected:Npn \__tblr_make_vcell_text:NN #1 #2
   {
     \dim_set:Nn \tex_hsize:D { #2 }
     \@arrayparboxrestore
     \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
     \mode_leave_vertical:
     \box_use:N \l__tblr_strut_ht_box
-    \bool_if:NTF \l__tblr_math_mode_bool { $#1$ } { #1 }
+    \bool_if:NTF \l__tblr_math_mode_bool
+      { $#1$ }
+      { \__tblr_rescan_cell_tokens:V #1 }
     \box_use:N \l__tblr_strut_dp_box
   }
+
+\cs_new_protected:Npn \__tblr_rescan_cell_tokens:n #1
+  {
+    \tl_if_empty:NTF \l__tblr_inner_spec_verb_tl
+      { #1 }
+      { \tex_scantokens:D {#1} }
+  }
+\cs_generate_variant:Nn \__tblr_rescan_cell_tokens:n {V}
 
 %% #1: total height dimension; #2: head dimension; #3: foot dimension;
 %% #4: tl for resulting upper size; #5: tl for resulting lower size
