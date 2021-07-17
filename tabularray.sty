@@ -4932,7 +4932,7 @@
           {
             \__tblr_do_if_tracing:nn { page } { \tl_log:N \l__tblr_i_tl }
             \int_compare:nNnT
-              { \l__tblr_i_tl - \l__tblr_long_from_tl } > {1}
+              { \l__tblr_i_tl - \l__tblr_long_from_tl } > {0}
               {
                 \__tblr_build_page_table:nnx {#1}
                   { \l__tblr_long_from_tl } { \int_eval:n { \l__tblr_i_tl - 1 } }
