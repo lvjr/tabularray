@@ -3281,7 +3281,7 @@
                 \hbox_set:Nn \l_tmpa_box
                   {
                     \l__tblr_f_tl
-                    \__tblr_rescan_cell_tokens:V \l_tmpa_tl
+                    \__tblr_rescan_cell_tokens:N \l_tmpa_tl
                   }
                 \tl_set:Nx \l__tblr_w_tl
                   { \dim_max:nn { \l__tblr_w_tl } { \box_wd:N \l_tmpa_box } }
@@ -3351,17 +3351,20 @@
     \box_use:N \l__tblr_strut_ht_box
     \bool_if:NTF \l__tblr_math_mode_bool
       { $#1$ }
-      { \__tblr_rescan_cell_tokens:V #1 }
+      { \__tblr_rescan_cell_tokens:N #1 }
     \box_use:N \l__tblr_strut_dp_box
   }
 
-\cs_new_protected:Npn \__tblr_rescan_cell_tokens:n #1
+\cs_new_protected:Npn \__tblr_rescan_cell_tokens:N #1
   {
     \tl_if_empty:NTF \l__tblr_inner_spec_verb_tl
       { #1 }
-      { \tex_scantokens:D {#1} }
+      {
+        \regex_replace_all:nnN { . } { \c{string} \0 } #1
+        \tl_set:Nx #1 { #1 }
+        \exp_args:NV \tex_scantokens:D #1
+      }
   }
-\cs_generate_variant:Nn \__tblr_rescan_cell_tokens:n {V}
 
 %% #1: total height dimension; #2: head dimension; #3: foot dimension;
 %% #4: tl for resulting upper size; #5: tl for resulting lower size
