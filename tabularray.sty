@@ -87,7 +87,6 @@
 \tl_new:N  \l__tblr_y_tl
 \int_new:N \l__tblr_a_int
 \int_new:N \l__tblr_c_int % for column number
-\int_new:N \l__tblr_i_int
 \int_new:N \l__tblr_r_int % for row number
 \dim_new:N \l__tblr_d_dim % for depth
 \dim_new:N \l__tblr_h_dim % for height
@@ -360,6 +359,7 @@
 \__tblr_data_new_key:nnn { row } { @row-foot }   { dim }
 \__tblr_data_new_key:nnn { row } { @row-upper }  { dim }
 \__tblr_data_new_key:nnn { row } { @row-lower }  { dim }
+\__tblr_data_new_key:nnn { row } { break }       { int }
 
 \int_new:N \g__tblr_data_column_key_count_int
 \__tblr_data_new_key:nnn { column } { width }       { dim }
@@ -1959,8 +1959,9 @@
     abovesep+ .code:n = \__tblr_row_gadd_dimen:ne { abovesep } { \dim_eval:n {#1} },
     belowsep+ .code:n = \__tblr_row_gadd_dimen:ne { belowsep } { \dim_eval:n {#1} },
     rowsep+   .meta:n = { abovesep+ = #1, belowsep+ = #1},
-    nobreak   .code:n = \__tblr_prop_gput:nxx { row }
-                          { [\int_eval:n {\c@rownum - 1}] / nobreak } { true },
+    break     .code:n = \__tblr_row_gput:nn { break } {#1},
+    pagebreak   .meta:n = { break = 1 },
+    nopagebreak .meta:n = { break = -1 },
     unknown   .code:n = \__tblr_row_unknown_key:V \l_keys_key_str,
   }
 
@@ -2485,7 +2486,7 @@
       {
         \tl_if_head_eq_meaning:nNTF {##1} *
           {
-            \tl_set:Nn \l__tblr_b_tl { \SetRow{nobreak} }
+            \tl_set:Nn \l__tblr_b_tl { \SetRow { break = -1 } }
             \tl_set:Nx \l__tblr_c_tl { \tl_tail:n {##1} }
             \tl_trim_spaces:N \l__tblr_c_tl %% Ignore spaces between * and [dimen]
             \tl_log:N \l__tblr_c_tl
@@ -4885,6 +4886,8 @@
 \dim_new:N \l__tblr_remain_height_dim
 \int_new:N \l__tblr_long_from_int
 \int_new:N \l__tblr_long_to_int
+\int_new:N \l__tblr_curr_i_int
+\int_new:N \l__tblr_prev_i_int
 \int_new:N \l__tblr_table_page_int
 \bool_new:N \l__tblr_table_page_break_bool
 
@@ -4912,22 +4915,23 @@
       { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
     \int_set:Nn \l__tblr_long_from_int { \l__tblr_row_head_tl + 1 }
     \int_set:Nn \l__tblr_long_to_int { \c@rowcount - ( \l__tblr_row_foot_tl + 0 ) }
-    \int_set:Nn \l__tblr_i_int { \l__tblr_long_from_int - 1 }
-    \int_do_while:nNnn { \l__tblr_i_int } < { \l__tblr_long_to_int }
+    \int_set:Nn \l__tblr_curr_i_int { \l__tblr_long_from_int - 1 }
+    \int_do_while:nNnn { \l__tblr_curr_i_int } < { \l__tblr_long_to_int }
       {
-        \__tblr_get_next_table_rows:NNNN \l__tblr_long_to_int \l__tblr_i_int
+        \int_set_eq:NN \l__tblr_prev_i_int \l__tblr_curr_i_int
+        \__tblr_get_next_table_rows:NNNN \l__tblr_long_to_int \l__tblr_curr_i_int
           \l_tmpa_dim \l__tblr_table_page_break_bool
         \__tblr_check_table_page_break:NNN
           \l__tblr_remain_height_dim \l_tmpa_dim \l__tblr_table_page_break_bool
         \bool_if:NTF \l__tblr_table_page_break_bool
           {
-            \__tblr_do_if_tracing:nn { page } { \int_log:N \l__tblr_i_int }
-            \int_compare:nNnT
-              { \l__tblr_i_int - \l__tblr_long_from_int } > {0}
+            \__tblr_do_if_tracing:nn { page } { \int_log:N \l__tblr_curr_i_int }
+            \int_compare:nNnF
+              { \l__tblr_prev_i_int - \l__tblr_long_from_int } < {0}
               {
                 \__tblr_build_page_table:nnx {#1}
                   { \int_use:N \l__tblr_long_from_int }
-                  { \int_eval:n { \l__tblr_i_int - 1 } }
+                  { \int_use:N \l__tblr_prev_i_int }
                 \int_incr:N \l__tblr_table_page_int
               }
             \newpage
@@ -4936,7 +4940,7 @@
             \LogTblrTracing { page }
             \dim_set:Nn \l__tblr_remain_height_dim
               { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim - \l_tmpa_dim }
-            \int_set_eq:NN \l__tblr_long_from_int \l__tblr_i_int
+            \int_set:Nn \l__tblr_long_from_int { \l__tblr_prev_i_int + 1 }
           }
           {
             \dim_add:Nn \l__tblr_remain_height_dim { -\l_tmpa_dim }
@@ -4962,17 +4966,31 @@
 %% #3: row dimension; #4: break page or not.
 \cs_new_protected:Npn \__tblr_get_next_table_rows:NNNN #1 #2 #3 #4
   {
-    \int_incr:N #2
-    \dim_set:Nn #3
+    \bool_set_true:N \l_tmpa_bool
+    \dim_zero:N #3
+    \bool_while_do:Nn \l_tmpa_bool
       {
-        \__tblr_data_item:nen { row } { \int_use:N #2 } { abovesep }
-        +
-        \__tblr_data_item:nen { row } { \int_use:N #2 } { @row-height }
-        +
-        \__tblr_data_item:nen { row } { \int_use:N #2 } { belowsep }
-        +
-        \__tblr_spec_item:ne { hline }
-          { [ \int_eval:n { #2 + 1 } ] / @hline-height }
+        \int_incr:N #2
+        \dim_add:Nn #3
+          {
+            \__tblr_data_item:nen { row } { \int_use:N #2 } { abovesep }
+            +
+            \__tblr_data_item:nen { row } { \int_use:N #2 } { @row-height }
+            +
+            \__tblr_data_item:nen { row } { \int_use:N #2 } { belowsep }
+            +
+            \__tblr_spec_item:ne { hline }
+              { [ \int_eval:n { #2 + 1 } ] / @hline-height }
+          }
+        \int_compare:nNnTF {#2} < {#1}
+          {
+            \tl_set:Nx \l__tblr_b_tl
+              { \__tblr_data_item:nen { row } { \int_eval:n { #2 + 1 } } { break } }
+            \int_compare:nNnTF { \l__tblr_b_tl } < { 0 }
+              { \bool_set_true:N \l_tmpa_bool }
+              { \bool_set_false:N \l_tmpa_bool }
+          }
+          { \bool_set_false:N \l_tmpa_bool }
       }
   }
 
