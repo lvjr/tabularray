@@ -1,0 +1,37 @@
+%  -*- coding: utf-8 -*-
+\documentclass[12pt]{article}
+\usepackage[a6paper,margin=10mm]{geometry}
+% a6paper = 105mm × 148mm
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+\usepackage{blindtext}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+% Issue #38: [longtblr] parts of the table missing (blank page instead)
+
+\START
+\BEGINTEST{testing long table with single row pages}
+\begin{longtblr}[
+  caption = {Table Caption},
+]{
+  colspec = {lX}, hlines,
+}
+ Alpha   & Beta  \\
+ Epsilon & \begin{minipage}[t]{0.8\linewidth}\blinditemize[12]\end{minipage} \\
+ Iota    & \begin{minipage}[t]{0.8\linewidth}\blinditemize[12]\end{minipage} \\
+ Nu      & Xi   \\
+ Rho     & \begin{minipage}[t]{0.8\linewidth}\blinditemize[12]\end{minipage} \\
+ Phi     & \begin{minipage}[t]{0.8\linewidth}\blinditemize[12]\end{minipage} \\
+\end{longtblr}
+Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text.
+%\listoftables
+\ENDTEST
+
+\end{document}

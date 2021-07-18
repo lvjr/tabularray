@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+\usepackage{xcolor}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{siunitx}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{siunitx: testing}
+\begin{tabular}{|S[table-format=2.1]|S[table-format = 2.2]|S[table-format=2.3]|}
+\hline
+ {Head} & {Head} & {Head} \\
+\hline
+ 11     & 11     & 11     \\
+\hline
+  2.1   &  2.2   &  2.3   \\
+\hline
+ 33.11  & 33.22  & 33.33  \\
+\hline
+\end{tabular}
+\par
+\begin{tblr}{
+ hlines, vlines,
+ colspec={S[table-format=2.1] S[table-format = 2.2] S[table-format=2.3]}
+}
+ {{{Head}}} & {{{Head}}} & {{{Head}}} \\
+ 11         & 11         & 11         \\
+  2.1       &  2.2       &  2.3       \\
+ 33.11      & 33.22      & 33.33      \\
+\end{tblr}
+\par
+\begin{tblr}{
+ hlines, vlines,
+ colspec={Q[si={table-format=2.1},purple7]
+          Q[si={table-format = 2.2},teal7]
+          Q[si={table-format=2.3},blue7]},
+}
+ {{{Head}}} & {{{Head}}} & {{{Head}}} \\
+ 11         & 11         & 11         \\
+  2.1       &  2.2       &  2.3       \\
+ 33.11      & 33.22      & 33.33      \\
+\end{tblr}
+\ENDTEST
+
+\end{document}

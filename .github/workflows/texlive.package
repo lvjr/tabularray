@@ -9,6 +9,7 @@ beamer
 bibunits
 bigintcalc
 bitset
+blindtext
 booktabs
 caption
 carlisle
@@ -93,6 +94,7 @@ refcount
 rerunfilecheck
 sansmathaccent
 setspace
+siunitx
 soul
 svn-prov
 tex
