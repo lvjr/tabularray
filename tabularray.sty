@@ -930,6 +930,21 @@
     \int_set:Nn \c@colnum {#2}
   }
 
+%% Table commands are defined only inside tblr environments,
+%% but some packages such as csvsimple need to use them outside tblr environments,
+%% therefore we defined some of them first here.
+
+\ProvideDocumentCommand \SetHlines  { o m m } {}
+\ProvideDocumentCommand \SetHline   { o m m } {}
+\ProvideDocumentCommand \SetVlines  { o m m } {}
+\ProvideDocumentCommand \SetVline   { o m m } {}
+\ProvideDocumentCommand \SetCells   { o m } {}
+\ProvideDocumentCommand \SetCell    { o m } {}
+\ProvideDocumentCommand \SetRows    { o m } {}
+\ProvideDocumentCommand \SetRow     { o m } {}
+\ProvideDocumentCommand \SetColumns { o m } {}
+\ProvideDocumentCommand \SetColumn  { o m } {}
+
 %%% --------------------------------------------------------
 %%> \section{New Content Commands}
 %%% --------------------------------------------------------
