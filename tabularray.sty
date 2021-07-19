@@ -2499,7 +2499,6 @@
             \tl_set:Nn \l__tblr_b_tl { \SetRow { break = -1 } }
             \tl_set:Nx \l__tblr_c_tl { \tl_tail:n {##1} }
             \tl_trim_spaces:N \l__tblr_c_tl %% Ignore spaces between * and [dimen]
-            \tl_log:N \l__tblr_c_tl
             \tl_if_head_eq_meaning:VNT \l__tblr_c_tl [
               {
                 \tl_put_right:Nn \l__tblr_b_tl { \RowBefore@AddBelowSep }

@@ -1,0 +1,129 @@
+%  -*- coding: utf-8 -*-
+\documentclass[12pt]{article}
+\usepackage[a6paper,margin=10mm]{geometry}
+% a6paper = 105mm × 148mm
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+\START
+\BEGINTEST{long table: pagebreak and nopagebreak}
+\begin{longtblr}[
+  caption = {Long Tabular},
+  entry = {Short Caption},
+  label = {tblr:abcd},
+]{
+  colspec = {XXX}, width = 0.9\linewidth,
+  rowhead = 2, rowfoot = 1
+}
+\hline
+ \SetRow{purple7}
+ Head & Head & Head \\
+\hline                               
+ \SetRow{purple7}
+ Head & Head & Head \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\\nopagebreak
+\hline
+ Epsilon & Zeta  & Eta     \\*
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline\pagebreak
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ \SetRow{blue7}
+ Foot & Foot & Foot \\
+\hline
+\end{longtblr}
+Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text.
+Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text.
+%\listoftables
+\ENDTEST
+
+\end{document}

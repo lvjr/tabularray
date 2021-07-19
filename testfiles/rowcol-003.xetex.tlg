@@ -7,9 +7,6 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line ....
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line ....
-> \l__tblr_c_tl=\hline Seven & Eight & Nine.
-> \l__tblr_c_tl=[1em] \hline Seven & Eight & Nine.
-> \l__tblr_c_tl=[1em] \hline .
 ============================================================
 ============================================================
 TEST 2: testing \\\relax and \hline \relax 
