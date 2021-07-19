@@ -2030,6 +2030,16 @@
   }
 \cs_generate_variant:Nn \__tblr_row_unknown_key:n { V }
 
+\NewTableCommand \pagebreak
+  {
+    \tblr_set_row:nn {} { break = 1 }
+  }
+
+\NewTableCommand \nopagebreak
+  {
+    \tblr_set_row:nn {} { break = -1 }
+  }
+
 %%% --------------------------------------------------------
 %%  \section{Column Types and Row Types}
 %%% --------------------------------------------------------
@@ -4889,7 +4899,8 @@
 \int_new:N \l__tblr_curr_i_int
 \int_new:N \l__tblr_prev_i_int
 \int_new:N \l__tblr_table_page_int
-\bool_new:N \l__tblr_table_page_break_bool
+\bool_new:N \l__tblr_page_break_curr_bool
+\bool_new:N \l__tblr_page_break_prev_bool
 
 %% #1: table alignment
 %% For long table, we need to leave hmode first to get correct \pagetotal
@@ -4919,11 +4930,12 @@
     \int_do_while:nNnn { \l__tblr_curr_i_int } < { \l__tblr_long_to_int }
       {
         \int_set_eq:NN \l__tblr_prev_i_int \l__tblr_curr_i_int
-        \__tblr_get_next_table_rows:NNNN \l__tblr_long_to_int \l__tblr_curr_i_int
-          \l_tmpa_dim \l__tblr_table_page_break_bool
+        \__tblr_get_next_table_rows:NNNN
+          \l__tblr_long_to_int \l__tblr_curr_i_int
+          \l_tmpa_dim \l__tblr_page_break_curr_bool
         \__tblr_check_table_page_break:NNN
-          \l__tblr_remain_height_dim \l_tmpa_dim \l__tblr_table_page_break_bool
-        \bool_if:NTF \l__tblr_table_page_break_bool
+          \l__tblr_remain_height_dim \l_tmpa_dim \l__tblr_page_break_prev_bool
+        \bool_if:NTF \l__tblr_page_break_prev_bool
           {
             \__tblr_do_if_tracing:nn { page } { \int_log:N \l__tblr_curr_i_int }
             \int_compare:nNnF
@@ -4943,7 +4955,21 @@
             \int_set:Nn \l__tblr_long_from_int { \l__tblr_prev_i_int + 1 }
           }
           {
-            \dim_add:Nn \l__tblr_remain_height_dim { -\l_tmpa_dim }
+            \bool_if:NTF \l__tblr_page_break_curr_bool
+              {
+                \__tblr_build_page_table:nnx {#1}
+                  { \int_use:N \l__tblr_long_from_int }
+                  { \int_use:N \l__tblr_curr_i_int }
+                \int_incr:N \l__tblr_table_page_int
+                \newpage
+                \hbox{}\kern-\topskip\nobreak
+                \noindent
+                \LogTblrTracing { page }
+                \dim_set:Nn \l__tblr_remain_height_dim
+                  { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
+                \int_set:Nn \l__tblr_long_from_int { \l__tblr_curr_i_int + 1 }
+              }
+              { \dim_add:Nn \l__tblr_remain_height_dim { -\l_tmpa_dim } }
           }
       }
     \int_compare:nNnTF { \l__tblr_table_page_int } = {1}
@@ -4968,6 +4994,7 @@
   {
     \bool_set_true:N \l_tmpa_bool
     \dim_zero:N #3
+    \bool_set_false:N #4
     \bool_while_do:Nn \l_tmpa_bool
       {
         \int_incr:N #2
@@ -4988,7 +5015,10 @@
               { \__tblr_data_item:nen { row } { \int_eval:n { #2 + 1 } } { break } }
             \int_compare:nNnTF { \l__tblr_b_tl } < { 0 }
               { \bool_set_true:N \l_tmpa_bool }
-              { \bool_set_false:N \l_tmpa_bool }
+              {
+                \bool_set_false:N \l_tmpa_bool
+                \int_compare:nNnT { \l__tblr_b_tl } > { 0 } { \bool_set_true:N #4 }
+              }
           }
           { \bool_set_false:N \l_tmpa_bool }
       }
