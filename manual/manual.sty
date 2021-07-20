@@ -30,10 +30,10 @@
 \NewTblrEnviron{spectblr}
 \SetTblrOuter[spectblr]{long}
 \SetTblrInner[spectblr]{
-  hlines = {white},
-  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
-  column{2} = {co=1},
-  rowhead = 1,
+  hlines = {white}, column{2} = {co=1}, colsep = 5pt,
+  row{odd} = {brown8}, row{even} = {gray8},
+  row{1} = {fg=white, bg=purple2, font=\bfseries\sffamily},
+  rowhead = 1, verb,
 }
 
 \newcommand{\mywarning}[1]{%
