@@ -27,13 +27,21 @@
 \newcommand*{\K}[1]{\texttt{#1}}
 \newcommand*{\V}[1]{\texttt{#1}}
 
+\NewTblrEnviron{newtblr}
+\SetTblrOuter[newtblr]{long}
+\SetTblrInner[newtblr]{
+  hlines = {white}, column{1,2} = {co=1}, colsep = 5pt,
+  row{odd} = {brown8}, row{even} = {gray8},
+  row{1} = {fg=white, bg=purple2, font=\bfseries\sffamily},
+}
+
 \NewTblrEnviron{spectblr}
 \SetTblrOuter[spectblr]{long}
 \SetTblrInner[spectblr]{
   hlines = {white}, column{2} = {co=1}, colsep = 5pt,
   row{odd} = {brown8}, row{even} = {gray8},
   row{1} = {fg=white, bg=purple2, font=\bfseries\sffamily},
-  rowhead = 1, verb,
+  rowhead = 1,
 }
 
 \newcommand{\mywarning}[1]{%
