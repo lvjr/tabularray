@@ -1214,16 +1214,18 @@ By this approach, alternating row colors should work as expected.
   remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
 ]{
   colspec = {XXX}, width = 0.85\linewidth,
-  row{odd} = {gray9}, row{even} = {brown9}, rowhead = 2, rowfoot = 1,
+  rowhead = 2, rowfoot = 1,
+  row{odd} = {gray9}, row{even} = {brown9},
+  row{1-2} = {purple7}, row{Z} = {blue7},
 }
 \hline
- \SetRow{purple7} Head & Head & Head \\
+ Head    & Head  & Head    \\
 \hline
- \SetRow{purple7} Head & Head & Head \\
+ Head    & Head  & Head    \\
 \hline
  Alpha   & Beta  & Gamma   \\
 \hline
- Epsilon & Zeta\TblrNote{a} & Eta \\
+ Epsilon & Zeta\TblrNote{a}       & Eta    \\
 \hline
  Iota    & Kappa\TblrNote{$\dag$} & Lambda \\
 \hline
@@ -1365,7 +1367,7 @@ Alpha   & Beta  & Gamma   \\
 \hline
  Phi     & Chi   & Psi     \\
 \hline
- Alpha   & Beta  & Gamma\footnote{Hello}   \\
+ Alpha   & Beta  & Gamma   \\
 \hline
  Epsilon & Zeta  & Eta     \\
 \hline
@@ -1401,7 +1403,7 @@ Alpha   & Beta  & Gamma   \\
 %\hline
 % Phi     & Chi   & Psi     \\
 \hline
- \SetRow{blue7} Foot & Foot & Foot \\
+ Foot    & Foot  & Foot    \\
 \hline
 \end{longtblr}
 
@@ -1431,16 +1433,18 @@ The source code for the above long table is shown below. It is mainly self-expla
   remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
 ]{
   colspec = {XXX}, width = 0.85\linewidth,
-  row{odd} = {gray9}, row{even} = {brown9}, rowhead = 2, rowfoot = 1,
+  rowhead = 2, rowfoot = 1,
+  row{odd} = {gray9}, row{even} = {brown9},
+  row{1-2} = {purple7}, row{Z} = {blue7},
 }
 \hline
- \SetRow{purple7} Head & Head & Head \\
+ Head    & Head  & Head    \\
 \hline
- \SetRow{purple7} Head & Head & Head \\
+ Head    & Head  & Head    \\
 \hline
  Alpha   & Beta  & Gamma   \\
 \hline
- Epsilon & Zeta\TblrNote{a} & Eta \\
+ Epsilon & Zeta\TblrNote{a}       & Eta    \\
 \hline
  Iota    & Kappa\TblrNote{$\dag$} & Lambda \\
 \hline
@@ -1464,7 +1468,7 @@ The source code for the above long table is shown below. It is mainly self-expla
 \hline
  Phi     & Chi   & Psi     \\
 \hline
- \SetRow{blue7} Foot & Foot & Foot \\
+ Foot    & Foot  & Foot    \\
 \hline
 \end{longtblr}
 \end{codehigh}
@@ -1546,6 +1550,9 @@ A template which only includes short text is called a \underline{sub template}.
 Normally there is one \verb!-! in the name of a sub template.
 A template which includes one or more paragraphs is called a \underline{main template}.
 Normally there isn't any \verb!-! in the name of a main template.
+
+For each of the above elements, two templates \verb!normal! and \verb!empty! are always defined.
+You can select one of them with \verb!\SetTblrTemplate! command.
 
 \subsection{Continuation Templates}
 
@@ -1735,6 +1742,12 @@ a theme consists of some template and style settings. For example:
 
 After defining the theme \verb!fancy!, you can use it
 by writing \verb!theme=fancy! in the optional argument of \verb!longtblr! environment.
+
+\section{Control Page Breaks}
+
+Just like \verb!longtable! package, you can use \verb!\\*! or \verb!\nopagebreak!
+to prohibit a page break, and use \verb!\pagebreak! to force a page break.
+
 
 \chapter{Use Some Libraries}
 
