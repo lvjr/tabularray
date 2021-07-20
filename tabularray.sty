@@ -859,10 +859,28 @@
       }
   }
 
+\tl_new:N \l__tblr_child_from_tl
+\tl_new:N \l__tblr_child_to_tl
+
 \cs_new_protected_nopar:Npn \__tblr_get_childs_normal_aux:w #1 - #2 \scan_stop
   {
-    \int_step_inline:nnn {#1} {#2}
+    \__tblr_child_name_to_index:nN {#1} \l__tblr_child_from_tl
+    \__tblr_child_name_to_index:nN {#2} \l__tblr_child_to_tl
+    \int_step_inline:nnn { \l__tblr_child_from_tl } { \l__tblr_child_to_tl }
       { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
+  }
+
+\regex_const:Nn \c__tblr_child_name_regex { ^ [X-Z] $ }
+
+%% Convert X, Y, Z to the indexes of the last three childs, respectively
+\cs_new_protected_nopar:Npn \__tblr_child_name_to_index:nN #1 #2
+  {
+    \regex_match:NnTF \c__tblr_child_name_regex {#1}
+      {
+        \tl_set:Nx #2
+          { \int_eval:n { \l_tblr_childs_total_tl + \int_from_alph:n {#1} - 26 } }
+      }
+      { \tl_set:Nx #2 { #1 } }
   }
 
 %%% --------------------------------------------------------
