@@ -4401,6 +4401,7 @@
 \DefTblrTemplate { contfoot-text } { normal } { Continued ~ on ~ next ~ page }
 \SetTblrTemplate { contfoot-text } { normal }
 
+\DefTblrTemplate { contfoot } { empty } { }
 \DefTblrTemplate { contfoot } { plain }
   {
     \noindent
@@ -4424,6 +4425,7 @@
 \DefTblrTemplate { conthead-text } { normal } { ( Continued ) }
 \SetTblrTemplate { conthead-text } { normal }
 
+\DefTblrTemplate { conthead } { empty } { }
 \DefTblrTemplate { conthead } { plain }
   {
     \noindent
@@ -4450,6 +4452,7 @@
 
 \tl_new:N \l__tblr_caption_short_tl
 
+\DefTblrTemplate { caption-lot } { empty } { }
 \DefTblrTemplate { caption-lot } { normal }
   {
     \tl_set:Nx \l__tblr_caption_short_tl { \InsertTblrText { entry } }
@@ -4463,18 +4466,22 @@
 %% We need to use \hspace and \enskip, but not ~ or \space,
 %% since we want a correct hangindent caption paragraph.
 
+\DefTblrTemplate { caption-tag } { empty } { }
 \DefTblrTemplate { caption-tag } { normal } { Table \hspace{0.25em} \thetable }
 \SetTblrTemplate { caption-tag } { normal }
 
+\DefTblrTemplate { caption-sep } { empty } { }
 \DefTblrTemplate { caption-sep } { normal } { : \enskip }
 \SetTblrTemplate { caption-sep } { normal }
 
+\DefTblrTemplate { caption-text } { empty } { }
 \DefTblrTemplate { caption-text } { normal } { \InsertTblrText { caption } }
 \SetTblrTemplate { caption-text } { normal }
 
 \box_new:N \l__tblr_caption_box
 \box_new:N \l__tblr_caption_left_box
 
+\DefTblrTemplate { caption } { empty } { }
 \DefTblrTemplate { caption } { plain }
   {
     \hbox_set:Nn \l__tblr_caption_box
@@ -4527,6 +4534,7 @@
   }
 \SetTblrTemplate { caption } { normal }
 
+\DefTblrTemplate { capcont } { empty } { }
 \DefTblrTemplate { capcont } { plain }
   {
     \hbox_set:Nn \l__tblr_caption_box
@@ -4622,6 +4630,7 @@
       { \textsuperscript { \sffamily \UseTblrFont { note-tag } #1 } }
   }
 
+\DefTblrTemplate { note-tag } { empty } { }
 \DefTblrTemplate { note-tag } { normal }
   {
     \textsuperscript { \sffamily \UseTblrFont { note-tag } \InsertTblrNoteTag }
@@ -4634,12 +4643,15 @@
   }
 \SetTblrTemplate { note-target } { normal }
 
+\DefTblrTemplate { note-sep } { empty } { }
 \DefTblrTemplate { note-sep } { normal } { \space }
 \SetTblrTemplate { note-sep } { normal }
 
+\DefTblrTemplate { note-text } { empty } { }
 \DefTblrTemplate { note-text } { normal } { \InsertTblrNoteText }
 \SetTblrTemplate { note-text } { normal }
 
+\DefTblrTemplate { note } { empty } { }
 \DefTblrTemplate { note } { plain }
   {
     \MapTblrNotes
@@ -4694,18 +4706,22 @@
 %%> \section{Table Remarks Templates}
 %%% --------------------------------------------------------
 
+\DefTblrTemplate { remark-tag } { empty } { }
 \DefTblrTemplate { remark-tag } { normal }
   {
     \itshape \UseTblrFont { remark-tag } \InsertTblrRemarkTag
   }
 \SetTblrTemplate { remark-tag } { normal }
 
+\DefTblrTemplate { remark-sep } { empty } { }
 \DefTblrTemplate { remark-sep } { normal } { : \space }
 \SetTblrTemplate { remark-sep } { normal }
 
+\DefTblrTemplate { remark-text } { empty } { }
 \DefTblrTemplate { remark-text } { normal } { \InsertTblrRemarkText }
 \SetTblrTemplate { remark-text } { normal }
 
+\DefTblrTemplate { remark } { empty } { }
 \DefTblrTemplate { remark } { plain }
   {
     \MapTblrRemarks
@@ -4772,6 +4788,9 @@
     head .meta:n = { firsthead, middlehead, lasthead },
     foot .meta:n = { firstfoot, middlefoot, lastfoot },
   }
+
+\DefTblrTemplate { head } { empty } { }
+\DefTblrTemplate { foot } { empty } { }
 
 \DefTblrTemplate { firsthead } { normal }
   {
