@@ -1,0 +1,60 @@
+% -*- coding: utf-8 -*-
+% !TEX program = lualatex
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+\usepackage{codehigh} % https://ctan.org/pkg/codehigh
+\usepackage{tabularray}
+\usepackage{array,multirow,amsmath}
+\usepackage{chemmacros}
+
+\UseTblrLibrary{booktabs,diagbox,siunitx}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  urlcolor=blue3,
+  linkcolor=red3,
+}
+
+\usepackage{tcolorbox}
+\tcbset{sharp corners, boxrule=0.5pt, colback=red9}
+
+\usepackage{float}
+
+\setcounter{tocdepth}{1}
+
+\newcommand*{\K}[1]{\texttt{#1}}
+\newcommand*{\V}[1]{\texttt{#1}}
+
+\NewTblrEnviron{spectblr}
+\SetTblrOuter[spectblr]{long}
+\SetTblrInner[spectblr]{
+  hlines = {white},
+  row{odd}={brown8},row{even}={gray8},row{1}={fg=white,bg=purple2,font=\bfseries\sffamily},
+  column{2} = {co=1},
+  rowhead = 1,
+}
+
+\newcommand{\mywarning}[1]{%
+  \begin{tcolorbox}
+  The interfaces in this #1 should be seen as
+  \textcolor{red3}{\bfseries experimental}
+  and are likely to change in future releases, if necessary.
+  Don’t use them in important documents.
+  \end{tcolorbox}
+}
+
+\renewcommand*{\thefootnote}{*}
+
+\newcommand*{\myversion}{2021L}
+\newcommand*{\mydate}{Version \myversion\ (\the\year-\mylpad\month-\mylpad\day)\\\myrepo}
+\newcommand*{\myrepo}{\url{https://github.com/lvjr/tabularray}}
+\newcommand*{\mylpad}[1]{\ifnum#1<10 0\the#1\else\the#1\fi}
+
+\colorlet{highback}{\ifodd\month azure9\else blue9\fi}
+\CodeHigh{language=latex/table,style/main=highback,style/code=highback}
+\NewCodeHighEnv{code}{style/main=gray9,style/code=gray9}
+\NewCodeHighEnv{demo}{style/main=gray9,style/code=gray9,demo}
+
+%\CodeHigh{lite}

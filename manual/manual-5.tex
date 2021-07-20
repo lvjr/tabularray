@@ -1,0 +1,132 @@
+% -*- coding: utf-8 -*-
+% !TEX program = lualatex
+\documentclass[oneside]{book}
+
+\input{manual.sty}
+\CodeHigh{lite}
+\setcounter{chapter}{4}
+
+\begin{document}
+
+\chapter{Use Some Libraries}
+
+\mywarning{chapter}
+
+The \verb!tabularray! package emulates or fixes some commands in other packages.
+To avoid potential conflict, you need to enable them with \verb!\UseTblrLibrary! command.
+
+\section{Library \V{booktabs}}
+
+When you write \verb!\UseTblrLibrary{booktabs}!,
+\verb!tabularray! package will define commands \verb!\toprule!, \verb!\midrule!,
+\verb!\bottomrule! and \verb!\cmidrule! inside \verb!tblr! environment.
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\toprule
+ Alpha   & Beta  & Gamma   & Delta \\
+\midrule
+ Epsilon & Zeta  & Eta     & Theta \\
+\cmidrule{1-3}
+ Iota    & Kappa & Lambda  & Mu    \\
+\cmidrule{2-4}
+ Nu      & Xi    & Omicron & Pi    \\
+\bottomrule
+\end{tblr}
+\end{demohigh}
+
+At this moment, \verb!trim! options for \verb!\cmidrule! command are not supported.
+But rule colors are possible just like \verb!\hline! and \verb!\cline! commands.
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\toprule[purple3]
+ Alpha   & Beta  & Gamma   & Delta \\
+\midrule[blue3]
+ Epsilon & Zeta  & Eta     & Theta \\
+\cmidrule[azure3]{1-3}
+ Iota    & Kappa & Lambda  & Mu    \\
+\cmidrule[azure3]{2-4}
+ Nu      & Xi    & Omicron & Pi    \\
+\bottomrule[purple3]
+\end{tblr}
+\end{demohigh}
+
+\section{Library \V{diagbox}}
+
+When writing \verb!\UseTblrLibrary{diagbox}! in the preamble of the document,
+\verb!tabularray! package loads \verb!diagbox! package,
+and you can use \verb!\diagbox! and \verb!\diagboxthree! commands inside \verb!tblr! environment.
+
+\begin{demohigh}
+\begin{tblr}{hlines,vlines}
+ \diagbox{Aa}{Pp} & Beta & Gamma \\
+ Epsilon & Zeta  & Eta \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\begin{tblr}{hlines,vlines}
+ \diagboxthree{Aa}{Pp}{Hh} & Beta & Gamma \\
+ Epsilon & Zeta  & Eta \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+You can also use \verb!\diagbox! and \verb!\diagboxthree! commands in math mode.
+\nopagebreak
+\begin{demohigh}
+$\begin{tblr}{|c|cc|}
+\hline
+ \diagbox{X_1}{X_2} & 0 & 1 \\
+\hline
+  0 & 0.1 & 0.2 \\
+  1 & 0.3 & 0.4 \\
+\hline
+\end{tblr}$
+\end{demohigh}
+
+\section{Library \V{siunitx}}
+
+When writing \verb!\UseTblrLibrary{siunitx}! in the preamble of the document,
+\verb!tabularray! package loads \verb!siunitx! package,
+and defines \verb!S! column for \verb!tblr! environment.
+
+\begin{demohigh}
+\begin{tblr}{
+  hlines, vlines,
+  colspec={
+    S[table-format=2.2]
+    S[table-format=2.2]
+    S[table-format=2.2]
+  }
+}
+ {{{Head}}} & {{{Head}}} & {{{Head}}} \\
+    11      &    11      &    11      \\
+     2.1    &     2.2    &     2.3    \\
+    33.11   &    33.22   &    33.33   \\
+\end{tblr}
+\end{demohigh}
+
+Note that you need to use \underline{triple} pairs of braces to guard non-numeric cells.
+If you need to apply other specifications for the \verb!S! columns,
+you need to move \verb!siunitx! options into \verb!si! keys of the \verb!Q! columns.
+
+\begin{demohigh}
+\begin{tblr}{
+  hlines, vlines,
+  colspec={
+    Q[si={table-format=2.2},blue7]
+    Q[si={table-format=2.2},teal7]
+    Q[si={table-format=2.2},purple7]
+  }
+}
+ {{{Head}}} & {{{Head}}} & {{{Head}}} \\
+    11      &    11      &    11      \\
+     2.1    &     2.2    &     2.3    \\
+    33.11   &    33.22   &    33.33   \\
+\end{tblr}
+\end{demohigh}
+
+\end{document}

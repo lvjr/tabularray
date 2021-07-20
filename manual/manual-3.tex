@@ -1,0 +1,538 @@
+% -*- coding: utf-8 -*-
+% !TEX program = lualatex
+\documentclass[oneside]{book}
+
+\input{manual.sty}
+\CodeHigh{lite}
+\setcounter{chapter}{2}
+
+\begin{document}
+
+\chapter{The New Interfaces}
+
+With \verb!tabularray! package, you can separate style and content totally in tables.
+
+\section{Hlines and Vlines}
+
+All available keys for hlines and vlines are described in Table \ref{key:hvline}.
+
+\begin{spectblr}[
+  caption = {Keys for Hlines and Vlines},
+  label = {key:hvline},
+  remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
+]{}
+  Key & Description and Values & Initial Value \\
+  \underline{\K{dash}} & dash style: \V{solid}, \V{dashed} or \V{dotted} & \V{solid} \\
+  \K{text}             & replace hline/vline with text (like \V{!} specifier in \K{colspec}) & None \\
+  \underline{\K{wd}}   & rule width dimension & None \\
+  \underline{\K{fg}}   & rule color name & None \\
+\end{spectblr}
+
+Options \verb!hlines! and \verb!vlines! are for setting all hlines and vlines, respectively.
+With empty value, all hlines/vlines will be solid.
+
+\begin{demohigh}
+\begin{tblr}{hlines,vlines}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+With values inside one pair of braces, all hlines/vlines will be styled.
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines = {1pt,solid},
+ vlines = {red3,dashed},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+Another pair of braces before will select segments in all hlines/vlines.
+
+\begin{demohigh}
+\begin{tblr}{
+ vlines = {1,3,5}{dashed},
+ vlines = {2,4,6}{solid},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+The above example can be simplified with \verb!odd! and \verb!even! values.
+(More child selectors can be defined with \verb!\NewChildSelector! command.
+Advanced users could read the source code for this.)
+
+\begin{demohigh}
+\begin{tblr}{
+ vlines = {odd}{dashed},
+ vlines = {even}{solid},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+Another pair of braces before will draw more hlines/vlines (in which \verb!-! stands for all line segments).
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines = {1}{-}{dashed},
+ hlines = {2}{-}{solid},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlines, respectively.
+
+\begin{demohigh}
+\begin{tblr}{
+ hline{1,7} = {1pt,solid},
+ hline{3-5} = {blue3,dashed},
+ vline{1,5} = {3-4}{dotted},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+At last we show the usage of \verb!text! key by the following example%
+\footnote{Code from \url{https://tex.stackexchange.com/questions/603023/tabularray-and-tabularx-column-separator}.}:
+
+\begin{demohigh}
+\begin{tblr}{
+  vlines, hlines,
+  colspec = {lX[c]X[c]X[c]X[c]},
+  vline{2} = {1}{text=\clap{:}},
+  vline{3} = {1}{text=\clap{\ch{+}}},
+  vline{4} = {1}{text=\clap{\ch{->}}},
+  vline{5} = {1}{text=\clap{\ch{+}}},
+}
+  Equation & \ch{CH4} & \ch{2 O2} & \ch{CO2} & \ch{2 H2O} \\
+  Initial  & $n_1$    & $n_2$     & 0        & 0 \\
+  Final    & $n_1-x$  & $n_2-2x$  & $x$      & $2x$ \\
+\end{tblr}
+\end{demohigh}
+
+You need to load \verb!chemmacros! package for the \verb!\ch! command.
+
+\section{Cells and Spancells}
+
+All available keys for cells are described in Table \ref{key:cell} and Table \ref{key:cellspan}.
+\nopagebreak
+\begin{spectblr}[
+  caption = {Keys for the Content of Cells},
+  label = {key:cell},
+  remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
+]{}
+  Key & Description and Values & Initial Value \\
+  \underline{\K{halign}}
+    & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
+    & \V{l} \\
+  \underline{\K{valign}}
+    & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
+      \V{h} (head) or \V{f} (foot)
+    & \V{t} \\
+  \underline{\K{wd}} & width dimension & None \\
+  \underline{\K{bg}} & background color name & None \\
+  \K{fg}    & foreground color name & None \\
+  \K{font}  & font commands & None \\
+  \K{preto} & prepend text to the cell & None \\
+  \K{appto} & append text to the cell & None \\
+  \K{cmd}   & execute command for the cell text & None \\
+\end{spectblr}
+\vspace{-2em}
+\begin{spectblr}[
+  caption = {Keys for Multispan of Cells},
+  label = {key:cellspan},
+]{}
+  Key & Description and Values & Initial Value \\
+  \K{r} & number of rows the cell spans    & 1 \\
+  \K{c} & number of columns the cell spans & 1 \\
+\end{spectblr}
+
+Option \verb!cells! is for setting all cells.
+\nopagebreak
+\begin{demohigh}
+\begin{tblr}{hlines={white},cells={c,blue7}}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+\end{tblr}
+\end{demohigh}
+
+Option \verb!cell{i}{j}! is for setting some cells.
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines = {white},
+ vlines = {white},
+ cell{1,6}{odd} = {teal7},
+ cell{1,6}{even} = {green7},
+ cell{2,4}{1,4} = {red7},
+ cell{3,5}{1,4} = {purple7},
+ cell{2}{2} = {r=4,c=2}{c,azure7},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+\section{Rows and Columns}
+
+All available keys for rows and columns are described in Table \ref{key:row} and Table \ref{key:column}.
+
+\begin{spectblr}[
+  caption = {Keys for Rows},
+  label = {key:row},
+  remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
+]{}
+  Key & Description and Values & Initial Value \\
+  \underline{\K{halign}}
+    & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
+    & \V{l} \\
+  \underline{\K{valign}}
+    & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
+      \V{h} (head) or \V{f} (foot)
+    & \V{t} \\
+  \underline{\K{ht}} & height dimension & None \\
+  \underline{\K{bg}} & background color name & None \\
+  \K{fg} & foreground color name & None \\
+  \K{font} & font commands & None \\
+  \K{abovesep} & set vertical space above the row & \V{2pt} \\
+  \K{abovesep+} & increase vertical space above the row & None \\
+  \K{belowsep} & set vertical space below the row & \V{2pt} \\
+  \K{belowsep+} & increase vertical space below the row & None \\
+  \K{rowsep} & set vertical space above and below the row & \V{2pt} \\
+  \K{rowsep+} & increase vertical space above and below the row & None \\
+  \K{preto} & prepend text to every cell (like \V{>} specifier in \K{rowspec}) & None \\
+  \K{appto} & append text to every cell (like \V{<} specifier in \K{rowspec}) & None \\
+  \K{cmd}   & execute command for every cell text & None \\
+\end{spectblr}
+\vspace{-2em}
+\begin{spectblr}[
+  caption = {Keys for Columns},
+  label = {key:column},
+  remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
+]{}
+  Key & Description and Values & Initial Value \\
+  \underline{\K{halign}}
+    & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
+    & \V{l} \\
+  \underline{\K{valign}}
+    & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
+      \V{h} (head) or \V{f} (foot)
+    & \V{t} \\
+  \underline{\K{wd}} & width dimension & None \\
+  \underline{\K{co}} & coefficient for the extendable column (\V{X} column) & None \\
+  \underline{\K{bg}} & background color name & None \\
+  \K{fg} & foreground color name & None \\
+  \K{font} & font commands & None \\
+  \K{leftsep} & set horizontal space to the left of the column & \V{6pt} \\
+  \K{leftsep+} & increase horizontal space to the left of the column & None \\
+  \K{rightsep} & set horizontal space to the right of the column & \V{6pt} \\
+  \K{rightsep+} & increase horizontal space to the right of the column & None \\
+  \K{colsep} & set horizontal space to both sides of the column & \V{6pt} \\
+  \K{colsep+} & increase horizontal space to both sides of the column & None \\
+  \K{preto} & prepend text to every cell (like \V{>} specifier in \K{colspec}) & None \\
+  \K{appto} & append text to every cell (like \V{<} specifier in \K{colspec}) & None \\
+  \K{cmd}   & execute command for every cell text & None \\
+\end{spectblr}
+
+Options \verb!rows! and \verb!columns! are for setting all rows and columns, respectively.
+\nopagebreak
+\begin{demohigh}
+\begin{tblr}{
+ hlines,
+ vlines,
+ rows = {7mm},
+ columns = {15mm,c},
+}
+ Alpha   & Beta  & Gamma   & Delta \\
+ Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns, respectively.
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines = {1pt,white},
+ row{odd} = {blue7},
+ row{even} = {azure7},
+ column{1} = {purple7,c},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+ Nu      & Xi    & Omicron & Pi      \\
+ Rho     & Sigma & Tau     & Upsilon \\
+ Phi     & Chi   & Psi     & Omega   \\
+\end{tblr}
+\end{demohigh}
+
+The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!font! keys.
+\nopagebreak
+\begin{demohigh}
+\begin{tblr}{
+ row{odd} = {bg=azure8},
+ row{1}   = {bg=azure3, fg=white, font=\sffamily},
+}
+ Alpha & Beta    & Gamma \\
+ Delta & Epsilon & Zeta  \\
+ Eta   & Theta   & Iota  \\
+ Kappa & Lambda  & Mu    \\
+ Nu Xi Omikron & Pi Rho Sigma & Tau Upsilon Phi \\
+\end{tblr}
+\end{demohigh}
+
+The following example demonstrates the usages of
+\verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! keys.
+\nopagebreak
+\begin{demohigh}
+\begin{tblr}{
+ hlines,
+ vlines,
+ rows = {abovesep=1pt,belowsep=5pt},
+ columns = {leftsep=1pt,rightsep=5pt},
+}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+The following example shows that we can replace \verb!\\[dimen]! with \verb!belowsep+! key.
+
+\begin{demohigh}
+\begin{tblr}{
+ hlines, row{2} = {belowsep+=5pt},
+}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+\section{The Whole Table}
+
+All available keys for the whole table are described in Table \ref{key:table}.
+
+\begin{spectblr}[
+  caption = {Keys for the Whole Table},
+  label = {key:table},
+]{}
+  Key & Description and Values & Initial Value \\
+  \K{rowspec} & set row specifications with row type specifiers & None \\
+  \K{colspec} & set column specifications with column type specifiers & None \\
+  \K{width} & width of the table with extendable columns & None \\
+  \K{rulesep} & space between two hlines or vlines & \V{2pt} \\
+  \K{stretch} & stretch ratio for struts added to cell text & \V{1} \\
+  \K{abovesep} & set vertical space above every row & \V{2pt} \\
+  \K{belowsep} & set vertical space below every row & \V{2pt} \\
+  \K{rowsep} & set vertical space above and below every row & \V{2pt} \\
+  \K{leftsep} & set horizontal space to the left of every column & \V{6pt} \\
+  \K{rightsep} & set horizontal space to the right of every column & \V{6pt} \\
+  \K{colsep} & set horizontal space to both sides of every column & \V{6pt} \\
+  \K{hspan} & horizontal span algorithm: \V{default}, \V{even}, or \V{minimal} & \V{default} \\
+  \K{vspan} & vertical span algorithm: \V{default} or \V{even} & \V{default} \\
+\end{spectblr}
+
+The following example demonstrates the usage of \verb!width! key.
+\nopagebreak
+\begin{demohigh}
+\begin{tblr}{width=0.8\textwidth, colspec={|l|X[2]|X[3]|X[-1]|}}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+The following example shows that we can replace \verb!\doublerulesep! parameter with \verb!rulesep! key.
+\nopagebreak
+\begin{demohigh}
+\begin{tblr}{
+ colspec={||llll||},rowspec={|QQQ|},rulesep=4pt,
+}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+The following example shows that we can replace \verb!\arraystretch! parameter with \verb!stretch! key.
+
+\begin{demohigh}
+\begin{tblr}{hlines,stretch=1.5}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+The following example uses \verb!rowsep! and \verb!colsep! keys to set padding for all rows and columns.
+\nopagebreak
+\begin{demohigh}
+\SetTblrInner{rowsep=2pt,colsep=2pt}
+\begin{tblr}{hlines,vlines}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+With \verb!hspan=default! or \verb!hspan=even!,
+\verb!tabularray! package will compute column widths from span widths.
+But with \verb!hspan=minimal!, it will compute span widths from column widths.
+The following examples show the results from different \verb!hspan! values.
+
+\begin{demohigh}
+\SetTblrInner{hlines, vlines, hspan=default}
+\begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
+ 111 111 & 222 222 & 333 333 \\
+ 12 Multi Columns Multi Columns 12 & & 333 \\
+ 13 Multi Columns Multi Columns Multi Columns 13 & & \\
+ 111 & 23 Multi Columns Multi Columns 23 & \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\SetTblrInner{hlines, vlines, hspan=even}
+\begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
+ 111 111 & 222 222 & 333 333 \\
+ 12 Multi Columns Multi Columns 12 & & 333 \\
+ 13 Multi Columns Multi Columns Multi Columns 13 & & \\
+ 111 & 23 Multi Columns Multi Columns 23 & \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\SetTblrInner{hlines, vlines, hspan=minimal}
+\begin{tblr}{cell{2}{1}={c=2}{l},cell{3}{1}={c=3}{l},cell{4}{2}={c=2}{l}}
+ 111 111 & 222 222 & 333 333 \\
+ 12 Multi Columns Multi Columns 12 & & 333 \\
+ 13 Multi Columns Multi Columns Multi Columns 13 & & \\
+ 111 & 23 Multi Columns Multi Columns 23 & \\
+\end{tblr}
+\end{demohigh}
+
+The following examples show the results from different \verb!vspan! values.
+\nopagebreak
+\begin{demohigh}
+\SetTblrInner{hlines, vlines, vspan=default}
+\begin{tblr}{column{2}={3.25cm}, cell{2}{2}={r=3}{l}}
+  Column1 & Column2 \\
+  Row1 & Long text that needs multiple lines.
+         Long text that needs multiple lines.
+         Long text that needs multiple lines. \\
+  Row2 & \\
+  Row3 & \\
+  Row4 & Short text \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\SetTblrInner{hlines, vlines, vspan=even}
+\begin{tblr}{column{2}={3.25cm}, cell{2}{2}={r=3}{l}}
+  Column1 & Column2 \\
+  Row1 & Long text that needs multiple lines.
+         Long text that needs multiple lines.
+         Long text that needs multiple lines. \\
+  Row2 & \\
+  Row3 & \\
+  Row4 & Short text \\
+\end{tblr}
+\end{demohigh}
+
+\section{Default Specifications}
+
+\verb!Tabularray! package provides \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
+for you to change the default inner and outer specifications of tables.
+Inner specifications are all specifications written in the mandatory argument of the \verb!tblr! environment,
+while outer specifications are all specifications written in the optional argument of the \verb!tblr! environment.
+At this time, most of the outer specifications are used for long tables (see Chapter \ref{chap:long}).
+
+In the below example, the first line draws all hlines and vlines for all tables created afterwards,
+while the second line makes all tables created afterwards vertically align at bottom.
+
+\begin{codehigh}
+\SetTblrInner{hlines,vlines}
+\SetTblrOuter{valign=b}
+\end{codehigh}
+
+You can define new \verb!tabularray! environments using \verb!\NewTblrEnviron! command:
+
+\begin{demohigh}
+\NewTblrEnviron{mytblr}
+\SetTblrInner[mytblr]{hlines,vlines}
+\SetTblrOuter[mytblr]{valign=b}
+Text \begin{mytblr}{cccc}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{mytblr} Text
+\end{demohigh}
+
+\section{Counters and Lengths}
+
+Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be used in cell text:
+\nopagebreak
+\begin{demohigh}
+\begin{tblr}{hlines}
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
+ Row=\arabic{rowcount}, Col=\arabic{colcount} &
+ Row=\arabic{rowcount}, Col=\arabic{colcount} &
+ Row=\arabic{rowcount}, Col=\arabic{colcount} &
+ Row=\arabic{rowcount}, Col=\arabic{colcount} \\
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] &
+ Cell[\arabic{rownum}][\arabic{colnum}] & Cell[\arabic{rownum}][\arabic{colnum}] \\
+\end{tblr}
+\end{demohigh}
+
+Also, lengths \verb!\leftsep!, \verb!\rightsep!, \verb!\abovesep!, \verb!\belowsep! can be used in cell text.
+
+\section{Tracing Tabularray}
+
+To trace internal data behind \verb!tblr! environment, you can use \verb!\SetTblrTracing! command.
+For example, \verb!\SetTblrTracing{all}! will turn on all tracings,
+and \verb!\SetTblrTracing{none}! will turn off all tracings.
+\verb!\SetTblrTracing{+row,+column}! will only tracing row and column data.
+All tracing messages will be written to the log files.
+
+\end{document}

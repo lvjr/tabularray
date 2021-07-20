@@ -1,0 +1,439 @@
+% -*- coding: utf-8 -*-
+% !TEX program = lualatex
+\documentclass[oneside]{book}
+
+\input{manual.sty}
+\CodeHigh{lite}
+
+\begin{document}
+
+\chapter{Overview of Features}
+
+\section{Vertical Space}
+
+After loading \verb!tabularray! package in the preamble,
+we can use \verb!tblr! environments to typeset tabulars and arrays.
+The name \verb!tblr! is short for \verb!tabularray! or \verb!top-bottom-left-right!.
+The following is our first example:
+
+\begin{demo}
+\begin{tabular}{lccr}
+\hline
+ Alpha   & Beta  & Gamma  & Delta \\
+\hline
+ Epsilon & Zeta  & Eta    & Theta \\
+\hline
+ Iota    & Kappa & Lambda & Mu    \\
+\hline
+\end{tabular}
+\end{demo}
+
+\begin{demohigh}
+\begin{tblr}{lccr}
+\hline
+ Alpha   & Beta  & Gamma  & Delta \\
+\hline
+ Epsilon & Zeta  & Eta    & Theta \\
+\hline
+ Iota    & Kappa & Lambda & Mu    \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+You may notice that there is extra space above and below the table rows with \verb!tblr! envirenment.
+This space makes the table look better.
+If you don't like it, you could use \verb!\SetTblrInner! command:
+
+\begin{demohigh}
+\SetTblrInner{rowsep=0pt}
+\begin{tblr}{lccr}
+\hline
+ Alpha   & Beta  & Gamma  & Delta \\
+\hline
+ Epsilon & Zeta  & Eta    & Theta \\
+\hline
+ Iota    & Kappa & Lambda & Mu    \\
+\hline
+\end{tblr}
+\end{demohigh} 
+
+But in many cases, this rowsep is useful:
+
+\begin{demo}
+$\begin{array}{rrr}
+\hline
+ \dfrac{2}{3} &  \dfrac{2}{3} &  \dfrac{1}{3} \\
+ \dfrac{2}{3} & -\dfrac{1}{3} & -\dfrac{2}{3} \\
+ \dfrac{1}{3} & -\dfrac{2}{3} &  \dfrac{2}{3} \\
+\hline
+\end{array}$
+\end{demo}
+
+\begin{demohigh}
+$\begin{tblr}{rrr}
+\hline
+ \dfrac{2}{3} &  \dfrac{2}{3} &  \dfrac{1}{3} \\
+ \dfrac{2}{3} & -\dfrac{1}{3} & -\dfrac{2}{3} \\
+ \dfrac{1}{3} & -\dfrac{2}{3} &  \dfrac{2}{3} \\
+\hline
+\end{tblr}$
+\end{demohigh}
+
+Note that you can use \verb!tblr! in both text and math modes.
+
+\section{Multiline Cells}
+
+It's quite easy to write multiline cells without fixing the column width in \verb!tblr! environments:
+just enclose the cell text with braces and use \verb!\\! to break lines:
+
+\begin{demohigh}
+\begin{tblr}{|l|c|r|}
+\hline
+ Left & {Center \\ Cent \\ C} & {Right \\ R} \\
+\hline
+ {L \\ Left} & {C \\ Cent \\ Center} & R \\
+\hline
+\end{tblr}
+\end{demohigh} 
+
+\section{Cell Alignment}
+
+From time to time,
+you may want to specify the horizontal and vertical alignment of cells at the same time.
+\verb!Tabularray! package provides a \verb!Q! column for this
+(In fact, \verb!Q! column is the only primitive column,
+other columns are defined as \verb!Q! columns with some options):
+
+\begin{demohigh}
+\begin{tblr}{|Q[l,t]|Q[c,m]|Q[r,b]|}
+\hline
+ {Top Baseline \\ Left Left} & Middle Center & {Right Right \\ Bottom Baseline} \\
+\hline
+\end{tblr}
+\end{demohigh} 
+
+Note that you can use more meaningful \verb!t! instead of \verb!p! for top baseline alignment.
+For some users who are familiar with word processors,
+these \verb!t! and \verb!b! columns are counter-intuitive.
+In \verb!tabularray! package, there are another two column types \verb!h! and \verb!f!,
+which will align cell text at row head and row foot, respectively:
+
+\begin{demohigh}
+\begin{tblr}{Q[h,4em]Q[t,4em]Q[m,4em]Q[b,4em]Q[f,4em]}
+\hline
+ {row\\head} & {top\\line} & {middle} & {line\\bottom} & {row\\foot} \\
+\hline
+ {row\\head} & {top\\line} & {11\\22\\mid\\44\\55} & {line\\bottom} & {row\\foot} \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+\section{Multirow Cells}
+
+The above \verb!h! and \verb!f! columns are necessary for multirow cells.
+In \verb!tabularray!, the \verb!t! and \verb!b! in the optional argument of \verb!\multirow! commands
+will be treated as \verb!h! and \verb!f!, respectively:
+
+\begin{demo}
+\begin{tabular}{|l|l|l|l|}
+\hline
+ \multirow[t]{4}{1.5cm}{Multirow Cell One} & Alpha &
+ \multirow[b]{4}{1.5cm}{Multirow Cell Two} & Alpha \\
+ & Beta  & & Beta \\
+ & Gamma & & Gamma \\
+ & Delta & & Delta \\
+\hline
+\end{tabular}
+\end{demo}
+
+\begin{demohigh}
+\begin{tblr}{|l|l|l|l|}
+\hline
+ \multirow[t]{4}{1.5cm}{Multirow Cell One} & Alpha &
+ \multirow[b]{4}{1.5cm}{Multirow Cell Two} & Alpha \\
+ & Beta  & & Beta \\
+ & Gamma & & Gamma \\
+ & Delta & & Delta \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+Note that you don't need to load \verb!multirow! package first,
+since \verb!tabularray! doesn't depend on it.
+Furthermore, \verb!tabularray! will always typeset decent multirow cells.
+First, it will set correct vertical \verb!c! alignment,
+even though some rows have large height:
+
+\begin{demo}
+\begin{tabular}{|l|m{4em}|}
+\hline
+ \multirow[c]{4}{1.5cm}{Multirow} & Alpha  \\
+ & Beta  \\
+ & Gamma \\
+ & Delta Delta Delta \\
+\hline
+\end{tabular}
+\end{demo}
+
+\begin{demohigh}
+\begin{tblr}{|l|m{4em}|}
+\hline
+ \multirow[c]{4}{1.5cm}{Multirow} & Alpha  \\
+ & Beta  \\
+ & Gamma \\
+ & Delta Delta Delta \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+Second, it will enlarge row heights if the multirow cells have large height,
+therefore it always avoids vertical overflow:
+
+\begin{demo}
+\begin{tabular}{|l|m{4em}|}
+\hline
+ \multirow[c]{2}{1cm}{Line \\ Line \\ Line \\ Line} & Alpha \\
+\cline{2-2}
+ & Beta \\
+\hline
+\end{tabular}
+\end{demo}
+
+\begin{demohigh}
+\begin{tblr}{|l|m{4em}|}
+\hline
+ \multirow[c]{2}{1cm}{Line \\ Line \\ Line \\ Line} & Alpha \\
+\cline{2}
+ & Beta \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+\section{Multi Rows and Columns}
+
+It was a hard job to typeset cells with multiple rows and multiple columns. For example:
+
+\begin{demo}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+ \multirow{2}{*}{2 Rows}
+     & \multicolumn{2}{c|}{2 Columns}
+                 & \multicolumn{2}{c|}{\multirow{2}{*}{2 Rows 2 Columns}} \\
+\cline{2-3}
+     & 2-2 & 2-3 & \multicolumn{2}{c|}{} \\
+\hline
+ 3-1 & 3-2 & 3-3 & 3-4 & 3-5 \\
+\hline
+\end{tabular}
+\end{demo}
+
+With \verb!tabularray! package, you can set spanned cells with \verb!\SetCell! command:
+within the optional argument of \verb!\SetCell! command,
+option \verb!r! is for rowspan number, and \verb!c! for colspan number;
+within the mandatory argument of it, horizontal and vertical alignment options are accepted.
+Therefore it's much simpler to typeset spanned cells:
+
+\begin{demohigh}
+\begin{tblr}{|c|c|c|c|c|}
+\hline
+ \SetCell[r=2]{c} 2 Rows
+     & \SetCell[c=2]{c} 2 Columns
+           &     & \SetCell[r=2,c=2]{c} 2 Rows 2 Columns & \\
+\hline
+     & 2-2 & 2-3 &     &     \\
+\hline
+ 3-1 & 3-2 & 3-3 & 3-4 & 3-5 \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+Using \verb!\multicolumn! command, the omitted cells \textcolor{red3}{must} be removed.
+On the contrary,
+using \verb!\multirow! command, the omitted cells \textcolor{red3}{must not} be removed.
+\verb!\SetCell! command behaves the same as \verb!\multirow! command in this aspect.
+
+With \verb!tblr! environment, any \verb!\hline! segments inside a spanned cell will be ignored,
+therefore we're free to use \verb!\hline! in the above example.
+Also, any omitted cell will definitely be ignored when typesetting,
+no matter it's empty or not.
+With this feature, we could put row and column numbers into the omitted cells,
+which will help us to locate cells when the tables are rather complex:
+
+\begin{demohigh}
+\begin{tblr}{|ll|c|rr|}
+\hline
+ \SetCell[r=3,c=2]{h} r=3 c=2 & 1-2 & \SetCell[r=2,c=3]{r} r=2 c=3 & 1-4 & 1-5 \\ 
+ 2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
+\hline
+ 3-1 & 3-2 & MIDDLE & \SetCell[r=3,c=2]{f} r=3 c=2 & 3-5 \\
+\hline
+ \SetCell[r=2,c=3]{l} r=2 c=3 & 4-2 & 4-3 & 4-4 & 4-5 \\
+ 5-1 & 5-2 & 5-3 & 5-4 & 5-5 \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+\section{Column Types}
+
+\verb!Tabularray! package supports all normal column types, as well as
+the extendable \verb!X! column type,
+which first occurred in \verb!tabularx! package and was largely improved by \verb!tabu! package:
+
+\begin{demohigh}
+\begin{tblr}{|X[2,l]|X[3,l]|X[1,r]|X[r]|}
+\hline
+ Alpha & Beta & Gamma & Delta \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+Also, \verb!X! columns with negative coefficients are possible:
+
+\begin{demohigh}
+\begin{tblr}{|X[2,l]|X[3,l]|X[-1,r]|X[r]|}
+\hline
+ Alpha & Beta & Gamma & Delta \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+We need the width to typeset a table with \verb!X! columns.
+If unset, the default is \verb!\linewidth!.
+To change the width, we have to first put all column specifications into \verb!colspec={...}!:
+
+\begin{demohigh}
+\begin{tblr}{width=0.8\linewidth,colspec={|X[2,l]|X[3,l]|X[-1,r]|X[r]|}}
+\hline
+ Alpha & Beta & Gamma & Delta \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+You can define new column types with \verb!\NewColumnType! command.
+For example, in \verb!tabularray! package,
+\verb!b! and \verb!X! columns are defined as special \verb!Q! columns:
+\begin{codehigh}
+\NewColumnType{b}[1]{Q[b,wd=#1]}
+\NewColumnType{X}[1][]{Q[co=1,#1]}
+\end{codehigh}
+
+\section{Row Types}
+
+Now that we have column types and \verb!colspec! option,
+you may ask for row types and \verb!rowspec! option.
+Yes, they are here:
+
+\begin{demohigh}
+\begin{tblr}{colspec={Q[l]Q[c]Q[r]},rowspec={|Q[t]|Q[m]|Q[b]|}}
+ {Alpha \\ Alpha} & Beta               & Gamma \\
+ Delta            & Epsilon            & {Zeta \\ Zeta}  \\
+ Eta              & {Theta \\ Theta}   & Iota  \\
+\end{tblr}
+\end{demohigh}
+
+Same as column types, \verb!Q! is the only primitive row type,
+and other row types are defined as \verb!Q! types with different options.
+It's better to specify horizontal alignment in \verb!colspec!,
+and vertical alignment in \verb!rowspec!, respectively.
+
+Inside \verb!rowspec!, \verb!|! is the hline type.
+Therefore we need not to write \verb!\hline! commnad, which makes table code cleaner.
+
+\section{Hlines and Vlines}
+
+Hlines and vlines have been improved too. You can specify the widths and styles of them:
+
+\begin{demohigh}
+\begin{tblr}{|l|[dotted]|[2pt]c|r|[solid]|[dashed]|}
+\hline
+One   &  Two  & Three \\
+\hline\hline[dotted]\hline
+Four  & Five  &   Six \\
+\hline[dashed]\hline[1pt]
+Seven & Eight &  Nine \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+\section{Colorful Tables}
+
+To add colors to your tables, you need to load \verb!xcolor! package first.
+\verb!Tabularray! package will also load \verb!ninecolors! package for proper color contrast.
+First you can specify background option for \verb!Q! rows/columns inside \verb!rowspec!/\verb!colspec!:
+
+\begin{demohigh}
+\begin{tblr}{colspec={lcr},rowspec={|Q[cyan7]|Q[azure7]|Q[blue7]|}}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\begin{tblr}{colspec={Q[l,brown7]Q[c,yellow7]Q[r,olive7]},rowspec={|Q|Q|Q|}}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+Also you can use \verb!\SetRow! or \verb!\SetColumn! command to specify row or column colors:
+
+\begin{demohigh}
+\begin{tblr}{colspec={lcr},rowspec={|Q|Q|Q|}}
+ \SetRow{cyan7}  Alpha   & Beta  & Gamma  \\
+ \SetRow{azure7} Epsilon & Zeta  & Eta    \\
+ \SetRow{blue7}  Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\begin{tblr}{colspec={lcr},rowspec={|Q|Q|Q|}}
+ \SetColumn{brown7}
+ Alpha          & \SetColumn{yellow7}
+                  Beta            & \SetColumn{olive7}
+                                    Gamma  \\
+ Epsilon        & Zeta            & Eta    \\
+ Iota           & Kappa           & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+Hlines and vlines can also have colors:
+
+\begin{demohigh}
+\begin{tblr}{colspec={lcr},rowspec={|[2pt,green7]Q|[teal7]Q|[green7]Q|[3pt,teal7]}}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\begin{tblr}{colspec={|[2pt,violet5]l|[2pt,magenta5]c|[2pt,purple5]r|[2pt,red5]}}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+\section{New Table Commands}
+
+All commands which change the specifications of tables \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
+The following example demonstrates how to define similar rules as in \verb!booktabs! package:
+
+\begin{codehigh}
+\NewTableCommand\toprule{\hline[0.08em]}
+\NewTableCommand\midrule{\hline[0.05em]}
+\NewTableCommand\bottomrule{\hline[0.08em]}
+\begin{tblr}{llll}
+\toprule
+ Alpha   & Beta  & Gamma   & Delta \\
+\midrule
+ Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    \\
+ Nu      & Xi    & Omicron & Pi    \\
+\bottomrule
+\end{tblr}
+\end{codehigh}
+
+\end{document}
