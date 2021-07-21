@@ -65,9 +65,6 @@ With empty value, all hlines/vlines will be solid.
  Alpha   & Beta  & Gamma   & Delta   \\
  Epsilon & Zeta  & Eta     & Theta   \\
  Iota    & Kappa & Lambda  & Mu      \\
- Nu      & Xi    & Omicron & Pi      \\
- Rho     & Sigma & Tau     & Upsilon \\
- Phi     & Chi   & Psi     & Omega   \\
 \end{tblr}
 \end{demohigh}
 
@@ -75,15 +72,11 @@ With values inside one pair of braces, all hlines/vlines will be styled.
 
 \begin{demohigh}
 \begin{tblr}{
- hlines = {1pt,solid},
- vlines = {red3,dashed},
+ hlines = {1pt,solid}, vlines = {red3,dashed},
 }
  Alpha   & Beta  & Gamma   & Delta   \\
  Epsilon & Zeta  & Eta     & Theta   \\
  Iota    & Kappa & Lambda  & Mu      \\
- Nu      & Xi    & Omicron & Pi      \\
- Rho     & Sigma & Tau     & Upsilon \\
- Phi     & Chi   & Psi     & Omega   \\
 \end{tblr}
 \end{demohigh}
 
@@ -125,8 +118,22 @@ Another pair of braces before will draw more hlines/vlines (in which \verb!-! st
 
 \begin{demohigh}
 \begin{tblr}{
- hlines = {1}{-}{dashed},
- hlines = {2}{-}{solid},
+ hlines = {1}{-}{dashed}, hlines = {2}{-}{solid},
+}
+ Alpha   & Beta  & Gamma   & Delta   \\
+ Epsilon & Zeta  & Eta     & Theta   \\
+ Iota    & Kappa & Lambda  & Mu      \\
+\end{tblr}
+\end{demohigh}
+
+Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlines, respectively.
+Their values are the same as options \verb!hliness! and \verb!vlines!:
+
+\begin{demohigh}
+\begin{tblr}{
+ hline{1,7} = {1pt,solid},
+ hline{3-5} = {blue3,dashed},
+ vline{1,5} = {3-4}{dotted},
 }
  Alpha   & Beta  & Gamma   & Delta   \\
  Epsilon & Zeta  & Eta     & Theta   \\
@@ -137,13 +144,14 @@ Another pair of braces before will draw more hlines/vlines (in which \verb!-! st
 \end{tblr}
 \end{demohigh}
 
-Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlines, respectively.
+You can use \verb!X!, \verb!Y!, \verb!Z! to denote the last three childs, respectively.
+It is especially useful when you are writing long tables:
 
 \begin{demohigh}
 \begin{tblr}{
- hline{1,7} = {1pt,solid},
- hline{3-5} = {blue3,dashed},
- vline{1,5} = {3-4}{dotted},
+ hline{1,Z} = {2pt},
+ hline{2,Y} = {1pt},
+ hline{3-X} = {dashed},
 }
  Alpha   & Beta  & Gamma   & Delta   \\
  Epsilon & Zeta  & Eta     & Theta   \\
@@ -219,10 +227,44 @@ You can use child selectors in the mandatory argument of \verb!\cline!.
 \end{tblr}
 \end{demohigh}
 
+Commands \verb!\SetHline! combines the usages of \verb!\hline! and \verb!\cline!:
+ 
+\begin{demohigh}
+\begin{tblr}{llll}
+\SetHline{1-3}{blue5,1pt}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\SetHline{2-4}{teal5,1pt}
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\SetHline[1]{1-3}{blue5,1pt}
+\SetHline[2]{1-3}{azure5,1pt}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\SetHline[1]{2-4}{teal5,1pt}
+\SetHline[2]{2-4}{green5,1pt}
+\end{tblr}
+\end{demohigh}
+
+In fact, table command \verb!\SetHline[<index>]{<columns>}{<styles>}! at the beginning of row \verb!i!
+is the same as table option \verb!hline{i}={<index>}{<columns>}{<styles>}!.
+
+Also, table command \verb!\SetHlines[<index>]{<columns>}{<styles>}! at the beginning of some row
+is the same as table option \verb!hlines{i}={<index>}{<columns>}{<styles>}!.
+
+The usages of table commands \verb!\vline!, \verb!\rline!, \verb!\SetVline!, \verb!\SetVlines!
+are similar to those of \verb!\hline!, \verb!\cline!, \verb!\SetHline!, \verb!\SetHlines!, respectively.
+But normally you don't need to use them.
+
 \section{Cells and Spancells}
 
 All available keys for cells are described in Table \ref{key:cell} and Table \ref{key:cellspan}.
-\nopagebreak
+
 \begin{spectblr}[
   caption = {Keys for the Content of Cells},
   label = {key:cell},
@@ -296,11 +338,11 @@ The available keys are described in Table \ref{key:cell}.
 \begin{demohigh}
 \begin{tblr}{llll}
 \hline[1pt]
- Alpha   & \SetCell{bg=teal2,fg=white} Beta & Gamma & Delta \\
+ Alpha   & \SetCell{bg=teal2,fg=white} Beta & Gamma \\
 \hline
- Epsilon & Zeta & \SetCell{r,font=\scshape} Eta & Theta \\
+ Epsilon & Zeta & \SetCell{r,font=\scshape} Eta \\
 \hline
- Iota    & Kappa & Lambda & Mu    \\
+ Iota    & Kappa & Lambda \\
 \hline[1pt]
 \end{tblr}
 \end{demohigh}
@@ -317,13 +359,32 @@ The available keys are described in Table \ref{key:cellspan}.
               & \SetCell[c=2]{c} Iota & 2-4
                               & \SetCell[c=2]{c} Lambda  & 2-6 \\
 \hline
- \SetCell[c=3]{l} Nu & 3-2 & 3-3
-                      & \SetCell[c=3]{l} Pi & 3-5 & 3-6   \\
+ \SetCell[c=3]{c} Nu & 3-2 & 3-3
+                      & \SetCell[c=3]{c} Pi & 3-5 & 3-6   \\
 \hline
- \SetCell[c=6]{r} Tau & 4-2 & 4-3 & 4-4 & 4-5 & 4-6 \\
+ \SetCell[c=6]{c} Tau & 4-2 & 4-3 & 4-4 & 4-5 & 4-6 \\
 \hline
 \end{tblr}
 \end{demohigh}
+
+\begin{demohigh}
+\begin{tblr}{|X|X|X|X|X|X|}
+\hline
+ Alpha & Beta    & Gamma   & Delta & Epsilon & Zeta \\
+\hline
+ \SetCell[r=2]{m} Eta
+       & Theta   & Iota    & Kappa & Lambda  & \SetCell[r=2]{m} Mu  \\
+\hline
+ Nu    & Xi      & Omicron & Pi    & Rho     & Sigma \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+In fact, table command \verb!\SetCell[<span>]{<styles>}! at the beginning of cell at row \verb!i!
+and column \verb!j! is the same as table option \verb!cell{i}{j}={<span>}{<styles>}!.
+
+Also, table command \verb!\SetCells[<span>]{<styles>}! at the beginning of some cell
+is the same as table option \verb!cells={<span>}{<styles>}!.
 
 \section{Rows and Columns}
 
@@ -392,10 +453,8 @@ Options \verb!rows! and \verb!columns! are for setting all rows and columns, res
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
- hlines,
- vlines,
- rows = {7mm},
- columns = {15mm,c},
+ hlines, vlines,
+ rows = {7mm}, columns = {15mm,c},
 }
  Alpha   & Beta  & Gamma   & Delta \\
  Epsilon & Zeta  & Eta     & Theta \\
@@ -438,11 +497,10 @@ The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!
 
 The following example demonstrates the usages of
 \verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! keys.
-\nopagebreak
+%\nopagebreak
 \begin{demohigh}
 \begin{tblr}{
- hlines,
- vlines,
+ hlines, vlines,
  rows = {abovesep=1pt,belowsep=5pt},
  columns = {leftsep=1pt,rightsep=5pt},
 }
@@ -480,6 +538,16 @@ The available keys are described in Table \ref{key:row}.
 \hline[1pt]
 \end{tblr}
 \end{demohigh}
+
+In fact, table command \verb!\SetRow{<styles>}! at the beginning of row \verb!i!
+is the same as table option \verb!row{i}={<styles>}!.
+
+Also, table command \verb!\SetRows{<styles>}! at the beginning of some row
+is the same as table option \verb!rows={<styles>}!.
+
+The usages of table commands \verb!\SetColumn! and \verb!\SetColumns!
+are similar to those of \verb!\SetRow! and \verb!\SetRows!, respectively.
+But normally you don't need to use them.
 
 \section{Colspec and Rowspec}
 
