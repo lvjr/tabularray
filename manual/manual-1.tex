@@ -116,7 +116,7 @@ Note that you can use more meaningful \verb!t! instead of \verb!p! for top basel
 For some users who are familiar with word processors,
 these \verb!t! and \verb!b! columns are counter-intuitive.
 In \verb!tabularray! package, there are another two column types \verb!h! and \verb!f!,
-which will align cell text at row head and row foot, respectively:
+which will align cell text at the head and the foot, respectively:
 
 \begin{demohigh}
 \begin{tblr}{Q[h,4em]Q[t,4em]Q[m,4em]Q[b,4em]Q[f,4em]}
@@ -130,9 +130,8 @@ which will align cell text at row head and row foot, respectively:
 
 \section{Multirow Cells}
 
-The above \verb!h! and \verb!f! columns are necessary for multirow cells.
-In \verb!tabularray!, the \verb!t! and \verb!b! in the optional argument of \verb!\multirow! commands
-will be treated as \verb!h! and \verb!f!, respectively:
+The above \verb!h! and \verb!f! alignments are necessary
+when we write multirow cells with \verb!\SetCell! command in \verb!tabularray!.
 
 \begin{demo}
 \begin{tabular}{|l|l|l|l|}
@@ -149,8 +148,8 @@ will be treated as \verb!h! and \verb!f!, respectively:
 \begin{demohigh}
 \begin{tblr}{|l|l|l|l|}
 \hline
- \multirow[t]{4}{1.5cm}{Multirow Cell One} & Alpha &
- \multirow[b]{4}{1.5cm}{Multirow Cell Two} & Alpha \\
+ \SetCell[r=4]{h,1.5cm} Multirow Cell One & Alpha &
+ \SetCell[r=4]{f,1.5cm} Multirow Cell Two & Alpha \\
  & Beta  & & Beta \\
  & Gamma & & Gamma \\
  & Delta & & Delta \\
@@ -178,7 +177,7 @@ even though some rows have large height:
 \begin{demohigh}
 \begin{tblr}{|l|m{4em}|}
 \hline
- \multirow[c]{4}{1.5cm}{Multirow} & Alpha  \\
+ \SetCell[r=4]{m,1.5cm} Multirow & Alpha  \\
  & Beta  \\
  & Gamma \\
  & Delta Delta Delta \\
@@ -202,7 +201,7 @@ therefore it always avoids vertical overflow:
 \begin{demohigh}
 \begin{tblr}{|l|m{4em}|}
 \hline
- \multirow[c]{2}{1cm}{Line \\ Line \\ Line \\ Line} & Alpha \\
+ \SetCell[r=2]{m,1cm} {Line \\ Line \\ Line \\ Line} & Alpha \\
 \cline{2}
  & Beta \\
 \hline
@@ -415,25 +414,5 @@ Hlines and vlines can also have colors:
  Iota    & Kappa & Lambda \\
 \end{tblr}
 \end{demohigh}
-
-\section{New Table Commands}
-
-All commands which change the specifications of tables \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
-The following example demonstrates how to define similar rules as in \verb!booktabs! package:
-
-\begin{codehigh}
-\NewTableCommand\toprule{\hline[0.08em]}
-\NewTableCommand\midrule{\hline[0.05em]}
-\NewTableCommand\bottomrule{\hline[0.08em]}
-\begin{tblr}{llll}
-\toprule
- Alpha   & Beta  & Gamma   & Delta \\
-\midrule
- Epsilon & Zeta  & Eta     & Theta \\
- Iota    & Kappa & Lambda  & Mu    \\
- Nu      & Xi    & Omicron & Pi    \\
-\bottomrule
-\end{tblr}
-\end{codehigh}
 
 \end{document}

@@ -156,6 +156,26 @@ Text \begin{mytblr}{cccc}
 \end{mytblr} Text
 \end{demohigh}
 
+\section{New Table Commands}
+
+All commands which change the specifications of tables \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
+The following example demonstrates how to define similar rules as in \verb!booktabs! package:
+
+\begin{codehigh}
+\NewTableCommand\toprule{\hline[0.08em]}
+\NewTableCommand\midrule{\hline[0.05em]}
+\NewTableCommand\bottomrule{\hline[0.08em]}
+\begin{tblr}{llll}
+\toprule
+ Alpha   & Beta  & Gamma   & Delta \\
+\midrule
+ Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    \\
+ Nu      & Xi    & Omicron & Pi    \\
+\bottomrule
+\end{tblr}
+\end{codehigh}
+
 \section{Counters and Lengths}
 
 Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be used in cell text:
