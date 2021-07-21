@@ -10,7 +10,7 @@
 
 \chapter{Extra Interfaces}
 
-\section{The Whole Table}
+\section{Table Specifications}
 
 All available keys for the whole table are described in Table \ref{key:table}.
 
@@ -156,25 +156,79 @@ Text \begin{mytblr}{cccc}
 \end{mytblr} Text
 \end{demohigh}
 
+If not giving the optional argument to \verb!\SetTblrInner! or \verb!\SetTblrOuter! command,
+we set the default specifications for \verb!tblr! environment.
+And different tabularray environments could have different default specifications.
+
 \section{New Table Commands}
 
 All commands which change the specifications of tables \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
-The following example demonstrates how to define similar rules as in \verb!booktabs! package:
+The following example demonstrates how to define a new table command:
 
-\begin{codehigh}
-\NewTableCommand\toprule{\hline[0.08em]}
-\NewTableCommand\midrule{\hline[0.05em]}
-\NewTableCommand\bottomrule{\hline[0.08em]}
+\begin{demohigh}
+\NewTableCommand\myhline{\hline[0.1em,red5]}
 \begin{tblr}{llll}
-\toprule
+\myhline
  Alpha   & Beta  & Gamma   & Delta \\
-\midrule
  Epsilon & Zeta  & Eta     & Theta \\
  Iota    & Kappa & Lambda  & Mu    \\
- Nu      & Xi    & Omicron & Pi    \\
-\bottomrule
+\myhline
 \end{tblr}
-\end{codehigh}
+\end{demohigh}
+
+\section{Expand Macros First}
+
+\verb!Tabularray! need to see every \verb!&! and \verb!\\! when splitting the table body
+with \verb!l3regex!. And you can not put cell text inside any table command defined with
+\verb!\NewTableCommand!. But you could use outer specification \verb!expand! to make \verb!tabularray!
+expand every occurrence of a specified macro \underline{once} before splitting the table body:
+
+\begin{demohigh}
+\def\tblrbody{
+ \hline
+  20 & 30 & 40 \\
+  50 & 60 & 70 \\
+ \hline
+}
+\begin{tblr}[expand=\tblrbody]{ccc}
+ \hline
+  AA & BB & CC \\
+  \tblrbody
+  DD & EE & FF \\
+  \tblrbody
+  GG & HH & II \\
+ \hline
+\end{tblr}
+\end{demohigh}
+
+With this \verb!expand! option, you can also use \verb!environ! package
+to define a new environment based on \verb!tblr! environment:
+
+\begin{demohigh}
+\NewEnviron{fancytblr}{
+ Before Text
+ \begin{tblr}[expand=\BODY]{hlines}
+   \BODY
+ \end{tblr}
+ After Text
+}
+\begin{fancytblr}
+  One   & Two   & Three \\
+  Four  & Five  & Six   \\
+  Seven & Eight & Nine  \\
+\end{fancytblr}
+\end{demohigh}
+
+\section{Use Verbatim Commands}
+
+With inner specification \verb!verb!, you can write \verb!\verb! commands in the cell text:
+
+\begin{demohigh}
+\begin{tblr}{hlines,verb}
+  20 & 30 & \verb!\hello{world}!40 \\
+  50 & \verb!\hello!60 & 70 \\
+\end{tblr}
+\end{demohigh}
 
 \section{Counters and Lengths}
 
