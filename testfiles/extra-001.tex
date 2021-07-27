@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+\usepackage{environ}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing expand option}
+\def\tblrbody{
+ \hline
+  20 & 30 & 40 \\
+  50 & 60 & 70 \\
+ \hline
+}
+\begin{tblr}[expand=\tblrbody]{ccc}
+ \hline
+  AA & BB & CC \\
+  \tblrbody
+  DD & EE & FF \\
+  \tblrbody
+  GG & HH & II \\
+ \hline
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{testing \NewEnviron}
+\NewEnviron{fancytblr}[1]{
+ Before Text
+ \begin{tblr}[expand=\BODY]{#1}
+   \BODY
+ \end{tblr}
+ After Text
+}
+\begin{fancytblr}{hlines}
+  One   & Two   & Three \\
+  Four  & Five  & Six   \\
+  Seven & Eight & Nine  \\
+\end{fancytblr}
+\ENDTEST
+
+\end{document}

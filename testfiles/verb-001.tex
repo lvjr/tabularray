@@ -1,0 +1,24 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing \verb command}
+\begin{tblr}{hlines,verb}
+  20 & 30 & \verb!\hello{world}!40 \\
+  50 & \verb!\hello!60 & 70 \\
+\end{tblr}
+\ENDTEST
+
+\end{document}

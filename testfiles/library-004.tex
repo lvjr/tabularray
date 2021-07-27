@@ -1,0 +1,142 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{siunitx}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{siunitx: table-alignment-mode=format}
+
+Tabular:
+
+\begin{tabular}{
+ |S[table-column-width=4em,table-format=2.3,table-alignment=left]
+ |S[table-column-width=4em,table-format=2.3,table-alignment=center]
+ |S[table-column-width=4em,table-format=2.3,table-alignment=right]|
+}
+\hline
+  {A}    & {B}    & {C}    \\
+\hline
+  11     & 11     & 11     \\
+\hline
+   2.111 &  2.222 &  2.333 \\
+\hline
+  33.11  & 33.22  & 33.33  \\
+\hline
+\end{tabular}
+
+\bigskip
+
+Tabularray:
+
+\begin{tblr}{
+ hlines, vlines, columns = {4em},
+ colspec={
+   Q[si={table-format=2.3,table-number-alignment=left},l]
+   Q[si={table-format=2.3,table-number-alignment=center},c]
+   Q[si={table-format=2.3,table-number-alignment=right},r]
+ }
+}
+  {{{A}}} & {{{B}}} & {{{C}}} \\
+  11      & 11      & 11      \\
+   2.111  &  2.222  &  2.333  \\
+  33.11   & 33.22   & 33.33   \\
+\end{tblr}
+
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{siunitx: table-alignment-mode=none}
+
+Tabular:
+
+\begin{tabular}{
+ |S[table-column-width=4em,table-alignment-mode=none,table-alignment=left]
+ |S[table-column-width=4em,table-alignment-mode=none,table-alignment=center]
+ |S[table-column-width=4em,table-alignment-mode=none,table-alignment=right]|
+}
+\hline
+  {A}    & {B}    & {C}    \\
+\hline
+  11     & 11     & 11     \\
+\hline
+   2.111 &  2.222 &  2.333 \\
+\hline
+  33.11  & 33.22  & 33.33  \\
+\hline
+\end{tabular}
+
+\bigskip
+
+Tabularray:
+
+\begin{tblr}{
+ hlines, vlines, columns = {4em},
+ colspec={
+   Q[si={table-alignment-mode=none,table-number-alignment=left},l]
+   Q[si={table-alignment-mode=none,table-number-alignment=center},c]
+   Q[si={table-alignment-mode=none,table-number-alignment=right},r]
+ }
+}
+  {{{A}}} & {{{B}}} & {{{C}}} \\
+  11      & 11      & 11      \\
+   2.111  &  2.222  &  2.333  \\
+  33.11   & 33.22   & 33.33   \\
+\end{tblr}
+
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{siunitx: table-alignment-mode=marker}
+
+Tabular:
+
+\begin{tabular}{
+ |S[table-column-width=4em,table-alignment-mode=marker]
+ |S[table-column-width=4em,table-alignment-mode=marker]
+ |S[table-column-width=4em,table-alignment-mode=marker]|
+}
+\hline
+  {A}    & {B}    & {C}    \\
+\hline
+  11     & 11     & 11     \\
+\hline
+   2.111 &  2.222 &  2.333 \\
+\hline
+  33.11  & 33.22  & 33.33  \\
+\hline
+\end{tabular}
+
+\bigskip
+
+Tabularray:
+
+\begin{tblr}{
+ hlines, vlines, columns = {4em},
+ colspec={
+   Q[si={table-alignment-mode=marker},c]
+   Q[si={table-alignment-mode=marker},c]
+   Q[si={table-alignment-mode=marker},c]
+ }
+}
+  {{{A}}} & {{{B}}} & {{{C}}} \\
+  11      & 11      & 11      \\
+   2.111  &  2.222  &  2.333  \\
+  33.11   & 33.22   & 33.33   \\
+\end{tblr}
+
+\ENDTEST
+
+\end{document}
