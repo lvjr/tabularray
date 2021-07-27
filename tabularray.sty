@@ -6037,8 +6037,8 @@
 \NewTblrLibrary { siunitx }
   {
     \RequirePackage { siunitx }
-    \NewColumnType { S } [1] [] { Q[si = {##1}] }
-    \NewColumnType { s } [1] [] { Q[si = {##1}, cmd = \TblrUnit] }
+    \NewColumnType { S } [1] [] { Q[si = {##1}, c] }
+    \NewColumnType { s } [1] [] { Q[si = {##1}, c, cmd = \TblrUnit] }
     \__tblr_data_new_key:nnn { cell } { si } { str }
     \keys_define:nn { tblr-column }
       {
