@@ -6038,6 +6038,7 @@
   {
     \RequirePackage { siunitx }
     \NewColumnType { S } [1] [] { Q[si = {##1}] }
+    \NewColumnType { s } [1] [] { Q[si = {##1}, cmd = \TblrUnit] }
     \__tblr_data_new_key:nnn { cell } { si } { str }
     \keys_define:nn { tblr-column }
       {
@@ -6046,12 +6047,20 @@
     \cs_new_protected:Npn \__tblr_siunitx_setcolumn:n ##1
       {
         \__tblr_column_gput_cell:nn { si } {##1}
-        \__tblr_process_text_for_every_column_cell:n { \__tblr_siunitx_tablenum:n }
+        \__tblr_process_text_for_every_column_cell:n { \TblrNum }
       }
-    \cs_new_protected:Npn \__tblr_siunitx_tablenum:n ##1
+    \NewDocumentCommand \TblrNum { m }
       {
-        \tl_if_head_is_group:nTF {##1}
-          { ##1 }
+        \__tblr_siunitx_process:Nn \tablenum {##1}
+      }
+    \NewDocumentCommand \TblrUnit { m }
+      {
+        \__tblr_siunitx_process:Nn \si {##1}
+      }
+    \cs_new_protected:Npn \__tblr_siunitx_process:Nn ##1 ##2
+      {
+        \tl_if_head_is_group:nTF {##2}
+          { ##2 }
           {
             \group_begin:
             \tl_set:Nx \l_tmpa_tl
@@ -6060,7 +6069,7 @@
                   { \int_use:N \c@rownum } { \int_use:N \c@colnum } { si }
               }
             \exp_args:NV \sisetup \l_tmpa_tl
-            \tablenum {##1}
+            ##1 {##2}
             \group_end:
           }
       }
