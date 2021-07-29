@@ -2401,6 +2401,8 @@
 \NewTblrEnviron { tblr }
 \NewTblrEnviron { longtblr }
 \SetTblrOuter [ longtblr ] { long }
+\NewTblrEnviron { talltblr }
+\SetTblrOuter [ talltblr ] { tall }
 
 \tl_new:N \l__tblr_env_name_tl
 \bool_new:N \l__tblr_math_mode_bool
@@ -2919,7 +2921,8 @@
 
 \keys_define:nn { tblr-outer }
   {
-    long    .code:n = \__tblr_outer_gput_spec:nn { long } {true},
+    long    .code:n = \__tblr_outer_gput_spec:nn { long } { true },
+    tall    .code:n = \__tblr_outer_gput_spec:nn { tall } { true },
     halign  .code:n = \__tblr_outer_gput_spec:nn { halign } {#1},
     valign  .code:n = \__tblr_outer_gput_spec:nn { valign } {#1},
     l       .meta:n = { halign = l },
@@ -4914,6 +4917,19 @@
       \l__tblr_table_lastfoot_box  { \UseTblrTemplate { lastfoot } { default } }
   }
 
+\cs_new_protected:Npn \__tblr_build_tall_table_head_foot:
+  {
+    \__tblr_get_table_width:
+    \__tblr_build_table_head_aux:Nn \l__tblr_table_firsthead_box
+      {
+        \tl_set:Nn \l_tmpa_tl { \InsertTblrText { label } }
+        \tl_if_empty:NF \l_tmpa_tl { \exp_args:NV \label \l_tmpa_tl }
+        \UseTblrTemplate { firsthead } { default }
+      }
+    \__tblr_build_table_foot_aux:Nn
+      \l__tblr_table_lastfoot_box  { \UseTblrTemplate { lastfoot } { default } }
+  }
+
 \cs_new_protected:Npn \__tblr_build_table_head_aux:Nn #1 #2
   {
     \vbox_set:Nn #1
@@ -4940,7 +4956,17 @@
   {
     \tl_if_eq:enTF { \__tblr_spec_item:nn { outer } { long } } { true }
       { \__tblr_build_long_table:e { \__tblr_spec_item:nn { outer } { halign } } }
-      { \__tblr_build_short_table:e { \__tblr_spec_item:nn { outer } { valign } } }
+      {
+        \tl_if_eq:enTF { \__tblr_spec_item:nn { outer } { tall } } { true }
+          {
+            \__tblr_build_tall_table:e
+              { \__tblr_spec_item:nn { outer } { valign } }
+          }
+          {
+            \__tblr_build_short_table:e
+              { \__tblr_spec_item:nn { outer } { valign } }
+          }
+      }
   }
 
 \dim_new:N \l__tblr_remain_height_dim
@@ -5149,6 +5175,25 @@
         \tl_if_eq:nnF {#2} {r} { \hfil }
       }
   }
+
+%% #1: table alignment
+%% For tall table, we need to leave vmode first
+\cs_new_protected:Npn \__tblr_build_tall_table:n #1
+  {
+    \mode_leave_vertical:
+    \__tblr_build_tall_table_head_foot:
+    \__tblr_build_one_table:nn {1} {\c@rowcount}
+    \vbox_set:Nn \l__tblr_table_box
+      {
+        \box_use:N \l__tblr_table_firsthead_box
+        \hrule height ~ 0pt
+        \box_use:N \l__tblr_table_box
+        \hrule height ~ 0pt
+        \box_use:N \l__tblr_table_lastfoot_box
+      }
+    \__tblr_valign_whole:Nn \l__tblr_table_box #1
+  }
+\cs_generate_variant:Nn \__tblr_build_tall_table:n { e }
 
 %% #1: table alignment
 %% For short table, we need to leave vmode first
