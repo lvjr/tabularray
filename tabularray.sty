@@ -5177,10 +5177,13 @@
   }
 
 %% #1: table alignment
-%% For tall table, we need to leave vmode first
+%% For tall table, we need to leave vmode first.
+%% Since there may be \centering in table environment,
+%% We use \raggedright to reset alignement for table head/foot.
 \cs_new_protected:Npn \__tblr_build_tall_table:n #1
   {
     \mode_leave_vertical:
+    \raggedright
     \__tblr_build_tall_table_head_foot:
     \__tblr_build_one_table:nn {1} {\c@rowcount}
     \vbox_set:Nn \l__tblr_table_box
