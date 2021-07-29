@@ -1,0 +1,96 @@
+%  -*- coding: utf-8 -*-
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+\usepackage{hyperref}
+\hypersetup{colorlinks}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+\START
+
+\BEGINTEST{tall table: inline}
+\noindent TEXT
+\begin{talltblr}[
+  caption = {First Long Long Long Long Tabular},
+  entry = {First Short Caption},
+  label = {tblr:first},
+  note{a} = {It is the first footnote.},
+  remark{Note} = {Some general note. Some general note. Some general note.},
+]{
+  colspec = {XXX}, width = 0.5\linewidth, hlines,
+}
+ Alpha   & Beta  & Gamma \\
+ Epsilon & Zeta  & Eta\TblrNote{a} \\
+ Iota    & Kappa & Lambda \\
+\end{talltblr}
+TEXT
+\ENDTEST
+
+\BEGINTEST{tall table: float}
+\begin{table}[!htbp]
+\centering
+\begin{tblr}[
+  tall,
+  caption = {Second Long Long Long Long Tabular},
+  entry = none,
+  label = none,
+  note{$\dag$} = {It is the second long long long long long long footnote.},
+  remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
+]{
+  colspec = {XXX}, width = 0.5\linewidth, hlines,
+}
+ Alpha   & Beta & Gamma \\
+ Epsilon & Zeta & Eta   \\
+ Iota    & Kapp & Lambdaa\TblrNote{$\dag$} \\
+\end{tblr}
+\end{table}
+\ENDTEST
+
+\BEGINTEST{tall table: inline}
+\noindent TEXT
+\begin{talltblr}[
+  caption = {Third Long Long Long Long Tabular},
+  entry = none,
+  note{a} = {It is the first footnote.},
+  remark{Note} = {Some general note. Some general note. Some general note.},
+]{
+  colspec = {XXX}, width = 0.5\linewidth, hlines,
+}
+ Alpha   & Beta  & Gamma \\
+ Epsilon & Zeta  & Eta\TblrNote{a} \\
+ Iota    & Kappa & Lambda \\
+\end{talltblr}
+TEXT
+\ENDTEST
+
+\BEGINTEST{tall table: float}
+\begin{table}[!htbp]
+\centering
+\begin{tblr}[
+  tall,
+  caption = {Fourth Long Long Long Long Tabular},
+  entry = {Fourth Short Caption},
+  label = {tblr:fourth},
+  note{$\dag$} = {It is the second long long long long long long footnote.},
+  remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
+]{
+  colspec = {XXX}, width = 0.5\linewidth, hlines,
+}
+ Alpha   & Beta & Gamma \\
+ Epsilon & Zeta & Eta   \\
+ Iota    & Kapp & Lambdaa\TblrNote{$\dag$} \\
+\end{tblr}
+\end{table}
+\ENDTEST
+
+%\listoftables
+
+\end{document}
