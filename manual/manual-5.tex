@@ -15,7 +15,7 @@
 The \verb!tabularray! package emulates or fixes some commands in other packages.
 To avoid potential conflict, you need to enable them with \verb!\UseTblrLibrary! command.
 
-\section{Library \V{booktabs}}
+\section{Library \texttt{booktabs}}
 
 When you write \verb!\UseTblrLibrary{booktabs}!,
 \verb!tabularray! package will define commands \verb!\toprule!, \verb!\midrule!,
@@ -36,6 +36,7 @@ When you write \verb!\UseTblrLibrary{booktabs}!,
 \end{demohigh}
 
 At this moment, \verb!trim! options for \verb!\cmidrule! command are not supported.
+(As a workaround, you may insert an empty column to separate two \verb!\cmidrule!'s.)
 But rule colors are possible just like \verb!\hline! and \verb!\cline! commands.
 
 \begin{demohigh}
@@ -52,7 +53,7 @@ But rule colors are possible just like \verb!\hline! and \verb!\cline! commands.
 \end{tblr}
 \end{demohigh}
 
-\section{Library \V{diagbox}}
+\section{Library \texttt{diagbox}}
 
 When writing \verb!\UseTblrLibrary{diagbox}! in the preamble of the document,
 \verb!tabularray! package loads \verb!diagbox! package,
@@ -87,46 +88,68 @@ $\begin{tblr}{|c|cc|}
 \end{tblr}$
 \end{demohigh}
 
-\section{Library \V{siunitx}}
+\section{Library \texttt{siunitx}}
 
 When writing \verb!\UseTblrLibrary{siunitx}! in the preamble of the document,
 \verb!tabularray! package loads \verb!siunitx! package,
-and defines \verb!S! column for \verb!tblr! environment.
+and defines \verb!S! column as \verb!Q! column with \verb!si! key.
 
 \begin{demohigh}
 \begin{tblr}{
   hlines, vlines,
   colspec={
-    S[table-format=2.2]
-    S[table-format=2.2]
-    S[table-format=2.2]
+    S[table-format=3.2]
+    S[table-format=3.2]
+    S[table-format=3.2]
   }
 }
  {{{Head}}} & {{{Head}}} & {{{Head}}} \\
-    11      &    11      &    11      \\
+   111      &   111      &   111      \\
+     2.1    &     2.2    &     2.3    \\
+    33.11   &    33.22   &    33.33   \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\begin{tblr}{
+  hlines, vlines,
+  colspec={
+    Q[si={table-format=3.2},c]
+    Q[si={table-format=3.2},c]
+    Q[si={table-format=3.2},c]
+  }
+}
+ {{{Head}}} & {{{Head}}} & {{{Head}}} \\
+   111      &   111      &   111      \\
      2.1    &     2.2    &     2.3    \\
     33.11   &    33.22   &    33.33   \\
 \end{tblr}
 \end{demohigh}
 
 Note that you need to use \underline{triple} pairs of braces to guard non-numeric cells.
-If you need to apply other specifications for the \verb!S! columns,
-you need to move \verb!siunitx! options into \verb!si! keys of the \verb!Q! columns.
+
+Also you must use \verb!l!, \verb!c! or \verb!r! to set horizontal alignment for non-numeric cells:
 
 \begin{demohigh}
 \begin{tblr}{
-  hlines, vlines,
+  hlines, vlines, columns={6em},
   colspec={
-    Q[si={table-format=2.2},blue7]
-    Q[si={table-format=2.2},teal7]
-    Q[si={table-format=2.2},purple7]
+    Q[si={table-format=3.2,table-number-alignment=left},l,blue7]
+    Q[si={table-format=3.2,table-number-alignment=center},c,teal7]
+    Q[si={table-format=3.2,table-number-alignment=right},r,purple7]
   }
 }
  {{{Head}}} & {{{Head}}} & {{{Head}}} \\
-    11      &    11      &    11      \\
+   111      &   111      &   111      \\
      2.1    &     2.2    &     2.3    \\
     33.11   &    33.22   &    33.33   \\
 \end{tblr}
 \end{demohigh}
+
+Both \verb!S! and \verb!s! columns are supported. In fact, These two columns are defined as follows:
+\begin{codehigh}
+\NewColumnType{S}[1][]{Q[si={##1},c]}
+\NewColumnType{s}[1][]{Q[si={##1},c,cmd=\TblrUnit]}
+\end{codehigh}
 
 \end{document}
