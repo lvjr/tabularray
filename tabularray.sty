@@ -4798,7 +4798,6 @@
 \DefTblrTemplate { firsthead } { normal }
   {
     \UseTblrTemplate { caption } { default }
-    \UseTblrTemplate { caption-lot } { default }
   }
 
 \DefTblrTemplate { middlehead, lasthead } { normal }
@@ -4901,8 +4900,7 @@
     \__tblr_get_table_width:
     \__tblr_build_table_head_aux:Nn \l__tblr_table_firsthead_box
       {
-        \tl_set:Nn \l_tmpa_tl { \InsertTblrText { label } }
-        \tl_if_empty:NF \l_tmpa_tl { \exp_args:NV \label \l_tmpa_tl }
+        \__tblr_build_table_label_entry:
         \UseTblrTemplate { firsthead } { default }
       }
     \__tblr_build_table_head_aux:Nn
@@ -4922,12 +4920,28 @@
     \__tblr_get_table_width:
     \__tblr_build_table_head_aux:Nn \l__tblr_table_firsthead_box
       {
-        \tl_set:Nn \l_tmpa_tl { \InsertTblrText { label } }
-        \tl_if_empty:NF \l_tmpa_tl { \exp_args:NV \label \l_tmpa_tl }
+        \__tblr_build_table_label_entry:
         \UseTblrTemplate { firsthead } { default }
       }
     \__tblr_build_table_foot_aux:Nn
       \l__tblr_table_lastfoot_box  { \UseTblrTemplate { lastfoot } { default } }
+  }
+
+\cs_new_protected:Npn \__tblr_build_table_label_entry:
+  {
+    \tl_set:Nx \l_tmpa_tl { \InsertTblrText { label } }
+    \tl_if_eq:NnTF \l_tmpa_tl { none }
+      {
+        \SetTblrTemplate { caption-tag }{ empty }
+        \SetTblrTemplate { caption-sep }{ empty }
+      }
+      {
+        \refstepcounter { table }
+        \tl_if_empty:NF \l_tmpa_tl { \exp_args:NV \label \l_tmpa_tl }
+      }
+    \tl_set:Nx \l_tmpb_tl { \InsertTblrText { entry } }
+    \tl_if_eq:NnF \l_tmpb_tl { none }
+      { \UseTblrTemplate { caption-lot } { default } }
   }
 
 \cs_new_protected:Npn \__tblr_build_table_head_aux:Nn #1 #2
@@ -4996,7 +5010,6 @@
     \hrule height ~ 0pt
     \LogTblrTracing { page }
     \int_set:Nn \l__tblr_table_page_int {1}
-    \refstepcounter { table }
     \__tblr_build_head_foot:
     \dim_set:Nn \l__tblr_remain_height_dim
       { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
