@@ -322,13 +322,21 @@ Their options are outer specifications and should be put in the optional argumen
   \V{footsep}         & vertical space between table foot and table body & \V{6pt} \\
   \V{presep}          & vertical space between table head and the above text & \verb!1.5\bigskipamount! \\
   \V{postsep}         & vertical space between table foot and the below text & \verb!1.5\bigskipamount! \\
-  \V{theme}           & table theme (including settings for templates and styles) & None \\
-  \V{caption}         & table caption & None \\
-  \V{entry}           & short table caption to be put in List of Tables & None \\
-  \V{label}           & table label & None \\
-  \V{note\{<name>\}}   & table note with \V{<name>} as tag & None \\
-  \V{remark\{<name>\}} & table remark with \V{<name>} as tag & None \\
+  \V{theme}           & table theme (including settings for templates and styles) & \None \\
+  \V{caption}         & table caption & \None \\
+  \V{entry}           & short table caption to be put in List of Tables & \None \\
+  \V{label}           & table label & \None \\
+  \V{note\{<name>\}}   & table note with \V{<name>} as tag & \None \\
+  \V{remark\{<name>\}} & table remark with \V{<name>} as tag & \None \\
 \end{spectblr}
+
+If you write \verb!entry=none!, \verb!tabularray! package will not add an entry in List of Tables.
+Therefore \verb!caption=text,entry=none! is similar to \verb!\caption[]{text}! in \verb!longtable!.
+
+If you write \verb!label=none!, \verb!tabularray! package will not step \verb!table! counter,
+and set the \verb!caption-tag! and \verb!caption-sep! templates (see below) to empty.
+Therefore \verb!caption=text,entry=none,label=none! is similar to \verb!\caption*{text}!
+in \verb!longtable!, except for the counter.
 
 \section{Customize Templates}
 
@@ -518,15 +526,6 @@ Note that you can define the same template for multiple elements in \verb!\DefTb
 
 \section{Change Styles}
 
-You may change the styles of template elements.
-
-\begin{codehigh}
-\SetTblrStyle{firsthead}{font=\bfseries}
-\SetTblrStyle{firstfoot}{fg=blue2}
-\SetTblrStyle{middlefoot}{\itshape}
-\SetTblrStyle{caption-tag}{red2}
-\end{codehigh}
-
 All available keys for template elements are described in Table \ref{key:element}.
 
 \begin{spectblr}[
@@ -542,6 +541,15 @@ All available keys for template elements are described in Table \ref{key:element
   \K{indent}             & parindent value \\
   \K{hang}               & hangindent value \\
 \end{spectblr}
+
+You may change the styles of template elements with \verb!\SetTblrStyle! command:
+
+\begin{codehigh}
+\SetTblrStyle{firsthead}{font=\bfseries}
+\SetTblrStyle{firstfoot}{fg=blue2}
+\SetTblrStyle{middlefoot}{\itshape}
+\SetTblrStyle{caption-tag}{red2}
+\end{codehigh}
 
 When you write \verb!\UseTblrTemplate{element}{default}! in defining a template,
 beside including the code of template \verb!element!, the foreground color and font commands
@@ -568,8 +576,29 @@ by writing \verb!theme=fancy! in the optional argument of \verb!longtblr! enviro
 
 \section{Control Page Breaks}
 
-Just like \verb!longtable! package, you can use \verb!\\*! or \verb!\nopagebreak!
-to prohibit a page break, and use \verb!\pagebreak! to force a page break.
+Just like \verb!longtable! package, inside \verb!longtblr! environment,
+you can use \verb!\\*! or \verb!\nopagebreak! to prohibit a page break,
+and use \verb!\pagebreak! to force a page break.
 
+\section{Floatable Tall Tables}
+
+There is also an \verb!talltblr! environment as an alternative to \verb!threeparttable! environment.
+It can not cross multiple pages, but it can be put inside \verb!table! environment.
+
+\begin{demohigh}
+TEXT\begin{talltblr}[
+  caption = {Long Long Long Long Tabular},
+  entry = {Short Caption},
+  label = {tblr:tall},
+  note{a} = {It is the first footnote.},
+  note{$\dag$} = {It is the second long long long long long long footnote.},
+]{
+  colspec = {XXX}, width = 0.5\linewidth, hlines,
+}
+  Alpha   & Beta  & Gamma \\
+  Epsilon & Zeta  & Eta\TblrNote{a} \\
+  Iota    & Kappa & Lambda\TblrNote{$\dag$} \\
+\end{talltblr}TEXT
+\end{demohigh}
 
 \end{document}

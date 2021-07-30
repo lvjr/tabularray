@@ -50,9 +50,9 @@ All available keys for hlines and vlines are described in Table \ref{key:hvline}
 ]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{dash}} & dash style: \V{solid}, \V{dashed} or \V{dotted} & \V{solid} \\
-  \K{text}             & replace hline/vline with text (like \V{!} specifier in \K{colspec}) & None \\
-  \underline{\K{wd}}   & rule width dimension & None \\
-  \underline{\K{fg}}   & rule color name & None \\
+  \K{text}             & replace hline/vline with text (like \V{!} specifier in \K{colspec}) & \None \\
+  \underline{\K{wd}}   & rule width dimension & \None \\
+  \underline{\K{fg}}   & rule color name & \None \\
 \end{spectblr}
 
 \subsection{Hlines and Vlines in New Interfaces}
@@ -278,13 +278,13 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
     & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
       \V{h} (head) or \V{f} (foot)
     & \V{t} \\
-  \underline{\K{wd}} & width dimension & None \\
-  \underline{\K{bg}} & background color name & None \\
-  \K{fg}    & foreground color name & None \\
-  \K{font}  & font commands & None \\
-  \K{preto} & prepend text to the cell & None \\
-  \K{appto} & append text to the cell & None \\
-  \K{cmd}   & execute command for the cell text & None \\
+  \underline{\K{wd}} & width dimension & \None \\
+  \underline{\K{bg}} & background color name & \None \\
+  \K{fg}    & foreground color name & \None \\
+  \K{font}  & font commands & \None \\
+  \K{preto} & prepend text to the cell & \None \\
+  \K{appto} & append text to the cell & \None \\
+  \K{cmd}   & execute command for the cell text & \None \\
 \end{spectblr}
 \vspace{-2em}
 \begin{spectblr}[
@@ -403,19 +403,19 @@ All available keys for rows and columns are described in Table \ref{key:row} and
     & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
       \V{h} (head) or \V{f} (foot)
     & \V{t} \\
-  \underline{\K{ht}} & height dimension & None \\
-  \underline{\K{bg}} & background color name & None \\
-  \K{fg} & foreground color name & None \\
-  \K{font} & font commands & None \\
+  \underline{\K{ht}} & height dimension & \None \\
+  \underline{\K{bg}} & background color name & \None \\
+  \K{fg} & foreground color name & \None \\
+  \K{font} & font commands & \None \\
   \K{abovesep} & set vertical space above the row & \V{2pt} \\
-  \K{abovesep+} & increase vertical space above the row & None \\
+  \K{abovesep+} & increase vertical space above the row & \None \\
   \K{belowsep} & set vertical space below the row & \V{2pt} \\
-  \K{belowsep+} & increase vertical space below the row & None \\
+  \K{belowsep+} & increase vertical space below the row & \None \\
   \K{rowsep} & set vertical space above and below the row & \V{2pt} \\
-  \K{rowsep+} & increase vertical space above and below the row & None \\
-  \K{preto} & prepend text to every cell (like \V{>} specifier in \K{rowspec}) & None \\
-  \K{appto} & append text to every cell (like \V{<} specifier in \K{rowspec}) & None \\
-  \K{cmd}   & execute command for every cell text & None \\
+  \K{rowsep+} & increase vertical space above and below the row & \None \\
+  \K{preto} & prepend text to every cell (like \V{>} specifier in \K{rowspec}) & \None \\
+  \K{appto} & append text to every cell (like \V{<} specifier in \K{rowspec}) & \None \\
+  \K{cmd}   & execute command for every cell text & \None \\
 \end{spectblr}
 \vspace{-2em}
 \begin{spectblr}[
@@ -431,20 +431,20 @@ All available keys for rows and columns are described in Table \ref{key:row} and
     & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
       \V{h} (head) or \V{f} (foot)
     & \V{t} \\
-  \underline{\K{wd}} & width dimension & None \\
-  \underline{\K{co}} & coefficient for the extendable column (\V{X} column) & None \\
-  \underline{\K{bg}} & background color name & None \\
-  \K{fg} & foreground color name & None \\
-  \K{font} & font commands & None \\
+  \underline{\K{wd}} & width dimension & \None \\
+  \underline{\K{co}} & coefficient for the extendable column (\V{X} column) & \None \\
+  \underline{\K{bg}} & background color name & \None \\
+  \K{fg} & foreground color name & \None \\
+  \K{font} & font commands & \None \\
   \K{leftsep} & set horizontal space to the left of the column & \V{6pt} \\
-  \K{leftsep+} & increase horizontal space to the left of the column & None \\
+  \K{leftsep+} & increase horizontal space to the left of the column & \None \\
   \K{rightsep} & set horizontal space to the right of the column & \V{6pt} \\
-  \K{rightsep+} & increase horizontal space to the right of the column & None \\
+  \K{rightsep+} & increase horizontal space to the right of the column & \None \\
   \K{colsep} & set horizontal space to both sides of the column & \V{6pt} \\
-  \K{colsep+} & increase horizontal space to both sides of the column & None \\
-  \K{preto} & prepend text to every cell (like \V{>} specifier in \K{colspec}) & None \\
-  \K{appto} & append text to every cell (like \V{<} specifier in \K{colspec}) & None \\
-  \K{cmd}   & execute command for every cell text & None \\
+  \K{colsep+} & increase horizontal space to both sides of the column & \None \\
+  \K{preto} & prepend text to every cell (like \V{>} specifier in \K{colspec}) & \None \\
+  \K{appto} & append text to every cell (like \V{<} specifier in \K{colspec}) & \None \\
+  \K{cmd}   & execute command for every cell text & \None \\
 \end{spectblr}
 
 \subsection{Rows and Columns in New Interfaces}

@@ -10,10 +10,46 @@
 
 \begin{document}
 
-\title{\sffamily\color{red3}Tabularray: Typeset Tabulars and Arrays with \LaTeX3}
-\author{Jianrui Lyu (tolvjr@163.com)}
-\date{\mydate}
-\maketitle
+\pagestyle{empty}
+
+\leavevmode\vfill
+
+\noindent
+\begin{tblr}{
+  colspec = {lX}, hlines = {2pt, white},
+  row{odd} = {azure8}, row{even} = {gray8},
+  row{1} = {6em,azure2,fg=white,font=\LARGE\bfseries\sffamily},
+  row{2-Z} = {3em,font=\Large},
+}
+  Tabularray & Typeset Tabulars and Arrays with \LaTeX3 \\
+  Author     & Jianrui Lyu (tolvjr@163.com) \\
+  Version    & \myversion\ (\the\year-\mylpad\month-\mylpad\day) \\
+  Code       & \url{https://github.com/lvjr/tabularray} \\
+  Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
+  Forum      & \url{https://github.com/lvjr/tabularray/discussions} \\
+\end{tblr}
+
+\begin{codehigh}
+\begin{tblr}{
+  colspec = {lX}, hlines = {2pt, white},
+  row{odd} = {azure8}, row{even} = {gray8},
+  row{1} = {6em,azure2,fg=white,font=\LARGE\bfseries\sffamily},
+  row{2-Z} = {3em,font=\Large},
+}
+  Tabularray & Typeset Tabulars and Arrays with \LaTeX3 \\
+  Author     & Jianrui Lyu (tolvjr@163.com) \\
+  Version    & \myversion\ (\the\year-\mylpad\month-\mylpad\day) \\
+  Code       & \url{https://github.com/lvjr/tabularray} \\
+  Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
+  Forum      & \url{https://github.com/lvjr/tabularray/discussions} \\
+\end{tblr}
+\end{codehigh}
+
+\vfill\vfill
+
+\newpage
+
+\pagestyle{headings}
 
 \tableofcontents
 
