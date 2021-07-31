@@ -7,9 +7,10 @@
 
 \begin{document}
 
-\begin{titlepage}
+\savegeometry{standard}
+\newgeometry{left=0pt,right=0pt}
 
-\leavevmode\vfill
+\begin{titlepage}
 
 \backgroundsetup{
   scale = 1,
@@ -47,7 +48,7 @@
 
 \noindent
 \begin{tblr}{
-  colspec = {lX}, hlines = {2pt, white},
+  colspec = {lX}, colsep = 12mm, hlines = {2pt, white},
   row{odd} = {azure8}, row{even} = {gray8},
   row{1} = {6em,azure2,fg=white,font=\LARGE\bfseries\sffamily},
   row{2-Z} = {3em,font=\Large},
@@ -61,9 +62,9 @@
   Forum      & \url{https://github.com/lvjr/tabularray/discussions} \\
 \end{tblr}
 
-\begin{codehigh}
+\begin{codehigh}[boxsep=6mm]
 \begin{tblr}{
-  colspec = {lX}, hlines = {2pt, white},
+  colspec = {lX}, colsep = 12mm, hlines = {2pt, white},
   row{odd} = {azure8}, row{even} = {gray8},
   row{1} = {6em,azure2,fg=white,font=\LARGE\bfseries\sffamily},
   row{2-Z} = {3em,font=\Large},
@@ -78,9 +79,9 @@
 \end{tblr}
 \end{codehigh}
 
-\vfill\vfill
-
 \end{titlepage}
+
+\loadgeometry{standard}
 
 \tableofcontents
 
