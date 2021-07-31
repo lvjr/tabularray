@@ -334,7 +334,7 @@ If you write \verb!entry=none!, \verb!tabularray! package will not add an entry 
 Therefore \verb!caption=text,entry=none! is similar to \verb!\caption[]{text}! in \verb!longtable!.
 
 If you write \verb!label=none!, \verb!tabularray! package will not step \verb!table! counter,
-and set the \verb!caption-tag! and \verb!caption-sep! templates (see below) to empty.
+and set the \verb!caption-tag! and \verb!caption-sep! elements (see below) to empty.
 Therefore \verb!caption=text,entry=none,label=none! is similar to \verb!\caption*{text}!
 in \verb!longtable!, except for the counter.
 
@@ -342,15 +342,17 @@ in \verb!longtable!, except for the counter.
 
 \subsection{Overview of Templates}
 
-The template system for table heads and table foots in \verb!tabularray! is largely inspired by \verb!beamer!,
-\verb!caption! and \verb!longtable! packages. You can use \verb!\DefTblrTemplate! command to define and
-modify templates, and \verb!\SetTblrTemplate! command to choose default templates. In defining templates,
+The template system for table heads and table foots in \verb!tabularray! is largely inspired
+by \verb!beamer!, \verb!caption! and \verb!longtable! packages. For elements in Table \ref{tblr:element},
+you can use \verb!\DefTblrTemplate! to define and modify templates,
+and use \verb!\SetTblrTemplate! to choose default templates. In defining templates,
 you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrTemplate! commands.
 
 \begin{spectblr}[
-  caption = {Templates for Table Heads and Table Foots}
+  caption = {Elements for Table Heads and Table Foots},
+  label = {tblr:element},
 ]{}
-  Template Name    & Template Description \\
+  Element Name     & Element Description and Default Template \\
   \V{contfoot-text}& continuation text in the foot, normally ``Continued on next page'' \\
   \V{contfoot}     & continuation paragraph in the foot, normally including \V{contfoot-text} template \\
   \V{conthead-text}& continuation text in the head, normally ``(Continued)'' \\
@@ -377,10 +379,10 @@ you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrT
   \V{foot}         & setting all of \V{firstfoot}, \V{middlefoot} and \V{lastfoot} \\
 \end{spectblr}
 
-A template which only includes short text is called a \underline{sub template}.
-Normally there is one \verb!-! in the name of a sub template.
-A template which includes one or more paragraphs is called a \underline{main template}.
-Normally there isn't any \verb!-! in the name of a main template.
+An element which only includes short text is called a \underline{sub element}.
+Normally there is one \verb!-! in the name of a sub element.
+An element which includes one or more paragraphs is called a \underline{main element}.
+Normally there isn't any \verb!-! in the name of a main element.
 
 For each of the above elements, two templates \verb!normal! and \verb!empty! are always defined.
 You can select one of them with \verb!\SetTblrTemplate! command.
@@ -398,7 +400,7 @@ Let us have a look at the code for defining templates of continuation text first
 
 In the above code, command \verb!\DefTblrTemplate! defines the templates with name \verb!normal!,
 and then command \verb!\SetTblrTemplate! sets the templates with name \verb!normal! as default.
-The \verb!normal! template is always defined and set as default for any template element in \verb!tabularray!.
+The \verb!normal! template is always defined and set as default for any element in \verb!tabularray!.
 Therefore you had better use another name when defining new templates.
 
 If you use \verb!default! as template name in \verb!\DefTblrTemplate!,
@@ -412,8 +414,8 @@ Therefore the above code can be written in another way:
 
 You may modify the code to customize continuation text to fit your needs.
 
-The \verb!contfoot! and \verb!conthead! templates normally
-include their sub templates with \verb!\UseTblrTemplate! commands.
+The templates for \verb!contfoot! and \verb!conthead! normally
+include the templates of their sub elements with \verb!\UseTblrTemplate! commands.
 But you can also handle user settings such as horizontal alignment here.
 
 \begin{codehigh}
@@ -529,7 +531,7 @@ Note that you can define the same template for multiple elements in \verb!\DefTb
 All available keys for template elements are described in Table \ref{key:element}.
 
 \begin{spectblr}[
-  caption = {Keys for the Styles of Template Elements},
+  caption = {Keys for the Styles of Elements},
   label = {key:element},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.
                   The keys \K{halign}, \K{indent} and \K{hang} are only for main templates.}
@@ -542,7 +544,7 @@ All available keys for template elements are described in Table \ref{key:element
   \K{hang}               & hangindent value \\
 \end{spectblr}
 
-You may change the styles of template elements with \verb!\SetTblrStyle! command:
+You may change the styles of elements with \verb!\SetTblrStyle! command:
 
 \begin{codehigh}
 \SetTblrStyle{firsthead}{font=\bfseries}
@@ -552,8 +554,8 @@ You may change the styles of template elements with \verb!\SetTblrStyle! command
 \end{codehigh}
 
 When you write \verb!\UseTblrTemplate{element}{default}! in defining a template,
-beside including the code of template \verb!element!, the foreground color and font commands
-of the template \verb!element! will be set up automatically.
+beside including template code of the \verb!element!, the foreground color and font commands
+of the \verb!element! will be set up automatically.
 In contrast, \verb!\ExpTblrTemplate{element}{default}! will only include template code.
 
 \section{Define Themes}
