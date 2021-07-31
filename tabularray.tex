@@ -7,6 +7,7 @@
 \usepackage{tabularray}
 \usepackage{array,multirow,amsmath}
 \usepackage{chemmacros,environ}
+\usepackage[firstpage=true]{background}
 
 \UseTblrLibrary{booktabs,diagbox,siunitx}
 
@@ -68,9 +69,43 @@
 
 \begin{document}
 
-\pagestyle{empty}
+\begin{titlepage}
 
 \leavevmode\vfill
+
+\backgroundsetup{
+  scale = 1,
+  angle = 0,
+  opacity = 1,
+  %color = black,
+  contents = {
+    \begin{tblr}{
+      width = \paperwidth, columns = {1}, rows= {4em},
+      cell{odd}{odd} = {gray9}, cell{even}{even} = {gray9},
+    }
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+    \end{tblr}
+  }
+}
 
 \noindent
 \begin{tblr}{
@@ -83,6 +118,7 @@
   Author     & Jianrui Lyu (tolvjr@163.com) \\
   Version    & \myversion\ (\the\year-\mylpad\month-\mylpad\day) \\
   Code       & \url{https://github.com/lvjr/tabularray} \\
+  Code       & \url{https://bitbucket.org/lvjr/tabularray} \\
   Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
   Forum      & \url{https://github.com/lvjr/tabularray/discussions} \\
 \end{tblr}
@@ -98,6 +134,7 @@
   Author     & Jianrui Lyu (tolvjr@163.com) \\
   Version    & \myversion\ (\the\year-\mylpad\month-\mylpad\day) \\
   Code       & \url{https://github.com/lvjr/tabularray} \\
+  Code       & \url{https://bitbucket.org/lvjr/tabularray} \\
   Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
   Forum      & \url{https://github.com/lvjr/tabularray/discussions} \\
 \end{tblr}
@@ -105,9 +142,7 @@
 
 \vfill\vfill
 
-\newpage
-
-\pagestyle{headings}
+\end{titlepage}
 
 \tableofcontents
 
@@ -1956,7 +1991,7 @@ and use \verb!\pagebreak! to force a page break.
 
 \section{Floatable Tall Tables}
 
-There is also an \verb!talltblr! environment as an alternative to \verb!threeparttable! environment.
+There is also a \verb!talltblr! environment as an alternative to \verb!threeparttable! environment.
 It can not cross multiple pages, but it can be put inside \verb!table! environment.
 
 \begin{demohigh}

@@ -1,0 +1,87 @@
+% -*- coding: utf-8 -*-
+% !TEX program = lualatex
+\documentclass[oneside]{book}
+
+\input{manual.sty}
+%\CodeHigh{lite}
+
+\begin{document}
+
+\begin{titlepage}
+
+\leavevmode\vfill
+
+\backgroundsetup{
+  scale = 1,
+  angle = 0,
+  opacity = 1,
+  %color = black,
+  contents = {
+    \begin{tblr}{
+      width = \paperwidth, columns = {1}, rows= {4em},
+      cell{odd}{odd} = {gray9}, cell{even}{even} = {gray9},
+    }
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+      & & & & & & & & & & & & & & \\
+    \end{tblr}
+  }
+}
+
+\noindent
+\begin{tblr}{
+  colspec = {lX}, hlines = {2pt, white},
+  row{odd} = {azure8}, row{even} = {gray8},
+  row{1} = {6em,azure2,fg=white,font=\LARGE\bfseries\sffamily},
+  row{2-Z} = {3em,font=\Large},
+}
+  Tabularray & Typeset Tabulars and Arrays with \LaTeX3 \\
+  Author     & Jianrui Lyu (tolvjr@163.com) \\
+  Version    & \myversion\ (\the\year-\mylpad\month-\mylpad\day) \\
+  Code       & \url{https://github.com/lvjr/tabularray} \\
+  Code       & \url{https://bitbucket.org/lvjr/tabularray} \\
+  Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
+  Forum      & \url{https://github.com/lvjr/tabularray/discussions} \\
+\end{tblr}
+
+\begin{codehigh}
+\begin{tblr}{
+  colspec = {lX}, hlines = {2pt, white},
+  row{odd} = {azure8}, row{even} = {gray8},
+  row{1} = {6em,azure2,fg=white,font=\LARGE\bfseries\sffamily},
+  row{2-Z} = {3em,font=\Large},
+}
+  Tabularray & Typeset Tabulars and Arrays with \LaTeX3 \\
+  Author     & Jianrui Lyu (tolvjr@163.com) \\
+  Version    & \myversion\ (\the\year-\mylpad\month-\mylpad\day) \\
+  Code       & \url{https://github.com/lvjr/tabularray} \\
+  Code       & \url{https://bitbucket.org/lvjr/tabularray} \\
+  Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
+  Forum      & \url{https://github.com/lvjr/tabularray/discussions} \\
+\end{tblr}
+\end{codehigh}
+
+\vfill\vfill
+
+\end{titlepage}
+
+\tableofcontents
+
+\end{document}

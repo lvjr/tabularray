@@ -23,8 +23,8 @@ local function MakeManual()
   --print(style)
   local main = ReadFile(path .. "manual.tex")
   local head =  main:match("(.-\\documentclass.-)\n")
-  local preface, body = main:match("\\begin{document}\n(\.-\\tableofcontents\n)(.+)\\end{document}\n")
-  --print(head, preface, body)
+  local body = main:match("\\begin{document}\n(.+)\\end{document}\n")
+  --print(head, body)
   local text = ""
   body = body:gsub("(\\input{(.-)})", function(line, name)
     --print(line, name)
@@ -33,7 +33,7 @@ local function MakeManual()
     local subbody = subtex:match("\\begin{document}\n\(.-)\n\\end{document}\n")
     text = text .. subbody
   end)
-  text = head .. style .. "\n\\begin{document}\n" .. preface .. text .. "\n\\end{document}\n"
+  text = head .. style .. "\n\\begin{document}\n" .. text .. "\n\\end{document}\n"
   text = text:gsub("\r\n", "\n"):gsub("\r", "\n")
   WriteFile("tabularray.tex", text)
 end
