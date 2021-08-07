@@ -5005,9 +5005,10 @@
       { \skip_vertical:n { \__tblr_spec_item:nn { outer } { presep } } }
     \LogTblrTracing { page }
     \nointerlineskip
-    \mode_leave_vertical:
+    \mode_leave_vertical: % enter horizontal mode to update \pagetotal
     \LogTblrTracing { page }
     \hrule height ~ 0pt
+    \nobreak % prevent page break after \hrule (see issue #42)
     \LogTblrTracing { page }
     \int_set:Nn \l__tblr_table_page_int {1}
     \__tblr_build_head_foot:
@@ -5024,16 +5025,25 @@
           \l_tmpa_dim \l__tblr_page_break_curr_bool
         \__tblr_check_table_page_break:NNN
           \l__tblr_remain_height_dim \l_tmpa_dim \l__tblr_page_break_prev_bool
+        \__tblr_do_if_tracing:nn { page } { \int_log:N \l__tblr_curr_i_int }
         \bool_if:NTF \l__tblr_page_break_prev_bool
           {
-            \__tblr_do_if_tracing:nn { page } { \int_log:N \l__tblr_curr_i_int }
-            \int_compare:nNnF
-              { \l__tblr_prev_i_int - \l__tblr_long_from_int } < {0}
+            \int_compare:nNnTF
+              { \l__tblr_long_from_int } > { \l__tblr_prev_i_int }
+              {
+                % See issue #42: if longtblr starts at the bottom of a page,
+                % \pagetotal maybe exceed \pagegoal after adding presep,
+                % or after adding rowhead or rowfoot of the table.
+                % In these cases, we will not typeset table in this page,
+                % but rather do some negative \vskip and execute \newpage.
+                \skip_vertical:n { \pagegoal - \pagetotal }
+              }
               {
                 \__tblr_build_page_table:nnx {#1}
                   { \int_use:N \l__tblr_long_from_int }
                   { \int_use:N \l__tblr_prev_i_int }
                 \int_incr:N \l__tblr_table_page_int
+                \int_set:Nn \l__tblr_long_from_int { \l__tblr_prev_i_int + 1 }
               }
             \newpage
             \hbox{}\kern-\topskip\nobreak
@@ -5041,7 +5051,6 @@
             \LogTblrTracing { page }
             \dim_set:Nn \l__tblr_remain_height_dim
               { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim - \l_tmpa_dim }
-            \int_set:Nn \l__tblr_long_from_int { \l__tblr_prev_i_int + 1 }
           }
           {
             \bool_if:NTF \l__tblr_page_break_curr_bool
