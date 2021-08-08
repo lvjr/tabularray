@@ -5084,7 +5084,7 @@
     \skip_vertical:n { \__tblr_spec_item:nn { outer } { postsep } }
     % In the past we used "\hrule height ~ 0pt" to get strict postsep,
     % but the postsep was not discarded when page breaks, see issue #39.
-    % Therefore you use \nointerlineskip here.
+    % Therefore we use \nointerlineskip here.
     \nointerlineskip
   }
 \cs_generate_variant:Nn \__tblr_build_long_table:n { e }
