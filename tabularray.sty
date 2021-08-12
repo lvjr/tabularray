@@ -2578,8 +2578,10 @@
       {
         \tl_set:Nn \l_tmpa_tl { ##1 }
         \__tblr_remove_braces:N \l_tmpa_tl
+        \__tblr_trim_par_tokens:N \l_tmpa_tl
         \int_incr:N \c@colnum
         \__tblr_extract_table_commands:N \l_tmpa_tl
+        \__tblr_trim_left_par_token:N \l_tmpa_tl
         \__tblr_spec_gput:neV { text } { [#1][\int_use:N \c@colnum] } \l_tmpa_tl
         \__tblr_add_multicolumn_empty_cell:
       }
@@ -2597,6 +2599,20 @@
             \int_set_eq:NN \c@colcount \c@colnum
           }
       }
+  }
+
+\regex_const:Nn \c__tblr_trim_left_par_regex { ^ \c{par} }
+\regex_const:Nn \c__tblr_trim_right_par_regex { \s * \c{par} $ }
+
+\cs_new_protected:Npn \__tblr_trim_par_tokens:N #1
+  {
+    \regex_replace_once:NnN \c__tblr_trim_left_par_regex {} #1
+    \regex_replace_once:NnN \c__tblr_trim_right_par_regex {} #1
+  }
+
+\cs_new_protected:Npn \__tblr_trim_left_par_token:N #1
+  {
+    \regex_replace_once:NnN \c__tblr_trim_left_par_regex {} #1
   }
 
 %% Add empty cells after the \multicolumn span cell
