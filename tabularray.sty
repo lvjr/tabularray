@@ -4165,8 +4165,8 @@
 %% Cell is spanned from col #1 to col #2, #3 is the return dim
 \cs_new_protected:Npn \__tblr_calc_span_widths:nnN #1 #2 #3
   {
-    \dim_zero:N #3
-    \int_step_inline:nnn { #1 } { #2 }
+    \dim_set:Nn #3 { \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[#1] } }
+    \int_step_inline:nnn { #1 + 1 } { #2 }
       {
         \tl_set:Nx \l_tmpa_tl
           { \prop_item:Ne \l__tblr_col_item_skip_size_prop { skip[##1] } }
