@@ -4546,6 +4546,17 @@
         \par
       }
   }
+\DefTblrTemplate { caption } { simple }
+  {
+    \UseTblrAlign { caption }
+    \UseTblrIndent { caption }
+    \UseTblrHang { caption }
+    \leavevmode
+    \UseTblrTemplate { caption-tag } { default }
+    \UseTblrTemplate { caption-sep } { default }
+    \UseTblrTemplate { caption-text } { default }
+    \par
+  }
 \SetTblrTemplate { caption } { normal }
 
 \DefTblrTemplate { capcont } { empty } { }
@@ -4602,6 +4613,19 @@
         \makebox [\hsize] [c] { \box_use:N \l__tblr_caption_box }
         \par
       }
+  }
+\DefTblrTemplate { capcont } { simple }
+  {
+    \UseTblrAlign { caption }
+    \UseTblrIndent { caption }
+    \UseTblrHang { caption }
+    \leavevmode
+    \UseTblrTemplate { caption-tag } { default }
+    \UseTblrTemplate { caption-sep } { default }
+    \UseTblrTemplate { caption-text } { default }
+    \space
+    \UseTblrTemplate { conthead-text } { default }
+    \par
   }
 \SetTblrTemplate { capcont} { normal }
 
