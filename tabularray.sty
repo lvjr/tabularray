@@ -17,11 +17,7 @@
 
 \RequirePackage{xparse}
 
-\AtBeginDocument
-  {
-    \@ifpackageloaded{xcolor}{\RequirePackage{ninecolors}}{}
-    \@ifpackageloaded{hyperref}{\hypersetup{pdfborder={0 0 0}}}{}
-  }
+\AtBeginDocument{\@ifpackageloaded{xcolor}{\RequirePackage{ninecolors}}{}}
 
 %% Backport \tl_if_eq:NnTF for old texlive 2020
 \cs_if_exist:NF \tl_if_eq:NnTF
@@ -4642,8 +4638,19 @@
       { #2 }
   }
 
+\DefTblrTemplate { note-border } { empty }
+  {
+    \hypersetup { pdfborder = { 0 ~ 0 ~ 0 } }
+  }
+\DefTblrTemplate { note-border } { normal }
+  {
+    \hypersetup { pdfborder = { 0 ~ 0 ~ 1 } }
+  }
+\SetTblrTemplate { note-border } { empty }
+
 \NewDocumentCommand \TblrNote { m }
   {
+    \cs_if_exist:NT \hypersetup { \ExpTblrTemplate { note-border }{ default } }
     \__tblr_hyper_link:nn {#1}
       { \textsuperscript { \sffamily \UseTblrFont { note-tag } #1 } }
   }
