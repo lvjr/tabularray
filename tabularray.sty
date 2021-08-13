@@ -23,8 +23,6 @@
     \@ifpackageloaded{hyperref}{\hypersetup{pdfborder={0 0 0}}}{}
   }
 
-\ExplSyntaxOn
-
 %% Backport \tl_if_eq:NnTF for old texlive 2020
 \cs_if_exist:NF \tl_if_eq:NnTF
   {
@@ -6168,5 +6166,3 @@
           }
       }
   }
-
-\ExplSyntaxOff
