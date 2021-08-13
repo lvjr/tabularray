@@ -2336,7 +2336,10 @@
       }
       {
         \str_if_in:cnTF { g_tblr_used_ \g__tblr_column_or_row_tl _types_str } {#1}
-          { \cs:w tblr_ \g__tblr_column_or_row_tl _type_  #1 \cs_end: }
+          {
+            %% Note that #1 may be an active character (see issue #58)
+            \cs:w tblr_ \g__tblr_column_or_row_tl _type_ \token_to_str:N #1 \cs_end:
+          }
           {
             \msg_error:nnVn { tabularray } { unknown-colrow-type }
               \g__tblr_column_or_row_tl {#1}
