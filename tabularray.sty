@@ -5673,12 +5673,6 @@
   {
     \tl_set:Nx \l__tblr_s_tl
       { \__tblr_prop_item:ne { inner } { rulesep } }
-    \tl_set:Nx \l__tblr_b_tl
-      {
-        \__tblr_spec_item:ne { hline }
-          { [\int_eval:n{#1 + 1}](1) / @hline-height }
-      }
-    \tl_if_empty:NT \l__tblr_b_tl { \tl_set:Nn \l__tblr_b_tl { 0pt } }
     \hbox_set:Nn \l__tblr_a_box
       {
         \int_step_inline:nn { \l__tblr_n_tl }
@@ -5691,10 +5685,12 @@
                 \tl_set:Nx \l__tblr_f_tl
                   { \__tblr_spec_item:ne { vline } { [#1][#2](##1) / fg } }
                 \tl_if_empty:NF \l__tblr_f_tl { \color{\l__tblr_f_tl} }
+                \__tblr_get_vline_above_below_skips:nnn {#1} {#2} {##1}
+                \skip_vertical:N \l__tblr_vline_aboveskip_dim
                 \__tblr_get_vline_segment_child:nnnxx {#1} {#2} {##1}
                   { \dim_eval:n { \l__tblr_row_ht_dim } }
-                  { \dim_eval:n { \l__tblr_row_dp_dim + \l__tblr_b_tl } }
-                \skip_vertical:n {  - \l__tblr_b_tl }
+                  { \dim_eval:n { \l__tblr_row_dp_dim } }
+                \skip_vertical:N \l__tblr_vline_belowskip_dim
               }
             \box_set_wd:Nn \l__tblr_b_box { \l__tblr_w_tl }
             \box_use:N \l__tblr_b_box
@@ -5731,12 +5727,10 @@
       {
         \dim_set:Nn \l_tmpa_dim
           { \__tblr_spec_item:ne { hline } { [#1] / @hline-height } }
-        \dim_set:Nn \l_tmpb_dim
-          { \__tblr_data_item:nen { row } {#1} { abovesep } }
         \fp_compare:nNnTF { \l__tblr_vline_abovepos_tl } < {0}
           {
             \dim_set:Nn \l__tblr_vline_aboveskip_dim
-              { - \l__tblr_vline_abovepos_tl \l_tmpb_dim }
+              { - \l__tblr_vline_abovepos_tl \l__tblr_row_abovesep_dim }
           }
           {
             \dim_set:Nn \l__tblr_vline_aboveskip_dim
@@ -5750,12 +5744,10 @@
             \__tblr_spec_item:ne { hline }
               { [\int_eval:n { #1 + 1 }] / @hline-height }
           }
-        \dim_set:Nn \l_tmpb_dim
-          { \__tblr_data_item:nen { row } {#1} { belowsep } }
         \fp_compare:nNnTF { \l__tblr_vline_belowpos_tl } < {0}
           {
             \dim_set:Nn \l__tblr_vline_belowskip_dim
-              { - \l__tblr_vline_belowpos_tl \l_tmpb_dim }
+              { - \l__tblr_vline_belowpos_tl \l__tblr_row_belowsep_dim }
           }
           {
             \dim_set:Nn \l__tblr_vline_belowskip_dim
