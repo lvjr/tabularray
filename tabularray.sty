@@ -5546,11 +5546,11 @@
           { \__tblr_data_item:nen { column } {#2} { leftsep } }
         \fp_compare:nNnTF { \l__tblr_hline_leftpos_tl } < {0}
           {
-            \dim_add:Nn \l__tblr_hline_leftskip_dim
+            \dim_set:Nn \l__tblr_hline_leftskip_dim
               { \l_tmpa_dim - \l__tblr_hline_leftpos_tl \l_tmpb_dim }
           }
           {
-            \dim_add:Nn \l__tblr_hline_leftskip_dim
+            \dim_set:Nn \l__tblr_hline_leftskip_dim
               { \l_tmpa_dim - \l__tblr_hline_leftpos_tl \l_tmpa_dim }
           }
       }
@@ -5565,11 +5565,11 @@
           { \__tblr_data_item:nen { column } {#2} { rightsep } }
         \fp_compare:nNnTF { \l__tblr_hline_rightpos_tl } < {0}
           {
-            \dim_add:Nn \l__tblr_hline_rightskip_dim
+            \dim_set:Nn \l__tblr_hline_rightskip_dim
               { \l_tmpa_dim - \l__tblr_hline_rightpos_tl \l_tmpb_dim }
           }
           {
-            \dim_add:Nn \l__tblr_hline_rightskip_dim
+            \dim_set:Nn \l__tblr_hline_rightskip_dim
               { \l_tmpa_dim - \l__tblr_hline_rightpos_tl \l_tmpa_dim }
           }
       }
