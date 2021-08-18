@@ -1108,6 +1108,8 @@
 \tl_new:N \l__tblr_hline_dash_tl  % dash style
 \tl_new:N \l__tblr_hline_fg_tl    % dash foreground
 \tl_new:N \l__tblr_hline_wd_tl    % dash width
+\tl_new:N \l__tblr_hline_leftpos_tl  % left position
+\tl_new:N \l__tblr_hline_rightpos_tl % right position
 
 \NewTableCommand \cline [2] [] { \SetHline [=] {#2} {#1} }
 
@@ -1209,6 +1211,8 @@
     wd .code:n = \tl_set:Nn \l__tblr_hline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_hline_fg_tl {#1},
     baseline .code:n = \__tblr_hline_set_baseline:n {#1},
+    leftpos  .code:n = \tl_set:Nx \l__tblr_hline_leftpos_tl {#1},
+    rightpos .code:n = \tl_set:Nx \l__tblr_hline_rightpos_tl {#1},
     unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
   }
 
@@ -1246,6 +1250,18 @@
             \__tblr_spec_gput:nee { hline }
               { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / fg }
               { \l__tblr_hline_fg_tl }
+          }
+        \tl_if_empty:NF \l__tblr_hline_leftpos_tl
+          {
+            \__tblr_spec_gput:nee { hline }
+              { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / leftpos }
+              { \l__tblr_hline_leftpos_tl }
+          }
+        \tl_if_empty:NF \l__tblr_hline_rightpos_tl
+          {
+            \__tblr_spec_gput:nee { hline }
+              { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / rightpos }
+              { \l__tblr_hline_rightpos_tl }
           }
       }
   }
@@ -5469,10 +5485,13 @@
             \hrule height ~ 0pt % remove lineskip
             \hbox_set_to_wd:Nnn \l__tblr_b_box { \l__tblr_col_o_wd_dim }
               {
+                \__tblr_get_hline_left_right_skips:nnn {#1} {#2} {##1}
+                \skip_horizontal:N \l__tblr_hline_leftskip_dim
                 \tl_set:Nx \l__tblr_f_tl
                   { \__tblr_spec_item:ne { hline } { [#1][#2](##1) / fg } }
                 \tl_if_empty:NF \l__tblr_f_tl { \color{\l__tblr_f_tl} }
                 \__tblr_get_hline_segment_child:nnn {#1} {#2} {##1}
+                \skip_horizontal:N \l__tblr_hline_rightskip_dim
               }
             \box_set_ht:Nn \l__tblr_b_box { \l__tblr_h_tl }
             \box_set_dp:Nn \l__tblr_b_box { 0pt }
@@ -5503,6 +5522,56 @@
         \__tblr_data_item:nen { column } {#1} { rightsep }
         +
         #3
+      }
+  }
+
+\dim_new:N \l__tblr_hline_leftskip_dim
+\dim_new:N \l__tblr_hline_rightskip_dim
+
+%% Calculate left and right skips from leftpos and rightpos specifications
+%% #1: row number; #2: column number; #3: hline index;
+\cs_new_protected:Npn \__tblr_get_hline_left_right_skips:nnn #1 #2 #3
+  {
+    \tl_set:Nn \l__tblr_hline_leftpos_tl  {1} % default position
+    \tl_set:Nn \l__tblr_hline_rightpos_tl {1} % default position
+    \tl_set:Nx \l__tblr_hline_leftpos_tl
+      { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / leftpos } }
+    \tl_set:Nx \l__tblr_hline_rightpos_tl
+      { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / rightpos } }
+    \fp_compare:nNnT { \l__tblr_hline_leftpos_tl } < {1}
+      {
+        \dim_set:Nn \l_tmpa_dim
+          { \__tblr_spec_item:ne { vline } { [#2] / @vline-width } }
+        \dim_set:Nn \l_tmpb_dim
+          { \__tblr_data_item:nen { column } {#2} { leftsep } }
+        \fp_compare:nNnTF { \l__tblr_hline_leftpos_tl } < {0}
+          {
+            \dim_add:Nn \l__tblr_hline_leftskip_dim
+              { \l_tmpa_dim - \l__tblr_hline_leftpos_tl \l_tmpb_dim }
+          }
+          {
+            \dim_add:Nn \l__tblr_hline_leftskip_dim
+              { \l_tmpa_dim - \l__tblr_hline_leftpos_tl \l_tmpa_dim }
+          }
+      }
+    \fp_compare:nNnT { \l__tblr_hline_rightpos_tl } < {1}
+      {
+        \dim_set:Nn \l_tmpa_dim
+          {
+            \__tblr_spec_item:ne { vline }
+              { [\int_eval:n { #2 + 1 }] / @vline-width }
+          }
+        \dim_set:Nn \l_tmpb_dim
+          { \__tblr_data_item:nen { column } {#2} { rightsep } }
+        \fp_compare:nNnTF { \l__tblr_hline_rightpos_tl } < {0}
+          {
+            \dim_add:Nn \l__tblr_hline_rightskip_dim
+              { \l_tmpa_dim - \l__tblr_hline_rightpos_tl \l_tmpb_dim }
+          }
+          {
+            \dim_add:Nn \l__tblr_hline_rightskip_dim
+              { \l_tmpa_dim - \l__tblr_hline_rightpos_tl \l_tmpa_dim }
+          }
       }
   }
 
