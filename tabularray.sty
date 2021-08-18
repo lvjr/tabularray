@@ -1323,6 +1323,8 @@
 \tl_new:N \l__tblr_vline_dash_tl  % dash style
 \tl_new:N \l__tblr_vline_fg_tl    % dash foreground
 \tl_new:N \l__tblr_vline_wd_tl    % dash width
+\tl_new:N \l__tblr_vline_abovepos_tl % above position
+\tl_new:N \l__tblr_vline_belowpos_tl % below position
 
 \NewTableCommand \rline [2] [] { \SetVline [=] {#2} {#1} }
 
@@ -1423,6 +1425,8 @@
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_vline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_vline_fg_tl {#1},
+    abovepos .code:n = \tl_set:Nx \l__tblr_vline_abovepos_tl {#1},
+    belowpos .code:n = \tl_set:Nx \l__tblr_vline_belowpos_tl {#1},
     unknown .code:n = \__tblr_vline_unknown_key:V \l_keys_key_str,
   }
 
@@ -1460,6 +1464,18 @@
             \__tblr_spec_gput:nee { vline }
               { [##1][\int_use:N \c@colnum](\l__tblr_vline_num_tl) / fg }
               { \l__tblr_vline_fg_tl }
+          }
+        \tl_if_empty:NF \l__tblr_vline_abovepos_tl
+          {
+            \__tblr_spec_gput:nee { vline }
+              { [##1][\int_use:N \c@colnum](\l__tblr_vline_num_tl) / abovepos }
+              { \l__tblr_vline_abovepos_tl }
+          }
+        \tl_if_empty:NF \l__tblr_vline_belowpos_tl
+          {
+            \__tblr_spec_gput:nee { vline }
+              { [##1][\int_use:N \c@colnum](\l__tblr_vline_num_tl) / belowpos }
+              { \l__tblr_vline_belowpos_tl }
           }
       }
   }
@@ -5690,6 +5706,62 @@
     \box_set_ht:Nn \l__tblr_c_box { \dim_use:N \l__tblr_row_ht_dim }
     \box_set_dp:Nn \l__tblr_c_box { \dim_use:N \l__tblr_row_dp_dim }
     \box_use:N \l__tblr_c_box
+  }
+
+\dim_new:N \l__tblr_vline_aboveskip_dim
+\dim_new:N \l__tblr_vline_belowskip_dim
+
+%% Calculate above and below skips from abovepos and belowpos specifications
+%% #1: row number; #2: column number; #3: vline index;
+\cs_new_protected:Npn \__tblr_get_vline_above_below_skips:nnn #1 #2 #3
+  {
+    \tl_set:Nx \l__tblr_vline_abovepos_tl
+      { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / abovepos } }
+    \tl_if_empty:NT \l__tblr_vline_abovepos_tl
+      {
+        \tl_set:Nn \l__tblr_vline_abovepos_tl {0} % default position
+      }
+    \tl_set:Nx \l__tblr_vline_belowpos_tl
+      { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / belowpos } }
+    \tl_if_empty:NT \l__tblr_vline_belowpos_tl
+      {
+        \tl_set:Nn \l__tblr_vline_belowpos_tl {0} % default position
+      }
+    \fp_compare:nNnF { \l__tblr_vline_abovepos_tl } = {0}
+      {
+        \dim_set:Nn \l_tmpa_dim
+          { \__tblr_spec_item:ne { hline } { [#1] / @hline-height } }
+        \dim_set:Nn \l_tmpb_dim
+          { \__tblr_data_item:nen { row } {#1} { abovesep } }
+        \fp_compare:nNnTF { \l__tblr_vline_abovepos_tl } < {0}
+          {
+            \dim_set:Nn \l__tblr_vline_aboveskip_dim
+              { - \l__tblr_vline_abovepos_tl \l_tmpb_dim }
+          }
+          {
+            \dim_set:Nn \l__tblr_vline_aboveskip_dim
+              { - \l__tblr_vline_abovepos_tl \l_tmpa_dim }
+          }
+      }
+    \fp_compare:nNnF { \l__tblr_vline_belowpos_tl } = {0}
+      {
+        \dim_set:Nn \l_tmpa_dim
+          {
+            \__tblr_spec_item:ne { hline }
+              { [\int_eval:n { #1 + 1 }] / @hline-height }
+          }
+        \dim_set:Nn \l_tmpb_dim
+          { \__tblr_data_item:nen { row } {#1} { belowsep } }
+        \fp_compare:nNnTF { \l__tblr_vline_belowpos_tl } < {0}
+          {
+            \dim_set:Nn \l__tblr_vline_belowskip_dim
+              { - \l__tblr_vline_belowpos_tl \l_tmpb_dim }
+          }
+          {
+            \dim_set:Nn \l__tblr_vline_belowskip_dim
+              { - \l__tblr_vline_belowpos_tl \l_tmpa_dim }
+          }
+      }
   }
 
 \tl_new:N \l__tblr_cell_rowspan_tl
