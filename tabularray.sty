@@ -1712,6 +1712,23 @@
               }
           }
       }
+    %% Make continuous borders for multirow cells
+    \tl_set:Nx \l__tblr_n_tl
+      {
+        \int_max:nn
+          {
+            \__tblr_spec_item:ne { vline } { [\int_use:N \c@colnum] / @vline-count }
+          }
+          { 1 }
+      }
+    \int_step_variable:nnNn
+      { \c@rownum } { \int_eval:n { \c@rownum + #1 -1 } } \l__tblr_i_tl
+      {
+        \__tblr_spec_gput:nee { vline }
+          { [\l__tblr_i_tl][\int_use:N \c@colnum](\l__tblr_n_tl) / belowpos } {1}
+        \__tblr_spec_gput:nee { vline }
+          { [\l__tblr_i_tl][\int_eval:n {\c@colnum + #2}](1) / belowpos } {1}
+      }
   }
 \cs_generate_variant:Nn \__tblr_set_span_spec:nn { VV }
 
