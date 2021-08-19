@@ -1215,8 +1215,11 @@
     leftpos  .code:n = \tl_set:Nx \l__tblr_hline_leftpos_tl {#1},
     rightpos .code:n = \tl_set:Nx \l__tblr_hline_rightpos_tl {#1},
     l        .meta:n = { leftpos = #1 },
+    l     .default:n = { -0.8 },
     r        .meta:n = { rightpos = #1 },
+    r     .default:n = { -0.8 },
     lr       .meta:n = { leftpos = #1, rightpos = #1 },
+    lr    .default:n = { -0.8 },
     endpos .bool_set:N = \l__tblr_hline_endpos_bool,
     unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
   }
@@ -6288,7 +6291,7 @@
     \NewTableCommand \toprule [1] []    { \hline [0.08em, ##1] }
     \NewTableCommand \midrule [1] []    { \hline [0.05em, ##1] }
     \NewTableCommand \bottomrule [1] [] { \hline [0.08em, ##1] }
-    \NewTableCommand \cmidrule [2] []   { \cline [0.03em, ##1] { ##2 } }
+    \NewTableCommand \cmidrule [2] []   { \cline [0.03em, endpos, ##1] { ##2 } }
   }
 
 %% Library diagbox and command \diagbox
