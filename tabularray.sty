@@ -1110,6 +1110,7 @@
 \tl_new:N \l__tblr_hline_wd_tl    % dash width
 \tl_new:N \l__tblr_hline_leftpos_tl  % left position
 \tl_new:N \l__tblr_hline_rightpos_tl % right position
+\bool_new:N \l__tblr_hline_endpos_bool % whether set positions only for both ends
 
 \NewTableCommand \cline [2] [] { \SetHline [=] {#2} {#1} }
 
@@ -1213,6 +1214,10 @@
     baseline .code:n = \__tblr_hline_set_baseline:n {#1},
     leftpos  .code:n = \tl_set:Nx \l__tblr_hline_leftpos_tl {#1},
     rightpos .code:n = \tl_set:Nx \l__tblr_hline_rightpos_tl {#1},
+    l        .meta:n = { leftpos = #1 },
+    r        .meta:n = { rightpos = #1 },
+    lr       .meta:n = { leftpos = #1, rightpos = #1 },
+    endpos .bool_set:N = \l__tblr_hline_endpos_bool,
     unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
   }
 
@@ -1236,34 +1241,57 @@
     \__tblr_get_childs:nx {#1} { \int_use:N \c@colcount }
     \clist_map_inline:Nn \l_tblr_childs_clist
       {
-        \__tblr_spec_gput:nee { hline }
-          { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / @dash }
-          { \l__tblr_hline_dash_tl }
+        \__tblr_set_hline_option:nnn { ##1 } { @dash } { \l__tblr_hline_dash_tl }
         \tl_if_empty:NF \l__tblr_hline_wd_tl
           {
-            \__tblr_spec_gput:nee { hline }
-              { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / wd }
-              { \l__tblr_hline_wd_tl }
+            \__tblr_set_hline_option:nnn { ##1 } { wd } { \l__tblr_hline_wd_tl }
           }
         \tl_if_empty:NF \l__tblr_hline_fg_tl
           {
-            \__tblr_spec_gput:nee { hline }
-              { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / fg }
-              { \l__tblr_hline_fg_tl }
-          }
-        \tl_if_empty:NF \l__tblr_hline_leftpos_tl
-          {
-            \__tblr_spec_gput:nee { hline }
-              { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / leftpos }
-              { \l__tblr_hline_leftpos_tl }
-          }
-        \tl_if_empty:NF \l__tblr_hline_rightpos_tl
-          {
-            \__tblr_spec_gput:nee { hline }
-              { [\int_use:N \c@rownum][##1](\l__tblr_hline_num_tl) / rightpos }
-              { \l__tblr_hline_rightpos_tl }
+            \__tblr_set_hline_option:nnn { ##1 } { fg } { \l__tblr_hline_fg_tl }
           }
       }
+    \tl_if_empty:NF \l__tblr_hline_leftpos_tl
+      {
+        \bool_if:NTF \l__tblr_hline_endpos_bool
+          {
+            \__tblr_set_hline_option:nnn
+              { \clist_item:Nn \l_tblr_childs_clist {1} }
+              { leftpos }
+              { \l__tblr_hline_leftpos_tl }
+          }
+          {
+            \clist_map_inline:Nn \l_tblr_childs_clist
+              {
+                \__tblr_set_hline_option:nnn
+                  { ##1 } { leftpos } { \l__tblr_hline_leftpos_tl }
+              }
+          }
+      }
+    \tl_if_empty:NF \l__tblr_hline_rightpos_tl
+      {
+        \bool_if:NTF \l__tblr_hline_endpos_bool
+          {
+            \__tblr_set_hline_option:nnn
+              { \clist_item:Nn \l_tblr_childs_clist {-1} }
+              { rightpos }
+              { \l__tblr_hline_rightpos_tl }
+          }
+          {
+            \clist_map_inline:Nn \l_tblr_childs_clist
+              {
+                \__tblr_set_hline_option:nnn
+                  { ##1 } { rightpos } { \l__tblr_hline_rightpos_tl }
+              }
+          }
+      }
+  }
+
+%% #1: column; #2: key; #3: value
+\cs_new_protected_nopar:Npn \__tblr_set_hline_option:nnn #1 #2 #3
+  {
+    \__tblr_spec_gput:nee { hline }
+      { [\int_use:N \c@rownum][#1](\l__tblr_hline_num_tl) / #2 } { #3 }
   }
 
 \NewTableCommand \firsthline [1] [] { \SetHline [+] {-} { #1, baseline=below } }
