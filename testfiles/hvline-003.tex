@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{xcolor}
+\usepackage{array}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing leftpos and rightpos}
+\begin{tblr}{
+  colspec = {|l||l|||l||l||},
+  hline{1},
+  hline{2} = {blue3, leftpos = -0.8, rightpos = 0.5},
+  hline{3} = {blue3, leftpos = 0.5, rightpos = -0.8},
+  hline{4} = {blue3, leftpos = 0.3, rightpos = 0.3},
+  hline{5},
+}
+ Alpha   & Beta  & Gamma   & Delta \\
+ Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    \\
+ Nu      & Xi    & Omicron & Pi    \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{testing abovepos and belowpos}
+\begin{tblr}{
+  rowspec = {|Q||Q|||Q||Q||},
+  colspec = {||Q||Q||Q||r@{:}l||Q||Q||Q||},
+  vline{6} = {purple3, abovepos = -0.3, belowpos = 0.7},
+  vline{7} = {purple3, abovepos = 0.3, belowpos = 0.3},
+  vline{8} = {purple3, abovepos = 0.7, belowpos = -0.3},
+  vline{9} = {purple3, abovepos = 1, belowpos = 1},
+  cell{1}{2} = {r=3}{l},
+}
+ Alpha   & Beta  & Gamma   & Delta & Alpha   & Beta  & Gamma   & Delta \\
+ Epsilon & Zeta  & Eta     & Theta & Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    & Iota    & Kappa & Lambda  & Mu    \\
+ Nu      & Xi    & Omicron & Pi    & Nu      & Xi    & Omicron & Pi    \\
+\end{tblr}
+\ENDTEST
+
+\end{document}
