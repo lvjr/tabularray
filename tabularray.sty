@@ -5565,12 +5565,14 @@
 %% #1: row number; #2: column number; #3: hline index;
 \cs_new_protected:Npn \__tblr_get_hline_left_right_skips:nnn #1 #2 #3
   {
-    \tl_set:Nn \l__tblr_hline_leftpos_tl  {1} % default position
-    \tl_set:Nn \l__tblr_hline_rightpos_tl {1} % default position
     \tl_set:Nx \l__tblr_hline_leftpos_tl
       { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / leftpos } }
+    \tl_if_empty:NT \l__tblr_hline_leftpos_tl
+      { \tl_set:Nn \l__tblr_hline_leftpos_tl {1} } % default position
     \tl_set:Nx \l__tblr_hline_rightpos_tl
       { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / rightpos } }
+    \tl_if_empty:NT \l__tblr_hline_rightpos_tl
+      { \tl_set:Nn \l__tblr_hline_rightpos_tl {1} } % default position
     \fp_compare:nNnT { \l__tblr_hline_leftpos_tl } < {1}
       {
         \dim_set:Nn \l_tmpa_dim
