@@ -1,9 +1,0 @@
-This is a generated file for the l3build validation system.
-Don't change this file in any respect.
-============================================================
-TEST 1: testing long table with single row pages
-============================================================
-[1
-] [2] [3]
-============================================================
-[4] (long-002.aux)
