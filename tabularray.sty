@@ -5678,6 +5678,9 @@
 \dim_new:N \l__tblr_row_dp_dim
 \dim_new:N \l__tblr_row_abovesep_dim
 \dim_new:N \l__tblr_row_belowsep_dim
+\box_new:N \l__tblr_row_vline_box
+\box_new:N \l__tblr_vline_box
+\box_new:N \l__tblr_cell_box
 
 %% Build current row, #1: row number
 \cs_new_protected:Npn \__tblr_build_row:N #1
@@ -5688,12 +5691,21 @@
       \l__tblr_row_ht_dim \l__tblr_row_dp_dim
       \l__tblr_row_abovesep_dim \l__tblr_row_belowsep_dim
     \vrule width ~ 0pt ~ height ~ \l__tblr_row_ht_dim ~ depth ~ \l__tblr_row_dp_dim
+    \hbox_set:Nn \l__tblr_row_vline_box
+      {
+        \vrule width ~ 0pt ~ height ~ \l__tblr_row_ht_dim
+                           ~ depth ~ \l__tblr_row_dp_dim
+      }
     \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
-        \__tblr_build_vline_segment:nn {#1} { \l__tblr_j_tl }
-        \__tblr_build_cell:NN #1 \l__tblr_j_tl
+        \__tblr_put_one_vline:n
+          { \__tblr_build_vline_segment:nn {#1} { \l__tblr_j_tl } }
+        \__tblr_put_one_cell:n { \__tblr_build_cell:NN #1 \l__tblr_j_tl }
       }
-    \__tblr_build_vline_segment:nn {#1} { \int_eval:n {\c@colcount + 1} }
+    \__tblr_put_one_vline:n
+      { \__tblr_build_vline_segment:nn {#1} { \int_eval:n {\c@colcount + 1} } }
+    \skip_horizontal:n { - \box_wd:N \l__tblr_row_vline_box }
+    \box_use:N \l__tblr_row_vline_box
   }
 
 %% Read from table specifications and calculate inner height/depth of the row
@@ -5725,6 +5737,28 @@
     \dim_set:Nn #3 { \l__row_lower_dim + \l__row_vpace_dim + #5 }
   }
 \cs_generate_variant:Nn \__tblr_get_row_inner_height_depth:nNNNN { V }
+
+\cs_new_protected:Npn \__tblr_put_one_vline:n #1
+  {
+    \hbox_set:Nn \l__tblr_vline_box {#1}
+    \skip_horizontal:n { \box_wd:N \l__tblr_vline_box }
+    \hbox_set:Nn \l__tblr_row_vline_box
+      {
+        \hbox_unpack:N \l__tblr_row_vline_box
+        \box_use:N \l__tblr_vline_box
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_put_one_cell:n #1
+  {
+    \hbox_set:Nn \l__tblr_cell_box {#1}
+    \hbox_set:Nn \l__tblr_row_vline_box
+      {
+        \hbox_unpack:N \l__tblr_row_vline_box
+        \skip_horizontal:n { \box_wd:N \l__tblr_cell_box }
+      }
+    \box_use:N \l__tblr_cell_box
+  }
 
 %% #1: row number, #2: column number
 \cs_new_protected:Npn \__tblr_build_vline_segment:nn #1 #2
