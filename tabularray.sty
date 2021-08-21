@@ -5363,10 +5363,14 @@
 \bool_new:N \l__tblr_build_last_hline_bool
 \bool_set_true:N \l__tblr_build_first_hline_bool
 \bool_set_true:N \l__tblr_build_last_hline_bool
+\box_new:N \l__tblr_border_box
+\box_new:N \l__tblr_hline_box
+\box_new:N \l__tblr_row_box
 
 %% #1: row from; #2: row to
 \cs_new_protected:Npn \__tblr_build_one_table:nn #1 #2
   {
+    \box_clear:N \l__tblr_border_box
     \vbox_set:Nn \l__tblr_table_box
       {
         \int_step_variable:nnNn {#1} {#2} \l__tblr_i_tl
@@ -5374,16 +5378,45 @@
             \bool_lazy_or:nnT
               { \int_compare_p:nNn { \l__tblr_i_tl } > {#1} }
               { \bool_if_p:N \l__tblr_build_first_hline_bool }
-              { \hbox:n { \__tblr_build_hline:V \l__tblr_i_tl } }
+              { \__tblr_put_one_hline:n { \__tblr_build_hline:V \l__tblr_i_tl } }
             \hrule height ~ 0pt % remove lineskip between hlines and rows
-            \hbox:n { \__tblr_build_row:N \l__tblr_i_tl }
+            \__tblr_put_one_row:n { \__tblr_build_row:N \l__tblr_i_tl }
             \hrule height ~ 0pt
           }
         \bool_if:NT \l__tblr_build_last_hline_bool
-          { \hbox:n { \__tblr_build_hline:n { \int_eval:n {#2 + 1} } } }
+          {
+            \__tblr_put_one_hline:n
+              { \__tblr_build_hline:n { \int_eval:n {#2 + 1} } }
+          }
+        \skip_vertical:n
+          { - \box_ht:N \l__tblr_border_box - \box_dp:N \l__tblr_border_box }
+        \box_use:N \l__tblr_border_box
       }
     \bool_set_true:N \l__tblr_build_first_hline_bool
     \bool_set_true:N \l__tblr_build_last_hline_bool
+  }
+
+\cs_new_protected:Npn \__tblr_put_one_hline:n #1
+  {
+    \hbox_set:Nn \l__tblr_hline_box {#1}
+    \skip_vertical:n { \box_ht:N \l__tblr_hline_box + \box_dp:N \l__tblr_hline_box }
+    \vbox_set:Nn \l__tblr_border_box
+      {
+        \vbox_unpack:N \l__tblr_border_box
+        \box_use:N \l__tblr_hline_box
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_put_one_row:n #1
+  {
+    \hbox_set:Nn \l__tblr_row_box {#1}
+    \vbox_set:Nn \l__tblr_border_box
+      {
+        \vbox_unpack:N \l__tblr_border_box
+        \skip_vertical:n
+          { \box_ht:N \l__tblr_row_box + \box_dp:N \l__tblr_row_box }
+      }
+    \box_use:N \l__tblr_row_box
   }
 
 %% #1: hline number
