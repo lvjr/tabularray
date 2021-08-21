@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+
+\usepackage{xcolor}
+\usepackage{array,multirow,booktabs}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing trim option for booktabs}
+\begin{tabular}{lcccc}
+\toprule
+  \multirow{2}[3]{*}{Sample} & \multicolumn{2}{c}{I} & \multicolumn{2}{c}{II} \\
+\cmidrule(l{0.65em}r{0.65em}){2-3} \cmidrule(lr){4-5}
+     & A & B &  C & D \\
+\midrule
+  S1 & 5 & 8 & 12 & 2 \\
+  S2 & 6 & 9 &  2 & 6 \\
+  S3 & 7 & 9 &  5 & 8 \\
+  S4 & 8 & 9 &  8 & 2 \\
+\bottomrule
+\end{tabular}
+
+\bigskip
+
+\begin{tblr}{
+  colspec = lcccc,
+  cell{1}{1} = {r=2}{},
+  cell{1}{2,4} = {c=2}{},
+}
+\toprule
+  Sample & I &   & II &   \\
+\cmidrule[lr=-1]{2-3} \cmidrule[lr]{4-5}
+         & A & B & C  & D \\
+\midrule
+  S1     & 5 & 8 & 12 & 2 \\
+  S2     & 6 & 9 &  2 & 6 \\
+  S3     & 7 & 9 &  5 & 8 \\
+  S4     & 8 & 9 &  8 & 2 \\
+\bottomrule
+\end{tblr}
+\ENDTEST
+
+\end{document}
