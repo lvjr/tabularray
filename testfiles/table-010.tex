@@ -1,0 +1,92 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+\hrule
+
+\START
+
+\vspace{2em}
+
+% See issue #32
+\BEGINTEST{testing \par tokens at the beginning and at the end of cell text}
+\begin{tblr}{lll}
+
+\hline
+ 
+  One
+  
+  &
+  
+  Two
+  
+  &
+  
+  Three
+  
+  \\ 
+ 
+  Four
+  
+  & 
+  
+  Five
+  
+  &
+  
+  Six
+  
+  \\ 
+ 
+  Seven
+  
+  &
+  
+  Eight
+  
+  &
+  
+  Nine
+  
+  \\ 
+ 
+\hline
+
+\end{tblr}
+\ENDTEST
+
+\vspace{2em}
+
+% See issue #48
+\BEGINTEST{testing space in multiline cell and braces removing}
+\begin{tblr}{l}
+\hline {a \\ {b}b} \\ \hline
+\end{tblr}
+\quad
+\begin{tblr}{l}
+\hline {a \\ {b}b } \\\hline
+\end{tblr}
+\quad
+\begin{tblr}{l}
+\hline { a \\ {b}b } \\ \hline
+\end{tblr}
+\quad
+\begin{tblr}{l}
+\hline a {a {b}b} \\\hline
+\end{tblr}
+\quad
+\begin{tblr}{l}
+\hline {\sffamily a {b}b} a \\\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}

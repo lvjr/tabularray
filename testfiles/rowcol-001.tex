@@ -7,6 +7,10 @@
 \usepackage{tabularray}
 \usepackage{array}
 
+% See issue #58
+\usepackage{doc}
+\MakeShortVerb|
+
 \SetTblrTracing{none}
 
 \begin{document}
@@ -39,7 +43,7 @@ a\begin{tblr}{|r@{.}ll|}
 
 \BEGINTEST{testing !, < and > specifiers}
 \begin{tblr}{
-  colspec={QQ>{\sffamily}Q!{:}>[0pt]{$}Q<{$}Q>{\bfseries}Q},
+  colspec={ll>{\sffamily}l!{:}>[0pt]{$}l<{$}l>{\bfseries}l},
   rowspec={>{\itshape}QQ<[0pt]{2}!{\dotfill}>{\footnotesize}QQ<{4}},
 }
  Alpha & Beta    & Gamma   & Delta & Epsilon & Zeta \\
