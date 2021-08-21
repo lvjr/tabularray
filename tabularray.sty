@@ -5363,14 +5363,16 @@
 \bool_new:N \l__tblr_build_last_hline_bool
 \bool_set_true:N \l__tblr_build_first_hline_bool
 \bool_set_true:N \l__tblr_build_last_hline_bool
-\box_new:N \l__tblr_border_box
+\box_new:N \l__tblr_table_hlines_box
 \box_new:N \l__tblr_hline_box
 \box_new:N \l__tblr_row_box
 
 %% #1: row from; #2: row to
+%% To fix disappeared hlines with colorful tables in Adobe Reader (see #76),
+%% we collect all hlines and draw them at the end of the table.
 \cs_new_protected:Npn \__tblr_build_one_table:nn #1 #2
   {
-    \box_clear:N \l__tblr_border_box
+    \box_clear:N \l__tblr_table_hlines_box
     \vbox_set:Nn \l__tblr_table_box
       {
         \int_step_variable:nnNn {#1} {#2} \l__tblr_i_tl
@@ -5389,8 +5391,11 @@
               { \__tblr_build_hline:n { \int_eval:n {#2 + 1} } }
           }
         \skip_vertical:n
-          { - \box_ht:N \l__tblr_border_box - \box_dp:N \l__tblr_border_box }
-        \box_use:N \l__tblr_border_box
+          {
+            - \box_ht:N \l__tblr_table_hlines_box
+            - \box_dp:N \l__tblr_table_hlines_box
+          }
+        \box_use:N \l__tblr_table_hlines_box
       }
     \bool_set_true:N \l__tblr_build_first_hline_bool
     \bool_set_true:N \l__tblr_build_last_hline_bool
@@ -5400,9 +5405,9 @@
   {
     \hbox_set:Nn \l__tblr_hline_box {#1}
     \skip_vertical:n { \box_ht:N \l__tblr_hline_box + \box_dp:N \l__tblr_hline_box }
-    \vbox_set:Nn \l__tblr_border_box
+    \vbox_set:Nn \l__tblr_table_hlines_box
       {
-        \vbox_unpack:N \l__tblr_border_box
+        \vbox_unpack:N \l__tblr_table_hlines_box
         \box_use:N \l__tblr_hline_box
       }
   }
@@ -5410,9 +5415,9 @@
 \cs_new_protected:Npn \__tblr_put_one_row:n #1
   {
     \hbox_set:Nn \l__tblr_row_box {#1}
-    \vbox_set:Nn \l__tblr_border_box
+    \vbox_set:Nn \l__tblr_table_hlines_box
       {
-        \vbox_unpack:N \l__tblr_border_box
+        \vbox_unpack:N \l__tblr_table_hlines_box
         \skip_vertical:n
           { \box_ht:N \l__tblr_row_box + \box_dp:N \l__tblr_row_box }
       }
@@ -5678,11 +5683,13 @@
 \dim_new:N \l__tblr_row_dp_dim
 \dim_new:N \l__tblr_row_abovesep_dim
 \dim_new:N \l__tblr_row_belowsep_dim
-\box_new:N \l__tblr_row_vline_box
+\box_new:N \l__tblr_row_vlines_box
 \box_new:N \l__tblr_vline_box
 \box_new:N \l__tblr_cell_box
 
 %% Build current row, #1: row number
+%% To fix disappeared vlines with colorful tables in Adobe Reader (see #76),
+%% we collect all vlines and draw them at the end of the row.
 \cs_new_protected:Npn \__tblr_build_row:N #1
   {
     \int_set:Nn \c@rownum {#1}
@@ -5691,7 +5698,7 @@
       \l__tblr_row_ht_dim \l__tblr_row_dp_dim
       \l__tblr_row_abovesep_dim \l__tblr_row_belowsep_dim
     \vrule width ~ 0pt ~ height ~ \l__tblr_row_ht_dim ~ depth ~ \l__tblr_row_dp_dim
-    \hbox_set:Nn \l__tblr_row_vline_box
+    \hbox_set:Nn \l__tblr_row_vlines_box
       {
         \vrule width ~ 0pt ~ height ~ \l__tblr_row_ht_dim
                            ~ depth ~ \l__tblr_row_dp_dim
@@ -5704,8 +5711,8 @@
       }
     \__tblr_put_one_vline:n
       { \__tblr_build_vline_segment:nn {#1} { \int_eval:n {\c@colcount + 1} } }
-    \skip_horizontal:n { - \box_wd:N \l__tblr_row_vline_box }
-    \box_use:N \l__tblr_row_vline_box
+    \skip_horizontal:n { - \box_wd:N \l__tblr_row_vlines_box }
+    \box_use:N \l__tblr_row_vlines_box
   }
 
 %% Read from table specifications and calculate inner height/depth of the row
@@ -5742,9 +5749,9 @@
   {
     \hbox_set:Nn \l__tblr_vline_box {#1}
     \skip_horizontal:n { \box_wd:N \l__tblr_vline_box }
-    \hbox_set:Nn \l__tblr_row_vline_box
+    \hbox_set:Nn \l__tblr_row_vlines_box
       {
-        \hbox_unpack:N \l__tblr_row_vline_box
+        \hbox_unpack:N \l__tblr_row_vlines_box
         \box_use:N \l__tblr_vline_box
       }
   }
@@ -5752,9 +5759,9 @@
 \cs_new_protected:Npn \__tblr_put_one_cell:n #1
   {
     \hbox_set:Nn \l__tblr_cell_box {#1}
-    \hbox_set:Nn \l__tblr_row_vline_box
+    \hbox_set:Nn \l__tblr_row_vlines_box
       {
-        \hbox_unpack:N \l__tblr_row_vline_box
+        \hbox_unpack:N \l__tblr_row_vlines_box
         \skip_horizontal:n { \box_wd:N \l__tblr_cell_box }
       }
     \box_use:N \l__tblr_cell_box
