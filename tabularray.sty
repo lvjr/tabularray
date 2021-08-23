@@ -3748,7 +3748,8 @@
   }
 
 %% If all columns have negative coefficients and small natural widths,
-%% \l__column_coefficient_prop will be empty after one or more rounds
+%% \l__column_coefficient_prop will be empty after one or more rounds.
+%% We reset @row-height, etc for \linewidth graphics in X columns (issue #80)
 \cs_new_protected:Npn \__tblr_adjust_extendable_column_width:
   {
     \bool_while_do:nn
@@ -3762,6 +3763,14 @@
       {
         \__tblr_data_gput:nnne { column } {##1} { width } {##2}
         \__tblr_data_gput:nnnn { column } {##1} { @col-width } { 0pt }
+      }
+    \int_step_inline:nn { \c@rowcount }
+      {
+        \__tblr_data_gput:nnnn { row } {##1} { @row-height } { 0pt }
+        \__tblr_data_gput:nnnn { row } {##1} { @row-head } { 0pt }
+        \__tblr_data_gput:nnnn { row } {##1} { @row-foot } { 0pt }
+        \__tblr_data_gput:nnnn { row } {##1} { @row-upper } { 0pt }
+        \__tblr_data_gput:nnnn { row } {##1} { @row-lower } { 0pt }
       }
     \__tblr_calculate_cell_sizes:
   }
