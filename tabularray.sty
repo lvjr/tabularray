@@ -6407,10 +6407,26 @@
 
 \NewTblrLibrary { booktabs }
   {
-    \NewTableCommand \toprule [1] []    { \hline [0.08em, ##1] }
-    \NewTableCommand \midrule [1] []    { \hline [0.05em, ##1] }
-    \NewTableCommand \bottomrule [1] [] { \hline [0.08em, ##1] }
-    \NewTableCommand \cmidrule [2] []   { \cline [0.03em, endpos, ##1] { ##2 } }
+    % We only use dimensions \aboverulesep and \belowrulesep in booktabs package
+    \RequirePackage { booktabs }
+    \newcommand \booktabshline [1] [] { \hline [##1] }
+    \newcommand \booktabsoldhline [1] []
+      { \hline [abovesep = \aboverulesep, belowsep = \belowrulesep, ##1] }
+    \newcommand \booktabscline [2] [] { \cline [##1] {##2} }
+    \newcommand \booktabsoldcline [2] []
+      { \cline [abovesep = \aboverulesep, belowsep = \belowrulesep, ##1] {##2} }
+    \NewTableCommand \toprule [1] []    { \booktabshline [0.08em, ##1] }
+    \NewTableCommand \midrule [1] []    { \booktabshline [0.05em, ##1] }
+    \NewTableCommand \bottomrule [1] [] { \booktabshline [0.08em, ##1] }
+    \NewTableCommand \cmidrule [2] [] { \booktabscline [0.03em, endpos, ##1] {##2} }
+    \NewTblrEnviron { booktabs }
+    \SetTblrInner [ booktabs ] { rowsep = 0pt }
+    \RequirePackage { etoolbox }
+    \AtBeginEnvironment { booktabs }
+      {
+        \let \booktabshline = \booktabsoldhline
+        \let \booktabscline = \booktabsoldcline
+      }
   }
 
 %% Library diagbox and command \diagbox

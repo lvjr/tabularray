@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage[b5paper,margin=1cm]{geometry}
 \pagestyle{empty}
+\setlength{\parindent}{0pt}
 
 \input{regression-test}
 
@@ -17,7 +18,7 @@
 \START
 \hrule\bigskip
 
-\BEGINTEST{testing trim option for booktabs}
+\BEGINTEST{testing trim option and booktabs environment for booktabs library}
 \begin{tabular}{lcccc}
 \toprule
   \multirow{2}[3]{*}{Sample} & \multicolumn{2}{c}{I} & \multicolumn{2}{c}{II} \\
@@ -30,9 +31,24 @@
   S4 & 8 & 9 &  8 & 2 \\
 \bottomrule
 \end{tabular}
-
-\bigskip
-
+\quad
+\begin{booktabs}{
+  colspec = lcccc,
+  cell{1}{1} = {r=2}{},
+  cell{1}{2,4} = {c=2}{},
+}
+\toprule
+  Sample & I &   & II &   \\
+\cmidrule[lr=-1]{2-3} \cmidrule[lr]{4-5}
+         & A & B & C  & D \\
+\midrule
+  S1     & 5 & 8 & 12 & 2 \\
+  S2     & 6 & 9 &  2 & 6 \\
+  S3     & 7 & 9 &  5 & 8 \\
+  S4     & 8 & 9 &  8 & 2 \\
+\bottomrule
+\end{booktabs}
+\quad
 \begin{tblr}{
   colspec = lcccc,
   cell{1}{1} = {r=2}{},
@@ -47,6 +63,42 @@
   S2     & 6 & 9 &  2 & 6 \\
   S3     & 7 & 9 &  5 & 8 \\
   S4     & 8 & 9 &  8 & 2 \\
+\bottomrule
+\end{tblr}
+\bigskip\hrule\bigskip
+\begin{tabular}{lll}
+\toprule
+ Alpha   & Beta  & Gamma   \\
+\cmidrule(lr){1-2}
+ Epsilon & Zeta  & Eta     \\
+\midrule
+ Iota    & Kappa & Lambda  \\
+\cmidrule(lr){2-3}
+ Nu      & Xi    & Omicron \\
+\bottomrule
+\end{tabular}
+\quad
+\begin{booktabs}{lll}
+\toprule
+ Alpha   & Beta  & Gamma   \\
+\cmidrule[lr]{1-2}
+ Epsilon & Zeta  & Eta     \\
+\midrule
+ Iota    & Kappa & Lambda  \\
+\cmidrule[lr]{2-3}
+ Nu      & Xi    & Omicron \\
+\bottomrule
+\end{booktabs}
+\quad
+\begin{tblr}{llll}
+\toprule
+ Alpha   & Beta  & Gamma   \\
+\cmidrule[lr]{1-2}
+ Epsilon & Zeta  & Eta     \\
+\midrule
+ Iota    & Kappa & Lambda  \\
+\cmidrule[lr]{2-3}
+ Nu      & Xi    & Omicron \\
 \bottomrule
 \end{tblr}
 \ENDTEST
