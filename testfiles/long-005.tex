@@ -1,0 +1,44 @@
+%  -*- coding: utf-8 -*-
+\documentclass[12pt]{article}
+\usepackage[a6paper,margin=15mm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+\START
+
+\BEGINTEST{#39: blank page when using \newpage}
+Text\par\vspace{1.5cm}
+
+\begin{longtblr}[
+  caption = {Long Tabular}
+]{
+  colspec = {X[l]X[l]X[l]}, hlines,
+}
+ Alpha   & Beta  & Gamma   \\
+ Epsilon & Zeta  & Eta     \\
+ Iota    & Kappa & Lambda  \\
+ Nu      & Xi    & Omicron \\
+ Rho     & Sigma & Tau     \\
+ Phi     & Chi   & Psi     \\
+ Alpha   & Beta  & Gamma   \\
+ Epsilon & Zeta  & Eta     \\
+ Iota    & Kappa & Lambda  \\
+ Nu      & Xi    & Omicron \\
+ Rho     & Sigma & Tau     \\
+ Phi     & Chi   & Psi     \\
+\end{longtblr}
+
+\newpage
+
+Line after \verb+\newpage+.
+\ENDTEST
+
+\end{document}

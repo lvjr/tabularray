@@ -1,0 +1,37 @@
+%  -*- coding: utf-8 -*-
+\documentclass[12pt]{article}
+\usepackage[a6paper,margin=15mm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+\START
+
+\BEGINTEST{#42: blank page after \section starts at the top of a page}
+Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text\par
+
+\vspace{9cm}
+\section{First Section}
+
+\begin{longtblr}[
+  caption = {Long Tabular}
+]{
+  colspec = {X[l]X[l]X[l]}, hlines,
+}
+ Alpha   & Beta  & Gamma   \\
+ Epsilon & Zeta  & Eta     \\
+ Iota    & Kappa & Lambda  \\
+ Nu      & Xi    & Omicron \\
+ Rho     & Sigma & Tau     \\
+ Phi     & Chi   & Psi     \\
+\end{longtblr}
+\ENDTEST
+
+\end{document}
