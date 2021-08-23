@@ -1221,6 +1221,12 @@
     lr       .meta:n = { leftpos = #1, rightpos = #1 },
     lr    .default:n = { -0.8 },
     endpos .bool_set:N = \l__tblr_hline_endpos_bool,
+    abovesep  .code:n = \__tblr_row_gput_above:ne { belowsep } { \dim_eval:n {#1} },
+    belowsep  .code:n = \__tblr_row_gput:ne { abovesep } { \dim_eval:n {#1} },
+    abovesep+ .code:n = \__tblr_row_gadd_dimen_above:ne
+                          { belowsep } { \dim_eval:n {#1} },
+    belowsep+ .code:n = \__tblr_row_gadd_dimen:ne
+                          { abovesep } { \dim_eval:n {#1} },
     unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
   }
 
@@ -2081,11 +2087,24 @@
   }
 \cs_generate_variant:Nn \__tblr_row_gput:nn { ne }
 
+\cs_new_protected:Npn \__tblr_row_gput_above:nn #1 #2
+  {
+    \__tblr_data_gput:nenn { row } { \int_eval:n { \c@rownum - 1 } } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_row_gput_above:nn { ne }
+
 \cs_new_protected:Npn \__tblr_row_gadd_dimen:nn #1 #2
   {
     \__tblr_data_gadd_dimen_value:nenn { row } { \int_use:N \c@rownum } {#1} {#2}
   }
 \cs_generate_variant:Nn \__tblr_row_gadd_dimen:nn { ne }
+
+\cs_new_protected:Npn \__tblr_row_gadd_dimen_above:nn #1 #2
+  {
+    \__tblr_data_gadd_dimen_value:nenn { row }
+      { \int_eval:n { \c@rownum - 1 } } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_row_gadd_dimen_above:nn { ne }
 
 %% #1: key; #2: value
 \cs_new_protected:Npn \__tblr_row_gput_cell:nn #1 #2
