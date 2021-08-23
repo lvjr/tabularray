@@ -1116,6 +1116,10 @@
 
 \NewTableCommand \hline [1] [] { \SetHline [+] {-} {#1} }
 
+%% Some keys can be set by any hline, such as abovesep and belowsep keys.
+%% Using special hline of index 0, you can set these keys without adding any hlines.
+\NewTableCommand \SetSeparation [1] { \SetHline [0] {-} {#1} }
+
 %% #1: the index of the hline (may be + or =)
 %% #2: which columns of the hline, separate by commas
 %% #3: key=value pairs
