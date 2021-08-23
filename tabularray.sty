@@ -3182,10 +3182,13 @@
         \xleaders \l__tblr_b_tl \vfil
       }
       {
+        %% When using text as vline, we need to omit abovepos and belowpos.
+        \unskip
         \hbox_set:Nn \l__tblr_d_box { \l__tblr_b_tl }
         \box_set_ht:Nn \l__tblr_d_box {#4}
         \box_set_dp:Nn \l__tblr_d_box {#5}
         \box_use:N \l__tblr_d_box
+        \vss
       }
     \group_end:
   }
@@ -5870,7 +5873,17 @@
               { - \l__tblr_vline_abovepos_tl \l_tmpa_dim }
           }
       }
-    \fp_compare:nNnF { \l__tblr_vline_belowpos_tl } = {0}
+    %% To join two vline segment above and below a cline,
+    %% we choose to extend every vline downwards a little (#55).
+    \fp_compare:nNnTF { \l__tblr_vline_belowpos_tl } = {0}
+      {
+        \dim_set:Nn \l__tblr_vline_belowskip_dim
+          {
+            - \__tblr_spec_item:ne { hline }
+                { [\int_eval:n { #1 + 1 }](1) / @hline-height }
+            + 0pt
+          }
+      }
       {
         \dim_set:Nn \l_tmpa_dim
           {
