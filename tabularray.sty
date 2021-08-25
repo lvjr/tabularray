@@ -3554,8 +3554,10 @@
     \box_use:N \l__tblr_strut_dp_box
   }
 
-%% The end-of-line character at the end of \scantokens causes extra vertical space
-%% below cells with verb option, so we have to use an \empty to remove it.
+%% When using verb option, there is an end-of-line character at the end.
+%% This character causes extra horizontal space at the end when "measure=hbox",
+%% or causes extra vertical space at the end with "measure=vbox".
+%% Therefore we have to use an \empty to remove it.
 %% See https://tex.stackexchange.com/q/213659
 \cs_new_protected:Npn \__tblr_rescan_cell_tokens:N #1
   {
