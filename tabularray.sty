@@ -3554,13 +3554,17 @@
     \box_use:N \l__tblr_strut_dp_box
   }
 
+
+%% The end-of-line character at the end of \scantokens causes extra vertical space
+%% below cells with verb option, so we have to use an \empty to remove it.
+%% See https://tex.stackexchange.com/q/213659
 \cs_new_protected:Npn \__tblr_rescan_cell_tokens:N #1
   {
     \tl_if_empty:NTF \l__tblr_inner_spec_verb_tl
       { #1 }
       {
         \regex_replace_all:nnN { . } { \c{string} \0 } #1
-        \tl_set:Nx #1 { #1 }
+        \tl_set:Nx #1 { #1 \noexpand \empty }
         \exp_args:NV \tex_scantokens:D #1
       }
   }
