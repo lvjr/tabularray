@@ -1,11 +1,7 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 ============================================================
-TEST 1: cell background
-============================================================
-============================================================
-============================================================
-TEST 2: cell foreground and font with measure=hbox
+TEST 1: testing itemize environment with measure=vbox
 ============================================================
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line ....
@@ -13,8 +9,12 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line ....
 ============================================================
 ============================================================
-TEST 3: cell foreground and font with measure=vbox
+TEST 2: testing itemize environment with measure=vbox
+============================================================
+============================================================
+============================================================
+TEST 3: testing \color command with measure=vbox
 ============================================================
 ============================================================
 [1
-] (color-001.aux)
+] (table-011.aux)

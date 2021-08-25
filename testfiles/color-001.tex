@@ -10,6 +10,7 @@
 \usepackage{array}
 
 \SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
 
 \begin{document}
 
@@ -40,12 +41,29 @@ Four  & \SetCell{teal}Five  &   Six \\
 
 \medskip\hrule\medskip
 
-%% Issue 2: Setting fonts?
-\BEGINTEST{cell foreground and font}
+%% Issue #2: Setting fonts?
+\BEGINTEST{cell foreground and font with measure=hbox}
 \begin{tblr}{
  colspec  = {lcr},
  row{odd} = {bg=azure9},
  row{1}   = {c,bg=azure3,fg=white,font=\sffamily},
+ measure  = hbox,
+}
+ Alpha & Beta    & Gamma \\
+ Delta & Epsilon & Zeta \\
+ Eta   & Theta   & Iota \\
+ Kappa & Lambda  & Mu \\
+ Nu Xi Omicron & Pi Rho Sigma & Tau Upsilon Phi \\
+\end{tblr}
+\ENDTEST
+
+%% Issue #36: \color inside varwidth
+\BEGINTEST{cell foreground and font with measure=vbox}
+\begin{tblr}{
+ colspec  = {lcr},
+ row{odd} = {bg=azure9},
+ row{1}   = {c,bg=azure3,fg=white,font=\sffamily},
+ measure  = vbox,
 }
  Alpha & Beta    & Gamma \\
  Delta & Epsilon & Zeta \\

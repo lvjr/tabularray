@@ -1,0 +1,117 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{enumitem}
+
+\SetTblrTracing{none}
+\SetTblrInner{rowsep=0pt}
+\UseTblrLibrary{varwidth}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\hrule
+
+%% Make PK fonts before starting test
+\begin{itemize}
+  \item text 1
+  \item text 2
+\end{itemize}
+
+\START
+
+\vspace{2em}
+
+% See issue #36
+\BEGINTEST{testing itemize environment with measure=vbox}
+\begin{tabular}{|p{1.8cm}|l|}
+  \hline
+  text & text \\
+  \hline
+  \begin{itemize}
+    \item text 1
+    \item text 2
+  \end{itemize} & text 3 \\
+  \hline
+\end{tabular}
+\qquad
+\begin{tblr}{
+  colspec = {ll}, hlines, vlines,
+  measure = vbox,
+}
+  text & text \\
+  \begin{itemize}
+    \item text 1
+    \item text 2
+  \end{itemize} & text 3 \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+% See issue #36
+\BEGINTEST{testing itemize environment with measure=vbox}
+\begin{tabularx}{0.5\textwidth}{|X|l|}
+  \hline
+  text & text \\
+  \hline
+  \begin{itemize}[topsep=0pt,parsep=0pt]
+    \item abc def abc def abc def abc def
+          abc def abc def abc def abc def
+          abc def abc def abc def abc def
+    \item abc def abc def abc def abc def
+          abc def abc def abc def abc def
+          abc def abc def abc def abc def\strut
+  \end{itemize}
+  & text 3 \\
+  \hline
+  abc def abc def abc def abc def
+  abc def abc def abc def abc def
+  abc def abc def abc def abc def
+  & xyz \\
+  \hline
+\end{tabularx}%
+\begin{tblr}{
+  colspec = {X[j,t]l}, width = 0.5\textwidth, hlines, vlines,
+  measure = vbox,
+}
+  text & text\\
+  \noindent
+  \begin{itemize}[topsep=0pt,parsep=0pt]
+    \item abc def abc def abc def abc def
+          abc def abc def abc def abc def
+          abc def abc def abc def abc def
+    \item abc def abc def abc def abc def
+          abc def abc def abc def abc def
+          abc def abc def abc def abc def\strut
+  \end{itemize}
+  & text 3 \\
+  abc def abc def abc def abc def
+  abc def abc def abc def abc def
+  abc def abc def abc def abc def
+  & xyz \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+% See issue #36
+\BEGINTEST{testing \color command with measure=vbox}
+\begin{tblr}{
+  colspec = {ll}, hlines, vlines,
+  measure = vbox,
+}
+  \color{red3}Hello      & \leavevmode\color{red3}Hello \\
+  Hello\color{red3}Hello & Hello{\color{red3}Hello}Hello
+\end{tblr}
+\ENDTEST
+
+\end{document}

@@ -5,12 +5,16 @@ TEST 1: cell background
 ============================================================
 ============================================================
 ============================================================
-TEST 2: cell foreground and font
+TEST 2: cell foreground and font with measure=hbox
 ============================================================
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line ....
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line ....
+============================================================
+============================================================
+TEST 3: cell foreground and font with measure=vbox
+============================================================
 ============================================================
 [1
 ] (color-001.aux)

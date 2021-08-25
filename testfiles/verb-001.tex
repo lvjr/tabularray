@@ -8,14 +8,22 @@
 \usepackage{tabularray}
 
 \SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
 
 \begin{document}
 
 \START
 \hrule\bigskip
 
-\BEGINTEST{testing \verb command}
-\begin{tblr}{hlines,verb}
+\BEGINTEST{testing \verb command with measure=hbox}
+\begin{tblr}{colspec={lll},hlines,verb,measure=hbox}
+  20 & 30 & \verb!\hello{world}!40 \\
+  50 & \verb!\hello!60 & 70 \\
+\end{tblr}
+\ENDTEST
+
+\BEGINTEST{testing \verb command with measure=vbox}
+\begin{tblr}{colspec={lll},hlines,verb,measure=vbox}
   20 & 30 & \verb!\hello{world}!40 \\
   50 & \verb!\hello!60 & 70 \\
 \end{tblr}
