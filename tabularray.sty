@@ -3451,10 +3451,20 @@
       { \__tblr_get_cell_size_with_hbox: }
   }
 
+%% Varwidth won't work as expected when \color command occurs in it,
+%% and we can not fix this problem with \leavevmode command.
+%% See https://tex.stackexchange.com/q/460489.
+%% But we need to use \color command for fg option,
+%% or users may use it in the middle of the cell text,
+%% so we have redefine \color command and disable it before measuring cell.
+
+\NewDocumentCommand \__tblr_fake_color_command:w { o m } { }
+
 \cs_new_protected:Npn \__tblr_get_cell_size_with_vbox:
   {
     \hbox_set:Nn \l_tmpa_box
       {
+        \cs_set_eq:NN \color \__tblr_fake_color_command:w
         \begin{varwidth}{\paperwidth}
            \l__tblr_f_tl
            \__tblr_rescan_cell_tokens:N \l__tblr_c_tl
