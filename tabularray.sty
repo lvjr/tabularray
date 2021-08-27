@@ -6468,6 +6468,12 @@
         \let \booktabshline = \booktabsoldhline
         \let \booktabscline = \booktabsoldcline
       }
+    \NewTableCommand \specialrule [3]
+      { \hline [##1, abovesep = ##2, belowsep = ##3] }
+    \NewTableCommand \addrowspace [1] [\defaultaddspace]
+      { \SetSeparation { abovesep = (##1) / 2, belowsep = (##1) / 2 } }
+    \NewTableCommand \addlinespace [1] [\defaultaddspace]
+      { \SetSeparation { abovesep = (##1) / 2, belowsep = (##1) / 2 } }
   }
 
 %% Library diagbox and command \diagbox
