@@ -6502,9 +6502,9 @@
     \NewTableCommand \specialrule [3]
       { \hline [##1, abovespace = ##2, belowspace = ##3] }
     \NewTableCommand \addrowspace [1] [\defaultaddspace]
-      { \SetVspace { abovespace = (##1) / 2, belowspace = (##1) / 2 } }
+      { \SetVspace { abovespace+ = (##1) / 2, belowspace+ = (##1) / 2 } }
     \NewTableCommand \addlinespace [1] [\defaultaddspace]
-      { \SetVspace { abovespace = (##1) / 2, belowspace = (##1) / 2 } }
+      { \SetVspace { abovespace+ = (##1) / 2, belowspace+ = (##1) / 2 } }
   }
 
 %% Library diagbox and command \diagbox
