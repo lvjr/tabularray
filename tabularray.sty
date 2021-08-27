@@ -6456,23 +6456,41 @@
   {
     % We only use dimensions \aboverulesep and \belowrulesep in booktabs package
     \RequirePackage { booktabs }
-    \newcommand \booktabshline [1] [] { \hline [##1] }
-    \newcommand \booktabsoldhline [1] []
-      { \hline [abovespace = \aboverulesep, belowspace = \belowrulesep, ##1] }
-    \newcommand \booktabscline [2] [] { \cline [##1] {##2} }
-    \newcommand \booktabsoldcline [2] []
-      { \cline [abovespace = \aboverulesep, belowspace = \belowrulesep, ##1] {##2} }
-    \NewTableCommand \toprule [1] []    { \booktabshline [0.08em, ##1] }
-    \NewTableCommand \midrule [1] []    { \booktabshline [0.05em, ##1] }
-    \NewTableCommand \bottomrule [1] [] { \booktabshline [0.08em, ##1] }
-    \NewTableCommand \cmidrule [2] [] { \booktabscline [0.03em, endpos, ##1] {##2} }
+    \newcommand \tblr@booktabs@hline [1] [] { \hline [##1] }
+    \newcommand \tblr@booktabs@oldhline [1] [] {
+      \hline [abovespace = \aboverulesep, belowspace = \belowrulesep, ##1]
+    }
+    \newcommand \tblr@booktabs@cline [2] [] { \cline [##1] {##2} }
+    \newcommand \tblr@booktabs@oldcline [2] [] {
+      \cline [abovespace = \aboverulesep, belowspace = \belowrulesep, ##1] {##2}
+    }
+    \newcommand \tblr@booktabs@cline@more [2] [] { \SetHline [+] {##2} {##1} }
+    \newcommand \tblr@booktabs@oldcline@more [2] [] {
+      \SetHline [+] {##2} {
+        abovespace = \aboverulesep, belowspace = \belowrulesep, ##1
+      }
+    }
+    \NewTableCommand \toprule [1] []    { \tblr@booktabs@hline [0.08em, ##1] }
+    \NewTableCommand \midrule [1] []    { \tblr@booktabs@hline [0.05em, ##1] }
+    \NewTableCommand \bottomrule [1] [] { \tblr@booktabs@hline [0.08em, ##1] }
+    \NewTableCommand \cmidrule [2] [] {
+      \tblr@booktabs@cline [0.03em, endpos, ##1] {##2}
+    }
+    \NewTableCommand \cmidrulemore [2] [] {
+      \tblr@booktabs@cline@more [0.03em, endpos, ##1] {##2}
+    }
+    \newcommand \tblr@booktabs@change@more [1] { \cmidrulemore }
+    \NewTableCommand \morecmidrules {
+      \peek_meaning:NTF \cmidrule { \tblr@booktabs@change@more } { \relax }
+    }
     \NewTblrEnviron { booktabs }
     \SetTblrInner [ booktabs ] { rowsep = 0pt }
     \RequirePackage { etoolbox }
     \AtBeginEnvironment { booktabs }
       {
-        \let \booktabshline = \booktabsoldhline
-        \let \booktabscline = \booktabsoldcline
+        \let \tblr@booktabs@hline = \tblr@booktabs@oldhline
+        \let \tblr@booktabs@cline = \tblr@booktabs@oldcline
+        \let \tblr@booktabs@cline@more = \tblr@booktabs@oldcline@more
       }
     \NewTableCommand \specialrule [3]
       { \hline [##1, abovespace = ##2, belowspace = ##3] }
