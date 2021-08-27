@@ -1133,13 +1133,19 @@
 \cs_new_protected:Npn \tblr_set_hline:nnn #1 #2 #3
   {
     \group_begin:
-    \keys_set_groups:nnn { tblr-hline } { text } {#3}
-    \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text }
+    %% We can not use \int_compare:nNnTF here since #1 may be + or = .
+    %% Also we treat hline of index 0 specially, not adding hline count.
+    \tl_if_eq:nnTF {#1} {0}
+      { \keys_set:nn { tblr-hline } {#3} }
       {
-        \__tblr_set_hline_num:n {#1}
-        \tl_clear:N \l__tblr_hline_dash_tl
-        \keys_set:nn { tblr-hline } { dash = solid, #3 }
-        \__tblr_set_hline_cmd:n {#2}
+        \keys_set_groups:nnn { tblr-hline } { text } {#3}
+        \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text }
+          {
+            \__tblr_set_hline_num:n {#1}
+            \tl_clear:N \l__tblr_hline_dash_tl
+            \keys_set:nn { tblr-hline } { dash = solid, #3 }
+            \__tblr_set_hline_cmd:n {#2}
+          }
       }
     \group_end:
   }
