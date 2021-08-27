@@ -6470,14 +6470,20 @@
         abovespace = \aboverulesep, belowspace = \belowrulesep, ##1
       }
     }
-    \NewTableCommand \toprule [1] []    { \tblr@booktabs@hline [0.08em, ##1] }
-    \NewTableCommand \midrule [1] []    { \tblr@booktabs@hline [0.05em, ##1] }
-    \NewTableCommand \bottomrule [1] [] { \tblr@booktabs@hline [0.08em, ##1] }
+    \NewTableCommand \toprule [1] [] {
+      \tblr@booktabs@hline [wd=\heavyrulewidth, ##1]
+    }
+    \NewTableCommand \midrule [1] [] {
+      \tblr@booktabs@hline [wd=\lightrulewidth, ##1]
+    }
+    \NewTableCommand \bottomrule [1] [] {
+      \tblr@booktabs@hline [wd=\heavyrulewidth, ##1]
+    }
     \NewTableCommand \cmidrule [2] [] {
-      \tblr@booktabs@cline [0.03em, endpos, ##1] {##2}
+      \tblr@booktabs@cline [wd=\cmidrulewidth, endpos, ##1] {##2}
     }
     \NewTableCommand \cmidrulemore [2] [] {
-      \tblr@booktabs@cline@more [0.03em, endpos, ##1] {##2}
+      \tblr@booktabs@cline@more [wd=\cmidrulewidth, endpos, ##1] {##2}
     }
     \newcommand \tblr@booktabs@change@more [1] { \cmidrulemore }
     \NewTableCommand \morecmidrules {
