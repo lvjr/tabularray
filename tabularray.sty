@@ -1118,7 +1118,7 @@
 
 %% Some keys can be set by any hline, such as abovespace and belowspace keys.
 %% Using special hline of index 0, you can set these keys without adding any hlines.
-\NewTableCommand \SetHspace [1] { \SetHline [0] {-} {#1} }
+\NewTableCommand \SetVspace [1] { \SetHline [0] {-} {#1} }
 
 %% #1: the index of the hline (may be + or =)
 %% #2: which columns of the hline, separate by commas
@@ -6495,9 +6495,9 @@
     \NewTableCommand \specialrule [3]
       { \hline [##1, abovespace = ##2, belowspace = ##3] }
     \NewTableCommand \addrowspace [1] [\defaultaddspace]
-      { \SetHspace { abovespace = (##1) / 2, belowspace = (##1) / 2 } }
+      { \SetVspace { abovespace = (##1) / 2, belowspace = (##1) / 2 } }
     \NewTableCommand \addlinespace [1] [\defaultaddspace]
-      { \SetHspace { abovespace = (##1) / 2, belowspace = (##1) / 2 } }
+      { \SetVspace { abovespace = (##1) / 2, belowspace = (##1) / 2 } }
   }
 
 %% Library diagbox and command \diagbox
