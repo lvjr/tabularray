@@ -11,7 +11,7 @@
 \usepackage[firstpage=true]{background}
 \backgroundsetup{contents={}}
 
-\UseTblrLibrary{booktabs,diagbox,siunitx}
+\UseTblrLibrary{booktabs,diagbox,siunitx,varwidth}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -24,6 +24,7 @@
 \tcbset{sharp corners, boxrule=0.5pt, colback=red9}
 
 \usepackage{float}
+%\usepackage{enumerate}
 
 \setcounter{tocdepth}{1}
 
@@ -112,7 +113,7 @@
 
 \noindent
 \begin{tblr}{
-  colspec = {lX}, colsep = 12mm, hlines = {2pt, white},
+  colspec = {rX}, colsep = 8mm, hlines = {2pt, white},
   row{odd} = {azure8}, row{even} = {gray8},
   row{1} = {6em,azure2,fg=white,font=\LARGE\bfseries\sffamily},
   row{2-Z} = {3em,font=\Large},
@@ -122,13 +123,14 @@
   Version    & \myversion\ (\the\year-\mylpad\month-\mylpad\day) \\
   Code       & \url{https://github.com/lvjr/tabularray} \\
   Code       & \url{https://bitbucket.org/lvjr/tabularray} \\
-  Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
   Forum      & \url{https://github.com/lvjr/tabularray/discussions} \\
+  Forum      & \url{https://tex.stackexchange.com/questions/tagged/tabularray} \\
+  Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
 \end{tblr}
 
-\begin{codehigh}[boxsep=6mm]
+\begin{codehigh}[boxsep=4mm]
 \begin{tblr}{
-  colspec = {lX}, colsep = 12mm, hlines = {2pt, white},
+  colspec = {rX}, colsep = 8mm, hlines = {2pt, white},
   row{odd} = {azure8}, row{even} = {gray8},
   row{1} = {6em,azure2,fg=white,font=\LARGE\bfseries\sffamily},
   row{2-Z} = {3em,font=\Large},
@@ -138,8 +140,9 @@
   Version    & \myversion\ (\the\year-\mylpad\month-\mylpad\day) \\
   Code       & \url{https://github.com/lvjr/tabularray} \\
   Code       & \url{https://bitbucket.org/lvjr/tabularray} \\
-  Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
   Forum      & \url{https://github.com/lvjr/tabularray/discussions} \\
+  Forum      & \url{https://tex.stackexchange.com/questions/tagged/tabularray} \\
+  Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
 \end{tblr}
 \end{codehigh}
 
@@ -565,7 +568,7 @@ With \verb!tabularray! package, you can change the styles of tables via old inte
 
 The old interfaces consist of some table commands inside the table contents.
 Same as \verb!tabular! and \verb!array! environments,
-all table commands \textcolor{red3}{must} be put at the beginning ot the cell text.
+all table commands \textcolor{red3}{must} be put at the beginning of the cell text.
 Also, new table commands \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
 
 The new interfaces consist of some options inside the mandatory argument,
@@ -590,18 +593,38 @@ hence totally separating the styles and the contents of tables.
 
 \section{Hlines and Vlines}
 
-All available keys for hlines and vlines are described in Table \ref{key:hvline}.
+All available keys for hlines and vlines are described in Table \ref{key:hline} and Table \ref{key:vline}.
 
 \begin{spectblr}[
-  caption = {Keys for Hlines and Vlines},
-  label = {key:hvline},
+  caption = {Keys for Hlines},
+  label = {key:hline},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
 ]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{dash}} & dash style: \V{solid}, \V{dashed} or \V{dotted} & \V{solid} \\
-  \K{text}             & replace hline/vline with text (like \V{!} specifier in \K{colspec}) & \None \\
-  \underline{\K{wd}}   & rule width dimension & \None \\
+  \K{text}             & replace hline with text (like \V{!} specifier in \K{rowspec}) & \None \\
+  \underline{\K{wd}}   & rule width dimension & \V{0.4pt} \\
   \underline{\K{fg}}   & rule color name & \None \\
+  \K{leftpos}          & crossing or trimming position at the left side  & \V{1} \\
+  \K{rightpos}         & crossing or trimming position at the right side & \V{1} \\
+  \K{abovespace}       & set \V{belowsep} of previous row (see Table \ref{key:row}) & \V{2pt} \\
+  \K{belowspace}       & set \V{abovesep} of current row (see Table \ref{key:row}) & \V{2pt} \\
+  \K{abovespace+}      & increase \V{belowsep} of previous row & \None \\
+  \K{belowspace+}      & increase \V{abovesep} of current row  & \None \\
+\end{spectblr}
+\vspace{-2em}
+\begin{spectblr}[
+  caption = {Keys for Vlines},
+  label = {key:vline},
+  remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
+]{}
+  Key & Description and Values & Initial Value \\
+  \underline{\K{dash}} & dash style: \V{solid}, \V{dashed} or \V{dotted} & \V{solid} \\
+  \K{text}             & replace vline with text (like \V{!} specifier in \K{colspec}) & \None \\
+  \underline{\K{wd}}   & rule width dimension & \V{0.4pt} \\
+  \underline{\K{fg}}   & rule color name & \None \\
+  \K{abovepos}         & crossing or trimming position at the above side & \V{0} \\
+  \K{belowpos}         & crossing or trimming position at the below side & \V{0} \\
 \end{spectblr}
 
 \subsection{Hlines and Vlines in New Interfaces}
@@ -675,8 +698,10 @@ Another pair of braces before will draw more hlines/vlines (in which \verb!-! st
 \end{tblr}
 \end{demohigh}
 
+Note that you \underline{must} use indexes in order: first 1, then 2, etc.
+
 Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlines, respectively.
-Their values are the same as options \verb!hliness! and \verb!vlines!:
+Their values are the same as options \verb!hlines! and \verb!vlines!:
 
 \begin{demohigh}
 \begin{tblr}{
@@ -731,10 +756,49 @@ Now we show the usage of \verb!text! key by the following example%
 
 You need to load \verb!chemmacros! package for the \verb!\ch! command.
 
+The \verb!leftpos! and \verb!rightpos! keys specify crossing or trimming positions for hlines.
+The possible values for them are decimal numbers between \verb!-1! and \verb!1!.
+Their initial values are \verb!1!.
+
+\begin{center}
+\begin{tblr}{width=0.5\textwidth,colspec={rX[l]},hlines}
+  -1 & the hline is trimmed by \V{colsep} \\
+   0 & the hline only touches the first vline \\
+   1 & the hline touches all the vlines \\
+\end{tblr}
+\end{center}
+
+\verb!abovepos! and \verb!belowpos! keys for vlines have similar meanings.
+But their initial values are \verb!0!.
+
+\begin{center}
+\begin{tblr}{width=0.5\textwidth,colspec={rX[l]},hlines}
+  -1 & the vline is trimmed by \V{rowsep} \\
+   0 & the vline only touches the first hline \\
+   1 & the vline touches all the hlines \\
+\end{tblr}
+\end{center}
+
+Here is an example for these four keys:
+
+\begin{demohigh}
+\begin{tblr}{
+  hline{1,4} = {1}{-}{},
+  hline{1,4} = {2}{-}{},
+  hline{2,3} = {1}{-}{leftpos = -1, rightpos = -1},
+  hline{2,3} = {2}{-}{leftpos = -1, rightpos = -1},
+  vline{1,4} = {abovepos = 1, belowpos = 1},
+}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
 \subsection{Hlines and Vlines in Old Interfaces}
 
 The \verb!\hline! command has an optional argument which accepts key-value options.
-The available keys are described in Table \ref{key:hvline}.
+The available keys are described in Table \ref{key:hline}.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -821,7 +885,7 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
 ]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
-    & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
+    & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
     & \V{l} \\
   \underline{\K{valign}}
     & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
@@ -2022,8 +2086,9 @@ To avoid potential conflict, you need to enable them with \verb!\UseTblrLibrary!
 
 \section{Library \texttt{booktabs}}
 
-When you write \verb!\UseTblrLibrary{booktabs}!,
-\verb!tabularray! package will define commands \verb!\toprule!, \verb!\midrule!,
+With \verb!\UseTblrLibrary{booktabs}! in the preamble of the document,
+\verb!tabularray! will load \verb!booktabs! package,
+and define \verb!\toprule!, \verb!\midrule!,
 \verb!\bottomrule! and \verb!\cmidrule! inside \verb!tblr! environment.
 
 \begin{demohigh}
@@ -2040,22 +2105,111 @@ When you write \verb!\UseTblrLibrary{booktabs}!,
 \end{tblr}
 \end{demohigh}
 
-At this moment, \verb!trim! options for \verb!\cmidrule! command are not supported.
-(As a workaround, you may insert an empty column to separate two \verb!\cmidrule!'s.)
-But rule colors are possible just like \verb!\hline! and \verb!\cline! commands.
+Just like \verb!\hline! and \verb!\cline! commands,
+you can also specify rule width and color in the optional argument of any of these commands.
 
 \begin{demohigh}
 \begin{tblr}{llll}
-\toprule[purple3]
- Alpha   & Beta  & Gamma   & Delta \\
+\toprule[2pt,purple3]
+ Alpha   & Beta  & Gamma  & Delta \\
 \midrule[blue3]
- Epsilon & Zeta  & Eta     & Theta \\
-\cmidrule[azure3]{1-3}
- Iota    & Kappa & Lambda  & Mu    \\
-\cmidrule[azure3]{2-4}
- Nu      & Xi    & Omicron & Pi    \\
-\bottomrule[purple3]
+ Epsilon & Zeta  & Eta    & Theta \\
+\cmidrule[azure3]{2-3}
+ Iota    & Kappa & Lambda & Mu    \\
+\bottomrule[2pt,purple3]
 \end{tblr}
+\end{demohigh}
+
+If you need more than one cmidrules, you can use \verb!\cmidrulemore! command.
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\toprule
+ Alpha   & Beta  & Gamma   & Delta \\
+\cmidrule{1-3} \cmidrulemore{2-4}
+ Epsilon & Zeta  & Eta     & Theta \\
+\cmidrule{1-3} \morecmidrules \cmidrule{2-4}
+ Iota    & Kappa & Lambda  & Mu    \\
+\bottomrule
+\end{tblr}
+\end{demohigh}
+
+From version \verb!2021N!, trim options (\verb!l!, \verb!r!, \verb!lr!)
+for \verb!\cmidrule! command are also supported.
+
+\begin{demohigh}
+\begin{tblr}{llll}
+\toprule
+ Alpha   & Beta  & Gamma   & Delta \\
+\cmidrule[lr]{1-2} \cmidrule[lr=-0.4]{3-4}
+ Epsilon & Zeta  & Eta     & Theta \\
+\cmidrule[r]{1-2} \cmidrule[l]{3-4}
+ Iota    & Kappa & Lambda  & Mu    \\
+\bottomrule
+\end{tblr}
+\end{demohigh}
+
+Note that you need to put \verb!l!, \verb!r! or \verb!lr! option into
+the \underline{\color{red3}square brackets}.
+and the possible values are decimal numbers between \verb!-1! and \verb!0!,
+where \verb!-1! means trimming the whole colsep, and \verb!0! means no trimming.
+The default value is \verb!-0.8!, which makes similar result as \verb!booktabs! package does.
+
+There is also a \verb!booktabs! environment for you. With this environment,
+the default \verb!rowsep=0pt!, but extra vertical space will be added by
+\verb!\toprule!, \verb!\midrule!, \verb!\bottomrule! and \verb!\cmidrule! commands.
+The sizes of vertical space are determined by \verb!\aboverulesep! and \verb!\belowrulesep! dimensions.
+
+\begin{demohigh}
+\begin{booktabs}{
+  colspec = lcccc,
+  cell{1}{1} = {r=2}{}, cell{1}{2,4} = {c=2}{},
+}
+\toprule
+  Sample & I &   & II &   \\
+\cmidrule[lr]{2-3} \cmidrule[lr]{4-5}
+         & A & B & C & D \\
+\midrule
+  S1     & 5 & 6 & 7 & 8 \\
+  S2     & 6 & 7 & 8 & 5 \\
+  S3     & 7 & 8 & 5 & 6 \\
+\bottomrule
+\end{booktabs}
+\end{demohigh}
+% S4     & 8 & 5 & 6 & 7 \\
+
+You can also use \verb!\specialrule! command.
+The second argument sets \verb!belowsep! of previous row,
+and the third argument sets \verb!abovesep! of current row,
+
+\begin{demohigh}
+\begin{booktabs}{llll}
+\toprule
+ Alpha   & Beta  & Gamma   & Delta \\
+\specialrule{0.5pt}{4pt}{6pt}
+ Epsilon & Zeta  & Eta     & Theta \\
+\specialrule{0.8pt,blue3}{3pt}{2pt}
+ Iota    & Kappa & Lambda  & Mu    \\
+\bottomrule
+\end{booktabs}
+\end{demohigh}
+
+At last, there is also an \verb!\addlinespace! command.
+You can specify the size of vertical space to be added in its optional argument,
+and the default size is \verb!0.5em!.
+This command adds one half of the space to \verb!belowsep! of previous row,
+and the other half to \verb!abovesep! of current row.
+
+\begin{demohigh}
+\begin{booktabs}{row{2}={olive9}}
+\toprule
+ Alpha   & Beta  & Gamma   & Delta \\
+\addlinespace
+ Epsilon & Zeta  & Eta     & Theta \\
+\addlinespace[1em]
+ Iota    & Kappa & Lambda  & Mu    \\
+\bottomrule
+\end{booktabs}
 \end{demohigh}
 
 \section{Library \texttt{diagbox}}
@@ -2102,39 +2256,31 @@ and defines \verb!S! column as \verb!Q! column with \verb!si! key.
 \begin{demohigh}
 \begin{tblr}{
   hlines, vlines,
-  colspec={
-    S[table-format=3.2]
-    S[table-format=3.2]
-    S[table-format=3.2]
-  }
+  colspec={S[table-format=3.2]S[table-format=3.2]},
 }
- {{{Head}}} & {{{Head}}} & {{{Head}}} \\
-   111      &   111      &   111      \\
-     2.1    &     2.2    &     2.3    \\
-    33.11   &    33.22   &    33.33   \\
+ {{{Head}}} & {{{Head}}} \\
+   111      &   111      \\
+     2.1    &     2.2    \\
+    33.11   &    33.22   \\
 \end{tblr}
 \end{demohigh}
 
 \begin{demohigh}
 \begin{tblr}{
   hlines, vlines,
-  colspec={
-    Q[si={table-format=3.2},c]
-    Q[si={table-format=3.2},c]
-    Q[si={table-format=3.2},c]
-  }
+  colspec={Q[si={table-format=3.2},c]Q[si={table-format=3.2},c]}
 }
- {{{Head}}} & {{{Head}}} & {{{Head}}} \\
-   111      &   111      &   111      \\
-     2.1    &     2.2    &     2.3    \\
-    33.11   &    33.22   &    33.33   \\
+ {{{Head}}} & {{{Head}}} \\
+   111      &   111      \\
+     2.1    &     2.2    \\
+    33.11   &    33.22   \\
 \end{tblr}
 \end{demohigh}
 
-Note that you need to use \underline{triple} pairs of braces to guard non-numeric cells.
+Note that you need to use \underline{\color{red3}triple} pairs of braces to guard non-numeric cells.
 
 Also you must use \verb!l!, \verb!c! or \verb!r! to set horizontal alignment for non-numeric cells:
-
+\nopagebreak
 \begin{demohigh}
 \begin{tblr}{
   hlines, vlines, columns={6em},
@@ -2156,6 +2302,30 @@ Both \verb!S! and \verb!s! columns are supported. In fact, These two columns are
 \NewColumnType{S}[1][]{Q[si={##1},c]}
 \NewColumnType{s}[1][]{Q[si={##1},c,cmd=\TblrUnit]}
 \end{codehigh}
+
+\section{Library \texttt{varwidth}}
+
+To build a nice table, \verb!tabularray! need to measure the widths of cells.
+By default, it uses \verb!\hbox! to measure the sizes.
+This causes an error if a cell contains some vertical material, such as lists or display maths.
+
+With \verb!\UseTblrLibrary{varwidth}! in the preamble of the document,
+\verb!tabularray! loads \verb!varwidth! package,
+and adds a new inner specification \verb!measure! for tables.
+After setting \verb!measure=vbox!, it will use \verb!\vbox! to measure cell widths.
+
+\begin{demohigh}
+\begin{tblr}{measure=vbox}
+\hline
+  Text Text Text Text Text Text Text
+  \begin{itemize}
+    \item List List List List List List
+    \item List List List List List List List
+  \end{itemize}
+  Text Text Text Text Text Text Text \\
+\hline
+\end{tblr}
+\end{demohigh}
 
 \chapter{The Source Code}
 
