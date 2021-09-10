@@ -105,11 +105,13 @@
 \cs_new_eq:NN \__tblr_halign_command_c: \centering
 \cs_new_eq:NN \__tblr_halign_command_r: \raggedleft
 
-%% Some counters for row and column numbering
-\newcounter{rownum}
-\newcounter{colnum}
-\newcounter{rowcount}
-\newcounter{colcount}
+%% Some counters for row and column numbering.
+%% We may need to restore all LaTeX counters in measuring and building cells,
+%% so we must not define these counters with \setcounter commands.
+\int_new:N \c@rownum
+\int_new:N \c@colnum
+\int_new:N \c@rowcount
+\int_new:N \c@colcount
 
 %% Some dimensions for row and column spacing
 \dim_new:N \abovesep
@@ -3397,7 +3399,9 @@
 \cs_new_protected:Npn \__tblr_measure_cell_update_sizes:nnNNNN #1 #2 #3 #4 #5 #6
   {
     \__tblr_get_cell_alignments:nn {#1} {#2}
+    \__tblr_save_counters:n { trial }
     \hbox_set:Nn \l_tmpa_box { \__tblr_get_cell_text:nn {#1} {#2} }
+    \__tblr_restore_counters:n { trial }
     \__tblr_update_cell_size:nnNNNN {#1} {#2} #3 #4 #5 #6
     \__tblr_update_row_size:nnNNN {#1} {#2} #4 #5 #6
     \__tblr_update_col_size:nN {#2} #3
@@ -3453,9 +3457,11 @@
 
 \cs_new_protected:Npn \__tblr_get_cell_size_with_box:
   {
+    \__tblr_save_counters:n { cell }
     \tl_if_eq:NnTF \l__tblr_inner_spec_measure_tl { vbox }
       { \__tblr_get_cell_size_with_vbox: }
       { \__tblr_get_cell_size_with_hbox: }
+    \__tblr_restore_counters:n { cell }
   }
 
 %% Varwidth won't work as expected when \color command occurs in it,
@@ -3503,7 +3509,9 @@
 \cs_new_protected:Npn \__tblr_get_vcell_and_sizes:NN #1 #2
   {
     \group_begin:
+    \__tblr_save_counters:n { cell }
     \vbox_set_top:Nn \l_tmpa_box { \__tblr_make_vcell_text:NN #1 #2 }
+    \__tblr_restore_counters:n { cell }
     \vbox_set:Nn \l_tmpb_box { \__tblr_make_vcell_text:NN #1 #2 }
     \dim_gset:Nn \g__tblr_cell_wd_dim { \box_wd:N \l_tmpb_box }
     \dim_gset:Nn \g__tblr_cell_ht_dim
@@ -6517,6 +6525,32 @@
       { \SetVspace { abovespace+ = (##1) / 2, belowspace+ = (##1) / 2 } }
     \NewTableCommand \addlinespace [1] [\defaultaddspace]
       { \SetVspace { abovespace+ = (##1) / 2, belowspace+ = (##1) / 2 } }
+  }
+
+%% Library counter for resetting all counters
+
+\tl_new:N \__tblr_saved_trial_counters_tl
+\tl_new:N \__tblr_saved_cell_counters_tl
+
+\cs_new_protected:Npn \__tblr_save_counters:n #1 { }
+\cs_new_protected:Npn \__tblr_restore_counters:n #1 { }
+
+%% We use code from tabularx package for resetting all LaTeX counters,
+%% where internal macro \cl@@ckpt looks like the following:
+%% \@elt{page} \@elt{equation} \@elt{enumi} \@elt{enumii} \@elt{enumiii} ...
+
+\NewTblrLibrary { counter }
+  {
+    \cs_set_protected:Npn \__tblr_save_counters:n ##1
+      {
+        \def \@elt ####1 { \global\value{####1} = \the\value{####1} \relax }
+        \tl_set:cx { __tblr_saved_ ##1 _counters_tl } { \cl@@ckpt }
+        \let \@elt = \relax
+      }
+    \cs_set_protected:Npn \__tblr_restore_counters:n ##1
+      {
+        \tl_use:c { __tblr_saved_ ##1 _counters_tl }
+      }
   }
 
 %% Library diagbox and command \diagbox
