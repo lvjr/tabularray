@@ -372,6 +372,7 @@
 \__tblr_data_new_key:nnn { cell } { valign }       { str }
 \__tblr_data_new_key:nnn { cell } { background }   { str }
 \__tblr_data_new_key:nnn { cell } { font }         { str }
+\__tblr_data_new_key:nnn { cell } { cmd }          { str }
 \__tblr_data_new_key:nnn { cell } { omit }         { int }
 \__tblr_data_new_key:nnn { cell } { @cell-width }  { dim }
 \__tblr_data_new_key:nnn { cell } { @cell-height } { dim }
@@ -1638,7 +1639,7 @@
     bg      .code:n = \__tblr_cell_gput:ne { background } {#1},
     preto   .code:n = \__tblr_cell_preto_text:n {#1},
     appto   .code:n = \__tblr_cell_appto_text:n {#1},
-    cmd     .code:n = \__tblr_cell_process_text:n {#1},
+    cmd     .code:n = \__tblr_cell_gput:nn { cmd } {#1},
     fg      .code:n = \__tblr_cell_preto_text:n { \color{#1} },
     font    .code:n = \__tblr_cell_gput:nn { font } { #1 \selectfont },
     unknown .code:n = \__tblr_cell_unknown_key:V \l_keys_key_str,
@@ -1687,23 +1688,6 @@
     \__tblr_spec_gput:neV { text } { [#1][#2] } \l__tblr_cell_text_tl
   }
 \cs_generate_variant:Nn \__tblr_cell_appto_text:nnn { nen, enn, een }
-
-\cs_new_protected:Npn \__tblr_cell_process_text:n #1
-  {
-    \__tblr_cell_process_text:een
-      { \int_use:N \c@rownum } { \int_use:N \c@colnum } {#1}
-  }
-
-\cs_new_protected:Npn \__tblr_cell_process_text:nnn #1 #2 #3
-  {
-    \tl_set:Nx \l__tblr_cell_text_tl
-      {
-        { \__tblr_spec_item:nn { text } { [#1][#2] } }
-      }
-    \tl_put_left:Nn \l__tblr_cell_text_tl {#3}
-    \__tblr_spec_gput:nnV { text } { [#1][#2] } \l__tblr_cell_text_tl
-  }
-\cs_generate_variant:Nn \__tblr_cell_process_text:nnn { nen, enn, een }
 
 \cs_new_protected:Npn \__tblr_cell_unknown_key:n #1
   {
@@ -1919,7 +1903,7 @@
     co        .code:n = \__tblr_column_gput:ne { coefficient } {#1},
     preto     .code:n = \__tblr_preto_text_for_every_column_cell:n {#1},
     appto     .code:n = \__tblr_appto_text_for_every_column_cell:n {#1},
-    cmd       .code:n = \__tblr_process_text_for_every_column_cell:n {#1},
+    cmd       .code:n = \__tblr_column_gput_cell:nn { cmd } {#1},
     leftsep   .code:n = \__tblr_column_gput:ne { leftsep } { \dim_eval:n {#1} },
     rightsep  .code:n = \__tblr_column_gput:ne { rightsep } { \dim_eval:n {#1} },
     colsep    .meta:n = { leftsep = #1, rightsep = #1},
@@ -1968,14 +1952,6 @@
     \int_step_inline:nn { \c@rowcount }
       {
         \__tblr_cell_appto_text:nen {##1} { \int_use:N \c@colnum } {#1}
-      }
-  }
-
-\cs_new_protected:Npn \__tblr_process_text_for_every_column_cell:n #1
-  {
-    \int_step_inline:nn { \c@rowcount }
-      {
-        \__tblr_cell_process_text:nen {##1} { \int_use:N \c@colnum } {#1}
       }
   }
 
@@ -2079,7 +2055,7 @@
     co        .code:n = \__tblr_row_gput:ne { coefficient } {#1},
     preto     .code:n = \__tblr_preto_text_for_every_row_cell:n {#1},
     appto     .code:n = \__tblr_appto_text_for_every_row_cell:n {#1},
-    cmd       .code:n = \__tblr_process_text_for_every_row_cell:n {#1},
+    cmd       .code:n = \__tblr_row_gput_cell:nn { cmd } {#1},
     abovesep  .code:n = \__tblr_row_gput:ne { abovesep } { \dim_eval:n {#1} },
     belowsep  .code:n = \__tblr_row_gput:ne { belowsep } { \dim_eval:n {#1} },
     rowsep    .meta:n = { abovesep = #1, belowsep = #1},
@@ -2141,14 +2117,6 @@
     \int_step_inline:nn { \c@colcount }
       {
         \__tblr_cell_appto_text:enn { \int_use:N \c@rownum } {##1} {#1}
-      }
-  }
-
-\cs_new_protected:Npn \__tblr_process_text_for_every_row_cell:n #1
-  {
-    \int_step_inline:nn { \c@colcount }
-      {
-        \__tblr_cell_process_text:enn { \int_use:N \c@rownum } {##1} {#1}
       }
   }
 
@@ -3420,13 +3388,22 @@
       { \__tblr_get_cell_text_real:nn { #1 } { #2 } }
   }
 
+\tl_new:N \l__tblr_cell_cmd_tl
+
 %% Get cell text, #1: row number, #2: column number
 %% If the width of the cell is not set, split it with \\ and compute the width
 %% Therefore we always get a vbox for any cell
 \cs_new_protected:Npn \__tblr_get_cell_text_real:nn #1 #2
   {
     \group_begin:
-    \tl_set:Nx \l__tblr_c_tl { \__tblr_spec_item:ne { text } {[#1][#2]} }
+    \tl_set:Nx \l__tblr_cell_cmd_tl
+      { \__tblr_data_item:neen { cell } {#1} {#2} { cmd } }
+    \tl_if_empty:NTF \l__tblr_cell_cmd_tl
+      { \tl_set:Nx \l__tblr_c_tl { \__tblr_spec_item:ne { text } {[#1][#2]} } }
+      {
+        \tl_set:Nx \l__tblr_c_tl { { \__tblr_spec_item:ne { text } {[#1][#2]} } }
+        \tl_put_left:NV \l__tblr_c_tl \l__tblr_cell_cmd_tl
+      }
     \tl_set:Nx \l__tblr_f_tl { \__tblr_data_item:neen { cell } {#1} {#2} { font } }
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_data_item:neen { cell } {#1} {#2} { width } }
@@ -6612,7 +6589,7 @@
     \cs_new_protected:Npn \__tblr_siunitx_setcolumn:n ##1
       {
         \__tblr_column_gput_cell:nn { si } {##1}
-        \__tblr_process_text_for_every_column_cell:n { \TblrNum }
+        \__tblr_column_gput_cell:nn { cmd } { \TblrNum }
       }
     \NewDocumentCommand \TblrNum { m }
       {
