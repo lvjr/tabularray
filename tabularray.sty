@@ -52,6 +52,7 @@
 \cs_generate_variant:Nn \tl_const:Nn { ce }
 \cs_generate_variant:Nn \tl_log:n { x }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
+\cs_generate_variant:Nn \tl_put_left:Nn { Nv }
 \prg_generate_conditional_variant:Nnn \clist_if_in:Nn { Nx } { TF }
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { xn } { TF }
@@ -373,6 +374,7 @@
 \__tblr_data_new_key:nnn { cell } { background }   { str }
 \__tblr_data_new_key:nnn { cell } { foreground }   { str }
 \__tblr_data_new_key:nnn { cell } { font }         { str }
+\__tblr_data_new_key:nnn { cell } { mode }         { str }
 \__tblr_data_new_key:nnn { cell } { cmd }          { str }
 \__tblr_data_new_key:nnn { cell } { omit }         { int }
 \__tblr_data_new_key:nnn { cell } { @cell-width }  { dim }
@@ -1639,10 +1641,11 @@
     wd      .code:n = \__tblr_cell_gput:ne { width } {#1},
     bg      .code:n = \__tblr_cell_gput:ne { background } {#1},
     fg      .code:n = \__tblr_cell_gput:ne { foreground } {#1},
+    font    .code:n = \__tblr_cell_gput:nn { font } { #1 \selectfont },
+    mode    .code:n = \__tblr_cell_gput:nn { mode } {#1},
+    cmd     .code:n = \__tblr_cell_gput:nn { cmd } {#1},
     preto   .code:n = \__tblr_cell_preto_text:n {#1},
     appto   .code:n = \__tblr_cell_appto_text:n {#1},
-    cmd     .code:n = \__tblr_cell_gput:nn { cmd } {#1},
-    font    .code:n = \__tblr_cell_gput:nn { font } { #1 \selectfont },
     unknown .code:n = \__tblr_cell_unknown_key:V \l_keys_key_str,
   }
 
@@ -1900,11 +1903,12 @@
     bg        .code:n = \__tblr_column_gput_cell:nn { background } {#1},
     fg        .code:n = \__tblr_column_gput_cell:nn { foreground } {#1},
     font      .code:n = \__tblr_column_gput_cell:nn { font } { #1 \selectfont },
+    mode      .code:n = \__tblr_column_gput_cell:nn { mode } {#1},
+    cmd       .code:n = \__tblr_column_gput_cell:nn { cmd } {#1},
     wd        .code:n = \__tblr_column_gput:ne { width } { \dim_eval:n {#1} },
     co        .code:n = \__tblr_column_gput:ne { coefficient } {#1},
     preto     .code:n = \__tblr_preto_text_for_every_column_cell:n {#1},
     appto     .code:n = \__tblr_appto_text_for_every_column_cell:n {#1},
-    cmd       .code:n = \__tblr_column_gput_cell:nn { cmd } {#1},
     leftsep   .code:n = \__tblr_column_gput:ne { leftsep } { \dim_eval:n {#1} },
     rightsep  .code:n = \__tblr_column_gput:ne { rightsep } { \dim_eval:n {#1} },
     colsep    .meta:n = { leftsep = #1, rightsep = #1},
@@ -2052,11 +2056,12 @@
     bg        .code:n = \__tblr_row_gput_cell:nn { background } {#1},
     fg        .code:n = \__tblr_row_gput_cell:nn { foreground } {#1},
     font      .code:n = \__tblr_row_gput_cell:nn { font } { #1 \selectfont },
+    mode      .code:n = \__tblr_row_gput_cell:nn { mode } {#1},
+    cmd       .code:n = \__tblr_row_gput_cell:nn { cmd } {#1},
     ht        .code:n = \__tblr_row_gput:ne { height } { \dim_eval:n {#1} },
     co        .code:n = \__tblr_row_gput:ne { coefficient } {#1},
     preto     .code:n = \__tblr_preto_text_for_every_row_cell:n {#1},
     appto     .code:n = \__tblr_appto_text_for_every_row_cell:n {#1},
-    cmd       .code:n = \__tblr_row_gput_cell:nn { cmd } {#1},
     abovesep  .code:n = \__tblr_row_gput:ne { abovesep } { \dim_eval:n {#1} },
     belowsep  .code:n = \__tblr_row_gput:ne { belowsep } { \dim_eval:n {#1} },
     rowsep    .meta:n = { abovesep = #1, belowsep = #1},
@@ -3389,8 +3394,13 @@
       { \__tblr_get_cell_text_real:nn { #1 } { #2 } }
   }
 
-\tl_new:N \l__tblr_cell_cmd_tl
 \tl_new:N \l__tblr_cell_fg_tl
+\tl_new:N \l__tblr_cell_cmd_tl
+\tl_new:N \l__tblr_cell_mode_tl
+\bool_new:N \l__tblr_cell_math_mode_bool
+\tl_const:Nn \l__tblr_cell_math_style_tl  { \relax }
+\tl_const:Nn \l__tblr_cell_imath_style_tl { \textstyle }
+\tl_const:Nn \l__tblr_cell_dmath_style_tl { \displaystyle }
 
 %% Get cell text, #1: row number, #2: column number
 %% If the width of the cell is not set, split it with \\ and compute the width
@@ -3406,6 +3416,23 @@
         \tl_set:Nx \l__tblr_c_tl { { \__tblr_spec_item:ne { text } {[#1][#2]} } }
         \tl_put_left:NV \l__tblr_c_tl \l__tblr_cell_cmd_tl
       }
+    \tl_set:Nx \l__tblr_cell_mode_tl
+      { \__tblr_data_item:neen { cell } {#1} {#2} { mode } }
+    \tl_if_empty:NT \l__tblr_cell_mode_tl
+      {
+        \bool_if:NTF \l__tblr_math_mode_bool
+          { \tl_set:Nn \l__tblr_cell_mode_tl { math } }
+          { \tl_set:Nn \l__tblr_cell_mode_tl { text } }
+      }
+    \tl_if_eq:NnTF \l__tblr_cell_mode_tl { text }
+      { \bool_set_false:N \l__tblr_cell_math_mode_bool }
+      {
+        \bool_set_true:N \l__tblr_cell_math_mode_bool
+        \tl_put_left:Nv \l__tblr_c_tl
+          { l__tblr_cell_ \l__tblr_cell_mode_tl _style_tl }
+        \tl_put_left:Nn \l__tblr_c_tl { $ }
+        \tl_put_right:Nn \l__tblr_c_tl { $ }
+      }
     \tl_set:Nx \l__tblr_f_tl { \__tblr_data_item:neen { cell } {#1} {#2} { font } }
     \tl_set:Nx \l__tblr_w_tl
       { \__tblr_data_item:neen { cell } {#1} {#2} { width } }
@@ -3420,9 +3447,9 @@
       }
     \dim_compare:nNnT { \l__tblr_w_tl } < { 0pt } % column width unset
       {
-        \bool_if:NTF \l__tblr_math_mode_bool
+        \bool_if:NTF \l__tblr_cell_math_mode_bool
           {
-            \hbox_set:Nn \l_tmpa_box { $\l__tblr_c_tl$ }
+            \hbox_set:Nn \l_tmpa_box { \l__tblr_c_tl }
             \tl_set:Nx \l__tblr_w_tl { \box_wd:N \l_tmpa_box }
           }
           {
@@ -3545,8 +3572,8 @@
     \mode_leave_vertical:
     \box_use:N \l__tblr_strut_ht_box
     \tl_if_empty:NF \l__tblr_cell_fg_tl { \exp_args:NV \color \l__tblr_cell_fg_tl }
-    \bool_if:NTF \l__tblr_math_mode_bool
-      { $#1$ }
+    \bool_if:NTF \l__tblr_cell_math_mode_bool
+      { #1 }
       { \__tblr_rescan_cell_tokens:N #1 }
     \box_use:N \l__tblr_strut_dp_box
   }
@@ -6566,7 +6593,7 @@
 
 \cs_new_protected:Npn \__tblr_lib_diagbox_math_or_text:n #1
   {
-    \bool_if:NTF \l__tblr_math_mode_bool {$#1$} {#1}
+    \bool_if:NTF \l__tblr_cell_math_mode_bool {$#1$} {#1}
   }
 
 \box_new:N \l__tblr_diag_box
