@@ -6486,6 +6486,72 @@
     \clist_map_inline:nn {#1} { \use:c { __tblr_use_lib_ ##1: } }
   }
 
+%% Library amsmath and environments +array, +matrix, +cases, ...
+
+\NewTblrLibrary { amsmath }
+  {
+    \RequirePackage { amsmath, environ }
+    \NewTblrEnviron { +array }
+    \SetTblrInner[+array]{colsep = 5pt}
+    \NewEnviron { +matrix } [1] [] {
+      \begin{+array}[expand = \BODY]{
+        column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
+        cells = {c}, ##1
+      }
+        \BODY
+      \end{+array}
+    }
+    \NewEnviron { +bmatrix } [1] [] {
+      \left[\begin{+array}[expand = \BODY]{
+        column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
+        cells = {c}, ##1
+      }
+        \BODY
+      \end{+array}\right]
+      \ignorespacesafterend
+    }
+    \NewEnviron { +Bmatrix } [1] [] {
+      \left\lbrace\begin{+array}[expand = \BODY]{
+        column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
+        cells = {c}, ##1
+      }
+        \BODY
+      \end{+array}\right\rbrace
+    }
+    \NewEnviron { +pmatrix } [1] [] {
+      \left(\begin{+array}[expand = \BODY]{
+        column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
+        cells = {c}, ##1
+      }
+        \BODY
+      \end{+array}\right)
+    }
+    \NewEnviron { +vmatrix } [1] [] {
+      \left\lvert\begin{+array}[expand = \BODY]{
+        column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
+        cells = {c}, ##1
+      }
+        \BODY
+      \end{+array}\right\rvert
+    }
+    \NewEnviron { +Vmatrix } [1] [] {
+      \left\lVert\begin{+array}[expand = \BODY]{
+        column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
+        cells = {c}, ##1
+      }
+        \BODY
+      \end{+array}\right\rVert
+    }
+    \NewEnviron { +cases } [1] [] {
+      \left\lbrace\begin{+array}[expand = \BODY]{
+        column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
+        colspec = {ll}, stretch = 1.2, ##1
+      }
+        \BODY
+      \end{+array}\right.
+    }
+  }
+
 %% Library booktabs and commands \toprule, \midrule, \bottomrule
 
 \NewTblrLibrary { booktabs }
