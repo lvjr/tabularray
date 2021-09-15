@@ -1,0 +1,100 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\UseTblrLibrary{amsmath}
+\SetTblrInner[+array]{rowsep=0pt}
+
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{amsmath library: testing}
+$\begin{array}{rrr}
+   1 &  23 \\
+  45 & 678 \\
+\end{array}$
+$\begin{matrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{matrix}$
+$\begin{bmatrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{bmatrix}$
+$\begin{Bmatrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{Bmatrix}$
+$\begin{pmatrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{pmatrix}$
+$\begin{vmatrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{vmatrix}$
+$\begin{Vmatrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{Vmatrix}$
+$\begin{cases}
+   1 \\
+  45 \\
+\end{cases}$
+$\begin{cases}
+   1 &  23 \\
+  45 & 678 \\
+\end{cases}$
+
+\bigskip
+
+$\begin{+array}{rrr}
+   1 &  23 \\
+  45 & 678 \\
+\end{+array}$
+$\begin{+matrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{+matrix}$
+$\begin{+bmatrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{+bmatrix}$
+$\begin{+Bmatrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{+Bmatrix}$
+$\begin{+pmatrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{+pmatrix}$
+$\begin{+vmatrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{+vmatrix}$
+$\begin{+Vmatrix}
+   1 &  23 \\
+  45 & 678 \\
+\end{+Vmatrix}$
+$\begin{+cases}
+   1 \\
+  45 \\
+\end{+cases}$
+$\begin{+cases}
+   1 &  23 \\
+  45 & 678 \\
+\end{+cases}$
+\ENDTEST
+
+\end{document}

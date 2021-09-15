@@ -1,0 +1,38 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\ExplSyntaxOn
+\let \replicate = \prg_replicate:nn
+\ExplSyntaxOff
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{testing cmd option}
+\begin{tblr}{
+  column{3} = {cmd=\fbox},
+  row{2} = {cmd=\underline},
+  cell{1}{3} = {cmd=},
+}
+\hline
+  Alpha   & Beta  & Gamma   \\
+  Epsilon & Zeta  & Eta     \\
+  Iota    & Kappa & Lambda  \\
+  Nu      & Xi    & Omicron \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}

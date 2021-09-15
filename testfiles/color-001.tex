@@ -57,6 +57,8 @@ Four  & \SetCell{teal}Five  &   Six \\
 \end{tblr}
 \ENDTEST
 
+\bigskip
+
 %% Issue #36: \color inside varwidth
 \BEGINTEST{cell foreground and font with measure=vbox}
 \begin{tblr}{
@@ -70,6 +72,20 @@ Four  & \SetCell{teal}Five  &   Six \\
  Eta   & Theta   & Iota \\
  Kappa & Lambda  & Mu \\
  Nu Xi Omicron & Pi Rho Sigma & Tau Upsilon Phi \\
+\end{tblr}
+\ENDTEST
+
+\medskip\hrule\medskip
+
+%% Issue #62: make fg option revisable
+\BEGINTEST{overwrite cell foreground}
+\begin{tblr}{
+  hlines, vlines,
+  cells	= {fg=white,bg=gray5},
+  cell{2}{2} = {fg=green8,bg=blue2},
+}
+  A & B \\
+  C & D \\
 \end{tblr}
 \ENDTEST
 

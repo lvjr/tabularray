@@ -30,4 +30,40 @@ One   &  Two  & Three\dfrac{A}{B} \\
 \end{tblr}$B
 \ENDTEST
 
+\bigskip\hrule\bigskip
+
+\BEGINTEST{testing mode option}
+\begin{tblr}{Q[l]Q[r,mode=math]Q[r,mode=dmath]}
+\hline
+  Alpha   & \frac12 & \frac12 \\
+  Epsilon & \frac34 & \frac34 \\
+  Iota    & \frac56 & \frac56 \\
+\hline
+\end{tblr}
+\quad
+\begin{tblr}{Q[l]Q[r,$]Q[r,$$]}
+\hline
+  Alpha   & \frac12 & \frac12 \\
+  Epsilon & \frac34 & \frac34 \\
+  Iota    & \frac56 & \frac56 \\
+\hline
+\end{tblr}
+\quad
+$\begin{tblr}{Q[l,mode=text]Q[r]Q[r,mode=dmath]}
+\hline
+  Alpha   & \frac12 & \frac12 \\
+  Epsilon & \frac34 & \frac34 \\
+  Iota    & \frac56 & \frac56 \\
+\hline
+\end{tblr}$
+\quad
+$\begin{tblr}{Q[l,mode=text]Q[r,$]Q[r,$$]}
+\hline
+  Alpha   & \frac12 & \frac12 \\
+  Epsilon & \frac34 & \frac34 \\
+  Iota    & \frac56 & \frac56 \\
+\hline
+\end{tblr}$
+\ENDTEST
+
 \end{document}

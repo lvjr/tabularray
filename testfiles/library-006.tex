@@ -1,0 +1,42 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\UseTblrLibrary{counter}
+\SetTblrInner{rowsep=0pt}
+
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\newcounter{mycnt}
+
+\BEGINTEST{counter library: testing}
+\begin{tabular}{|l|l|}
+\hline
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+\hline
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+\hline
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+\hline
+\end{tabular}
+\quad\setcounter{mycnt}{0}%
+\begin{tblr}{cells={l},hlines,vlines}
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+\end{tblr}
+\ENDTEST
+
+\end{document}
