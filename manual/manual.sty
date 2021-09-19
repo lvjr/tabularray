@@ -1,6 +1,9 @@
 % -*- coding: utf-8 -*-
 % !TEX program = lualatex
 
+\newcommand*{\myversion}{2021N}
+\newcommand*{\mylpad}[1]{\ifnum#1<10 0\the#1\else\the#1\fi}
+
 \usepackage[a4paper,margin=2.5cm]{geometry}
 
 \usepackage{codehigh} % https://ctan.org/pkg/codehigh
@@ -58,10 +61,7 @@
   \end{tcolorbox}
 }
 
-\renewcommand*{\thefootnote}{*}
-
-\newcommand*{\myversion}{2021N}
-\newcommand*{\mylpad}[1]{\ifnum#1<10 0\the#1\else\the#1\fi}
+%\renewcommand*{\thefootnote}{*}
 
 \colorlet{highback}{azure9}
 \CodeHigh{language=latex/table,style/main=highback,style/code=highback}

@@ -9,6 +9,7 @@
 \begin{document}
 
 \chapter{Extra Interfaces}
+\label{chap:extra}
 
 \section{Table Specifications}
 
@@ -181,7 +182,9 @@ The following example demonstrates how to define a new table command:
 \verb!Tabularray! need to see every \verb!&! and \verb!\\! when splitting the table body
 with \verb!l3regex!. And you can not put cell text inside any table command defined with
 \verb!\NewTableCommand!. But you could use outer specification \verb!expand! to make \verb!tabularray!
-expand every occurrence of a specified macro \underline{once} before splitting the table body:
+expand every occurrence of a specified macro \underline{once} before splitting the table body.
+The macro \underline{can not} be defined with \verb!\NewDocumentCommand! or
+\verb!\NewExpandableDocumentCommand!, and \underline{can not} have optional argument.
 
 \begin{demohigh}
 \def\tblrbody{

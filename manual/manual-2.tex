@@ -55,6 +55,7 @@ All available keys for hlines and vlines are described in Table \ref{key:hline} 
   \underline{\K{fg}}   & rule color name & \None \\
   \K{leftpos}          & crossing or trimming position at the left side  & \V{1} \\
   \K{rightpos}         & crossing or trimming position at the right side & \V{1} \\
+  \K{endpos}           & adjust leftpos/rightpos for only the leftmost/rightmost column & \V{false} \\
   \K{abovespace}       & set \V{belowsep} of previous row (see Table \ref{key:row}) & \V{2pt} \\
   \K{belowspace}       & set \V{abovesep} of current row (see Table \ref{key:row}) & \V{2pt} \\
   \K{abovespace+}      & increase \V{belowsep} of previous row & \None \\
@@ -105,14 +106,13 @@ Another pair of braces before will select segments in all hlines/vlines.
 \begin{demohigh}
 \begin{tblr}{
  vlines = {1,3,5}{dashed},
- vlines = {2,4,6}{solid},
+ vlines = {2,4}{solid},
 }
  Alpha   & Beta  & Gamma   & Delta   \\
  Epsilon & Zeta  & Eta     & Theta   \\
  Iota    & Kappa & Lambda  & Mu      \\
  Nu      & Xi    & Omicron & Pi      \\
  Rho     & Sigma & Tau     & Upsilon \\
- Phi     & Chi   & Psi     & Omega   \\
 \end{tblr}
 \end{demohigh}
 
@@ -130,7 +130,6 @@ Advanced users could read the source code for this.)
  Iota    & Kappa & Lambda  & Mu      \\
  Nu      & Xi    & Omicron & Pi      \\
  Rho     & Sigma & Tau     & Upsilon \\
- Phi     & Chi   & Psi     & Omega   \\
 \end{tblr}
 \end{demohigh}
 
@@ -243,6 +242,22 @@ Here is an example for these four keys:
 \end{tblr}
 \end{demohigh}
 
+There is also an \verb!endpos! option for adjusting \verb!leftpos!/\verb!rightpos!
+for only the leftmost/rightmost column:
+
+\begin{demohigh}
+\begin{tblr}{
+ hline{1,4} = {1}{-}{},
+ hline{1,4} = {2}{-}{},
+ hline{2,3} = {leftpos = -1, rightpos = -1, endpos},
+ vline{1,4} = {abovepos = 1, belowpos = 1},
+}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
 \subsection{Hlines and Vlines in Old Interfaces}
 
 The \verb!\hline! command has an optional argument which accepts key-value options.
@@ -330,7 +345,7 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
   caption = {Keys for the Content of Cells},
   label = {key:cell},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{}
+]{verb}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
@@ -343,9 +358,12 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
   \underline{\K{bg}} & background color name & \None \\
   \K{fg}    & foreground color name & \None \\
   \K{font}  & font commands & \None \\
+  \K{mode}  & set cell mode: \V{math}, \V{imath}, \V{dmath} or \V{text} & \None \\
+  \verb!$!  & same as \V{mode=math} & \None \\
+  \verb!$$! & same as \V{mode=dmath} & \None \\
+  \K{cmd}   & execute command for the cell text & \None \\
   \K{preto} & prepend text to the cell & \None \\
   \K{appto} & append text to the cell & \None \\
-  \K{cmd}   & execute command for the cell text & \None \\
 \end{spectblr}
 \vspace{-2em}
 \begin{spectblr}[
@@ -370,7 +388,16 @@ Option \verb!cells! is for setting all cells.
 \end{tblr}
 \end{demohigh}
 
-Option \verb!cell{i}{j}! is for setting some cells.
+Option \verb!cell{i}{j}! is for setting some cells,
+where \verb!i! stands for the row numbers and \verb!j! stands for the column numbers.
+\nopagebreak
+\begin{demohigh}
+\begin{tblr}{
+  cell{1}{2-4} = {cmd=\fbox}
+}
+  Alpha & Beta & Gamma & Delta
+\end{tblr}
+\end{demohigh}
 
 \begin{demohigh}
 \begin{tblr}{
@@ -455,7 +482,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   caption = {Keys for Rows},
   label = {key:row},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{}
+]{verb}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
@@ -468,6 +495,10 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \underline{\K{bg}} & background color name & \None \\
   \K{fg} & foreground color name & \None \\
   \K{font} & font commands & \None \\
+  \K{mode}  & set mode for row cells: \V{math}, \V{imath}, \V{dmath} or \V{text} & \None \\
+  \verb!$!  & same as \V{mode=math} & \None \\
+  \verb!$$! & same as \V{mode=dmath} & \None \\
+  \K{cmd}   & execute command for every cell text & \None \\
   \K{abovesep} & set vertical space above the row & \V{2pt} \\
   \K{abovesep+} & increase vertical space above the row & \None \\
   \K{belowsep} & set vertical space below the row & \V{2pt} \\
@@ -476,14 +507,13 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{rowsep+} & increase vertical space above and below the row & \None \\
   \K{preto} & prepend text to every cell (like \V{>} specifier in \K{rowspec}) & \None \\
   \K{appto} & append text to every cell (like \V{<} specifier in \K{rowspec}) & \None \\
-  \K{cmd}   & execute command for every cell text & \None \\
 \end{spectblr}
 \vspace{-2em}
 \begin{spectblr}[
   caption = {Keys for Columns},
   label = {key:column},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{}
+]{verb}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
@@ -497,6 +527,10 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \underline{\K{bg}} & background color name & \None \\
   \K{fg} & foreground color name & \None \\
   \K{font} & font commands & \None \\
+  \K{mode}  & set mode for column cells: \V{math}, \V{imath}, \V{dmath} or \V{text} & \None \\
+  \verb!$!  & same as \V{mode=math} & \None \\
+  \verb!$$! & same as \V{mode=dmath} & \None \\
+  \K{cmd}   & execute command for every cell text & \None \\
   \K{leftsep} & set horizontal space to the left of the column & \V{6pt} \\
   \K{leftsep+} & increase horizontal space to the left of the column & \None \\
   \K{rightsep} & set horizontal space to the right of the column & \V{6pt} \\
@@ -505,7 +539,6 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{colsep+} & increase horizontal space to both sides of the column & \None \\
   \K{preto} & prepend text to every cell (like \V{>} specifier in \K{colspec}) & \None \\
   \K{appto} & append text to every cell (like \V{<} specifier in \K{colspec}) & \None \\
-  \K{cmd}   & execute command for every cell text & \None \\
 \end{spectblr}
 
 \subsection{Rows and Columns in New Interfaces}
@@ -541,7 +574,7 @@ Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns
 \end{tblr}
 \end{demohigh}
 
-The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!font! keys.
+The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!font! keys:
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -556,8 +589,23 @@ The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!
 \end{tblr}
 \end{demohigh}
 
+The following example demonstrates the usages of \verb!mode! key:
+\nopagebreak
+\begin{demohigh}
+$\begin{tblr}{
+  column{1} = {mode=text},
+  column{3} = {mode=dmath},
+}
+\hline
+  Alpha   & \frac12 & \frac12 \\
+  Epsilon & \frac34 & \frac34 \\
+  Iota    & \frac56 & \frac56 \\
+\hline
+\end{tblr}$
+\end{demohigh}
+
 The following example demonstrates the usages of
-\verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! keys.
+\verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! keys:
 %\nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -625,6 +673,19 @@ The following example demonstrates the usage of \verb!width! option.
  Alpha   & Beta  & Gamma  & Delta \\
  Epsilon & Zeta  & Eta    & Theta \\
  Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+You can omit \verb!colspec! name if it is the only key you use inside the mandatory argument.
+The following example demonstrates the usages of \verb!$! and \verb!$$! keys:
+\nopagebreak
+\begin{demohigh}
+\begin{tblr}{Q[l]Q[r,$]Q[r,$$]}
+\hline
+  Alpha   & \frac12 & \frac12 \\
+  Epsilon & \frac34 & \frac34 \\
+  Iota    & \frac56 & \frac56 \\
+\hline
 \end{tblr}
 \end{demohigh}
 
