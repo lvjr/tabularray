@@ -2422,8 +2422,8 @@ Also you must use \verb!l!, \verb!c! or \verb!r! to set horizontal alignment for
 
 Both \verb!S! and \verb!s! columns are supported. In fact, These two columns have been defined as follows:
 \begin{codehigh}
-\NewColumnType{S}[1][]{Q[si={##1},c]}
-\NewColumnType{s}[1][]{Q[si={##1},c,cmd=\TblrUnit]}
+\NewColumnType{S}[1][]{Q[si={#1},c]}
+\NewColumnType{s}[1][]{Q[si={#1},c,cmd=\TblrUnit]}
 \end{codehigh}
 You don't need to and are not allowed to define them again.
 
