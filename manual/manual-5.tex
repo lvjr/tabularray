@@ -13,6 +13,49 @@
 The \verb!tabularray! package emulates or fixes some commands in other packages.
 To avoid potential conflict, you need to enable them with \verb!\UseTblrLibrary! command.
 
+\section{Library \texttt{amsmath}}
+
+With \verb!\UseTblrLibrary{amsmath}! in the preamble of the document,
+\verb!tabularray! will load \verb!amsmath! package, and define \verb!+array!, \verb!+matrix!,
+\verb!+bmatrix!, \verb!+Bmatrix!, \verb!+pmatrix!, \verb!+vmatrix!, \verb!+Vmatrix! and \verb!+cases!
+environments. Each of the environments is similar to the environment without \verb!+! prefix in its name,
+but has default \verb!rowsep=2pt! just as \verb!tblr! environment. Every environment
+except \verb!+array! accepts an optional argument, where you can write inner specifications.
+
+\begin{demo}
+$\begin{pmatrix}
+ \dfrac{2}{3} &  \dfrac{2}{3} &  \dfrac{1}{3} \\
+ \dfrac{2}{3} & -\dfrac{1}{3} & -\dfrac{2}{3} \\
+ \dfrac{1}{3} & -\dfrac{2}{3} &  \dfrac{2}{3} \\
+\end{pmatrix}$
+\end{demo}
+
+\begin{demohigh}
+$\begin{+pmatrix}[cells={r},row{2}={purple8}]
+ \dfrac{2}{3} &  \dfrac{2}{3} &  \dfrac{1}{3} \\
+ \dfrac{2}{3} & -\dfrac{1}{3} & -\dfrac{2}{3} \\
+ \dfrac{1}{3} & -\dfrac{2}{3} &  \dfrac{2}{3} \\
+\end{+pmatrix}$
+\end{demohigh}
+
+\begin{demo}
+$f(x)=\begin{cases}
+ 0,            & x=1; \\
+ \dfrac{1}{3}, & x=2; \\
+ \dfrac{2}{3}, & x=3; \\
+ 1,            & x=4. \\
+\end{cases}$
+\end{demo}
+
+\begin{demohigh}
+$f(x)=\begin{+cases}
+ 0,            & x=1; \\
+ \dfrac{1}{3}, & x=2; \\
+ \dfrac{2}{3}, & x=3; \\
+ 1,            & x=4. \\
+\end{+cases}$
+\end{demohigh}
+
 \section{Library \texttt{booktabs}}
 
 With \verb!\UseTblrLibrary{booktabs}! in the preamble of the document,
@@ -139,6 +182,21 @@ and the other half to \verb!abovesep! of current row.
  Iota    & Kappa & Lambda  & Mu    \\
 \bottomrule
 \end{booktabs}
+\end{demohigh}
+
+\section{Library \texttt{counter}}
+
+You need to load \verb!counter! library with \verb!\UseTblrLibrary{counter}!,
+if you want to modify some LaTeX counters inside \verb!tabularray! tables.
+
+\begin{demohigh}
+\newcounter{mycnta}
+\newcommand{\mycnta}{\stepcounter{mycnta}\arabic{mycnta}}
+\begin{tblr}{hlines}
+  \mycnta & \mycnta & \mycnta \\
+  \mycnta & \mycnta & \mycnta \\
+  \mycnta & \mycnta & \mycnta \\
+\end{tblr}
 \end{demohigh}
 
 \section{Library \texttt{diagbox}}

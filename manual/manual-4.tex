@@ -11,14 +11,12 @@
 \chapter{Use Long Tables}
 \label{chap:long}
 
-\mywarning{chapter}
-
 \section{A Simple Example}
 
-In fact, to make a decent long table with header and footer, it is better to separate header/footer as
+To make a decent long table with header and footer, it is better to separate header/footer as
 \underline{table head/foot} (which includes caption, footnotes, continuation text)
 and \underline{row head/foot} (which includes some rows of the table that should appear in every page).
-By this approach, alternating row colors should work as expected.
+By this approach, alternating row colors work as expected.
 
 \NewTblrTheme{fancy}{
   \SetTblrStyle{firsthead}{font=\bfseries}
@@ -213,25 +211,25 @@ Alpha   & Beta  & Gamma   \\
  Rho     & Sigma & Tau     \\
 \hline
  Phi     & Chi   & Psi     \\
-%\hline
-% Alpha   & Beta  & Gamma   \\
-%\hline
-% Epsilon & Zeta  & Eta     \\
-%\hline
-% Iota    & Kappa & Lambda  \\
-%\hline
-% Nu      & Xi    & Omicron \\
-%\hline
-% Rho     & Sigma & Tau     \\
-%\hline
-% Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
 \hline
  Foot    & Foot  & Foot    \\
 \hline
 \end{longtblr}
 
 As you can see in the above example, the appearance of long tables of \verb!tabularray! package
-is similar to that of \verb!threeparttable! and \verb!threeparttablex! packages.
+is similar to that of \verb!threeparttablex! packages.
 We support table footnotes, but not page footnotes in \verb!tabularray! package.
 
 \newpage
@@ -306,7 +304,7 @@ In the above example, We set \verb!rowhead=2! and \verb!rowfoot=1!.
 \begin{spectblr}[
   caption = {Inner Specifications for Row Heads and Row Foots}
 ]{}
-  Key Nama    & Key Description & Initial Value \\
+  Key Name    & Key Description & Initial Value \\
   \V{rowhead} & number of the first rows of the table appear in every page & \V{0} \\
   \V{rowfoot} & number of the last rows of the table appear in every page  & \V{0} \\
 \end{spectblr}
@@ -317,7 +315,7 @@ Their options are outer specifications and should be put in the optional argumen
 \begin{spectblr}[
   caption = {Outer Specifications for Table Heads and Table Foots}
 ]{verb}
-  Key Nama            & Key Description & Initial Value \\
+  Key Name            & Key Description & Initial Value \\
   \V{headsep}         & vertical space between table head and table body & \V{6pt} \\
   \V{footsep}         & vertical space between table foot and table body & \V{6pt} \\
   \V{presep}          & vertical space between table head and the above text & \verb!1.5\bigskipamount! \\

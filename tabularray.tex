@@ -11,7 +11,7 @@
 \usepackage[firstpage=true]{background}
 \backgroundsetup{contents={}}
 
-\UseTblrLibrary{booktabs,diagbox,siunitx,varwidth}
+\UseTblrLibrary{amsmath,booktabs,counter,diagbox,siunitx,varwidth}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -1487,14 +1487,12 @@ All tracing messages will be written to the log files.
 \chapter{Use Long Tables}
 \label{chap:long}
 
-\mywarning{chapter}
-
 \section{A Simple Example}
 
-In fact, to make a decent long table with header and footer, it is better to separate header/footer as
+To make a decent long table with header and footer, it is better to separate header/footer as
 \underline{table head/foot} (which includes caption, footnotes, continuation text)
 and \underline{row head/foot} (which includes some rows of the table that should appear in every page).
-By this approach, alternating row colors should work as expected.
+By this approach, alternating row colors work as expected.
 
 \NewTblrTheme{fancy}{
   \SetTblrStyle{firsthead}{font=\bfseries}
@@ -1689,25 +1687,25 @@ Alpha   & Beta  & Gamma   \\
  Rho     & Sigma & Tau     \\
 \hline
  Phi     & Chi   & Psi     \\
-%\hline
-% Alpha   & Beta  & Gamma   \\
-%\hline
-% Epsilon & Zeta  & Eta     \\
-%\hline
-% Iota    & Kappa & Lambda  \\
-%\hline
-% Nu      & Xi    & Omicron \\
-%\hline
-% Rho     & Sigma & Tau     \\
-%\hline
-% Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
 \hline
  Foot    & Foot  & Foot    \\
 \hline
 \end{longtblr}
 
 As you can see in the above example, the appearance of long tables of \verb!tabularray! package
-is similar to that of \verb!threeparttable! and \verb!threeparttablex! packages.
+is similar to that of \verb!threeparttablex! packages.
 We support table footnotes, but not page footnotes in \verb!tabularray! package.
 
 \newpage
@@ -1782,7 +1780,7 @@ In the above example, We set \verb!rowhead=2! and \verb!rowfoot=1!.
 \begin{spectblr}[
   caption = {Inner Specifications for Row Heads and Row Foots}
 ]{}
-  Key Nama    & Key Description & Initial Value \\
+  Key Name    & Key Description & Initial Value \\
   \V{rowhead} & number of the first rows of the table appear in every page & \V{0} \\
   \V{rowfoot} & number of the last rows of the table appear in every page  & \V{0} \\
 \end{spectblr}
@@ -1793,7 +1791,7 @@ Their options are outer specifications and should be put in the optional argumen
 \begin{spectblr}[
   caption = {Outer Specifications for Table Heads and Table Foots}
 ]{verb}
-  Key Nama            & Key Description & Initial Value \\
+  Key Name            & Key Description & Initial Value \\
   \V{headsep}         & vertical space between table head and table body & \V{6pt} \\
   \V{footsep}         & vertical space between table foot and table body & \V{6pt} \\
   \V{presep}          & vertical space between table head and the above text & \verb!1.5\bigskipamount! \\
@@ -2084,6 +2082,49 @@ TEXT\begin{talltblr}[
 The \verb!tabularray! package emulates or fixes some commands in other packages.
 To avoid potential conflict, you need to enable them with \verb!\UseTblrLibrary! command.
 
+\section{Library \texttt{amsmath}}
+
+With \verb!\UseTblrLibrary{amsmath}! in the preamble of the document,
+\verb!tabularray! will load \verb!amsmath! package, and define \verb!+array!, \verb!+matrix!,
+\verb!+bmatrix!, \verb!+Bmatrix!, \verb!+pmatrix!, \verb!+vmatrix!, \verb!+Vmatrix! and \verb!+cases!
+environments. Each of the environments is similar to the environment without \verb!+! prefix in its name,
+but has default \verb!rowsep=2pt! just as \verb!tblr! environment. Every environment
+except \verb!+array! accepts an optional argument, where you can write inner specifications.
+
+\begin{demo}
+$\begin{pmatrix}
+ \dfrac{2}{3} &  \dfrac{2}{3} &  \dfrac{1}{3} \\
+ \dfrac{2}{3} & -\dfrac{1}{3} & -\dfrac{2}{3} \\
+ \dfrac{1}{3} & -\dfrac{2}{3} &  \dfrac{2}{3} \\
+\end{pmatrix}$
+\end{demo}
+
+\begin{demohigh}
+$\begin{+pmatrix}[cells={r},row{2}={purple8}]
+ \dfrac{2}{3} &  \dfrac{2}{3} &  \dfrac{1}{3} \\
+ \dfrac{2}{3} & -\dfrac{1}{3} & -\dfrac{2}{3} \\
+ \dfrac{1}{3} & -\dfrac{2}{3} &  \dfrac{2}{3} \\
+\end{+pmatrix}$
+\end{demohigh}
+
+\begin{demo}
+$f(x)=\begin{cases}
+ 0,            & x=1; \\
+ \dfrac{1}{3}, & x=2; \\
+ \dfrac{2}{3}, & x=3; \\
+ 1,            & x=4. \\
+\end{cases}$
+\end{demo}
+
+\begin{demohigh}
+$f(x)=\begin{+cases}
+ 0,            & x=1; \\
+ \dfrac{1}{3}, & x=2; \\
+ \dfrac{2}{3}, & x=3; \\
+ 1,            & x=4. \\
+\end{+cases}$
+\end{demohigh}
+
 \section{Library \texttt{booktabs}}
 
 With \verb!\UseTblrLibrary{booktabs}! in the preamble of the document,
@@ -2210,6 +2251,21 @@ and the other half to \verb!abovesep! of current row.
  Iota    & Kappa & Lambda  & Mu    \\
 \bottomrule
 \end{booktabs}
+\end{demohigh}
+
+\section{Library \texttt{counter}}
+
+You need to load \verb!counter! library with \verb!\UseTblrLibrary{counter}!,
+if you want to modify some LaTeX counters inside \verb!tabularray! tables.
+
+\begin{demohigh}
+\newcounter{mycnta}
+\newcommand{\mycnta}{\stepcounter{mycnta}\arabic{mycnta}}
+\begin{tblr}{hlines}
+  \mycnta & \mycnta & \mycnta \\
+  \mycnta & \mycnta & \mycnta \\
+  \mycnta & \mycnta & \mycnta \\
+\end{tblr}
 \end{demohigh}
 
 \section{Library \texttt{diagbox}}
