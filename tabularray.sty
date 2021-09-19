@@ -3594,6 +3594,8 @@
     \tl_if_empty:NTF \l__tblr_inner_spec_verb_tl
       { #1 }
       {
+        %% insert space characters after some control sequences first (issue #112)
+        \regex_replace_all:nnN { (\c{[A-Za-z]*}) ([A-Za-z]) } { \1 \  \2 } #1
         \regex_replace_all:nnN { . } { \c{string} \0 } #1
         \tl_set:Nx #1 { #1 \noexpand \empty }
         \exp_args:NV \tex_scantokens:D #1

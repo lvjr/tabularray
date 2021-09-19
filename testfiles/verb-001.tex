@@ -29,4 +29,12 @@
 \end{tblr}
 \ENDTEST
 
+%% Issue #112: verb option causes an error
+\BEGINTEST{testing verb option and control sequences}
+\begin{tblr}{verb}
+  \bfseries Text1 & \verb|\bfseries Text1| \\
+  \sffamily 1Text & \verb|\sffamily 1Text| \\
+\end{tblr}
+\ENDTEST
+
 \end{document}
