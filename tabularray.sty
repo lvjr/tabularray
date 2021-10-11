@@ -4661,7 +4661,7 @@
     \tl_if_empty:NT \l__tblr_caption_short_tl
       { \tl_set:Nx \l__tblr_caption_short_tl { \InsertTblrText { caption } } }
     \addcontentsline { lot } { table }
-      { \protect\numberline { \arabic { table } } { \l__tblr_caption_short_tl } }
+      { \protect\numberline { \thetable } { \l__tblr_caption_short_tl } }
   }
 \SetTblrTemplate { caption-lot } { normal }
 
