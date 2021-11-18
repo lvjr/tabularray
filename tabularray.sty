@@ -114,6 +114,12 @@
 \int_new:N \c@rowcount
 \int_new:N \c@colcount
 
+%% Add missing \therownum, \thecolnum, \therowcount, \thecolcount (issue #129)
+\NewExpandableDocumentCommand \therownum {} { \@arabic \c@rownum }
+\NewExpandableDocumentCommand \thecolnum {} { \@arabic \c@colnum }
+\NewExpandableDocumentCommand \therowcount {} { \@arabic \c@rowcount }
+\NewExpandableDocumentCommand \thecolcount {} { \@arabic \c@colcount }
+
 %% Some dimensions for row and column spacing
 \dim_new:N \abovesep
 \dim_new:N \belowsep
