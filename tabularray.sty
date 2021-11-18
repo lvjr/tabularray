@@ -2685,9 +2685,12 @@
       }
     %% Decrease row count by 1 if the last row has only one empty cell text
     %% We need to do it here since the > or < column type may add text to cells
-    \bool_lazy_and:nnTF
-      { \int_compare_p:nNn {\c@colnum} = {1} }
-      { \tl_if_empty_p:N \l_tmpa_tl }
+    \bool_lazy_all:nTF
+      {
+        { \int_compare_p:nNn {#1} = {\c@rowcount} }
+        { \int_compare_p:nNn {\c@colnum} = {1} }
+        { \tl_if_empty_p:N \l_tmpa_tl }
+      }
       { \int_decr:N \c@rowcount }
       {
         \__tblr_prop_gput:nnx
