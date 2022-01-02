@@ -13,6 +13,9 @@
 
 \section{A Simple Example}
 
+The predefined \verb!longtblr! environment allows writing tables that span multiple pages.
+You can also use the \verb![long]! table option for any environment, as in \verb!\begin{booktabs}[long]...\end{booktabs}!.
+
 To make a decent long table with header and footer, it is better to separate header/footer as
 \underline{table head/foot} (which includes caption, footnotes, continuation text)
 and \underline{row head/foot} (which includes some rows of the table that should appear in every page).
@@ -294,7 +297,7 @@ The source code for the above long table is shown below. It is mainly self-expla
 \end{longtblr}
 \end{codehigh}
 
-As you can see in the above code, we typeset long tables with \verb!longtblr! environemnt.
+As you can see in the above code, we typeset long tables with \verb!longtblr! environment.
 And we can totally separate contents and styles of long tables with \verb!tabularray! package.
 
 Row head and row foot consist of some lines of the table and should appear in every page.
