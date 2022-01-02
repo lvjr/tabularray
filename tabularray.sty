@@ -6604,14 +6604,23 @@
       \peek_meaning:NTF \cmidrule { \tblr@booktabs@change@more } { \relax }
     }
     \NewTblrEnviron { booktabs }
+    \NewTblrEnviron { longtabs }
+    \NewTblrEnviron { talltabs }
     \SetTblrInner [ booktabs ] { rowsep = 0pt }
+    \SetTblrInner [ longtabs ] { rowsep = 0pt }
+    \SetTblrInner [ talltabs ] { rowsep = 0pt }
+    \SetTblrOuter [ longtabs ] { long }
+    \SetTblrOuter [ talltabs ] { tall }
     \RequirePackage { etoolbox }
-    \AtBeginEnvironment { booktabs }
+    \newcommand \tblr@booktabs@begin@hook
       {
         \let \tblr@booktabs@hline = \tblr@booktabs@oldhline
         \let \tblr@booktabs@cline = \tblr@booktabs@oldcline
         \let \tblr@booktabs@cline@more = \tblr@booktabs@oldcline@more
       }
+    \AtBeginEnvironment { booktabs } { \tblr@booktabs@begin@hook }
+    \AtBeginEnvironment { longtabs } { \tblr@booktabs@begin@hook }
+    \AtBeginEnvironment { talltabs } { \tblr@booktabs@begin@hook }
     \NewTableCommand \specialrule [3]
       { \hline [##1, abovespace = ##2, belowspace = ##3] }
     \NewTableCommand \addrowspace [1] [\defaultaddspace]
