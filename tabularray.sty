@@ -5258,6 +5258,7 @@
   {
     \LogTblrTracing { page }
     \par
+    \TblrAlignBoth
     \LogTblrTracing { page }
     \dim_compare:nNnTF { \pagegoal } = { \maxdimen }
       { \hbox{}\kern-\topskip\nobreak }
@@ -5479,7 +5480,7 @@
 \cs_new_protected:Npn \__tblr_build_tall_table:n #1
   {
     \mode_leave_vertical:
-    \raggedright
+    \TblrAlignBoth
     \__tblr_build_tall_table_head_foot:
     \__tblr_build_one_table:nn {1} {\c@rowcount}
     \vbox_set:Nn \l__tblr_table_box
@@ -5499,6 +5500,7 @@
 \cs_new_protected:Npn \__tblr_build_short_table:n #1
   {
     \mode_leave_vertical:
+    \TblrAlignBoth
     \__tblr_build_one_table:nn {1} {\c@rowcount}
     \__tblr_valign_whole:Nn \l__tblr_table_box #1
   }
