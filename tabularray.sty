@@ -44,6 +44,21 @@
     \cs_set_eq:NN \seq_map_indexed_function:NN \seq_indexed_map_function:NN
   }
 
+\NewDocumentCommand \TblrAlignBoth { }
+  {
+    \let \\ = \@normalcr
+    \leftskip = \z@skip
+    \@rightskip = \z@skip
+    \rightskip = \@rightskip
+    \parfillskip = \@flushglue
+  }
+
+\NewDocumentCommand \TblrAlignLeft { } { \raggedright }
+
+\NewDocumentCommand \TblrAlignCenter { } { \centering }
+
+\NewDocumentCommand \TblrAlignRight { } { \raggedleft }
+
 \cs_generate_variant:Nn \msg_error:nnnn { nnVn }
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nxn, Nxx, NxV }
@@ -102,9 +117,10 @@
 \int_new:N \g__tblr_table_count_int
 
 %% Some commands for horizontal alignment
-\cs_new_eq:NN \__tblr_halign_command_l: \raggedright
-\cs_new_eq:NN \__tblr_halign_command_c: \centering
-\cs_new_eq:NN \__tblr_halign_command_r: \raggedleft
+\cs_new_eq:NN \__tblr_halign_command_j: \TblrAlignBoth
+\cs_new_eq:NN \__tblr_halign_command_l: \TblrAlignLeft
+\cs_new_eq:NN \__tblr_halign_command_c: \TblrAlignCenter
+\cs_new_eq:NN \__tblr_halign_command_r: \TblrAlignRight
 
 %% Some counters for row and column numbering.
 %% We may need to restore all LaTeX counters in measuring and building cells,
