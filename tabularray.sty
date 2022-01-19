@@ -44,6 +44,8 @@
     \cs_set_eq:NN \seq_map_indexed_function:NN \seq_indexed_map_function:NN
   }
 
+\NewDocumentCommand \TblrParboxRestore { } { \@parboxrestore }
+
 \NewDocumentCommand \TblrAlignBoth { }
   {
     \let \\ = \@normalcr
@@ -3598,7 +3600,7 @@
 \cs_new_protected:Npn \__tblr_make_vcell_text:NN #1 #2
   {
     \dim_set:Nn \tex_hsize:D { #2 }
-    \@arrayparboxrestore
+    \TblrParboxRestore
     \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
     \mode_leave_vertical:
     \box_use:N \l__tblr_strut_ht_box
@@ -5162,16 +5164,26 @@
         \__tblr_build_table_label_entry:
         \UseTblrTemplate { firsthead } { default }
       }
-    \__tblr_build_table_head_aux:Nn
-      \l__tblr_table_middlehead_box { \UseTblrTemplate { middlehead } { default } }
-    \__tblr_build_table_head_aux:Nn
-      \l__tblr_table_lasthead_box  { \UseTblrTemplate { lasthead } { default } }
-    \__tblr_build_table_foot_aux:Nn
-      \l__tblr_table_firstfoot_box { \UseTblrTemplate { firstfoot } { default } }
-    \__tblr_build_table_foot_aux:Nn
-      \l__tblr_table_middlefoot_box { \UseTblrTemplate { middlefoot } { default } }
-    \__tblr_build_table_foot_aux:Nn
-      \l__tblr_table_lastfoot_box  { \UseTblrTemplate { lastfoot } { default } }
+    \__tblr_build_table_head_aux:Nn \l__tblr_table_middlehead_box
+      {
+        \UseTblrTemplate { middlehead } { default }
+      }
+    \__tblr_build_table_head_aux:Nn \l__tblr_table_lasthead_box
+      {
+        \UseTblrTemplate { lasthead } { default }
+      }
+    \__tblr_build_table_foot_aux:Nn \l__tblr_table_firstfoot_box
+      {
+        \UseTblrTemplate { firstfoot } { default }
+      }
+    \__tblr_build_table_foot_aux:Nn \l__tblr_table_middlefoot_box
+      {
+        \UseTblrTemplate { middlefoot } { default }
+      }
+    \__tblr_build_table_foot_aux:Nn \l__tblr_table_lastfoot_box
+      {
+        \UseTblrTemplate { lastfoot } { default }
+      }
   }
 
 \cs_new_protected:Npn \__tblr_build_tall_table_head_foot:
@@ -5208,7 +5220,7 @@
     \vbox_set:Nn #1
       {
         \hsize = \tablewidth
-        \parindent = 0pt \relax
+        \TblrParboxRestore % it will set \linewidth = \hsize
         \vbox:n {#2}
         \skip_vertical:n { \__tblr_spec_item:nn { outer } { headsep } }
       }
@@ -5220,7 +5232,7 @@
       {
         \hsize = \tablewidth
         \skip_vertical:n { \__tblr_spec_item:nn { outer } { footsep } }
-        \parindent = 0pt \relax
+        \TblrParboxRestore % it will set \linewidth = \hsize
         \vbox:n {#2}
       }
   }
@@ -5258,7 +5270,6 @@
   {
     \LogTblrTracing { page }
     \par
-    \TblrAlignBoth
     \LogTblrTracing { page }
     \dim_compare:nNnTF { \pagegoal } = { \maxdimen }
       { \hbox{}\kern-\topskip\nobreak }
@@ -5480,7 +5491,6 @@
 \cs_new_protected:Npn \__tblr_build_tall_table:n #1
   {
     \mode_leave_vertical:
-    \TblrAlignBoth
     \__tblr_build_tall_table_head_foot:
     \__tblr_build_one_table:nn {1} {\c@rowcount}
     \vbox_set:Nn \l__tblr_table_box
@@ -5500,7 +5510,6 @@
 \cs_new_protected:Npn \__tblr_build_short_table:n #1
   {
     \mode_leave_vertical:
-    \TblrAlignBoth
     \__tblr_build_one_table:nn {1} {\c@rowcount}
     \__tblr_valign_whole:Nn \l__tblr_table_box #1
   }
