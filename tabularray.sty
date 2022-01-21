@@ -1785,7 +1785,7 @@
           { 1 }
       }
     \int_step_variable:nnNn
-      { \c@rownum } { \int_eval:n { \c@rownum + #1 -1 } } \l__tblr_i_tl
+      { \c@rownum } { \int_eval:n { \c@rownum + #1 - 2 } } \l__tblr_i_tl
       {
         \__tblr_spec_gput:nee { vline }
           { [\l__tblr_i_tl][\int_use:N \c@colnum](\l__tblr_n_tl) / belowpos } {1}
