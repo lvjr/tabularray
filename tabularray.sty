@@ -3490,7 +3490,8 @@
       {
         \bool_if:NTF \l__tblr_cell_math_mode_bool
           {
-            \hbox_set:Nn \l_tmpa_box { \l__tblr_c_tl }
+            %% Note that font = \boldmath will increase cell width (issue #137)
+            \hbox_set:Nn \l_tmpa_box { \l__tblr_f_tl \l__tblr_c_tl }
             \tl_set:Nx \l__tblr_w_tl { \box_wd:N \l_tmpa_box }
           }
           {
