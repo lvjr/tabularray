@@ -1999,7 +1999,7 @@ The \verb!capcont! template will be used in \verb!middlehead! and \verb!lasthead
   \UseTblrTemplate{caption-tag}{default}
   \UseTblrTemplate{caption-sep}{default}
   \UseTblrTemplate{caption-text}{default}
-  \UseTblrTemplate{conthead}{default}
+  \UseTblrTemplate{conthead-text}{default}
 }
 \end{codehigh}
 
@@ -2069,6 +2069,14 @@ The templates for table heads and foots are defined as including other templates
 \end{codehigh}
 
 Note that you can define the same template for multiple elements in \verb!\DefTblrTemplate! command.
+If you only want to show table caption in the first page, you may change the definitions of
+\verb!middlehead! and \verb!lasthead! elements:
+
+\begin{codehigh}
+\DefTblrTemplate{middlehead,lasthead}{default}{
+  \UseTblrTemplate{conthead}{default}
+}
+\end{codehigh}
 
 \section{Change Styles}
 
