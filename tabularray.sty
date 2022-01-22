@@ -1003,7 +1003,7 @@
   {
     \clist_if_in:NnTF \g__tblr_content_commands_clist { #1 }
       {
-        \msg_warning:nnn { tabularray } { defined-content-command } { #1 }
+        \msg_error:nnn { tabularray } { defined-content-command } { #1 }
         \clist_log:N \g__tblr_content_commands_clist
       }
       {
@@ -2362,8 +2362,8 @@
     \str_if_in:cnTF { g_tblr_used_ \g__tblr_column_or_row_tl _types_str } {#1}
       {
         \tl_if_eq:NnTF \g__tblr_column_or_row_tl { row }
-          { \msg_warning:nnnn { tabularray } { used-colrow-type } { Row } {#1} }
-          { \msg_warning:nnnn { tabularray } { used-colrow-type } { Column } {#1} }
+          { \msg_error:nnnn { tabularray } { used-colrow-type } { Row } {#1} }
+          { \msg_error:nnnn { tabularray } { used-colrow-type } { Column } {#1} }
         \str_log:c { g_tblr_used_ \g__tblr_column_or_row_tl _types_str }
       }
       {
@@ -2503,13 +2503,13 @@
 %% #1: env name
 \NewDocumentCommand \NewTblrEnviron { m }
   {
-    \tl_new:c { l__tblr_default_ #1 _outer_tl }
-    \tl_set_eq:cN { l__tblr_default_ #1 _outer_tl } \l__tblr_initial_tblr_outer_tl
-    \tl_new:c { l__tblr_default_ #1 _inner_tl }
     \NewDocumentEnvironment {#1} { O{c} m +b }
       {
         \__tblr_environ_code:nnnn {#1} {##1} {##2} {##3}
       } { }
+    \tl_new:c { l__tblr_default_ #1 _inner_tl }
+    \tl_new:c { l__tblr_default_ #1 _outer_tl }
+    \tl_set_eq:cN { l__tblr_default_ #1 _outer_tl } \l__tblr_initial_tblr_outer_tl
     \ignorespaces
   }
 
@@ -3028,11 +3028,18 @@
 %%  \section{Initialize and Parse Table Outer Specifications}
 %%% --------------------------------------------------------
 
+\msg_new:nnn { tabularray } { used-theme-name }
+  { theme ~ name ~ #1 ~ has ~ been ~ used! }
+
 %% #1: theme names; #2: template and style commands
 \NewDocumentCommand \NewTblrTheme { m +m }
   {
-    \tl_set:cn { g__tblr_theme_ #1 _code_tl } {#2}
-    \ignorespaces
+    \tl_if_exist:cTF { g__tblr_theme_ #1 _code_tl }
+      { \msg_error:nnn { tabularray } { used-theme-name } { #1 } }
+      {
+        \tl_set:cn { g__tblr_theme_ #1 _code_tl } {#2}
+        \ignorespaces
+      }
   }
 
 \cs_new_protected:Npn \__tblr_use_theme:n #1
@@ -4506,6 +4513,7 @@
     \keys_set:nn { tblr-def-template } {#1}
     \ignorespaces
   }
+\cs_new_eq:NN \DeclareTblrTemplate \DefTblrTemplate
 
 \cs_new_protected:Npn \__tblr_def_template:n #1
   {
