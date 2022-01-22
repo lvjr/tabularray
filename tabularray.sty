@@ -5230,8 +5230,11 @@
       {
         \hsize = \tablewidth
         \TblrParboxRestore % it will set \linewidth = \hsize
-        \vbox:n {#2}
-        \skip_vertical:n { \__tblr_spec_item:nn { outer } { headsep } }
+        \vbox_set:Nn \l_tmpa_box {#2}
+        \box_use:N \l_tmpa_box
+        \dim_compare:nNnT
+          { \box_ht:N \l_tmpa_box + \box_dp:N \l_tmpa_box } > { 0pt }
+          { \skip_vertical:n { \__tblr_spec_item:nn { outer } { headsep } } }
       }
   }
 
@@ -5240,9 +5243,12 @@
     \vbox_set:Nn #1
       {
         \hsize = \tablewidth
-        \skip_vertical:n { \__tblr_spec_item:nn { outer } { footsep } }
         \TblrParboxRestore % it will set \linewidth = \hsize
-        \vbox:n {#2}
+        \vbox_set:Nn \l_tmpb_box {#2}
+        \dim_compare:nNnT
+          { \box_ht:N \l_tmpb_box + \box_dp:N \l_tmpb_box } > { 0pt }
+          { \skip_vertical:n { \__tblr_spec_item:nn { outer } { footsep } } }
+        \box_use:N \l_tmpb_box
       }
   }
 
