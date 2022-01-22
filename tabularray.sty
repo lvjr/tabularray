@@ -6291,11 +6291,10 @@
 %%  \section{Tracing Tabularray}
 %%% --------------------------------------------------------
 
-\NewDocumentCommand \SetTabularrayTracing { m }
+\NewDocumentCommand \SetTblrTracing { m }
   {
     \keys_set:nn { tblr-set-tracing } {#1}
   }
-\cs_new_eq:NN \SetTblrTracing \SetTabularrayTracing
 
 \bool_new:N \g__tblr_tracing_text_bool
 \bool_new:N \g__tblr_tracing_command_bool
@@ -6404,11 +6403,10 @@
     \bool_gset_false:N \g__tblr_tracing_step_bool
   }
 
-\NewDocumentCommand \LogTabularrayTracing { m }
+\NewDocumentCommand \LogTblrTracing { m }
   {
     \keys_set:nn { tblr-log-tracing } {#1}
   }
-\cs_new_eq:NN \LogTblrTracing \LogTabularrayTracing
 
 \keys_define:nn { tblr-log-tracing }
   {
