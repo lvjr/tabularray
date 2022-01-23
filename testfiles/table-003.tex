@@ -15,15 +15,23 @@
 \START
 \hrule\bigskip
 
-\BEGINTEST{\firsthline and \lasthline}
-\SetTblrDefault{rows={rowsep=0pt}}
-TOP\begin{tabular}[t]{l}\firsthline big\\box\\\hline\end{tabular}TOP
-TOP\begin{tblr}[t]{l}\firsthline big\\box\\\hline\end{tblr}TOP
+\BEGINTEST{vertical alignment: the first and the last rows}
+\setlength{\arrayrulewidth}{2pt}
+\SetTblrDefault{rows={rowsep=0pt},hlines={2pt}}
+TOP\begin{tabular}[t]{l}\firsthline big\\\hline box\\\hline\end{tabular}TOP
+TOP\begin{tblr}[T]{l}big\\box\\\end{tblr}TOP
+\qquad
+BOT\begin{tabular}[b]{l}\hline big\\\hline box\\\lasthline\end{tabular}BOT
+BOT\begin{tblr}[B]{l}big\\box\\\end{tblr}BOT
+\ENDTEST
 
-\bigskip
+\bigskip\hrule\bigskip
 
-BOT\begin{tabular}[b]{l}\hline big\\box\\\lasthline\end{tabular}BOT
-BOT\begin{tblr}[b]{l}\hline big\\box\\\lasthline\end{tblr}BOT
+\BEGINTEST{vertical alignment: specified rows}
+\SetTblrDefault{stretch=0,belowsep=4pt,hlines=2pt}
+ROW\begin{tblr}[valign=3]{l}big\\box\\middle\\fox\\small\\pot\\\end{tblr}ROW
+\quad
+ROW\begin{tblr}[valign=5]{l}big\\box\\middle\\fox\\small\\pot\\\end{tblr}ROW
 \ENDTEST
 
 \end{document}

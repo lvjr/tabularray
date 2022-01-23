@@ -33,7 +33,7 @@ TOP\begin{tabular}[t]{l}big\\box\end{tabular}TOP
 TOP\begin{tblr}[t]{l}big\\box\end{tblr}TOP
 
 MID\begin{tabular}[c]{l}big\\box\end{tabular}MID
-MID\begin{tblr}[c]{l}big\\box\end{tblr}MID
+MID\begin{tblr}[m]{l}big\\box\end{tblr}MID
 
 MID\begin{tabular}[c]{l}big\\box\end{tabular}MID
 MID\begin{tblr}[c]{l}big\\box\end{tblr}MID
@@ -45,24 +45,25 @@ BOT\begin{tblr}[b]{l}big\\box\end{tblr}BOT
 \bigskip\hrule\bigskip
 
 \BEGINTEST{vertical alignment: two rows with hlines}
-\SetTblrDefault{rows={rowsep=0pt}}
-TOP\begin{tabular}[t]{l}\hline big\\box\\\hline\end{tabular}TOP
-TOP\begin{tblr}[t]{l}\hline big\\box\\\hline\end{tblr}TOP
+\setlength{\arrayrulewidth}{2pt}
+\SetTblrDefault{rows={rowsep=0pt},hlines={2pt}}
+TOP\begin{tabular}[t]{l}\hline big\\\hline box\\\hline\end{tabular}TOP
+TOP\begin{tblr}[t]{l}big\\box\\\end{tblr}TOP
 
 \bigskip
 
-MID\begin{tabular}[c]{l}\hline big\\box\\\hline\end{tabular}MID
-MID\begin{tblr}[c]{l}\hline big\\box\\\hline\end{tblr}MID
+MID\begin{tabular}[c]{l}\hline big\\\hline box\\\hline\end{tabular}MID
+MID\begin{tblr}[m]{l}big\\box\\\end{tblr}MID
 
 \bigskip
 
-MID\begin{tabular}[c]{l}\hline big\\box\\\hline\end{tabular}MID
-MID\begin{tblr}[c]{l}\hline big\\box\\\hline\end{tblr}MID
+MID\begin{tabular}[c]{l}\hline big\\\hline box\\\hline\end{tabular}MID
+MID\begin{tblr}[c]{l}big\\box\\\end{tblr}MID
 
 \bigskip
 
-BOT\begin{tabular}[b]{l}\hline big\\box\\\hline\end{tabular}BOT
-BOT\begin{tblr}[b]{l}\hline big\\box\\\hline\end{tblr}BOT
+BOT\begin{tabular}[b]{l}\hline big\\\hline box\\\hline\end{tabular}BOT
+BOT\begin{tblr}[b]{l}big\\box\\\end{tblr}BOT
 \ENDTEST
 
 \end{document}
