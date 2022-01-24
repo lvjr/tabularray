@@ -5621,6 +5621,7 @@
 \tl_const:Nn \__tblr_vbox_B_tl {B}
 
 \regex_const:Nn \c__tblr_is_positive_integer_regex { ^ \d+ $ }
+\regex_const:Nn \c__tblr_is_negative_integer_regex { ^ - \d+ $ }
 
 \cs_new_protected:Npn \__tblr_valign_whole:Nn #1 #2
   {
@@ -5651,7 +5652,12 @@
       {
         \regex_match:NVTF \c__tblr_is_positive_integer_regex \__tblr_vbox_align_tl
           { \__tblr_valign_whole_at_row:N #1 }
-          { \__tblr_valign_whole_middle:N #1 }
+          {
+            \regex_match:NVTF
+              \c__tblr_is_negative_integer_regex \__tblr_vbox_align_tl
+              { \__tblr_valign_whole_at_border:N #1 }
+              { \__tblr_valign_whole_middle:N #1 }
+          }
       }
     \box_use_drop:N #1
     \group_end:
@@ -5717,6 +5723,40 @@
       {
         \dim_add:Nn \l__tblr_d_dim { \__tblr_valign_get_hline_total:n {##1} }
         \dim_add:Nn \l__tblr_d_dim { \__tblr_valign_get_row_total:n {##1} }
+      }
+    \box_set_dp:Nn #1 { \l__tblr_d_dim }
+    \box_set_ht:Nn #1 { \l__tblr_t_dim - \l__tblr_d_dim }
+  }
+
+\cs_new_protected:Npn \__tblr_valign_whole_at_border:N #1
+  {
+    \tl_set:Nx \__tblr_vbox_align_tl { \int_eval:n { - \__tblr_vbox_align_tl } }
+    \int_compare:nNnTF { 2 * \__tblr_vbox_align_tl - 2 } > { \c@rowcount }
+      { \__tblr_valign_whole_at_border_from_below:N #1 }
+      { \__tblr_valign_whole_at_border_from_above:N #1 }
+  }
+
+\cs_new_protected:Npn \__tblr_valign_whole_at_border_from_above:N #1
+  {
+    \dim_set:Nn \l__tblr_h_dim
+      { \__tblr_valign_get_hline_total:n { \__tblr_vbox_align_tl } }
+    \int_step_inline:nn { \__tblr_vbox_align_tl - 1 }
+      {
+        \dim_add:Nn \l__tblr_h_dim { \__tblr_valign_get_hline_total:n {##1} }
+        \dim_add:Nn \l__tblr_h_dim { \__tblr_valign_get_row_total:n {##1} }
+      }
+    \box_set_ht:Nn #1 { \l__tblr_h_dim }
+    \box_set_dp:Nn #1 { \l__tblr_t_dim - \l__tblr_h_dim }
+  }
+
+\cs_new_protected:Npn \__tblr_valign_whole_at_border_from_below:N #1
+  {
+    \dim_zero:N \l__tblr_d_dim
+    \int_step_inline:nnn { \__tblr_vbox_align_tl } { \c@rowcount }
+      {
+        \dim_add:Nn \l__tblr_d_dim { \__tblr_valign_get_row_total:n {##1} }
+        \dim_add:Nn \l__tblr_d_dim
+          { \__tblr_valign_get_hline_total:n { \int_eval:n { ##1 + 1 } } }
       }
     \box_set_dp:Nn #1 { \l__tblr_d_dim }
     \box_set_ht:Nn #1 { \l__tblr_t_dim - \l__tblr_d_dim }
