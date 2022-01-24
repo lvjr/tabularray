@@ -3071,6 +3071,7 @@
     t       .meta:n = { valign = t },
     T       .meta:n = { valign = T },
     m       .meta:n = { valign = m },
+    M       .meta:n = { valign = M },
     b       .meta:n = { valign = b },
     B       .meta:n = { valign = B },
     expand  .code:n = \__tblr_outer_gput_spec:nn { expand } {#1},
@@ -5616,6 +5617,7 @@
 \tl_const:Nn \__tblr_vbox_t_tl {t}
 \tl_const:Nn \__tblr_vbox_T_tl {T}
 \tl_const:Nn \__tblr_vbox_m_tl {m}
+\tl_const:Nn \__tblr_vbox_M_tl {M}
 \tl_const:Nn \__tblr_vbox_c_tl {c}
 \tl_const:Nn \__tblr_vbox_b_tl {b}
 \tl_const:Nn \__tblr_vbox_B_tl {B}
@@ -5634,6 +5636,8 @@
           { \__tblr_valign_whole_middle:N #1 }
         \__tblr_vbox_c_tl
           { \__tblr_valign_whole_middle:N #1 }
+        \__tblr_vbox_M_tl
+          { \__tblr_valign_whole_middle_row_or_border:N #1 }
         \__tblr_vbox_t_tl
           { \__tblr_valign_whole_top:N #1 }
         \__tblr_vbox_T_tl
@@ -5689,6 +5693,19 @@
       { \dim_zero:N \l__tblr_d_dim }
     \box_set_ht:Nn #1 { \l__tblr_t_dim - \l__tblr_d_dim }
     \box_set_dp:Nn #1 { \l__tblr_d_dim }
+  }
+
+\cs_new_protected:Npn \__tblr_valign_whole_middle_row_or_border:N #1
+  {
+    \int_if_odd:nTF { \c@rowcount }
+      {
+        \tl_set:Nx \__tblr_vbox_align_tl { \int_eval:n { (\c@rowcount + 1) / 2 } }
+        \__tblr_valign_whole_at_row_from_above:N #1
+      }
+      {
+        \tl_set:Nx \__tblr_vbox_align_tl { \int_eval:n { \c@rowcount / 2 + 1 } }
+        \__tblr_valign_whole_at_border_from_above:N #1
+      }
   }
 
 \cs_new_protected:Npn \__tblr_valign_whole_at_row:N #1
