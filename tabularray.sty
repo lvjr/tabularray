@@ -1561,6 +1561,25 @@
       }
   }
 
+%% Vborder holds keys not related to a specified vline
+\NewTableCommand \vborder [1] { \tblr_set_vborder:n {#1} }
+
+\cs_new_protected:Npn \tblr_set_vborder:n #1
+  {
+    \keys_set:nn { tblr-vborder } {#1}
+  }
+
+\keys_define:nn { tblr-vborder }
+  {
+    leftspace .code:n = \__tblr_column_gput_left:ne
+                          { rightsep } { \dim_eval:n {#1} },
+    rightspace .code:n = \__tblr_column_gput:ne { leftsep } { \dim_eval:n {#1} },
+    leftspace+ .code:n = \__tblr_column_gadd_dimen_left:ne
+                          { rightsep } { \dim_eval:n {#1} },
+    rightspace+ .code:n = \__tblr_column_gadd_dimen:ne
+                          { leftsep } { \dim_eval:n {#1} },
+  }
+
 %%% --------------------------------------------------------
 %%  \section{Set Cells}
 %%% --------------------------------------------------------
@@ -1959,12 +1978,25 @@
   }
 \cs_generate_variant:Nn \__tblr_column_gput:nn { ne }
 
+\cs_new_protected:Npn \__tblr_column_gput_left:nn #1 #2
+  {
+    \__tblr_data_gput:nenn { column } { \int_eval:n { \c@colnum - 1 } } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_column_gput_left:nn { ne }
+
 \cs_new_protected:Npn \__tblr_column_gadd_dimen:nn #1 #2
   {
     \__tblr_data_gadd_dimen_value:nenn { column }
       { \int_use:N \c@colnum } {#1} {#2}
   }
 \cs_generate_variant:Nn \__tblr_column_gadd_dimen:nn { ne }
+
+\cs_new_protected:Npn \__tblr_column_gadd_dimen_left:nn #1 #2
+  {
+    \__tblr_data_gadd_dimen_value:nenn { column }
+      { \int_eval:n { \c@colnum - 1 } } {#1} {#2}
+  }
+\cs_generate_variant:Nn \__tblr_column_gadd_dimen_left:nn { ne }
 
 %% #1: key; #2: value
 \cs_new_protected:Npn \__tblr_column_gput_cell:nn #1 #2
