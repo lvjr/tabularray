@@ -2103,7 +2103,7 @@
     pagebreak   .meta:n = { break = 1 },
     nopagebreak .meta:n = { break = -1 },
     baseline  .code:n = \__tblr_outer_gput_spec:ne
-                          { valign } { \int_use:N \c@rownum },
+                          { baseline } { \int_use:N \c@rownum },
     unknown   .code:n = \__tblr_row_unknown_key:V \l_keys_key_str,
   }
 
@@ -2484,7 +2484,7 @@
 \tl_new:N \l__tblr_initial_tblr_outer_tl
 \tl_set:Nn \l__tblr_initial_tblr_outer_tl
   {
-    halign = c, valign = m, headsep = 6pt, footsep = 6pt,
+    halign = c, baseline = m, headsep = 6pt, footsep = 6pt,
     presep = 1.5\bigskipamount, postsep = 1.5\bigskipamount,
   }
 
@@ -2988,7 +2988,7 @@
     rulesep .code:n = \__tblr_keys_gput:nn { rulesep } {#1},
     rowhead .code:n = \__tblr_keys_gput:nn { rowhead } {#1},
     rowfoot .code:n = \__tblr_keys_gput:nn { rowfoot } {#1},
-    baseline .code:n = \__tblr_outer_gput_spec:nn { valign } {#1},
+    baseline .code:n = \__tblr_outer_gput_spec:nn { baseline } {#1},
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
 
@@ -3067,16 +3067,17 @@
     long    .code:n = \__tblr_outer_gput_spec:nn { long } { true },
     tall    .code:n = \__tblr_outer_gput_spec:nn { tall } { true },
     halign  .code:n = \__tblr_outer_gput_spec:nn { halign } {#1},
-    valign  .code:n = \__tblr_outer_gput_spec:nn { valign } {#1},
+    baseline .code:n = \__tblr_outer_gput_spec:nn { baseline } {#1},
     l       .meta:n = { halign = l },
     c       .meta:n = { halign = c },
     r       .meta:n = { halign = r },
-    t       .meta:n = { valign = t },
-    T       .meta:n = { valign = T },
-    m       .meta:n = { valign = m },
-    M       .meta:n = { valign = M },
-    b       .meta:n = { valign = b },
-    B       .meta:n = { valign = B },
+    t       .meta:n = { baseline = t },
+    T       .meta:n = { baseline = T },
+    m       .meta:n = { baseline = m },
+    M       .meta:n = { baseline = M },
+    b       .meta:n = { baseline = b },
+    B       .meta:n = { baseline = B },
+    valign  .meta:n = { baseline = #1 }, % obsolete, will be removed some day
     expand  .code:n = \__tblr_outer_gput_spec:nn { expand } {#1},
     headsep .code:n = \__tblr_outer_gput_spec:nn { headsep } {#1},
     footsep .code:n = \__tblr_outer_gput_spec:nn { footsep } {#1},
@@ -5276,11 +5277,11 @@
         \tl_if_eq:enTF { \__tblr_spec_item:nn { outer } { tall } } { true }
           {
             \__tblr_build_tall_table:e
-              { \__tblr_spec_item:nn { outer } { valign } }
+              { \__tblr_spec_item:nn { outer } { baseline } }
           }
           {
             \__tblr_build_short_table:e
-              { \__tblr_spec_item:nn { outer } { valign } }
+              { \__tblr_spec_item:nn { outer } { baseline } }
           }
       }
   }
