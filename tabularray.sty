@@ -1147,9 +1147,8 @@
 
 \NewTableCommand \hline [1] [] { \SetHline [+] {-} {#1} }
 
-%% Some keys can be set by any hline, such as abovespace and belowspace keys.
-%% Using special hline of index 0, you can set these keys without adding any hlines.
-\NewTableCommand \SetVspace [1] { \SetHline [0] {-} {#1} }
+%% Hborder holds keys not related to a specified hline
+\NewTableCommand \hborder [1] { \SetHline [0] {-} {#1} }
 
 %% #1: the index of the hline (may be + or =)
 %% #2: which columns of the hline, separate by commas
@@ -1165,9 +1164,9 @@
   {
     \group_begin:
     %% We can not use \int_compare:nNnTF here since #1 may be + or = .
-    %% Also we treat hline of index 0 specially, not adding hline count.
+    %% Also we implement hborder as hline of index 0
     \tl_if_eq:nnTF {#1} {0}
-      { \keys_set:nn { tblr-hline } {#3} }
+      { \keys_set:nn { tblr-hborder } {#3} }
       {
         \keys_set_groups:nnn { tblr-hline } { text } {#3}
         \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text }
@@ -1245,6 +1244,16 @@
     \tl_set_eq:NN \l__tblr_hline_num_tl \l__tblr_hline_count_tl
   }
 
+\keys_define:nn { tblr-hborder }
+  {
+    abovespace .code:n = \__tblr_row_gput_above:ne { belowsep } { \dim_eval:n {#1} },
+    belowspace .code:n = \__tblr_row_gput:ne { abovesep } { \dim_eval:n {#1} },
+    abovespace+ .code:n = \__tblr_row_gadd_dimen_above:ne
+                          { belowsep } { \dim_eval:n {#1} },
+    belowspace+ .code:n = \__tblr_row_gadd_dimen:ne
+                          { abovesep } { \dim_eval:n {#1} },
+  }
+
 \keys_define:nn { tblr-hline }
   {
     dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 },
@@ -1262,12 +1271,6 @@
     lr       .meta:n = { leftpos = #1, rightpos = #1 },
     lr    .default:n = { -0.8 },
     endpos .bool_set:N = \l__tblr_hline_endpos_bool,
-    abovespace .code:n = \__tblr_row_gput_above:ne { belowsep } { \dim_eval:n {#1} },
-    belowspace .code:n = \__tblr_row_gput:ne { abovesep } { \dim_eval:n {#1} },
-    abovespace+ .code:n = \__tblr_row_gadd_dimen_above:ne
-                          { belowsep } { \dim_eval:n {#1} },
-    belowspace+ .code:n = \__tblr_row_gadd_dimen:ne
-                          { abovesep } { \dim_eval:n {#1} },
     unknown .code:n = \__tblr_hline_unknown_key:V \l_keys_key_str,
   }
 
@@ -6730,17 +6733,18 @@
     \RequirePackage { booktabs }
     \newcommand \tblr@booktabs@hline [1] [] { \hline [##1] }
     \newcommand \tblr@booktabs@oldhline [1] [] {
-      \hline [abovespace = \aboverulesep, belowspace = \belowrulesep, ##1]
+      \hline [##1]
+      \hborder { abovespace = \aboverulesep, belowspace = \belowrulesep }
     }
     \newcommand \tblr@booktabs@cline [2] [] { \cline [##1] {##2} }
     \newcommand \tblr@booktabs@oldcline [2] [] {
-      \cline [abovespace = \aboverulesep, belowspace = \belowrulesep, ##1] {##2}
+      \cline [##1] {##2}
+      \hborder { abovespace = \aboverulesep, belowspace = \belowrulesep }
     }
     \newcommand \tblr@booktabs@cline@more [2] [] { \SetHline [+] {##2} {##1} }
     \newcommand \tblr@booktabs@oldcline@more [2] [] {
-      \SetHline [+] {##2} {
-        abovespace = \aboverulesep, belowspace = \belowrulesep, ##1
-      }
+      \SetHline [+] {##2} {##1}
+      \hborder { abovespace = \aboverulesep, belowspace = \belowrulesep }
     }
     \NewTableCommand \toprule [1] [] {
       \tblr@booktabs@hline [wd=\heavyrulewidth, ##1]
@@ -6780,11 +6784,11 @@
     \AtBeginEnvironment { longtabs } { \tblr@booktabs@begin@hook }
     \AtBeginEnvironment { talltabs } { \tblr@booktabs@begin@hook }
     \NewTableCommand \specialrule [3]
-      { \hline [##1, abovespace = ##2, belowspace = ##3] }
+      { \hline [##1] \hborder { abovespace = ##2, belowspace = ##3 } }
     \NewTableCommand \addrowspace [1] [\defaultaddspace]
-      { \SetVspace { abovespace+ = (##1) / 2, belowspace+ = (##1) / 2 } }
+      { \hborder { abovespace+ = (##1) / 2, belowspace+ = (##1) / 2 } }
     \NewTableCommand \addlinespace [1] [\defaultaddspace]
-      { \SetVspace { abovespace+ = (##1) / 2, belowspace+ = (##1) / 2 } }
+      { \hborder { abovespace+ = (##1) / 2, belowspace+ = (##1) / 2 } }
   }
 
 %% Library counter for resetting all counters
