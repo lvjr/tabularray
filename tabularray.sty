@@ -2102,6 +2102,8 @@
     break     .code:n = \__tblr_row_gput:nn { break } {#1},
     pagebreak   .meta:n = { break = 1 },
     nopagebreak .meta:n = { break = -1 },
+    baseline  .code:n = \__tblr_outer_gput_spec:ne
+                          { valign } { \int_use:N \c@rownum },
     unknown   .code:n = \__tblr_row_unknown_key:V \l_keys_key_str,
   }
 
@@ -3091,6 +3093,7 @@
   {
     \__tblr_spec_gput:nen { outer } {#1} {#2}
   }
+\cs_generate_variant:Nn \__tblr_outer_gput_spec:nn { ne }
 
 \regex_const:Nn \c__tblr_option_key_name_regex { ^ [A-Za-z\-] + $ }
 
