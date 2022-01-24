@@ -1147,9 +1147,6 @@
 
 \NewTableCommand \hline [1] [] { \SetHline [+] {-} {#1} }
 
-%% Hborder holds keys not related to a specified hline
-\NewTableCommand \hborder [1] { \SetHline [0] {-} {#1} }
-
 %% #1: the index of the hline (may be + or =)
 %% #2: which columns of the hline, separate by commas
 %% #3: key=value pairs
@@ -1163,19 +1160,13 @@
 \cs_new_protected:Npn \tblr_set_hline:nnn #1 #2 #3
   {
     \group_begin:
-    %% We can not use \int_compare:nNnTF here since #1 may be + or = .
-    %% Also we implement hborder as hline of index 0
-    \tl_if_eq:nnTF {#1} {0}
-      { \keys_set:nn { tblr-hborder } {#3} }
+    \keys_set_groups:nnn { tblr-hline } { text } {#3}
+    \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text }
       {
-        \keys_set_groups:nnn { tblr-hline } { text } {#3}
-        \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text }
-          {
-            \__tblr_set_hline_num:n {#1}
-            \tl_clear:N \l__tblr_hline_dash_tl
-            \keys_set:nn { tblr-hline } { dash = solid, #3 }
-            \__tblr_set_hline_cmd:n {#2}
-          }
+        \__tblr_set_hline_num:n {#1}
+        \tl_clear:N \l__tblr_hline_dash_tl
+        \keys_set:nn { tblr-hline } { dash = solid, #3 }
+        \__tblr_set_hline_cmd:n {#2}
       }
     \group_end:
   }
@@ -1242,16 +1233,6 @@
     \__tblr_spec_gput:nee { hline }
       { [\int_use:N \c@rownum] / @hline-count } { \l__tblr_hline_count_tl }
     \tl_set_eq:NN \l__tblr_hline_num_tl \l__tblr_hline_count_tl
-  }
-
-\keys_define:nn { tblr-hborder }
-  {
-    abovespace .code:n = \__tblr_row_gput_above:ne { belowsep } { \dim_eval:n {#1} },
-    belowspace .code:n = \__tblr_row_gput:ne { abovesep } { \dim_eval:n {#1} },
-    abovespace+ .code:n = \__tblr_row_gadd_dimen_above:ne
-                          { belowsep } { \dim_eval:n {#1} },
-    belowspace+ .code:n = \__tblr_row_gadd_dimen:ne
-                          { abovesep } { \dim_eval:n {#1} },
   }
 
 \keys_define:nn { tblr-hline }
@@ -1559,6 +1540,29 @@
               { \l__tblr_vline_belowpos_tl }
           }
       }
+  }
+
+%%% --------------------------------------------------------
+%%>  \section{Set Hborders and Vborders}
+%%% --------------------------------------------------------
+
+%% Hborder holds keys not related to a specified hline
+\NewTableCommand \hborder [1] { \tblr_set_hborder:n {#1} }
+
+\cs_new_protected:Npn \tblr_set_hborder:n #1
+  {
+    \keys_set:nn { tblr-hborder } {#1}
+  }
+
+\keys_define:nn { tblr-hborder }
+  {
+    abovespace .code:n = \__tblr_row_gput_above:ne
+                          { belowsep } { \dim_eval:n {#1} },
+    belowspace .code:n = \__tblr_row_gput:ne { abovesep } { \dim_eval:n {#1} },
+    abovespace+ .code:n = \__tblr_row_gadd_dimen_above:ne
+                          { belowsep } { \dim_eval:n {#1} },
+    belowspace+ .code:n = \__tblr_row_gadd_dimen:ne
+                          { abovesep } { \dim_eval:n {#1} },
   }
 
 %% Vborder holds keys not related to a specified vline
