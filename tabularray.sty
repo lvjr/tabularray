@@ -5479,7 +5479,7 @@
         \hrule height ~ 0pt
         \box_use:N \l__tblr_table_foot_box
       }
-    \__tblr_halign_whole:Nn \l__tblr_table_box #1
+    \__tblr_halign_whole:Nn \l__tblr_table_box {#1}
   }
 \cs_generate_variant:Nn \__tblr_build_page_table:nnn { nnx }
 
@@ -5527,7 +5527,7 @@
         \hrule height ~ 0pt
         \box_use:N \l__tblr_table_lastfoot_box
       }
-    \__tblr_valign_whole:Nn \l__tblr_table_box #1
+    \__tblr_valign_whole:Nn \l__tblr_table_box {#1}
   }
 \cs_generate_variant:Nn \__tblr_build_tall_table:n { e }
 
@@ -5537,7 +5537,7 @@
   {
     \mode_leave_vertical:
     \__tblr_build_one_table:nn {1} {\c@rowcount}
-    \__tblr_valign_whole:Nn \l__tblr_table_box #1
+    \__tblr_valign_whole:Nn \l__tblr_table_box {#1}
   }
 \cs_generate_variant:Nn \__tblr_build_short_table:n { e }
 
