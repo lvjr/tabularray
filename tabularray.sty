@@ -1242,7 +1242,6 @@
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_hline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_hline_fg_tl {#1},
-    baseline .code:n = \__tblr_hline_set_baseline:n {#1},
     leftpos  .code:n = \tl_set:Nx \l__tblr_hline_leftpos_tl {#1},
     rightpos .code:n = \tl_set:Nx \l__tblr_hline_rightpos_tl {#1},
     l        .meta:n = { leftpos = #1 },
@@ -1328,22 +1327,20 @@
       { [\int_use:N \c@rownum][#1](\l__tblr_hline_num_tl) / #2 } { #3 }
   }
 
-\NewTableCommand \firsthline [1] [] { \SetHline [+] {-} { #1, baseline=below } }
-\NewTableCommand \lasthline [1] [] { \SetHline [+] {-} { #1, baseline=above } }
+\msg_new:nnn { tabularray } { obsolete firsthline }
+  { \firsthline ~ is ~ obsolete; ~ use ~ 'baseline=T' ~ instead. }
 
-\cs_new_protected:Npn \__tblr_hline_set_baseline:n #1
+\msg_new:nnn { tabularray } { obsolete lasthline }
+  { \lasthline ~ is ~ obsolete; ~ use ~ 'baseline=B' ~ instead. }
+
+\NewTableCommand \firsthline [1] []
   {
-    \tl_if_eq:nnTF {#1} {above}
-      {
-        \__tblr_prop_gput:nnx { inner }
-          { baseline } { \int_eval:n { \c@rownum - 1 } }
-      }
-      {
-        \tl_if_eq:nnT {#1} {below}
-          {
-            \__tblr_prop_gput:nnx { inner } { baseline } { \int_use:N \c@rownum }
-          }
-      }
+    \msg_error:nn { tabularray } { obsolete firsthline }
+  }
+
+\NewTableCommand \lasthline [1] []
+  {
+    \msg_error:nn { tabularray } { obsolete lasthline }
   }
 
 %% \SetVlines command for setting every vline in the table
