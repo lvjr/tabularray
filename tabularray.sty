@@ -828,15 +828,41 @@
 \clist_new:N \l_tblr_childs_clist
 \tl_new:N \l_tblr_childs_total_tl
 
-\NewChildSelector { odd }
+\tl_new:N \l__tblr_child_from_tl
+\tl_new:N \l__tblr_child_to_tl
+
+\NewChildSelector { odd } [1] []
   {
-    \int_step_inline:nnnn {1} {2} { \l_tblr_childs_total_tl }
-      { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
+    \__tblr_child_selector_odd_or_even:n { odd } {#1}
   }
 
-\NewChildSelector { even }
+\NewChildSelector { even } [1] []
   {
-    \int_step_inline:nnnn {2} {2} { \l_tblr_childs_total_tl }
+    \__tblr_child_selector_odd_or_even:n { even } {#1}
+  }
+
+%% #1: odd or even; #2: selector option
+\cs_new_protected:Npn \__tblr_child_selector_odd_or_even:n #1 #2
+  {
+    \tl_if_blank:nTF {#2}
+      {
+        \tl_if_eq:nnTF {#1} { odd }
+          { \tl_set:Nn \l__tblr_child_from_tl {1} }
+          { \tl_set:Nn \l__tblr_child_from_tl {2} }
+        \tl_set_eq:NN \l__tblr_child_to_tl \l_tblr_childs_total_tl
+      }
+      {
+        \seq_set_split:Nnn \l_tmpa_seq {-} { #2 - Z }
+        \tl_set:Nx \l__tblr_child_from_tl { \seq_item:Nn \l_tmpa_seq {1} }
+        \tl_set:Nx \l__tblr_child_to_tl { \seq_item:Nn \l_tmpa_seq {2} }
+        \tl_use:c { int_if_ #1 :nF } { \l__tblr_child_from_tl }
+          {
+            \tl_set:Nx \l__tblr_child_from_tl
+              { \int_eval:n { \l__tblr_child_from_tl + 1 } }
+          }
+        \__tblr_child_name_to_index:VN \l__tblr_child_to_tl \l__tblr_child_to_tl
+      }
+    \int_step_inline:nnnn { \l__tblr_child_from_tl } {2} { \l__tblr_child_to_tl }
       { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
   }
 
@@ -883,9 +909,6 @@
       }
   }
 
-\tl_new:N \l__tblr_child_from_tl
-\tl_new:N \l__tblr_child_to_tl
-
 \cs_new_protected_nopar:Npn \__tblr_get_childs_normal_aux:w #1 - #2 \scan_stop
   {
     \__tblr_child_name_to_index:nN {#1} \l__tblr_child_from_tl
@@ -906,6 +929,7 @@
       }
       { \tl_set:Nx #2 { #1 } }
   }
+\cs_generate_variant:Nn \__tblr_child_name_to_index:nN { VN }
 
 %%% --------------------------------------------------------
 %%  \section{New Table Commands}
