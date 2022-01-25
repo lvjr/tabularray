@@ -59,11 +59,11 @@ tabularray \par
 \BEGINTEST{multirow and multicolumn: \cline}
 \begin{tblr}{|c|c|c|c|c|}
 \hline
-\multirow{2}{*}{Multirow}
-       & \multicolumn{2}{c|}{Multicolumn}
-                             & \multicolumn{2}{c|}{\multirow{2}{*}{Multirow and Multicolumn}} \\
+\SetCell[r=2]{c} Multirow
+       & \SetCell[c=2]{c} Multicolumn
+                  &          & \SetCell[r=2,c=2]{c} Multirow and Multicolumn \\
 \cline{2-3}
- ???   & column-2 & column-3 & \multicolumn{2}{c|}{} \\
+ ???   & column-2 & column-3 & ??? \\
 \hline
 cell-1 & cell-2   & cell-3   & cell-4 & cell-5 \\
 \hline
@@ -75,11 +75,11 @@ cell-1 & cell-2   & cell-3   & cell-4 & cell-5 \\
 \BEGINTEST{multirow and multicolumn: \hline}
 \begin{tblr}{|c|c|c|c|c|}
 \hline
-\multirow{2}{*}{Multirow}
-       & \multicolumn{2}{c|}{Multicolumn}
-                             & \multicolumn{2}{c|}{\multirow{2}{*}{Multirow and Multicolumn}} \\
+\SetCell[r=2]{c} Multirow
+       & \SetCell[c=2]{c} Multicolumn
+                  &          & \SetCell[r=2,c=2]{c} Multirow and Multicolumn \\
 \hline
- ???   & column-2 & column-3 & \multicolumn{2}{c|}{} \\
+ ???   & column-2 & column-3 & ??? \\
 \hline
 cell-1 & cell-2   & cell-3   & cell-4 & cell-5 \\
 \hline

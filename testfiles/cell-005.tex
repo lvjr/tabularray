@@ -45,20 +45,20 @@
 \noindent
 \begin{tblr}{width=\textwidth,colsep=2pt,colspec={|*{16}{X[c]|}}}
 \hline
-  \multicolumn{4}{|r|}{4}
-& \multicolumn{4}{r|}{8}
-& \multicolumn{4}{r|}{12}
-& \multicolumn{4}{r|}{16}\\
+  \SetCell[c=4]{r} 4 & & &
+& \SetCell[c=4]{r} 8 & & &
+& \SetCell[c=4]{r} 12 & & &
+& \SetCell[c=4]{r} 16 & & & \\
 \hline
-  \multicolumn{1}{|c|}{B/R}
-& \multicolumn{5}{c|}{Msg-Type}
-& \multicolumn{5}{c|}{Src-Addr}
-& \multicolumn{5}{c|}{Dest-Addr}\\
+  B/R
+& \SetCell[c=5]{c} Msg-Type & & & &
+& \SetCell[c=5]{c} Src-Addr & & & &
+& \SetCell[c=5]{c} Dest-Addr & & & & \\
 \hline
-  \multicolumn{16}{|c|}{Fletcher-16 Checksum}\\
+  \SetCell[c=16]{c} Fletcher-16 Checksum & & & & & & & & & & & & & & & \\
 \hline
-  \multicolumn{8}{|c|}{Payload-Length in Bits}
-& \multicolumn{8}{c|}{Payload max. 28 Byte}\\
+  \SetCell[c=8]{c} Payload-Length in Bits & & & & & & &
+& \SetCell[c=8]{c} Payload max. 28 Byte & & & & & & & \\
 \hline
 \end{tblr}
 \ENDTEST
