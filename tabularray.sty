@@ -381,7 +381,6 @@
 \__tblr_data_new_key:nnn { row } { @row-foot }   { dim }
 \__tblr_data_new_key:nnn { row } { @row-upper }  { dim }
 \__tblr_data_new_key:nnn { row } { @row-lower }  { dim }
-\__tblr_data_new_key:nnn { row } { break }       { int }
 
 \int_new:N \g__tblr_data_column_key_count_int
 \__tblr_data_new_key:nnn { column } { width }       { dim }
@@ -1580,8 +1579,24 @@
                           { belowsep } { \dim_eval:n {#1} },
     belowspace+ .code:n = \__tblr_row_gadd_dimen:ne
                           { abovesep } { \dim_eval:n {#1} },
+    pagebreak   .code:n = \__tblr_hborder_gput_pagebreak:n {#1},
+    pagebreak   .default:n = yes,
     baseline    .code:n = \__tblr_outer_gput_spec:ne
                           { baseline } { - \int_use:N \c@rownum },
+  }
+
+\tl_const:Nn \c__tblr_pagebreak_yes_tl  {  1 }
+\tl_const:Nn \c__tblr_pagebreak_auto_tl {  0 }
+\tl_const:Nn \c__tblr_pagebreak_no_tl   { -1 }
+
+\cs_new_protected:Npn \__tblr_hborder_gput_pagebreak:n #1
+  {
+    \tl_if_exist:cT { c__tblr_pagebreak_ #1 _tl }
+      {
+        \__tblr_spec_gput:nee { hline }
+          { [\int_use:N \c@rownum] / @pagebreak }
+          { \tl_use:c { c__tblr_pagebreak_ #1 _tl } }
+      }
   }
 
 %% Vborder holds keys not related to a specified vline
@@ -2177,9 +2192,6 @@
     abovesep+ .code:n = \__tblr_row_gadd_dimen:ne { abovesep } { \dim_eval:n {#1} },
     belowsep+ .code:n = \__tblr_row_gadd_dimen:ne { belowsep } { \dim_eval:n {#1} },
     rowsep+   .meta:n = { abovesep+ = #1, belowsep+ = #1},
-    break     .code:n = \__tblr_row_gput:nn { break } {#1},
-    pagebreak   .meta:n = { break = 1 },
-    nopagebreak .meta:n = { break = -1 },
     baseline  .code:n = \__tblr_outer_gput_spec:ne
                           { baseline } { \int_use:N \c@rownum },
     unknown   .code:n = \__tblr_row_unknown_key:V \l_keys_key_str,
@@ -2257,12 +2269,12 @@
 
 \NewTableCommand \pagebreak
   {
-    \tblr_set_row:nn {} { break = 1 }
+    \hborder { pagebreak = yes }
   }
 
 \NewTableCommand \nopagebreak
   {
-    \tblr_set_row:nn {} { break = -1 }
+    \hborder { pagebreak = no }
   }
 
 %%% --------------------------------------------------------
@@ -2727,7 +2739,7 @@
       {
         \tl_if_head_eq_meaning:nNTF {##1} *
           {
-            \tl_set:Nn \l__tblr_b_tl { \SetRow { break = -1 } }
+            \tl_set:Nn \l__tblr_b_tl { \hborder { pagebreak = no } }
             \tl_set:Nx \l__tblr_c_tl { \tl_tail:n {##1} }
             \tl_trim_spaces:N \l__tblr_c_tl %% Ignore spaces between * and [dimen]
             \tl_if_head_eq_meaning:VNT \l__tblr_c_tl [
@@ -5494,12 +5506,17 @@
         \int_compare:nNnTF {#2} < {#1}
           {
             \tl_set:Nx \l__tblr_b_tl
-              { \__tblr_data_item:nen { row } { \int_eval:n { #2 + 1 } } { break } }
-            \int_compare:nNnTF { \l__tblr_b_tl } < { 0 }
+              {
+                \__tblr_spec_item:ne { hline }
+                  { [ \int_eval:n { #2 + 1 } ] / @pagebreak }
+              }
+            % Note that \l__tblr_b_tl may be empty
+            \int_compare:nNnTF { \l__tblr_b_tl + 0 } < { 0 }
               { \bool_set_true:N \l_tmpa_bool }
               {
                 \bool_set_false:N \l_tmpa_bool
-                \int_compare:nNnT { \l__tblr_b_tl } > { 0 } { \bool_set_true:N #4 }
+                \int_compare:nNnT { \l__tblr_b_tl + 0 } > { 0 }
+                  { \bool_set_true:N #4 }
               }
           }
           { \bool_set_false:N \l_tmpa_bool }
