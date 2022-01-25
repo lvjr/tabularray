@@ -1551,6 +1551,26 @@
     \keys_set:nn { tblr-hborder } {#1}
   }
 
+\cs_new_protected:Npn \tblr_set_hborder:nn #1 #2
+  {
+    \group_begin:
+    \__tblr_get_childs:nx {#1} { \int_eval:n { \c@rowcount + 1 } }
+    \clist_map_inline:Nn \l_tblr_childs_clist
+      {
+        \int_set:Nn \c@rownum {##1}
+        \tblr_set_hborder:n {#2}
+      }
+    \group_end:
+  }
+
+%% This function is called when parsing table specifications
+%% Note that #1 always includes an outer pair of braces
+\cs_new_protected:Npn \__tblr_set_hborder_aux:nn #1 #2
+  {
+    \tblr_set_hborder:nn #1 {#2}
+  }
+\cs_generate_variant:Nn \__tblr_set_hborder_aux:nn { Vn }
+
 \keys_define:nn { tblr-hborder }
   {
     abovespace .code:n = \__tblr_row_gput_above:ne
@@ -1571,6 +1591,26 @@
   {
     \keys_set:nn { tblr-vborder } {#1}
   }
+
+\cs_new_protected:Npn \tblr_set_vborder:nn #1 #2
+  {
+    \group_begin:
+    \__tblr_get_childs:nx {#1} { \int_eval:n { \c@colcount + 1 } }
+    \clist_map_inline:Nn \l_tblr_childs_clist
+      {
+        \int_set:Nn \c@colnum {##1}
+        \tblr_set_vborder:n {#2}
+      }
+    \group_end:
+  }
+
+%% This function is called when parsing table specifications
+%% Note that #1 always includes an outer pair of braces
+\cs_new_protected:Npn \__tblr_set_vborder_aux:nn #1 #2
+  {
+    \tblr_set_vborder:nn #1 {#2}
+  }
+\cs_generate_variant:Nn \__tblr_set_vborder_aux:nn { Vn }
 
 \keys_define:nn { tblr-vborder }
   {
@@ -2996,10 +3036,10 @@
 \clist_new:N \g__tblr_table_known_keys_clist
 \clist_gset:Nn \g__tblr_table_known_keys_clist
   {
-    colspec, rowspec, width, hspan, vspan, stretch, verb,
-    column, row, cell, vline, hline, columns, rows, cells, vlines, hlines,
+    colspec, rowspec, column, row, cell, hline, vline, hborder, vborder, width,
+    rowhead, rowfoot, columns, rows, cells, hlines, vlines, % hborders, vborders,
     leftsep, rightsep, colsep, abovesep, belowsep, rowsep, rulesep,
-    rowhead, rowfoot, baseline,
+    baseline, hspan, vspan, stretch, verb,
   }
 
 \keys_define:nn { tblr }
