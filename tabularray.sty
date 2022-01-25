@@ -1560,6 +1560,8 @@
                           { belowsep } { \dim_eval:n {#1} },
     belowspace+ .code:n = \__tblr_row_gadd_dimen:ne
                           { abovesep } { \dim_eval:n {#1} },
+    baseline    .code:n = \__tblr_outer_gput_spec:ne
+                          { baseline } { - \int_use:N \c@rownum },
   }
 
 %% Vborder holds keys not related to a specified vline
