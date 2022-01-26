@@ -1364,20 +1364,20 @@
       { [\int_use:N \c@rownum][#1](\l__tblr_hline_num_tl) / #2 } { #3 }
   }
 
-\msg_new:nnn { tabularray } { obsolete firsthline }
+\msg_new:nnn { tabularray } { obsolete-firsthline }
   { \firsthline ~ is ~ obsolete; ~ use ~ 'baseline=T' ~ instead. }
 
-\msg_new:nnn { tabularray } { obsolete lasthline }
+\msg_new:nnn { tabularray } { obsolete-lasthline }
   { \lasthline ~ is ~ obsolete; ~ use ~ 'baseline=B' ~ instead. }
 
 \NewTableCommand \firsthline [1] []
   {
-    \msg_error:nn { tabularray } { obsolete firsthline }
+    \msg_error:nn { tabularray } { obsolete-firsthline }
   }
 
 \NewTableCommand \lasthline [1] []
   {
-    \msg_error:nn { tabularray } { obsolete lasthline }
+    \msg_error:nn { tabularray } { obsolete-lasthline }
   }
 
 %% \SetVlines command for setting every vline in the table
@@ -1916,20 +1916,20 @@
 
 %% Obsolete \multicolumn and \multirow commands
 
-\msg_new:nnn { tabularray } { obsolete multicolumn }
+\msg_new:nnn { tabularray } { obsolete-multicolumn }
   { \multicolumn ~ is ~ obsolete; ~ use ~ \SetCell ~ instead. }
 
-\msg_new:nnn { tabularray } { obsolete multirow }
+\msg_new:nnn { tabularray } { obsolete-multirow }
   { \multirow ~ is ~ obsolete; ~ use ~ \SetCell ~ instead. }
 
 \NewTableCommand \multicolumn [2]
   {
-    \msg_error:nn { tabularray } { obsolete multicolumn }
+    \msg_error:nn { tabularray } { obsolete-multicolumn }
   }
 
 \NewTableCommand \multirow [3] [m]
   {
-    \msg_error:nn { tabularray } { obsolete multirow }
+    \msg_error:nn { tabularray } { obsolete-multirow }
   }
 
 %%% --------------------------------------------------------
