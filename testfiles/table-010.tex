@@ -90,4 +90,15 @@
 \end{tblr}
 \ENDTEST
 
+\vspace{2em}
+
+% See issue #114
+\BEGINTEST{missing last rows when tblr contains truncated rows}
+\begin{tblr}{hlines}
+this is & shown\\
+\\
+this is & not shown\\
+\end{tblr}
+\ENDTEST
+
 \end{document}

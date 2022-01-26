@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\UseTblrLibrary{siunitx}
+
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{siunitx: testing multiline cells}%#90
+\centering
+\begin{tblr}{colspec=lSS,hlines,vlines}
+{two line \\ column header} & {{{column header}}} & {{{two line \\ column header}}} \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{testing multiline cells with three pairs of braces}%#90
+\centering
+\begin{tblr}{hlines,vlines}
+{{{one line cell}}} & {{{two line \\ text}}} \\
+\end{tblr}
+\ENDTEST
+
+\end{document}

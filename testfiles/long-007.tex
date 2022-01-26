@@ -1,0 +1,87 @@
+%  -*- coding: utf-8 -*-
+\documentclass[12pt]{article}
+\usepackage[a6paper,margin=15mm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{xcolor}
+\usepackage{tabularray}
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\START
+
+\BEGINTEST{#165: pagebreak option}
+Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text.
+\begin{longtblr}[
+  caption = {Talks},
+]{
+  colspec = {lll},
+  rowhead = 1,
+  row{odd} = {gray8},
+  row{1} = {brown8},
+  hborder{odd} = {pagebreak=no},
+  hborder{28} = {pagebreak=no},
+}
+  Head  &Head   &Head  \\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+\hborder{pagebreak=auto} % overwrite pagebreak=no before
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+\hborder{pagebreak} % overwrite pagebreak=no before
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+%\hborder{pagebreak}
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+\end{longtblr}
+Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text.
+\ENDTEST
+
+\end{document}

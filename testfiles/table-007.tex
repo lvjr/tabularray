@@ -66,4 +66,17 @@ $\begin{tblr}{Q[l,mode=text]Q[r,$]Q[r,$$]}
 \end{tblr}$
 \ENDTEST
 
+\bigskip\hrule\bigskip
+
+\BEGINTEST{testing mode=math with font=\boldmath}%#137
+\begin{tblr}{
+  hlines, vlines,
+  column{1}={font=\bfseries},
+  column{2}={font=\boldmath,mode=math},
+}
+  1    & n    \\
+  text & y[n] \\
+\end{tblr}
+\ENDTEST
+
 \end{document}

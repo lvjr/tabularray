@@ -12,5 +12,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 TEST 2: testing space in multiline cell and braces removing
 ============================================================
 ============================================================
+============================================================
+TEST 3: missing last rows when tblr contains truncated rows
+============================================================
+============================================================
 [1
 ] (table-010.aux)

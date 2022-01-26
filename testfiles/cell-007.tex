@@ -16,7 +16,7 @@
 \START
 \hrule\bigskip
 
-\BEGINTEST{test \multirow cells}
+\BEGINTEST{test multirow cells}
 \begin{tabular}{|l|l|l|l|}
 \hline
 \multirow{4}{1.5cm}{Multirow Cell One}
@@ -27,7 +27,7 @@
 & Delta & & Delta \\
 \hline
 \end{tabular}
-\SetTblrDefault{rows={rowsep=0pt}}
+\SetTblrInner{rows={rowsep=0pt}}
 \begin{tblr}{|l|l|l|l|}
 \hline
 \SetCell[r=4]{1.5cm} Multirow Cell One
@@ -36,6 +36,23 @@
 & Beta  & & Beta \\
 & Gamma & & Gamma \\
 & Delta & & Delta \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{test multirow cells with double hlines}%#141
+\begin{tblr}{colspec={llll}, hlines, vlines, hline{2}={2}{-}{solid}}
+    A & \SetCell[c=2]{c} B & C & D \\
+    E & F & G & H
+\end{tblr}
+\qquad
+\begin{tblr}{colspec={c|c|c},hlines}
+\hline
+A & B & C \\
+\SetCell[r=2]{c} A & B1 & C1 \\
+                   & B2 & C2 \\
 \hline
 \end{tblr}
 \ENDTEST

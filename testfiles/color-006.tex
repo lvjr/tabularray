@@ -1,0 +1,77 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{xcolor}
+%\usepackage{ninecolors}
+\usepackage{tabularray}
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{even and odd selectors with options}
+\begin{tblr}{
+  row{1} = {gray9},
+  cell{odd}{1} = {red9},
+  cell{odd[4]}{2} = {green9},
+  cell{odd[3-X]}{3} = {blue9},
+}
+  Head  &Head   &Head  \\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+\end{tblr}
+\qquad
+\begin{tblr}{
+  row{1} = {gray9},
+  cell{even}{1} = {yellow9},
+  cell{even[4]}{2} = {cyan9},
+  cell{even[3-X]}{3} = {purple9},
+}
+  Head  &Head   &Head  \\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+  Talk A&Place A&Date A\\
+  Talk B&Place B&Date B\\
+  Talk C&Place C&Date C\\
+  Talk D&Place D&Date D\\
+  Talk E&Place E&Date E\\
+  Talk F&Place F&Date F\\
+\end{tblr}
+\ENDTEST
+
+\end{document}
