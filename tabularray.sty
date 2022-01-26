@@ -32,31 +32,6 @@
 
 \AtBeginDocument{\@ifpackageloaded{xcolor}{\RequirePackage{ninecolors}}{}}
 
-%% Backport \tl_if_eq:NnTF for old texlive 2020
-\cs_if_exist:NF \tl_if_eq:NnTF
-  {
-    \tl_new:N \l__tblr_backport_b_tl
-    \prg_new_protected_conditional:Npnn \tl_if_eq:Nn #1 #2 { T, F, TF }
-      {
-        \group_begin:
-          \tl_set:Nn \l__tblr_backport_b_tl {#2}
-          \exp_after:wN
-        \group_end:
-        \if_meaning:w #1 \l__tblr_backport_b_tl
-          \prg_return_true:
-        \else:
-          \prg_return_false:
-        \fi:
-      }
-    \prg_generate_conditional_variant:Nnn \tl_if_eq:Nn { c } { TF, T, F }
-  }
-
-%% Compatible with texlive 2020
-\cs_if_exist:NF \seq_map_indexed_function:NN
-  {
-    \cs_set_eq:NN \seq_map_indexed_function:NN \seq_indexed_map_function:NN
-  }
-
 \NewDocumentCommand \TblrParboxRestore { } { \@parboxrestore }
 
 \NewDocumentCommand \TblrAlignBoth { }
