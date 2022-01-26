@@ -10,6 +10,7 @@
 %%  \section{Scratch Variables and Function Variants}
 %%% --------------------------------------------------------
 
+%% \DeclareRelease and \DeclareCurrentRelease are added in LaTeX 2018-04-01
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
 \DeclareRelease{v2021}{}{tabularray-2021.sty}
 \DeclareCurrentRelease{}{2022-01-01}
@@ -18,7 +19,16 @@
 \ProvidesExplPackage{tabularray}{2022-01-01}{2022@}
   {Typeset tabulars and arrays with LaTeX3}
 
-\RequirePackage{xparse}
+%% \IfFormatAtLeastTF, xparse and lthooks are added in LaTeX 2020-10-01
+%% Note that \@ifl@t@r or \@ifpackagelater means 'this date or later'
+\msg_new:nnn { tabularray } { latex-too-old }
+  {
+    Your ~ LaTeX ~ release ~ is ~ too ~ old. \\
+    Please ~ update ~ to ~ 2020-10-01 ~ first.
+  }
+\@ifl@t@r\fmtversion{2020-10-01}{}{
+  \msg_error:nn { tabularray } { latex-too-old }
+}
 
 \AtBeginDocument{\@ifpackageloaded{xcolor}{\RequirePackage{ninecolors}}{}}
 
