@@ -9,6 +9,7 @@
 \begin{document}
 
 \chapter{Basic Interfaces}
+\label{chap:basic}
 
 \section{Old and New Interfaces}
 
@@ -28,9 +29,11 @@ hence totally separating the styles and the contents of tables.
 ]{verb}
   Old Interfaces                                 & New Interfaces          \\
   \verb!\SetHlines!                              & \K{hlines}              \\
-  \verb!\SetHline!, \verb!\hline!, \verb!\cline! & \K{hline}, \K{rowspec}  \\
+  \verb!\SetHline!, \verb!\hline!, \verb!\hborder!, \verb!\cline!
+                                                 & \K{hline}, \K{hborder}, \K{rowspec}  \\
   \verb!\SetVlines!                              & \K{vlines}              \\
-  \verb!\SetVline!, \verb!\vline!, \verb!\rline! & \K{vline}, \K{colspec}  \\
+  \verb!\SetVline!, \verb!\vline!, \verb!\vborder!, \verb!\rline!
+                                                 & \K{vline}, \K{vborder}, \K{colspec}  \\
   \verb!\SetCells!                               & \K{cells}               \\
   \verb!\SetCell!                                & \K{cell}                \\
   \verb!\SetRows!                                & \K{rows}                \\
@@ -56,10 +59,6 @@ All available keys for hlines and vlines are described in Table \ref{key:hline} 
   \K{leftpos}          & crossing or trimming position at the left side  & \V{1} \\
   \K{rightpos}         & crossing or trimming position at the right side & \V{1} \\
   \K{endpos}           & adjust leftpos/rightpos for only the leftmost/rightmost column & \V{false} \\
-  \K{abovespace}       & set \V{belowsep} of previous row (see Table \ref{key:row}) & \V{2pt} \\
-  \K{belowspace}       & set \V{abovesep} of current row (see Table \ref{key:row}) & \V{2pt} \\
-  \K{abovespace+}      & increase \V{belowsep} of previous row & \None \\
-  \K{belowspace+}      & increase \V{abovesep} of current row  & \None \\
 \end{spectblr}
 \vspace{-2em}
 \begin{spectblr}[
@@ -336,6 +335,42 @@ is the same as table option \verb!hlines={<index>}{<columns>}{<styles>}!.
 The usages of table commands \verb!\vline!, \verb!\rline!, \verb!\SetVline!, \verb!\SetVlines!
 are similar to those of \verb!\hline!, \verb!\cline!, \verb!\SetHline!, \verb!\SetHlines!, respectively.
 But normally you don't need to use them.
+
+\section{Hborders and Vborders}
+
+Options \verb!hborder{i}! and \verb!vborder{j}! are similar to \verb!hline{i}! and \verb!vline{j}!,
+respectively, but they hold border specifications not related to one specific hline and vline.
+All available keys for \verb!hborder{i}! and \verb!vborder{j}! are described in
+Table~\ref{key:hborder} and Table~\ref{key:vborder}.
+
+\begin{spectblr}[
+  caption = {Keys for Hborders},
+  label = {key:hborder},
+]{}
+  Key & Description and Values & Initial Value \\
+  \K{pagebreak}   & pagebreak at this position: \V{yes}, \V{no} or \V{auto}
+                    (See Chapter~\ref{chap:long}) & \V{auto} \\
+  \K{abovespace}  & set \V{belowsep} of previous row (see Table \ref{key:row}) & \V{2pt} \\
+  \K{belowspace}  & set \V{abovesep} of current row (see Table \ref{key:row}) & \V{2pt} \\
+  \K{abovespace+} & increase \V{belowsep} of previous row & \None \\
+  \K{belowspace+} & increase \V{abovesep} of current row  & \None \\
+\end{spectblr}
+\vspace{-2em}
+\begin{spectblr}[
+  caption = {Keys for Vborders},
+  label = {key:vborder},
+]{}
+  Key & Description and Values & Initial Value \\
+  \K{leftspace}   & set \V{rightsep} of previous column (see Table \ref{key:column}) & \V{6pt} \\
+  \K{rightspace}  & set \V{leftsep} of current column (see Table \ref{key:column}) & \V{6pt} \\
+  \K{leftspace+}  & increase \V{rightsep} of previous column & \None \\
+  \K{rightspace+} & increase \V{leftsep} of current column  & \None \\
+\end{spectblr}
+
+Furthermore, table command \verb!\hborder{<specs>}! at the beginning of row \verb!i!
+is the same as table option \verb!hborder{i}={<specs>}!,
+and table command \verb!\vborder{<specs>}! at the beginning of column \verb!j!
+is the same as table option \verb!vborder{j}={<specs>}!.
 
 \section{Cells and Spancells}
 

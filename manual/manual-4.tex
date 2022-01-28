@@ -13,9 +13,6 @@
 
 \section{A Simple Example}
 
-The predefined \verb!longtblr! environment allows writing tables that span multiple pages.
-You can also use the \verb![long]! table option for any environment, as in \verb!\begin{booktabs}[long]...\end{booktabs}!.
-
 To make a decent long table with header and footer, it is better to separate header/footer as
 \underline{table head/foot} (which includes caption, footnotes, continuation text)
 and \underline{row head/foot} (which includes some rows of the table that should appear in every page).
@@ -233,7 +230,7 @@ Alpha   & Beta  & Gamma   \\
 
 As you can see in the above example, the appearance of long tables of \verb!tabularray! package
 is similar to that of \verb!threeparttablex! packages.
-We support table footnotes, but not page footnotes in \verb!tabularray! package.
+It supports table footnotes, but not page footnotes.
 
 \newpage
 
@@ -345,7 +342,9 @@ in \verb!longtable!, except for the counter.
 
 The template system for table heads and table foots in \verb!tabularray! is largely inspired
 by \verb!beamer!, \verb!caption! and \verb!longtable! packages. For elements in Table \ref{tblr:element},
-you can use \verb!\DefTblrTemplate! to define and modify templates,
+you can use \verb!\DefTblrTemplate!\footnote{From version 2022A,
+\texttt{\string\DefTblrTemplate} has another name \texttt{\string\DeclareTblrTemplate}.}
+to define and modify templates,
 and use \verb!\SetTblrTemplate! to choose default templates. In defining templates,
 you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrTemplate! commands.
 

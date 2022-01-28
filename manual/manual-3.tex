@@ -11,13 +11,31 @@
 \chapter{Extra Interfaces}
 \label{chap:extra}
 
-\section{Table Specifications}
+In general, \verb!tblr! envrinment can accepts both inner and outer specifications:
 
-All available keys for the whole table are described in Table \ref{key:table}.
+\begin{codehigh}
+\begin{tblr}[<outer specs>]{<inner specs>}
+  <table body>
+\end{tblr}
+\end{codehigh}
+
+\textbf{Inner specifications} are all specifications written in the \underline{mandatory} argument
+of \verb!tblr! environment, which include new interfaces described in Chapter \ref{chap:basic}.
+
+\textbf{Outer specifications} are all specifications written in the \underline{optional} argument
+of \verb!tblr! environment, most of which are used for long tables (see Chapter \ref{chap:long}).
+
+You can use \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
+to set default inner and outer specifications of tables, repectively.
+
+\section{Inner Specifications}
+
+In addition to new interfaces in Chapter \ref{chap:basic},
+there are several inner specifications which are described in Table~\ref{key:inner}.
 
 \begin{spectblr}[
-  caption = {Keys for the Whole Table},
-  label = {key:table},
+  caption = {Keys for Inner Specifications},
+  label = {key:inner},
 ]{}
   Key & Description and Values & Initial Value \\
   \K{rulesep} & space between two hlines or vlines & \V{2pt} \\
@@ -30,7 +48,11 @@ All available keys for the whole table are described in Table \ref{key:table}.
   \K{colsep} & set horizontal space to both sides of every column & \V{6pt} \\
   \K{hspan} & horizontal span algorithm: \V{default}, \V{even}, or \V{minimal} & \V{default} \\
   \K{vspan} & vertical span algorithm: \V{default} or \V{even} & \V{default} \\
+  \K{verb} & you need this key to use verb commands & \None \\
+  \K{baseline} & set the baseline of the table & \V{m} \\
 \end{spectblr}
+
+\subsection{Space between Double Rules}
 
 The following example shows that we can replace \verb!\doublerulesep! parameter with \verb!rulesep! key.
 \nopagebreak
@@ -44,6 +66,8 @@ The following example shows that we can replace \verb!\doublerulesep! parameter 
 \end{tblr}
 \end{demohigh}
 
+\subsection{Minimal Strut for Cell Text}
+
 The following example shows that we can replace \verb!\arraystretch! parameter with \verb!stretch! key.
 
 \begin{demohigh}
@@ -53,6 +77,8 @@ The following example shows that we can replace \verb!\arraystretch! parameter w
  Iota    & Kappa & Lambda & Mu    \\
 \end{tblr}
 \end{demohigh}
+
+\subsection{Rowseps and Colseps for All}
 
 The following example uses \verb!rowsep! and \verb!colsep! keys to set padding for all rows and columns.
 \nopagebreak
@@ -64,6 +90,8 @@ The following example uses \verb!rowsep! and \verb!colsep! keys to set padding f
  Iota    & Kappa & Lambda & Mu    \\
 \end{tblr}
 \end{demohigh}
+
+\subsection{Hspan and Vspan Algorithms}
 
 With \verb!hspan=default! or \verb!hspan=even!,
 \verb!tabularray! package will compute column widths from span widths.
@@ -128,56 +156,102 @@ The following examples show the results from different \verb!vspan! values.
 \end{tblr}
 \end{demohigh}
 
-\section{Default Specifications}
+\subsection{Use Verbatim Commands}
 
-\verb!Tabularray! package provides \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
-for you to change the default inner and outer specifications of tables.
-Inner specifications are all specifications written in the mandatory argument of the \verb!tblr! environment,
-while outer specifications are all specifications written in the optional argument of the \verb!tblr! environment.
-At this time, most of the outer specifications are used for long tables (see Chapter \ref{chap:long}).
-
-In the below example, the first line draws all hlines and vlines for all tables created afterwards,
-while the second line makes all tables created afterwards vertically align at bottom.
-
-\begin{codehigh}
-\SetTblrInner{hlines,vlines}
-\SetTblrOuter{valign=b}
-\end{codehigh}
-
-You can define new \verb!tabularray! environments using \verb!\NewTblrEnviron! command:
+With \verb!verb! key, you can write \verb!\verb! commands in the cell text:
 
 \begin{demohigh}
-\NewTblrEnviron{mytblr}
-\SetTblrInner[mytblr]{hlines,vlines}
-\SetTblrOuter[mytblr]{valign=b}
-Text \begin{mytblr}{cccc}
- Alpha   & Beta  & Gamma  & Delta \\
- Epsilon & Zeta  & Eta    & Theta \\
- Iota    & Kappa & Lambda & Mu    \\
-\end{mytblr} Text
-\end{demohigh}
-
-If not giving the optional argument to \verb!\SetTblrInner! or \verb!\SetTblrOuter! command,
-we set the default specifications for \verb!tblr! environment.
-And different tabularray environments could have different default specifications.
-
-\section{New Table Commands}
-
-All commands which change the specifications of tables \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
-The following example demonstrates how to define a new table command:
-
-\begin{demohigh}
-\NewTableCommand\myhline{\hline[0.1em,red5]}
-\begin{tblr}{llll}
-\myhline
- Alpha   & Beta  & Gamma   & Delta \\
- Epsilon & Zeta  & Eta     & Theta \\
- Iota    & Kappa & Lambda  & Mu    \\
-\myhline
+\begin{tblr}{hlines,verb}
+  20 & 30 & \verb!\hello{world}!40 \\
+  50 & \verb!\hello!60 & 70 \\
 \end{tblr}
 \end{demohigh}
 
-\section{Expand Macros First}
+\subsection{Set Baseline for the Table}
+
+With \verb!baseline! key, you can set baseline for the table.
+All possible values for \verb!baseline! are as follows:
+
+\begin{center}
+\begin{tblr}{width=0.6\textwidth,colspec={cX[l]},hlines}
+  \V{t}    & align the table at the top \\
+  \V{T}    & align the table at the first row \\
+  \V{m}    & align the table at the middle, initial value \\
+  \V{b}    & align the table at the bottom \\
+  \V{B}    & align the table at the last row \\
+  \V{<n>}  & align the table at row \V{<n>} (a positive integer) \\
+\end{tblr}
+\end{center}
+
+If there is no hline above the first row, you get the same result with either \V{t} or \V{T}.
+But you get different results if there are one or more hlines above the row:
+
+\begin{demohigh}
+Baseline\begin{tblr}{hlines,baseline=t}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}Baseline
+\end{demohigh}
+
+\begin{demohigh}
+Baseline\begin{tblr}{hlines,baseline=T}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}Baseline
+\end{demohigh}
+
+The differences between \verb!b! and \verb!B! are similar to \verb!t! and \verb!T!.
+In fact, these two values \verb!T! and \verb!B! are better replacements
+for currently obsolete \verb!\firsthline! and \verb!\lasthline! commands.
+
+\section{Outer Specifications}
+
+Except for specifications to be introduced in Chapter \ref{chap:long},
+there are several other outer specifications which are described in Table~\ref{key:outer}.
+
+\begin{spectblr}[
+  caption = {Keys for Outer Specifications},
+  label = {key:outer},
+]{}
+  Key & Description and Values & Initial Value \\
+  \K{baseline} & set the baseline of the table & \V{m} \\
+  \K{long} & change the table to a long table & \None \\
+  \K{tall} & change the table to a tall table & \None \\
+  \K{expand} & you need this key to use verb commands & \None \\
+\end{spectblr}
+
+\subsection{Set Baseline in Another Way}
+
+You may notice that you can write \K{baseline} option as either an inner or an outer specification.
+It is true that either way would do the job. But there is a small difference:
+when \verb!baseline=t/T/m/b/B! is an outer specification,
+you can omit the key name and write the value only.
+
+\begin{demohigh}
+Baseline\begin{tblr}[m]{hlines}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}Baseline
+\end{demohigh}
+
+\subsection{Long and Tall Tables}
+
+You can change a table to long table by passing outer specification \K{long},
+or change it to tall table by passing outer specification \K{tall} (see Chapter~\ref{chap:long}).
+Therefore the following two tables are the same:
+\begin{codehigh}
+\begin{longtblr}{lcr}
+  Alpha & Beta & Gamma
+\end{longtblr}
+\begin{tblr}[long]{lcr}
+  Alpha & Beta & Gamma
+\end{tblr}
+\end{codehigh}
+
+\subsection{Expand Macros First}
 
 \verb!Tabularray! need to see every \verb!&! and \verb!\\! when splitting the table body
 with \verb!l3regex!. And you can not put cell text inside any table command defined with
@@ -204,17 +278,61 @@ The macro \underline{can not} be defined with \verb!\NewDocumentCommand! or
 \end{tblr}
 \end{demohigh}
 
-With this \verb!expand! option, you can also use \verb!environ! package
-to define a new environment based on \verb!tblr! environment:
+\section{Default Specifications}
+
+\verb!Tabularray! package provides \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
+for you to change the default inner and outer specifications of tables.
+
+In the below example, the first line draws all hlines and vlines for all tables created afterwards,
+while the second line makes all tables created afterwards vertically align at the last row.
+
+\begin{codehigh}
+\SetTblrInner{hlines,vlines}
+\SetTblrOuter{baseline=B}
+\end{codehigh}
+
+\section{New Tabularray Environments}
+
+You can define new \verb!tabularray! environments using \verb!\NewTblrEnviron! command:
 
 \begin{demohigh}
-\NewEnviron{fancytblr}{
- Before Text
- \begin{tblr}[expand=\BODY]{hlines}
-   \BODY
- \end{tblr}
- After Text
-}
+\NewTblrEnviron{mytblr}
+\SetTblrInner[mytblr]{hlines,vlines}
+\SetTblrOuter[mytblr]{baseline=B}
+Text \begin{mytblr}{cccc}
+ Alpha   & Beta  & Gamma  & Delta \\
+ Epsilon & Zeta  & Eta    & Theta \\
+ Iota    & Kappa & Lambda & Mu    \\
+\end{mytblr} Text
+\end{demohigh}
+
+If not giving the optional argument to \verb!\SetTblrInner! or \verb!\SetTblrOuter! command,
+we set the default specifications for \verb!tblr! environment.
+And different tabularray environments could have different default specifications.
+
+\section{New General Environments}
+
+With \verb!+b! argument type of \verb!\NewDocumentEnvironment! command,
+you can also define a new general environment based on \verb!tblr! environment
+(note that there is an extra pair of curly braces at the end):
+
+\NewDocumentEnvironment{fancytblr}{+b}{
+  Before Text
+  \begin{tblr}{hlines}
+    #1
+  \end{tblr}
+  After Text
+}{}
+\begin{codehigh}
+\NewDocumentEnvironment{fancytblr}{+b}{
+  Before Text
+  \begin{tblr}{hlines}
+    #1
+  \end{tblr}
+  After Text
+}{}
+\end{codehigh}
+\begin{demohigh}
 \begin{fancytblr}
   One   & Two   & Three \\
   Four  & Five  & Six   \\
@@ -222,14 +340,60 @@ to define a new environment based on \verb!tblr! environment:
 \end{fancytblr}
 \end{demohigh}
 
-\section{Use Verbatim Commands}
+\section{New Table Commands}
 
-With inner specification \verb!verb!, you can write \verb!\verb! commands in the cell text:
+All commands which change the specifications of tables \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
+The following example demonstrates how to define a new table command:
 
 \begin{demohigh}
-\begin{tblr}{hlines,verb}
-  20 & 30 & \verb!\hello{world}!40 \\
-  50 & \verb!\hello!60 & 70 \\
+\NewTableCommand\myhline{\hline[0.1em,red5]}
+\begin{tblr}{llll}
+\myhline
+ Alpha   & Beta  & Gamma   & Delta \\
+ Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    \\
+\myhline
+\end{tblr}
+\end{demohigh}
+
+\section{Odd and Even Selectors}
+
+From version 2022A, child selectors \verb!odd! and \verb!even! accept an optional argument,
+in which you can specify the start index and the end index of the childs.
+
+\begin{demohigh}
+\begin{tblr}{
+  cell{odd}{1} = {red9},
+  cell{odd[4]}{2} = {green9},
+  cell{odd[3-X]}{3} = {blue9},
+}
+  Head   & Head    & Head   \\
+  Talk A & Place A & Date A \\
+  Talk B & Place B & Date B \\
+  Talk C & Place C & Date C \\
+  Talk D & Place D & Date D \\
+  Talk E & Place E & Date E \\
+  Talk F & Place F & Date F \\
+  Talk G & Place G & Date G \\
+  Talk H & Place H & Date H \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\begin{tblr}{
+  cell{even}{1} = {yellow9},
+  cell{even[4]}{2} = {cyan9},
+  cell{even[3-X]}{3} = {purple9},
+}
+  Head   & Head    & Head   \\
+  Talk A & Place A & Date A \\
+  Talk B & Place B & Date B \\
+  Talk C & Place C & Date C \\
+  Talk D & Place D & Date D \\
+  Talk E & Place E & Date E \\
+  Talk F & Place F & Date F \\
+  Talk G & Place G & Date G \\
+  Talk H & Place H & Date H \\
 \end{tblr}
 \end{demohigh}
 

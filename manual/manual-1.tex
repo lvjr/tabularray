@@ -9,6 +9,13 @@
 
 \chapter{Overview of Features}
 
+Before using \verb!tabularray! package, it is better to know how to typeset simple text and
+math tables with traditional \verb!tabular!, \verb!tabularx! and \verb!array! environments,
+because we will compare \verb!tblr! environment from \verb!tabularray! package with these
+environments. You may read web pages on LaTeX tables on
+\href{https://www.learnlatex.org/en/lesson-08}{LearnLaTeX} and
+\href{https://www.overleaf.com/learn/latex/Tables}{Overleaf} first.
+
 \section{Vertical Space}
 
 After loading \verb!tabularray! package in the preamble,
@@ -360,7 +367,8 @@ Seven & Eight &  Nine \\
 \section{Colorful Tables}
 
 To add colors to your tables, you need to load \verb!xcolor! package first.
-\verb!Tabularray! package will also load \verb!ninecolors! package for proper color contrast.
+\verb!Tabularray! package will also load
+\href{https://ctan.org/pkg/ninecolors}{\texttt{ninecolors}} package for proper color contrast.
 First you can specify background option for \verb!Q! rows/columns inside \verb!rowspec!/\verb!colspec!:
 
 \begin{demohigh}
