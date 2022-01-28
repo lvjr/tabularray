@@ -950,7 +950,7 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
-    & \V{l} \\
+    & \V{j} \\
   \underline{\K{valign}}
     & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
       \V{h} (head) or \V{f} (foot)
@@ -1086,8 +1086,8 @@ All available keys for rows and columns are described in Table \ref{key:row} and
 ]{verb}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
-    & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
-    & \V{l} \\
+    & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
+    & \V{j} \\
   \underline{\K{valign}}
     & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
       \V{h} (head) or \V{f} (foot)
@@ -1117,8 +1117,8 @@ All available keys for rows and columns are described in Table \ref{key:row} and
 ]{verb}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
-    & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right)
-    & \V{l} \\
+    & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
+    & \V{j} \\
   \underline{\K{valign}}
     & vertical alignment: \V{t} (top), \V{m} (middle), \V{b} (bottom),
       \V{h} (head) or \V{f} (foot)
@@ -2297,12 +2297,14 @@ All available keys for template elements are described in Table \ref{key:element
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.
                   The keys \K{halign}, \K{indent} and \K{hang} are only for main templates.}
 ]{}
-  Key Name               & Key Description \\
-  \underline{\K{fg}}     & foreground color \\
-  \underline{\K{font}}   & font commands \\
-  \underline{\K{halign}} & horizontal alignment: \V{l} (left), \V{c} (center), or \V{r} (right) \\
-  \K{indent}             & parindent value \\
-  \K{hang}               & hangindent value \\
+  Key Name               & Key Description  & Initial Value\\
+  \underline{\K{fg}}     & foreground color & \None \\
+  \underline{\K{font}}   & font commands    & \None \\
+  \underline{\K{halign}}
+     & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
+                                            & \V{j} \\
+  \K{indent}             & parindent value  & \V{0pt} \\
+  \K{hang}               & hangindent value & \V{0pt} or \V{0.7em} \\
 \end{spectblr}
 
 You may change the styles of elements with \verb!\SetTblrStyle! command:
