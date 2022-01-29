@@ -3194,7 +3194,7 @@
 \cs_new_protected:Npn \__tblr_make_strut_box:
   {
     \tl_set:Nx \l__tblr_s_tl { \__tblr_prop_item:ne { inner } { stretch } }
-    \int_compare:nNnTF { \l__tblr_s_tl } > {0}
+    \fp_compare:nNnTF { \l__tblr_s_tl } > {0}
       {
         \hbox_set:Nn \l__tblr_strut_ht_box
           { \vrule height \l__tblr_s_tl \box_ht:N \strutbox width ~ 0pt }
