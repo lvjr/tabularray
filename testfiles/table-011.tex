@@ -103,6 +103,34 @@
 
 \bigskip\hrule\bigskip
 
+% See issue #99
+\BEGINTEST{testing itemize environment with measure=vbox and stretch=-1}
+\SetTblrInner{rowsep=2pt}
+\begin{tblr}{
+  colspec = {ll}, hlines, vlines,
+  measure = vbox, stretch=-1,
+}
+  text & text \\
+  \begin{itemize}[nosep]
+    \item text 1
+    \item text 2
+  \end{itemize} & oooo \\
+\end{tblr}
+\qquad
+\begin{tblr}{
+  colspec = {Q[l,b]Q[l,b]}, hlines, vlines,
+  measure = vbox, stretch=-1,
+}
+  text & text \\
+  \begin{itemize}[nosep]
+    \item text 1
+    \item text 2
+  \end{itemize} & gggg \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
 % See issue #36
 \BEGINTEST{testing \color command with measure=vbox}
 \begin{tblr}{
