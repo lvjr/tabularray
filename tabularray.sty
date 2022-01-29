@@ -3194,11 +3194,32 @@
 \cs_new_protected:Npn \__tblr_make_strut_box:
   {
     \tl_set:Nx \l__tblr_s_tl { \__tblr_prop_item:ne { inner } { stretch } }
-    \hbox_set:Nn \l__tblr_strut_ht_box
-      { \vrule height \l__tblr_s_tl \box_ht:N \strutbox width ~ 0pt }
-    \hbox_set:Nn \l__tblr_strut_dp_box
-      { \vrule depth \l__tblr_s_tl \box_dp:N \strutbox width ~ 0pt }
+    \int_compare:nNnTF { \l__tblr_s_tl } > {0}
+      {
+        \hbox_set:Nn \l__tblr_strut_ht_box
+          { \vrule height \l__tblr_s_tl \box_ht:N \strutbox width ~ 0pt }
+        \hbox_set:Nn \l__tblr_strut_dp_box
+          { \vrule depth \l__tblr_s_tl \box_dp:N \strutbox width ~ 0pt }
+        \cs_set_eq:NN \__tblr_use_strut_ht_box: \__tblr_use_strut_ht_box_real:
+        \cs_set_eq:NN \__tblr_use_strut_dp_box: \__tblr_use_strut_dp_box_real:
+      }
+      {
+        \cs_set_eq:NN \__tblr_use_strut_ht_box: \__tblr_use_strut_ht_box_ignore:
+        \cs_set_eq:NN \__tblr_use_strut_dp_box: \__tblr_use_strut_dp_box_ignore:
+      }
   }
+
+\cs_new_protected:Npn \__tblr_use_strut_ht_box_real:
+  {
+    \box_use:N \l__tblr_strut_ht_box
+  }
+\cs_new_protected:Npn \__tblr_use_strut_ht_box_ignore: { }
+
+\cs_new_protected:Npn \__tblr_use_strut_dp_box_real:
+  {
+    \box_use:N \l__tblr_strut_dp_box
+  }
+\cs_new_protected:Npn \__tblr_use_strut_dp_box_ignore: { }
 
 %% Calculate the thickness for every hline and vline
 \cs_new_protected:Npn \__tblr_calculate_line_sizes:
@@ -3663,12 +3684,12 @@
     \TblrParboxRestore
     \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
     \mode_leave_vertical:
-    \box_use:N \l__tblr_strut_ht_box
+    \__tblr_use_strut_ht_box:
     \tl_if_empty:NF \l__tblr_cell_fg_tl { \exp_args:NV \color \l__tblr_cell_fg_tl }
     \bool_if:NTF \l__tblr_cell_math_mode_bool
       { #1 }
       { \__tblr_rescan_cell_tokens:N #1 }
-    \box_use:N \l__tblr_strut_dp_box
+    \__tblr_use_strut_dp_box:
   }
 
 %% When using verb option, there is an end-of-line character at the end.
