@@ -3204,16 +3204,30 @@
         \cs_set_eq:NN \__tblr_use_strut_dp_box: \__tblr_use_strut_dp_box_real:
       }
       {
-        \cs_set_eq:NN \__tblr_use_strut_ht_box: \__tblr_use_strut_ht_box_ignore:
+        \fp_compare:nNnTF { \l__tblr_s_tl } < {0}
+          {
+            \cs_set_eq:NN \__tblr_use_strut_ht_box: \__tblr_use_strut_ht_box_vmode:
+          }
+          {
+            \cs_set_eq:NN \__tblr_use_strut_ht_box: \__tblr_use_strut_ht_box_hmode:
+          }
         \cs_set_eq:NN \__tblr_use_strut_dp_box: \__tblr_use_strut_dp_box_ignore:
       }
   }
 
 \cs_new_protected:Npn \__tblr_use_strut_ht_box_real:
   {
+    \mode_leave_vertical:
     \box_use:N \l__tblr_strut_ht_box
   }
-\cs_new_protected:Npn \__tblr_use_strut_ht_box_ignore: { }
+\cs_new_protected:Npn \__tblr_use_strut_ht_box_hmode:
+  {
+    \mode_leave_vertical:
+  }
+\cs_new_protected:Npn \__tblr_use_strut_ht_box_vmode:
+  {
+    \@minipagetrue % for lists (see issue #99)
+  }
 
 \cs_new_protected:Npn \__tblr_use_strut_dp_box_real:
   {
@@ -3683,7 +3697,7 @@
     \dim_set:Nn \tex_hsize:D { #2 }
     \TblrParboxRestore
     \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
-    \mode_leave_vertical:
+    %% \mode_leave_vertical: has been moved into \__tblr_use_strut_ht_box:
     \__tblr_use_strut_ht_box:
     \tl_if_empty:NF \l__tblr_cell_fg_tl { \exp_args:NV \color \l__tblr_cell_fg_tl }
     \bool_if:NTF \l__tblr_cell_math_mode_bool
