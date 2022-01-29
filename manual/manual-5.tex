@@ -301,21 +301,60 @@ By default, it uses \verb!\hbox! to measure the sizes.
 This causes an error if a cell contains some vertical material, such as lists or display maths.
 
 With \verb!\UseTblrLibrary{varwidth}! in the preamble of the document,
-\verb!tabularray! loads \verb!varwidth! package,
-and adds a new inner specification \verb!measure! for tables.
+\verb!tabularray! will load \verb!varwidth! package,
+and add a new inner specification \verb!measure! for tables.
 After setting \verb!measure=vbox!, it will use \verb!\vbox! to measure cell widths.
 
 \begin{demohigh}
-\begin{tblr}{measure=vbox}
-\hline
+\begin{tblr}{hlines,measure=vbox}
   Text Text Text Text Text Text Text
   \begin{itemize}
     \item List List List List List List
     \item List List List List List List List
   \end{itemize}
   Text Text Text Text Text Text Text \\
-\hline
 \end{tblr}
 \end{demohigh}
+
+From version 2022A, you can remove extra space above and below lists,
+by adding option \verb!stretch=-1!.
+The following example also needs \verb!enumitem! package and its \verb!nosep! option:
+
+{\centering\begin{tblr}{
+  hlines,vlines,rowspec={Q[l,t]Q[l,b]},
+  measure=vbox,stretch=-1,
+}
+  \begin{itemize}[nosep]
+    \item List List List List List
+    \item List List List List List List
+  \end{itemize} & oooo \\
+  \begin{itemize}[nosep]
+    \item List List List List List
+    \item List List List List List List
+  \end{itemize} & gggg \\
+\end{tblr}\par}
+
+%% BUG: there is extra vertical space at the beginning of the first cell if I use demohigh
+%\begin{demohigh}
+\begin{codehigh}
+\begin{tblr}{
+  hlines,vlines,rowspec={Q[l,t]Q[l,b]},
+  measure=vbox,stretch=-1,
+}
+  \begin{itemize}[nosep]
+    \item List List List List List
+    \item List List List List List List
+  \end{itemize} & oooo \\
+  \begin{itemize}[nosep]
+    \item List List List List List
+    \item List List List List List List
+  \end{itemize} & gggg \\
+\end{tblr}
+\end{codehigh}
+%\end{demohigh}
+
+Note that option \verb!stretch=-1! also removes struts from cells, therefore it may not work well
+in \verb!tabularray! environments with \verb!rowsep=0pt!, such as
+\verb!booktabs!/\verb!longtabs!/\verb!talltabs! environments from \verb!booktabs! library.
 
 \end{document}
