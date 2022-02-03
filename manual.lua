@@ -30,7 +30,7 @@ local function MakeManual()
     --print(line, name)
     local subtex = ReadFile(path .. name .. ".tex")
     --print(subtex)
-    local subbody = subtex:match("\\begin{document}\n\(.-)\n\\end{document}\n")
+    local subbody = subtex:match("\\begin{document}\n(.-)\n\\end{document}\n")
     text = text .. subbody
   end)
   text = head .. style .. "\n\\begin{document}\n" .. text .. "\n\\end{document}\n"
