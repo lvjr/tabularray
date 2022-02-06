@@ -7,7 +7,7 @@
 %%% ----------------------------------------------------------------------------
 
 %%% --------------------------------------------------------
-%%  \section{Scratch Variables and Function Variants}
+%%> \section{Scratch Variables and Function Variants}
 %%% --------------------------------------------------------
 
 %% \DeclareRelease and \DeclareCurrentRelease are added in LaTeX 2018-04-01
@@ -134,7 +134,7 @@
 \dim_new:N \rightsep
 
 %%% --------------------------------------------------------
-%%  \section{Data Structures Based on Property Lists}
+%%> \section{Data Structures Based on Property Lists}
 %%% --------------------------------------------------------
 
 \int_new:N \g_tblr_level_int % store table nesting level
@@ -245,7 +245,7 @@
 \cs_generate_variant:Nn \__tblr_gadd_dimen_value:Nnn { cnn }
 
 %%% --------------------------------------------------------
-%%  \section{Data Structures Based on Token Lists}
+%%> \section{Data Structures Based on Token Lists}
 %%% --------------------------------------------------------
 
 \cs_new_protected:Npn \__tblr_clear_spec_lists:
@@ -325,7 +325,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Data Structures Based on Integer Arrays}
+%%> \section{Data Structures Based on Integer Arrays}
 %%% --------------------------------------------------------
 
 \msg_new:nnn { tabularray } { intarray-beyond-bound }
@@ -769,7 +769,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Child Selectors}
+%%> \section{Child Selectors}
 %%% --------------------------------------------------------
 
 \clist_new:N \g_tblr_used_child_selectors_clist
@@ -921,7 +921,7 @@
 \cs_generate_variant:Nn \__tblr_child_name_to_index:nN { VN }
 
 %%% --------------------------------------------------------
-%%  \section{New Table Commands}
+%%> \section{New Table Commands}
 %%% --------------------------------------------------------
 
 %% We need some commands to modify table/row/column/cell specifications.
@@ -1034,7 +1034,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{New Dash Styles}
+%%> \section{New Dash Styles}
 %%% --------------------------------------------------------
 
 %% \NewDashStyle commands
@@ -1104,7 +1104,7 @@
 \NewDashStyle {dotted} {on ~ 0.4pt ~ off ~ 1pt}
 
 %%% --------------------------------------------------------
-%%  \section{Set Hlines and Vlines}
+%%> \section{Set Hlines and Vlines}
 %%% --------------------------------------------------------
 
 \tl_set:Nn \@tblr@dash { dash }
@@ -1652,7 +1652,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Set Cells}
+%%> \section{Set Cells}
 %%% --------------------------------------------------------
 
 %% \SetCells command for setting every cell in the table
@@ -1908,7 +1908,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Set Columns and Rows}
+%%> \section{Set Columns and Rows}
 %%% --------------------------------------------------------
 
 %% \SetColumns command for setting every column in the table
@@ -2258,7 +2258,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Column Types and Row Types}
+%%> \section{Column Types and Row Types}
 %%% --------------------------------------------------------
 
 %% Some primitive column/row types
@@ -2548,7 +2548,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Set Environments and New Environments}
+%%> \section{Set Environments and New Environments}
 %%% --------------------------------------------------------
 
 \tl_new:N \l__tblr_initial_tblr_outer_tl
@@ -2641,7 +2641,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Split Table Contents}
+%%> \section{Split Table Contents}
 %%% --------------------------------------------------------
 
 %% Insert and remove braces for nesting environments inside cells
@@ -2802,7 +2802,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Extract Table Commands from Cell Text}
+%%> \section{Extract Table Commands from Cell Text}
 %%% --------------------------------------------------------
 
 %% Extract table commands defined with \NewTableCommand from cell text
@@ -2883,7 +2883,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Initialize Table Inner Specifications}
+%%> \section{Initialize Table Inner Specifications}
 %%% --------------------------------------------------------
 
 \prop_gset_from_keyval:Nn \g__tblr_initial_table_prop
@@ -3064,7 +3064,7 @@
 \cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
 
 %%% --------------------------------------------------------
-%%  \section{Initialize and Parse Table Outer Specifications}
+%%> \section{Initialize and Parse Table Outer Specifications}
 %%% --------------------------------------------------------
 
 \msg_new:nnn { tabularray } { used-theme-name }
@@ -3171,7 +3171,7 @@
 \cs_generate_variant:Nn \__tblr_outer_gput_more:nn { Vn }
 
 %%% --------------------------------------------------------
-%%  \section{Typeset and Calculate Sizes}
+%%> \section{Typeset and Calculate Sizes}
 %%% --------------------------------------------------------
 
 %% Calculate the width and height for every cell and border
@@ -3888,7 +3888,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Calculate and Adjust Extendable Columns}
+%%> \section{Calculate and Adjust Extendable Columns}
 %%% --------------------------------------------------------
 
 %% Compute column widths when there are some extendable columns
@@ -4056,7 +4056,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Calculate and Adjust Multispan Cells}
+%%> \section{Calculate and Adjust Multispan Cells}
 %%% --------------------------------------------------------
 
 %% Compute and adjust widths when there are some span cells.
@@ -6481,7 +6481,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Tracing Tabularray}
+%%> \section{Tracing Tabularray}
 %%% --------------------------------------------------------
 
 \NewDocumentCommand \SetTblrTracing { m }
@@ -6716,7 +6716,7 @@
   }
 
 %%% --------------------------------------------------------
-%%  \section{Tabularray Libraries}
+%%> \section{Tabularray Libraries}
 %%% --------------------------------------------------------
 
 %% \NewTblrLibrary and \UseTblrLibrary commands
