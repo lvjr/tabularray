@@ -3318,7 +3318,11 @@
       {
         %% When using text as vline, we need to omit abovepos and belowpos.
         \unskip
-        \hbox_set:Nn \l__tblr_d_box { \l__tblr_b_tl }
+        \hbox_set:Nn \l__tblr_d_box
+          {
+            \bool_if:NTF \l__tblr_math_mode_bool
+              { $ \l__tblr_b_tl $ } { \l__tblr_b_tl }
+          }
         \box_set_ht:Nn \l__tblr_d_box {#4}
         \box_set_dp:Nn \l__tblr_d_box {#5}
         \box_use:N \l__tblr_d_box
@@ -3376,7 +3380,11 @@
         \__tblr_get_hline_dash_style:N \l__tblr_b_tl
         \xleaders \l__tblr_b_tl \hfil
       }
-      { \l__tblr_b_tl \hfil }
+      {
+        \bool_if:NTF \l__tblr_math_mode_bool
+          { $ \l__tblr_b_tl $ } { \l__tblr_b_tl }
+        \hfil
+      }
     \group_end:
   }
 
