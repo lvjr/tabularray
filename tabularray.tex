@@ -731,7 +731,7 @@ Their values are the same as options \verb!hlines! and \verb!vlines!:
 \end{tblr}
 \end{demohigh}
 
-You can use \verb!X!, \verb!Y!, \verb!Z! to denote the last three childs, respectively.
+You can use \verb!X!, \verb!Y!, \verb!Z! to denote the last three children, respectively.
 It is especially useful when you are writing long tables:
 
 \begin{demohigh}
@@ -1349,7 +1349,7 @@ It can have an optional argument when it's defined.
 \chapter{Extra Interfaces}
 \label{chap:extra}
 
-In general, \verb!tblr! envrinment can accepts both inner and outer specifications:
+In general, \verb!tblr! environment can accepts both inner and outer specifications:
 
 \begin{codehigh}
 \begin{tblr}[<outer specs>]{<inner specs>}
@@ -1364,7 +1364,7 @@ of \verb!tblr! environment, which include new interfaces described in Chapter \r
 of \verb!tblr! environment, most of which are used for long tables (see Chapter \ref{chap:long}).
 
 You can use \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
-to set default inner and outer specifications of tables, repectively.
+to set default inner and outer specifications of tables, respectively.
 
 \section{Inner Specifications}
 
@@ -1697,7 +1697,7 @@ The following example demonstrates how to define a new table command:
 \section{Odd and Even Selectors}
 
 From version 2022A, child selectors \verb!odd! and \verb!even! accept an optional argument,
-in which you can specify the start index and the end index of the childs.
+in which you can specify the start index and the end index of the children.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -2451,7 +2451,7 @@ you can also specify rule width and color in the optional argument of any of the
 \end{tblr}
 \end{demohigh}
 
-If you need more than one \verb!\cmidrules!, you can use \verb!\cmidrulemore! command.
+If you need more than one \verb!\cmidrule!s, you can use \verb!\cmidrulemore! command.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -2723,31 +2723,22 @@ in \verb!tabularray! environments with \verb!rowsep=0pt!, such as
 Starting from 2022, except for hotfix releases for critical bugs,
 all new releases will be published only in March, June, September or December.
 You may watch the milestones page for the scheduled dates of upcoming releases
-and their changes:
-
-\begin{center}
-\url{https://github.com/lvjr/tabularray/milestones}
-\end{center}
+and their changes:\newline
+\centerline{\url{https://github.com/lvjr/tabularray/milestones}}
 
 To make the upcoming releases more stable, you are very welcome to test the latest package file
 in the repository. To test it, you only need to download the following \verb!tabularray.sty!
-and put it into the folder of your TeX documents:
-
-\begin{center}
-\url{https://github.com/lvjr/tabularray/raw/main/tabularray.sty}
-\end{center}
+and put it into the folder of your TeX documents:\newline
+\centerline{\url{https://github.com/lvjr/tabularray/raw/main/tabularray.sty}}
 
 \section{The History}
 
-The change log of \verb!tabularray! package will be updated on the wiki page:
-
-\begin{center}
-\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}
-\end{center}
+The change log of \verb!tabularray! package will be updated on the wiki page:\newline
+\centerline{\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}}
 
 In version 2022A, there were several breaking changes:
 
-\begin{itemize}
+\begin{itemize}[nosep]
   \item \verb!\multicolumn! command was removed; it is better to use \verb!\SetCell! command.
   \item \verb!\multirow! command was removed; it is better to use \verb!\SetCell! command.
   \item \verb!\firsthline! command was removed; it is better to use \verb!baseline=T! option.
