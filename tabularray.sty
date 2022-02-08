@@ -3581,6 +3581,7 @@
       }
     \dim_compare:nNnT { \l__tblr_w_tl } < { 0pt } % column width unset
       {
+        \__tblr_save_counters:n { cell }
         \bool_if:NTF \l__tblr_cell_math_mode_bool
           {
             %% Note that font = \boldmath will increase cell width (issue #137)
@@ -3590,6 +3591,7 @@
           {
             \__tblr_get_cell_size_with_box:
           }
+        \__tblr_restore_counters:n { cell }
       }
     \tl_set:Nx \l__tblr_cell_fg_tl
       { \__tblr_data_item:neen { cell } {#1} {#2} { foreground } }
@@ -3600,11 +3602,9 @@
 
 \cs_new_protected:Npn \__tblr_get_cell_size_with_box:
   {
-    \__tblr_save_counters:n { cell }
     \tl_if_eq:NnTF \l__tblr_inner_spec_measure_tl { vbox }
       { \__tblr_get_cell_size_with_vbox: }
       { \__tblr_get_cell_size_with_hbox: }
-    \__tblr_restore_counters:n { cell }
   }
 
 %% Varwidth won't work as expected when \color command occurs in it,
