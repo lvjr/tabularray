@@ -9,6 +9,7 @@
 \usepackage{xcolor}
 \usepackage{tabularx}
 \usepackage{enumitem}
+\usepackage{hyperref}
 
 \SetTblrTracing{none}
 \SetTblrInner{rowsep=0pt}
@@ -126,6 +127,48 @@
     \item text 1
     \item text 2
   \end{itemize} & gggg \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+% See issue #196
+\BEGINTEST{testing enumerate environment with measure=vbox and stretch=-1}
+\SetTblrInner{rowsep=2pt}
+\makeatletter
+\newcommand\myitem{\measuring@true\item\measuring@false}
+\makeatother
+\begin{tblr}{
+  colspec = {ll}, hlines, vlines,
+  measure = vbox, stretch=-1,
+}
+  text & text \\
+  \begin{enumerate}[nosep]
+    \item text 1
+    \item text 2
+  \end{enumerate} & oooo \\
+\end{tblr}
+\qquad
+\begin{tblr}{
+  colspec = {ll}, hlines, vlines,
+  measure = vbox, stretch=-1,
+}
+  text & text \\
+  \begin{enumerate}[nosep]
+    \myitem text 1
+    \item text 2
+  \end{enumerate} & oooo \\
+\end{tblr}
+\qquad
+\begin{tblr}{
+  colspec = {Q[l,b]Q[l,b]}, hlines, vlines,
+  measure = vbox, stretch=-1,
+}
+  text & text \\
+  \begin{enumerate}[nosep]
+    \item text 1
+    \item text 2
+  \end{enumerate} & gggg \\
 \end{tblr}
 \ENDTEST
 
