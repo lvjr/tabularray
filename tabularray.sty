@@ -30,7 +30,14 @@
   \msg_error:nn { tabularray } { latex-too-old }
 }
 
-\AtBeginDocument{\@ifpackageloaded{xcolor}{\RequirePackage{ninecolors}}{}}
+\AtBeginDocument{
+  \@ifpackageloaded{xcolor}{\RequirePackage{ninecolors}}{}
+  \@ifpackageloaded{hyperref}{
+    \newenvironment{tblrNoHyper}{\NoHyper}{\endNoHyper}
+  }{
+    \newenvironment{tblrNoHyper}{}{}
+  }
+}
 
 \NewDocumentCommand \TblrParboxRestore { } { \@parboxrestore }
 
@@ -3607,6 +3614,9 @@
 %% or users may use it in the middle of the cell text,
 %% so we have redefine \color command and disable it before measuring cell.
 
+%% In order to correctly measure an enumerate environment,
+%% we need to enclose varwidth with NoHyper environment (see issue #196).
+
 \NewDocumentCommand \__tblr_fake_color_command:w { o m } { }
 
 \cs_new_protected:Npn \__tblr_get_cell_size_with_vbox:
@@ -3614,10 +3624,12 @@
     \hbox_set:Nn \l_tmpa_box
       {
         \cs_set_eq:NN \color \__tblr_fake_color_command:w
+        \begin{tblrNoHyper}
         \begin{varwidth}{\paperwidth}
            \l__tblr_f_tl
            \__tblr_rescan_cell_tokens:N \l__tblr_c_tl
         \end{varwidth}
+        \end{tblrNoHyper}
       }
     \tl_set:Nx \l__tblr_w_tl { \box_wd:N \l_tmpa_box }
   }
