@@ -42,6 +42,34 @@ a\begin{tblr}{|r@{.}ll|}
 
 \bigskip\hrule\bigskip
 
+\BEGINTEST{testing @ expression in math mode}% see #138
+$\begin{array}{r @{{}={}} l}
+1 & 1
+\end{array}$
+\quad
+$\begin{tblr}{r @{{}={}} l}
+1 & 1
+\end{tblr}$
+\qquad
+$\begin{array}{r @{${}={}$} l}
+1 & 1
+\end{array}$
+\quad
+$\begin{tblr}{r @{${}={}$} l}
+1 & 1
+\end{tblr}$
+\qquad
+$\begin{array}{r @{\rightarrow} l}
+1 & 1
+\end{array}$
+\quad
+$\begin{tblr}{r @{\rightarrow} l}
+1 & 1
+\end{tblr}$
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
 \BEGINTEST{testing !, < and > specifiers}
 \begin{tblr}{
   colspec={ll>{\sffamily}l!{:}>[0pt]{$}l<{$}l>{\bfseries}l},
