@@ -21,7 +21,7 @@
 
 \newcounter{mycnt}
 
-\BEGINTEST{counter library: testing}
+\BEGINTEST{counter library: text mode}
 \begin{tabular}{|l|l|}
 \hline
   \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
@@ -37,6 +37,27 @@
   \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
   \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
 \end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{counter library: math mode}
+\setcounter{mycnt}{0}%
+$\begin{array}{|l|l|}
+\hline
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+\hline
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+\hline
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+\hline
+\end{array}$
+\quad\setcounter{mycnt}{0}%
+$\begin{tblr}{cells={l},hlines,vlines}
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+  \stepcounter{mycnt}\arabic{mycnt} & \stepcounter{mycnt}\arabic{mycnt} \\
+\end{tblr}$
 \ENDTEST
 
 \end{document}
