@@ -56,6 +56,8 @@
 
 \NewDocumentCommand \TblrAlignRight { } { \raggedleft }
 
+\cs_set_eq:NN \TblrNewPage \newpage
+
 \cs_generate_variant:Nn \msg_error:nnnn { nnVn }
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nxn, Nxx, NxV }
@@ -5438,7 +5440,7 @@
                 \int_incr:N \l__tblr_table_page_int
                 \int_set:Nn \l__tblr_long_from_int { \l__tblr_prev_i_int + 1 }
               }
-            \newpage
+            \TblrNewPage
             \hbox{}\kern-\topskip\nobreak
             \noindent
             \LogTblrTracing { page }
@@ -5452,7 +5454,7 @@
                   { \int_use:N \l__tblr_long_from_int }
                   { \int_use:N \l__tblr_curr_i_int }
                 \int_incr:N \l__tblr_table_page_int
-                \newpage
+                \TblrNewPage
                 \hbox{}\kern-\topskip\nobreak
                 \noindent
                 \LogTblrTracing { page }
