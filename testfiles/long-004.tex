@@ -26,7 +26,7 @@
   note{a} = {It is the first footnote.},
   remark{Note} = {Some general note. Some general note. Some general note.},
 ]{
-  colspec = {XXX}, width = 0.5\linewidth, hlines,
+  colspec = {XXX[r]}, width = 0.5\linewidth, hlines,
 }
  Alpha   & Beta  & Gamma \\
  Epsilon & Zeta  & Eta\TblrNote{a} \\
@@ -46,7 +46,7 @@ TEXT
   note{$\dag$} = {It is the second long long long long long long footnote.},
   remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
 ]{
-  colspec = {XXX}, width = 0.5\linewidth, hlines,
+  colspec = {XXX[r]}, width = 0.5\linewidth, hlines,
 }
  Alpha   & Beta & Gamma \\
  Epsilon & Zeta & Eta   \\
@@ -54,6 +54,8 @@ TEXT
 \end{tblr}
 \end{table}
 \ENDTEST
+
+\renewcommand\TblrOverlap[1]{#1}
 
 \BEGINTEST{tall table: inline}
 \noindent TEXT
@@ -63,7 +65,7 @@ TEXT
   note{a} = {It is the first footnote.},
   remark{Note} = {Some general note. Some general note. Some general note.},
 ]{
-  colspec = {XXX}, width = 0.5\linewidth, hlines,
+  colspec = {XXX[r]}, width = 0.5\linewidth, hlines,
 }
  Alpha   & Beta  & Gamma \\
  Epsilon & Zeta  & Eta\TblrNote{a} \\
@@ -83,7 +85,7 @@ TEXT
   note{$\dag$} = {It is the second long long long long long long footnote.},
   remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
 ]{
-  colspec = {XXX}, width = 0.5\linewidth, hlines,
+  colspec = {XXX[r]}, width = 0.5\linewidth, hlines,
 }
  Alpha   & Beta & Gamma \\
  Epsilon & Zeta & Eta   \\
