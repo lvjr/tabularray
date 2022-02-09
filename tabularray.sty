@@ -5005,11 +5005,16 @@
   }
 \SetTblrTemplate { note-border } { empty }
 
+\cs_set_eq:NN \TblrOverlap \rlap
+
 \NewDocumentCommand \TblrNote { m }
   {
     \cs_if_exist:NT \hypersetup { \ExpTblrTemplate { note-border }{ default } }
-    \__tblr_hyper_link:nn {#1}
-      { \textsuperscript { \sffamily \UseTblrFont { note-tag } #1 } }
+    \TblrOverlap
+      {
+        \__tblr_hyper_link:nn {#1}
+          { \textsuperscript { \sffamily \UseTblrFont { note-tag } #1 } }
+      }
   }
 
 \DefTblrTemplate { note-tag } { empty } { }
