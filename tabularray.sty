@@ -27,7 +27,9 @@
     Please ~ update ~ to ~ 2020-10-01 ~ first.
   }
 \@ifl@t@r\fmtversion{2020-10-01}{}{
-  \msg_error:nn { tabularray } { latex-too-old }
+  %% Support TeX Live 2020 on Overleaf
+  \msg_warning:nn { tabularray } { latex-too-old }
+  \usepackage{xparse}
 }
 
 \AtBeginDocument{
