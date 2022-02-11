@@ -3452,6 +3452,7 @@
     %% You can use these two counters in cell text
     \int_zero:N \c@rownum
     \int_zero:N \c@colnum
+    \__tblr_save_counters:n { table }
     \int_step_inline:nn { \c@rowcount }
       {
         \int_incr:N \c@rownum
@@ -3478,6 +3479,7 @@
               \g__tblr_cell_foot_dim
           }
       }
+    \__tblr_restore_counters:n { table }
     \int_step_inline:nn { \c@colcount }
       {
         \tl_set:Nx \l__tblr_w_tl
@@ -3511,9 +3513,7 @@
 \cs_new_protected:Npn \__tblr_measure_cell_update_sizes:nnNNNN #1 #2 #3 #4 #5 #6
   {
     \__tblr_get_cell_alignments:nn {#1} {#2}
-    \__tblr_save_counters:n { trial }
     \hbox_set:Nn \l_tmpa_box { \__tblr_get_cell_text:nn {#1} {#2} }
-    \__tblr_restore_counters:n { trial }
     \__tblr_update_cell_size:nnNNNN {#1} {#2} #3 #4 #5 #6
     \__tblr_update_row_size:nnNNN {#1} {#2} #4 #5 #6
     \__tblr_update_col_size:nN {#2} #3
