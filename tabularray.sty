@@ -5231,14 +5231,18 @@
     %% \l__tblr_row_head_tl and \l__tblr_row_foot_tl may be empty
     \tl_set:Nx \l__tblr_row_head_tl { \__tblr_prop_item:ne { inner } { rowhead } }
     \int_compare:nNnTF { \l__tblr_row_head_tl + 0 } > { 0 }
-      { \__tblr_build_one_table:nn {1} { \l__tblr_row_head_tl } }
+      {
+        \__tblr_build_one_table:nnNN {1} { \l__tblr_row_head_tl }
+          \c_true_bool \c_true_bool
+      }
       { \__tblr_build_one_hline:n {1} }
     \box_set_eq:NN \l__tblr_row_head_box \l__tblr_table_box
     \tl_set:Nx \l__tblr_row_foot_tl { \__tblr_prop_item:ne { inner } { rowfoot } }
     \int_compare:nNnTF { \l__tblr_row_foot_tl + 0 } > { 0 }
       {
-        \__tblr_build_one_table:nn
+        \__tblr_build_one_table:nnNN
           { \c@rowcount - \l__tblr_row_foot_tl + 1 } { \c@rowcount }
+          \c_true_bool \c_true_bool
       }
       { \__tblr_build_one_hline:n { \int_eval:n { \c@rowcount + 1 } } }
     \box_set_eq:NN \l__tblr_row_foot_box \l__tblr_table_box
@@ -5578,9 +5582,7 @@
 %% #1: table alignment; #2: row from; #3: row to
 \cs_new_protected:Npn \__tblr_build_page_table:nnn #1 #2 #3
   {
-    \bool_set_false:N \l__tblr_build_first_hline_bool
-    \bool_set_false:N \l__tblr_build_last_hline_bool
-    \__tblr_build_one_table:nn {#2} {#3}
+    \__tblr_build_one_table:nnNN {#2} {#3} \c_false_bool \c_false_bool
     \vbox_set:Nn \l__tblr_table_box
       {
         \box_use:N \l__tblr_table_head_box
@@ -5628,7 +5630,7 @@
   {
     \mode_leave_vertical:
     \__tblr_build_tall_table_head_foot:
-    \__tblr_build_one_table:nn {1} {\c@rowcount}
+    \__tblr_build_one_table:nnNN {1} {\c@rowcount} \c_true_bool \c_true_bool
     \vbox_set:Nn \l__tblr_table_box
       {
         \box_use:N \l__tblr_table_firsthead_box
@@ -5646,23 +5648,20 @@
 \cs_new_protected:Npn \__tblr_build_short_table:n #1
   {
     \mode_leave_vertical:
-    \__tblr_build_one_table:nn {1} {\c@rowcount}
+    \__tblr_build_one_table:nnNN {1} {\c@rowcount} \c_true_bool \c_true_bool
     \__tblr_valign_whole:Nn \l__tblr_table_box {#1}
   }
 \cs_generate_variant:Nn \__tblr_build_short_table:n { e }
 
-\bool_new:N \l__tblr_build_first_hline_bool
-\bool_new:N \l__tblr_build_last_hline_bool
-\bool_set_true:N \l__tblr_build_first_hline_bool
-\bool_set_true:N \l__tblr_build_last_hline_bool
 \box_new:N \l__tblr_table_hlines_box
 \box_new:N \l__tblr_hline_box
 \box_new:N \l__tblr_row_box
 
 %% #1: row from; #2: row to
+%% #3: whether build first hline or not; #4: whether build last hline or not
 %% To fix disappeared hlines with colorful tables in Adobe Reader (see #76),
 %% we collect all hlines and draw them at the end of the table.
-\cs_new_protected:Npn \__tblr_build_one_table:nn #1 #2
+\cs_new_protected:Npn \__tblr_build_one_table:nnNN #1 #2 #3 #4
   {
     \box_clear:N \l__tblr_table_hlines_box
     \vbox_set:Nn \l__tblr_table_box
@@ -5671,13 +5670,13 @@
           {
             \bool_lazy_or:nnT
               { \int_compare_p:nNn { \l__tblr_i_tl } > {#1} }
-              { \bool_if_p:N \l__tblr_build_first_hline_bool }
+              { \bool_if_p:N #3 }
               { \__tblr_put_one_hline:n { \__tblr_build_hline:V \l__tblr_i_tl } }
             \hrule height ~ 0pt % remove lineskip between hlines and rows
             \__tblr_put_one_row:n { \__tblr_build_row:N \l__tblr_i_tl }
             \hrule height ~ 0pt
           }
-        \bool_if:NT \l__tblr_build_last_hline_bool
+        \bool_if:NT #4
           {
             \__tblr_put_one_hline:n
               { \__tblr_build_hline:n { \int_eval:n {#2 + 1} } }
@@ -5689,8 +5688,6 @@
           }
         \box_use:N \l__tblr_table_hlines_box
       }
-    \bool_set_true:N \l__tblr_build_first_hline_bool
-    \bool_set_true:N \l__tblr_build_last_hline_bool
   }
 
 \cs_new_protected:Npn \__tblr_put_one_hline:n #1
