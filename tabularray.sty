@@ -6974,6 +6974,14 @@
         \LogTblrTracing { step = do ~ functional ~ calculation }
         \__tblr_prop_item:nn { inner } { func }
       }
+    \PrgNewFunction \CellGetText { m m }
+      {
+        \Expand { \__tblr_spec_item:nn { text } { [##1][##2] } }
+      }
+    \PrgNewFunction \CellSetText { m m m }
+      {
+        \__tblr_spec_gput:nnn { text } { [##1][##2] } {##3}
+      }
   }
 
 %% Library siunitx and S columns
