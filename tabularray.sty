@@ -2643,6 +2643,7 @@
     \LogTblrTracing { step = execute ~ table ~ commands}
     \__tblr_execute_table_commands:
     \__tblr_disable_table_commands:
+    \__tblr_functional_calculation:
     \LogTblrTracing { step = calculate ~ cell ~ and ~ line ~ sizes}
     \__tblr_enable_content_commands:
     \__tblr_calc_cell_and_line_sizes:
@@ -6959,6 +6960,22 @@
     \box_use:N \l__tblr_diag_box
   }
 
+%% Library functional and func option
+
+\cs_set_eq:NN \__tblr_functional_calculation: \prg_do_nothing:
+
+\NewTblrLibrary { functional }
+  {
+    \RequirePackage { functional }
+    \clist_put_right:Nn \g__tblr_table_known_keys_clist { func }
+    \keys_define:nn { tblr } { func .code:n = \__tblr_keys_gput:nn { func } {##1} }
+    \cs_set:Npn \__tblr_functional_calculation:
+      {
+        \LogTblrTracing { step = do ~ functional ~ calculation }
+        \__tblr_prop_item:nn { inner } { func }
+      }
+  }
+
 %% Library siunitx and S columns
 
 \NewTblrLibrary { siunitx }
@@ -7010,4 +7027,3 @@
     \clist_gput_left:Nn \g__tblr_table_known_keys_clist { measure }
     \keys_define:nn { tblr } { measure .tl_set:N = \l__tblr_inner_spec_measure_tl }
   }
-
