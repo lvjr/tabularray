@@ -2694,7 +2694,7 @@
 \cs_new_protected:Npn \__tblr_split_table:n #1
   {
     \tl_set:Nn \l__tblr_body_tl {#1}
-    \tblr_modify_table_body:N \l__tblr_body_tl
+    \tblr_modify_table_body:
     \int_zero:N \c@rowcount
     \int_zero:N \c@colcount
     \__tblr_split_table_to_lines:NN \l__tblr_body_tl \l__tblr_lines_seq
@@ -2703,15 +2703,14 @@
 
 \tl_new:N \l__tblr_expand_tl
 
-%% #1: tl with table content
-\cs_new_protected:Npn \tblr_modify_table_body:N #1
+\cs_new_protected:Npn \tblr_modify_table_body:
   {
     \tl_set:Nx \l__tblr_expand_tl { \__tblr_spec_item:nn { outer } { expand } }
     \tl_set:Nx \l__tblr_expand_tl { \tl_head:N \l__tblr_expand_tl }
     \tl_if_empty:NF \l__tblr_expand_tl
       {
         \exp_last_unbraced:NNV
-        \__tblr_expand_table_body:NN #1 \l__tblr_expand_tl
+        \__tblr_expand_table_body:NN \l__tblr_body_tl \l__tblr_expand_tl
       }
   }
 
@@ -6978,6 +6977,40 @@
 \NewTblrLibrary { functional }
   {
     \RequirePackage { functional }
+    %% Add outer specification "evaluate"
+    \keys_define:nn { tblr-outer }
+      { evaluate .code:n = \__tblr_outer_gput_spec:nn { evaluate } {##1} }
+    \tl_new:N \l__tblr_evaluate_tl
+    \hook_gput_code:nnn { cmd / tblr_modify_table_body: / before } { tblr }
+      {
+        \tl_set:Nx \l__tblr_evaluate_tl
+          { \__tblr_spec_item:nn { outer } { evaluate } }
+        \tl_set:Nx \l__tblr_evaluate_tl { \tl_head:N \l__tblr_evaluate_tl }
+        \tl_if_empty:NF \l__tblr_evaluate_tl
+          {
+            \exp_last_unbraced:NNV
+            \__tblr_evaluate_table_body:NN \l__tblr_body_tl \l__tblr_evaluate_tl
+          }
+      }
+    %% Evaluate every occurrence of the specified function
+    %% #1: tl with table content; #2: function to be evaluate
+    \cs_new_protected:Npn \__tblr_evaluate_table_body:NN ##1 ##2
+      {
+        \tl_set_eq:NN \l_tmpa_tl ##1
+        \tl_clear:N ##1
+        \cs_set_eq:NN \fun_use_result_saved: \fun_use_result:
+        \cs_set_protected:Npn \__tblr_evaluate_table_body_aux:w ####1 ##2
+          {
+            \tl_put_right:Nn ##1 {####1}
+            \peek_meaning:NTF \q_stop { \use_none:n } {##2}
+          }
+        \cs_set_protected:Npn \fun_use_result:
+          { \exp_last_unbraced:NV \__tblr_evaluate_table_body_aux:w \gResultTl }
+        \exp_last_unbraced:NV
+          \__tblr_evaluate_table_body_aux:w \l_tmpa_tl ##2 \q_stop
+        \cs_set_eq:NN \fun_use_result: \fun_use_result_saved:
+      }
+    %% Add inner specification "process"
     \clist_put_right:Nn \g__tblr_table_known_keys_clist { process }
     \keys_define:nn { tblr }
       { process .code:n = \__tblr_keys_gput:nn { process } {##1} }
