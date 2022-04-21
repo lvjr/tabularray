@@ -6967,12 +6967,13 @@
 \NewTblrLibrary { functional }
   {
     \RequirePackage { functional }
-    \clist_put_right:Nn \g__tblr_table_known_keys_clist { func }
-    \keys_define:nn { tblr } { func .code:n = \__tblr_keys_gput:nn { func } {##1} }
+    \clist_put_right:Nn \g__tblr_table_known_keys_clist { process }
+    \keys_define:nn { tblr }
+      { process .code:n = \__tblr_keys_gput:nn { process } {##1} }
     \cs_set:Npn \__tblr_functional_calculation:
       {
         \LogTblrTracing { step = do ~ functional ~ calculation }
-        \__tblr_prop_item:nn { inner } { func }
+        \__tblr_prop_item:nn { inner } { process }
       }
     \PrgNewFunction \CellGetText { m m }
       {
