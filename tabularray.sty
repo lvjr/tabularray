@@ -6993,22 +6993,22 @@
           }
       }
     %% Evaluate every occurrence of the specified function
-    %% #1: tl with table content; #2: function to be evaluate
+    %% #1: tl with table content; #2: function to be evaluated
     \cs_new_protected:Npn \__tblr_evaluate_table_body:NN ##1 ##2
       {
         \tl_set_eq:NN \l_tmpa_tl ##1
         \tl_clear:N ##1
-        \cs_set_eq:NN \fun_use_result_saved: \fun_use_result:
+        \cs_set_eq:NN \tblr_fun_use_result:  \FunUseResult
         \cs_set_protected:Npn \__tblr_evaluate_table_body_aux:w ####1 ##2
           {
             \tl_put_right:Nn ##1 {####1}
             \peek_meaning:NTF \q_stop { \use_none:n } {##2}
           }
-        \cs_set_protected:Npn \fun_use_result:
+        \cs_set_protected:Npn \FunUseResult
           { \exp_last_unbraced:NV \__tblr_evaluate_table_body_aux:w \gResultTl }
         \exp_last_unbraced:NV
           \__tblr_evaluate_table_body_aux:w \l_tmpa_tl ##2 \q_stop
-        \cs_set_eq:NN \fun_use_result: \fun_use_result_saved:
+        \cs_set_eq:NN \FunUseResult \tblr_fun_use_result:
       }
     %% Add inner specification "process"
     \clist_put_right:Nn \g__tblr_table_known_keys_clist { process }
