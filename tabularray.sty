@@ -2703,8 +2703,11 @@
 
 \tl_new:N \l__tblr_expand_tl
 
+\cs_set_eq:NN \__tblr_hook_split_before: \prg_do_nothing:
+
 \cs_new_protected:Npn \tblr_modify_table_body:
   {
+    \__tblr_hook_split_before:
     \tl_set:Nx \l__tblr_expand_tl { \__tblr_spec_item:nn { outer } { expand } }
     \tl_set:Nx \l__tblr_expand_tl { \tl_head:N \l__tblr_expand_tl }
     \tl_if_empty:NF \l__tblr_expand_tl
@@ -6981,7 +6984,7 @@
     \keys_define:nn { tblr-outer }
       { evaluate .code:n = \__tblr_outer_gput_spec:nn { evaluate } {##1} }
     \tl_new:N \l__tblr_evaluate_tl
-    \hook_gput_code:nnn { cmd / tblr_modify_table_body: / before } { tblr }
+    \cs_set_protected:Npn \__tblr_hook_split_before:
       {
         \tl_set:Nx \l__tblr_evaluate_tl
           { \__tblr_spec_item:nn { outer } { evaluate } }
