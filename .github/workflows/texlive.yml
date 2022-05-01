@@ -5,7 +5,8 @@ name: Test tabularray in TeX Live
 on: [push, pull_request]
 
 env:
-  CTAN_URL: https://mirrors.rit.edu/CTAN
+  TLCurrent: https://mirrors.rit.edu/CTAN/systems/texlive/tlnet
+  TLHistoric: https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2021/tlnet-final
 
 jobs:
   build-ubuntu:
@@ -15,12 +16,12 @@ jobs:
     - name: Install TeX Live
       run: |
         export PATH=${{github.workspace}}/tmp/texlive/bin/x86_64-linux:$PATH
-        wget ${{env.CTAN_URL}}/systems/texlive/tlnet/install-tl-unx.tar.gz
+        wget ${{env.TLCurrent}}/install-tl-unx.tar.gz
         tar -xzf install-tl-unx.tar.gz
         cd install-tl-20*
-        ./install-tl --profile ../.github/workflows/texlive.profile
+        ./install-tl --profile ../.github/workflows/texlive.profile --repository=${{env.TLCurrent}}
         echo $(cat ${{github.workspace}}/.github/workflows/texlive.package) | xargs tlmgr install
-        tlmgr update --self --all --no-auto-install --repository=${{env.CTAN_URL}}/systems/texlive/tlnet/
+        tlmgr update --self --all --no-auto-install --repository=${{env.TLCurrent}}
     - name: Test tabularray with l3build
       run: |
         export PATH=${{github.workspace}}/tmp/texlive/bin/x86_64-linux:$PATH
@@ -39,12 +40,12 @@ jobs:
     - name: Install TeX Live
       run: |
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\win32;" + ${env:PATH}
-        Invoke-WebRequest -Uri ${{env.CTAN_URL}}/systems/texlive/tlnet/install-tl.zip -OutFile install-tl.zip
+        Invoke-WebRequest -Uri ${{env.TLCurrent}}/install-tl.zip -OutFile install-tl.zip
         Expand-Archive install-tl.zip -DestinationPath .
         Set-Location install-tl-*
-        .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive.profile
+        .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive.profile --repository=${{env.TLCurrent}}
         ${{github.workspace}}/.github/workflows/texlive.bat
-        tlmgr update --self --all --no-auto-install --repository=${{env.CTAN_URL}}/systems/texlive/tlnet/
+        tlmgr update --self --all --no-auto-install --repository=${{env.TLCurrent}}
     - name: Test tabularray with l3build
       run: |
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\win32;" + ${env:PATH}
