@@ -5341,27 +5341,27 @@
 \cs_new_protected:Npn \__tblr_build_table_label_entry:
   {
     \tl_set:Nx \l_tmpa_tl { \InsertTblrText { label } }
+    \tl_set:Nx \l_tmpb_tl { \InsertTblrText { entry } }
+    \tl_if_eq:NnF \l_tmpb_tl { none }
+      {
+        \UseTblrTemplate { caption-lot }{ default }
+      }
     \tl_if_eq:NnTF \l_tmpa_tl { none }
       {
         \SetTblrTemplate { caption-tag }{ empty }
         \SetTblrTemplate { caption-sep }{ empty }
       }
       {
-        \cs_if_exist:NT { \@currentlabelname }
+        \cs_if_exist:NT \@currentlabelname
           {
-            \tl_set:Nx \l_tmpb_tl { \InsertTblrText { entry } }
             \tl_if_empty:NT \l_tmpb_tl
-              { \tl_set:NV \l_tmpb_tl { \InsertTblrText { caption } } }
+              { \tl_set:Nx \l_tmpb_tl { \InsertTblrText { caption } } }
             \exp_args:NV \GetTitleString \l_tmpb_tl
-            \tl_gset:Nx \@currentlabelname \GetTitleStringResult
+            \tl_set_eq:NN \@currentlabelname \GetTitleStringResult
           }
-
         \refstepcounter { table }
         \tl_if_empty:NF \l_tmpa_tl { \exp_args:NV \label \l_tmpa_tl }
       }
-    \tl_set:Nx \l_tmpb_tl { \InsertTblrText { entry } }
-    \tl_if_eq:NnF \l_tmpb_tl { none }
-      { \UseTblrTemplate { caption-lot } { default } }
   }
 
 \cs_new_protected:Npn \__tblr_build_table_head_aux:Nn #1 #2
