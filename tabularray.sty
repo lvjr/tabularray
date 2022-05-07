@@ -5422,6 +5422,7 @@
   {
     \LogTblrTracing { page }
     \par
+    \skip_zero:N \parskip % see issue #203
     \LogTblrTracing { page }
     \dim_compare:nNnTF { \pagegoal } = { \maxdimen }
       { \hbox{}\kern-\topskip\nobreak }
