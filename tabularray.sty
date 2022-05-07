@@ -2594,7 +2594,6 @@
     \tl_new:c { l__tblr_default_ #1 _inner_tl }
     \tl_new:c { l__tblr_default_ #1 _outer_tl }
     \tl_set_eq:cN { l__tblr_default_ #1 _outer_tl } \l__tblr_initial_tblr_outer_tl
-    \ignorespaces
   }
 
 %% Create tblr and longtblr environments
@@ -2608,14 +2607,18 @@
 \bool_new:N \l__tblr_math_mode_bool
 
 %% Main environment code
+%% We need to add \group_align_safe_begin: and \group_align_safe_end:
+%% to make tabularray correctly nest in align environment (see issue #143)
 \cs_new_protected:Npn \__tblr_environ_code:nnnn #1 #2 #3 #4
   {
+    \group_align_safe_begin:
     \int_gincr:N \g__tblr_table_count_int
     \tl_set:Nn \l__tblr_env_name_tl {#1}
     \mode_if_math:TF
       { \bool_set_true:N \l__tblr_math_mode_bool }
       { \bool_set_false:N \l__tblr_math_mode_bool }
     \__tblr_builder:nnn {#2} {#3} {#4}
+    \group_align_safe_end:
   }
 
 %% Read, split and build the table
