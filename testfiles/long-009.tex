@@ -1,0 +1,37 @@
+%  -*- coding: utf-8 -*-
+\documentclass[12pt]{article}
+\usepackage[a6paper,margin=15mm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\START
+
+\BEGINTEST{testing positive parskip} % issue #203
+\setlength{\parskip}{6cm}
+A
+
+B
+
+\begin{longtblr}{colspec={XXXX}, hlines, vlines}
+   1 &  1  &  1  &  1 \\
+   2 &  2  &  2  &  2 \\
+   3 &  3  &  3  &  3 \\
+   4 &  4  &  4  &  4 \\
+   5 &  5  &  5  &  5 \\
+   6 &  6  &  6  &  6 \\
+   7 &  7  &  7  &  7 \\
+   8 &  8  &  8  &  8 \\
+   9 &  9  &  9  &  9 \\
+\end{longtblr}
+\ENDTEST
+
+\end{document}

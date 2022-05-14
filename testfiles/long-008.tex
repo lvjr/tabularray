@@ -1,0 +1,32 @@
+%  -*- coding: utf-8 -*-
+\documentclass[12pt]{article}
+\usepackage[a6paper,margin=15mm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\START
+
+\BEGINTEST{testing first and last hlines in subtables} % issue #227
+\begin{longtblr}{colspec={XXX},vlines,hlines}
+\begin{tblr}{
+  colspec={cc},
+  vlines,
+  hlines
+}
+  a & b \\
+  c & d \\
+\end{tblr}
+& B & C \\
+\end{longtblr}
+\ENDTEST
+
+\end{document}

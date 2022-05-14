@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+\usepackage{mathtools}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\hrule
+
+\START
+
+\vspace{2em}
+
+\BEGINTEST{testing tabularray in align environment} % issue #143
+\begin{align*}
+  \begin{tblr}{cc}
+    a & b \\
+    x_1 & x_2
+  \end{tblr}
+\end{align*}
+\ENDTEST
+
+\end{document}

@@ -1,0 +1,145 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\UseTblrLibrary{functional}
+\usepackage{xcolor}
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{filecontents*}[overwrite]{test1.tmp}
+Some & Some \\
+\end{filecontents*}
+\begin{filecontents*}[overwrite]{test2.tmp}
+Other & Other \\
+\end{filecontents*}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{functional: calculate the sums of column cells}
+\IgnoreSpacesOn
+\PrgNewFunction \FuncSum {} {
+  \IntStepInline {1} {1} {\arabic{colcount}} {
+    \IntZero \lTmpaInt
+    \IntStepInline {1} {1} {\arabic{rowcount}-1} {
+      \IntAdd \lTmpaInt {\CellGetText {####1} {##1}}
+    }
+    \CellSetText {\Expand{\arabic{rowcount}}} {##1} {\IntUse\lTmpaInt}
+  }
+}
+\IgnoreSpacesOff
+\begin{tblr}{colspec={rrr},process=\FuncSum}
+\hline
+  1 & 2 & 3 \\
+  4 & 5 & 6 \\
+  7 & 8 & 9 \\
+\hline
+    &   &   \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{functional: color background of cells according to its content}
+\IgnoreSpacesOn
+\PrgNewFunction \FuncColor {} {
+  \IntStepInline {1} {1} {\arabic{rowcount}} {
+    \IntStepInline {1} {1} {\arabic{colcount}} {
+      \IntSet \lTmpaInt {\CellGetText {##1} {####1}}
+      \IntCompareTF {\lTmpaInt} > {0}
+        {\CellSetStyle {##1} {####1} {bg=purple8}}
+        {\CellSetStyle {##1} {####1} {bg=olive8}}
+    }
+  }
+}
+\IgnoreSpacesOff
+\begin{tblr}{hlines,vlines,colspec={*{3}{Q[r,$]}},process=\FuncColor}
+  -1 &  2 &  3 \\
+   4 &  5 & -6 \\
+   7 & -8 &  9 \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{functional: color table rows with a color series}
+\definecolor{lightb}{RGB}{217,224,250}
+\definecolorseries{tblrow}{rgb}{last}{lightb}{white}
+\resetcolorseries[3]{tblrow}
+\IgnoreSpacesOn
+\PrgNewFunction \FuncSeries {} {
+  \IntStepInline {1} {1} {\arabic{rowcount}} {
+    \TlSet \lTmpaTl {\IntMathMod {##1-1} {3}}
+    \RowSetStyle {##1} {\Expand{bg=tblrow!![\lTmpaTl]}}
+  }
+}
+\IgnoreSpacesOff
+\begin{tblr}{hlines,process=\FuncSeries}
+  Row1 & 1 \\
+  Row2 & 2 \\
+  Row3 & 3 \\
+  Row1 & 4 \\
+  Row2 & 5 \\
+  Row3 & 6 \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{functional: evaluate every occurrence of a function}
+\IgnoreSpacesOn
+\PrgNewFunction \SomeFunc {m} {
+  \Return {#1 & #1 \\}
+}
+\PrgNewFunction \OtherFunc {} {
+  \Return {Other & Other \\}
+}
+\IgnoreSpacesOff
+\begin{tblr}[evaluate=\SomeFunc]{hlines}
+  Row1 & 1 \\
+  Row2 & 2 \\
+  \SomeFunc{Text}
+  Row3 & 3 \\
+  Row4 & 4 \\
+  \SomeFunc{Text}
+  Row5 & 5 \\
+  Row6 & 6 \\
+\end{tblr}
+\begin{tblr}[evaluate=\OtherFunc]{hlines}
+  Row1 & 1 \\
+  Row2 & 2 \\
+  \OtherFunc
+  Row3 & 3 \\
+  Row4 & 4 \\
+  \OtherFunc
+  Row5 & 5 \\
+  Row6 & 6 \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{functional: input files inside tabularray tables}
+\begin{tblr}[evaluate=\FileInput]{hlines}
+  Row1 & 1 \\
+  Row2 & 2 \\
+  \FileInput{test1.tmp}
+  Row3 & 3 \\
+  Row4 & 4 \\
+  \FileInput{test2.tmp}
+  Row5 & 5 \\
+  Row6 & 6 \\
+\end{tblr}
+\ENDTEST
+
+\end{document}

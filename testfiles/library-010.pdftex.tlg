@@ -1,0 +1,30 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+TEST 1: functional: calculate the sums of column cells
+============================================================
+\g__fun_argtype_index_6_int=\count...
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line ....
+============================================================
+============================================================
+TEST 2: functional: color background of cells according to its content
+============================================================
+============================================================
+============================================================
+TEST 3: functional: color table rows with a color series
+============================================================
+============================================================
+============================================================
+TEST 4: functional: evaluate every occurrence of a function
+============================================================
+============================================================
+============================================================
+TEST 5: functional: input files inside tabularray tables
+============================================================
+(test1.tmp) (test2.tmp)
+============================================================
+[1
+] (library-010.aux)
