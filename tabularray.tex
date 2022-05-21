@@ -18,7 +18,7 @@
 \usepackage[firstpage=true]{background}
 \backgroundsetup{contents={}}
 
-\UseTblrLibrary{amsmath,booktabs,counter,diagbox,siunitx,varwidth}
+\UseTblrLibrary{amsmath,booktabs,counter,diagbox,functional,siunitx,varwidth}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -2463,7 +2463,7 @@ If you need more than one \verb!\cmidrule!s, you can use \verb!\cmidrulemore! co
 \end{tblr}
 \end{demohigh}
 
-From version \verb!2021N!, trim options (\verb!l!, \verb!r!, \verb!lr!)
+From version 2021N (2021-09-01), trim options (\verb!l!, \verb!r!, \verb!lr!)
 for \verb!\cmidrule! command are also supported.
 
 \begin{demohigh}
@@ -2541,7 +2541,8 @@ and the other half to \verb!abovesep! of current row.
 \end{booktabs}
 \end{demohigh}
 
-From version 2022A, there is a \verb!longtabs! environment for writing long \verb!booktabs! tables,
+From version 2022A (2022-03-01), there is a \verb!longtabs! environment
+for writing long \verb!booktabs! tables,
 and a \verb!talltabs! environment for writing tall \verb!booktabs! tables.
 
 \section{Library \texttt{counter}}
@@ -2594,6 +2595,228 @@ $\begin{tblr}{|c|cc|}
 \end{tblr}$
 \end{demohigh}
 
+\section{Library \texttt{functional}}
+
+With \verb!\UseTblrLibrary{functional}! in the preamble of the document,
+\verb!tabularray! will load \href{https://ctan.org/pkg/functional}{\texttt{functional}} package,
+and define outer key \verb!evaluate! and inner key \verb!process!.
+These two new keys are useful for doing functional programming inside tables.
+
+\subsection{Outer key \texttt{evaluate} in action}
+
+With outer key \verb!evaluate!, you can evaluate every occurrence of a specified protected function
+(defined with \verb!\PrgNewFunction!) and replace it with the return value before splitting the table body.
+
+The first application of \verb!evaluate! key is for inputting files inside tables.
+Assume you have two files \verb!test1.tmp! and \verb!test2.tmp! with the following contents:
+
+\begin{filecontents*}[overwrite]{test1.tmp}
+Some & Some \\
+\end{filecontents*}
+\begin{filecontents*}[overwrite]{test2.tmp}
+Other & Other \\
+\end{filecontents*}
+
+\begin{codehigh}
+\begin{filecontents*}[overwrite]{test1.tmp}
+Some & Some \\
+\end{filecontents*}
+\end{codehigh}
+
+\begin{codehigh}
+\begin{filecontents*}[overwrite]{test2.tmp}
+Other & Other \\
+\end{filecontents*}
+\end{codehigh}
+
+Then you can input them with outer specification \verb!evaluate=\FileInput!.
+The \verb!\FileInput! function is provided by \verb!functional! package.
+
+\begin{demohigh}
+\begin{tblr}[evaluate=\FileInput]{hlines}
+  Row1 & 1 \\
+  \FileInput{test1.tmp}
+  Row3 & 3 \\
+  \FileInput{test2.tmp}
+  Row5 & 5 \\
+\end{tblr}
+\end{demohigh}
+
+In general, you can define your functions which return parts of table contents,
+and use \verb!evaluate! key to evaluate them inside tables.
+
+\begin{demohigh}
+\IgnoreSpacesOn
+\PrgNewFunction \SomeFunc {m} {
+  \Return {#1 & #1 \\}
+}
+\IgnoreSpacesOff
+\begin{tblr}[evaluate=\SomeFunc]{hlines}
+  Row1 & 1 \\
+  \SomeFunc{Text}
+  Row3 & 3 \\
+  \SomeFunc{Text}
+  Row5 & 5 \\
+\end{tblr}
+\end{demohigh}
+
+\begin{demohigh}
+\IgnoreSpacesOn
+\PrgNewFunction \OtherFunc {} {
+  \Return {Other & Other \\}
+}
+\IgnoreSpacesOff
+\begin{tblr}[evaluate=\OtherFunc]{hlines}
+  Row1 & 1 \\
+  \OtherFunc
+  Row3 & 3 \\
+  \OtherFunc
+  Row5 & 5 \\
+\end{tblr}
+\end{demohigh}
+
+You can even generate the whole table with some function.
+
+\begin{demohigh}
+\IgnoreSpacesOn
+\PrgNewFunction \MakeEmptyTable {mm}  {
+  \TlSet \lTmpaTl {\IntReplicate {\IntEval{#2-1}} {&}}
+  \TlPutRight \lTmpaTl {\\}
+  \IntReplicate {#1} {\TlUse \lTmpaTl}
+}
+\IgnoreSpacesOff
+\begin{tblr}[evaluate=\MakeEmptyTable]{hlines,vlines}
+  \MakeEmptyTable{3}{7}
+\end{tblr}
+\end{demohigh}
+
+\subsection{Inner key \texttt{process} in action}
+
+With inner key \verb!process!, you can modify the contents and styles before the table is built.
+Several public functions defined with \verb!\PrgNewFuncton! are provided for you:
+
+\begin{itemize}
+  \item \verb!\CellGetText{<rownum>}{<colnum>}!
+  \item \verb!\CellSetText{<rownum>}{<colnum>}{<text>}!
+  \item \verb!\CellSetStyle{<rownum>}{<colnum>}{<style>}!
+  \item \verb!\RowSetStyle{<rownum>}{<style>}!
+  \item \verb!\ColumnSetStyle{<colnum>}{<style>}!
+\end{itemize}
+
+As the first example, let's calculate the sums of cells column by column:
+
+\IgnoreSpacesOn
+\PrgNewFunction \FuncSum {} {
+  \IntStepOneInline {1} {\arabic{colcount}} {
+    \IntZero \lTmpaInt
+    \IntStepOneInline {1} {\arabic{rowcount}-1} {
+      \IntAdd \lTmpaInt {\CellGetText {####1} {##1}}
+    }
+    \CellSetText {\Expand{\arabic{rowcount}}} {##1} {\IntUse\lTmpaInt}
+  }
+}
+\IgnoreSpacesOff
+\begin{codehigh}
+\IgnoreSpacesOn
+\PrgNewFunction \FuncSum {} {
+  \IntStepOneInline {1} {\arabic{colcount}} {
+    \IntZero \lTmpaInt
+    \IntStepOneInline {1} {\arabic{rowcount}-1} {
+      \IntAdd \lTmpaInt {\CellGetText {####1} {##1}}
+    }
+    \CellSetText {\Expand{\arabic{rowcount}}} {##1} {\IntUse\lTmpaInt}
+  }
+}
+\IgnoreSpacesOff
+\end{codehigh}
+
+\begin{demohigh}
+\begin{tblr}{colspec={rrr},process=\FuncSum}
+\hline
+  1 & 2 & 3 \\
+  4 & 5 & 6 \\
+  7 & 8 & 9 \\
+\hline
+    &   &   \\
+\hline
+\end{tblr}
+\end{demohigh}
+
+Now, let's set background colors of cells depending on their contents:
+
+\IgnoreSpacesOn
+\PrgNewFunction \FuncColor {} {
+  \IntStepOneInline {1} {\arabic{rowcount}} {
+    \IntStepOneInline {1} {\arabic{colcount}} {
+      \IntSet \lTmpaInt {\CellGetText {##1} {####1}}
+      \IntCompareTF {\lTmpaInt} > {0}
+        {\CellSetStyle {##1} {####1} {bg=purple8}}
+        {\CellSetStyle {##1} {####1} {bg=olive8}}
+    }
+  }
+}
+\IgnoreSpacesOff
+\begin{codehigh}
+\IgnoreSpacesOn
+\PrgNewFunction \FuncColor {} {
+  \IntStepOneInline {1} {\arabic{rowcount}} {
+    \IntStepOneInline {1} {\arabic{colcount}} {
+      \IntSet \lTmpaInt {\CellGetText {##1} {####1}}
+      \IntCompareTF {\lTmpaInt} > {0}
+        {\CellSetStyle {##1} {####1} {bg=purple8}}
+        {\CellSetStyle {##1} {####1} {bg=olive8}}
+    }
+  }
+}
+\IgnoreSpacesOff
+\end{codehigh}
+
+\begin{demohigh}
+\begin{tblr}{hlines,vlines,cells={r,$},process=\FuncColor}
+  -1 &  2 &  3 \\
+   4 &  5 & -6 \\
+   7 & -8 &  9 \\
+\end{tblr}
+\end{demohigh}
+
+We can also use color series of \verb!xcolor! package to color table rows:
+
+\definecolor{lightb}{RGB}{217,224,250}
+\definecolorseries{tblrow}{rgb}{last}{lightb}{white}
+\resetcolorseries[3]{tblrow}
+\IgnoreSpacesOn
+\PrgNewFunction \FuncSeries {} {
+  \IntStepOneInline {1} {\arabic{rowcount}} {
+    \TlSet \lTmpaTl {\IntMathMod {##1-1} {3}}
+    \RowSetStyle {##1} {\Expand{bg=tblrow!![\lTmpaTl]}}
+  }
+}
+\IgnoreSpacesOff
+\begin{codehigh}
+\definecolor{lightb}{RGB}{217,224,250}
+\definecolorseries{tblrow}{rgb}{last}{lightb}{white}
+\resetcolorseries[3]{tblrow}
+\IgnoreSpacesOn
+\PrgNewFunction \FuncSeries {} {
+  \IntStepOneInline {1} {\arabic{rowcount}} {
+    \TlSet \lTmpaTl {\IntMathMod {##1-1} {3}}
+    \RowSetStyle {##1} {\Expand{bg=tblrow!![\lTmpaTl]}}
+  }
+}
+\IgnoreSpacesOff
+\end{codehigh}
+
+\begin{demohigh}
+\begin{tblr}{hlines,process=\FuncSeries}
+  Row1 & 1 \\
+  Row2 & 2 \\
+  Row3 & 3 \\
+  Row4 & 4 \\
+  Row5 & 5 \\
+  Row6 & 6 \\
+\end{tblr}
+\end{demohigh}
+
 \section{Library \texttt{siunitx}}
 
 When writing \verb!\UseTblrLibrary{siunitx}! in the preamble of the document,
@@ -2603,7 +2826,7 @@ and defines \verb!S! column as \verb!Q! column with \verb!si! key.
 \begin{demohigh}
 \begin{tblr}{
   hlines, vlines,
-  colspec={S[table-format=3.2]S[table-format=3.2]},
+  colspec={S[table-format=3.2]S[table-format=3.2]}
 }
  {{{Head}}} & {{{Head}}} \\
    111      &   111      \\
@@ -2624,7 +2847,23 @@ and defines \verb!S! column as \verb!Q! column with \verb!si! key.
 \end{tblr}
 \end{demohigh}
 
-Note that you need to use \underline{\color{red3}triple} pairs of braces to guard non-numeric cells.
+Note that you need to use \underline{\color{red3}triple} pairs of curly braces to guard non-numeric cells.
+But it is cumbersome to enclose each cell with braces. From version 2022B (2022-06-01)
+a new key \verb!guard! is provided for cells and rows. With \verb!guard! key the previous example
+can be largely simplified.
+
+\begin{demohigh}
+\begin{tblr}{
+  hlines, vlines,
+  colspec={Q[si={table-format=3.2},c]Q[si={table-format=3.2},c]},
+  row{1} = {guard}
+}
+   Head  & Head   \\
+  111    & 111    \\
+    2.1  &   2.2  \\
+   33.11 &  33.22 \\
+\end{tblr}
+\end{demohigh}
 
 Also you must use \verb!l!, \verb!c! or \verb!r! to set horizontal alignment for non-numeric cells:
 \nopagebreak
@@ -2635,12 +2874,13 @@ Also you must use \verb!l!, \verb!c! or \verb!r! to set horizontal alignment for
     Q[si={table-format=3.2,table-number-alignment=left},l,blue7]
     Q[si={table-format=3.2,table-number-alignment=center},c,teal7]
     Q[si={table-format=3.2,table-number-alignment=right},r,purple7]
-  }
+  },
+  row{1} = {guard}
 }
- {{{Head}}} & {{{Head}}} & {{{Head}}} \\
-   111      &   111      &   111      \\
-     2.1    &     2.2    &     2.3    \\
-    33.11   &    33.22   &    33.33   \\
+  Head  & Head   & Head   \\
+ 111    & 111    & 111    \\
+   2.1  &   2.2  &   2.3  \\
+  33.11 &  33.22 &  33.33 \\
 \end{tblr}
 \end{demohigh}
 
@@ -2673,7 +2913,7 @@ After setting \verb!measure=vbox!, it will use \verb!\vbox! to measure cell widt
 \end{tblr}
 \end{demohigh}
 
-From version 2022A, you can remove extra space above and below lists,
+From version 2022A (2022-03-01), you can remove extra space above and below lists,
 by adding option \verb!stretch=-1!.
 The following example also needs \verb!enumitem! package and its \verb!nosep! option:
 
