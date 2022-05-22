@@ -27,17 +27,17 @@ Other & Other \\
 
 \BEGINTEST{functional: calculate the sums of column cells}
 \IgnoreSpacesOn
-\PrgNewFunction \FuncSum {} {
-  \IntStepInline {1} {1} {\arabic{colcount}} {
-    \IntZero \lTmpaInt
-    \IntStepInline {1} {1} {\arabic{rowcount}-1} {
-      \IntAdd \lTmpaInt {\CellGetText {####1} {##1}}
+\prgNewFunction \funcSum {} {
+  \intStepOneInline {1} {\arabic{colcount}} {
+    \intZero \lTmpaInt
+    \intStepOneInline {1} {\arabic{rowcount}-1} {
+      \intAdd \lTmpaInt {\cellGetText {####1} {##1}}
     }
-    \CellSetText {\Expand{\arabic{rowcount}}} {##1} {\IntUse\lTmpaInt}
+    \cellSetText {\expWhole{\arabic{rowcount}}} {##1} {\intUse\lTmpaInt}
   }
 }
 \IgnoreSpacesOff
-\begin{tblr}{colspec={rrr},process=\FuncSum}
+\begin{tblr}{colspec={rrr},process=\funcSum}
 \hline
   1 & 2 & 3 \\
   4 & 5 & 6 \\
@@ -52,18 +52,18 @@ Other & Other \\
 
 \BEGINTEST{functional: color background of cells according to its content}
 \IgnoreSpacesOn
-\PrgNewFunction \FuncColor {} {
-  \IntStepInline {1} {1} {\arabic{rowcount}} {
-    \IntStepInline {1} {1} {\arabic{colcount}} {
-      \IntSet \lTmpaInt {\CellGetText {##1} {####1}}
-      \IntCompareTF {\lTmpaInt} > {0}
-        {\CellSetStyle {##1} {####1} {bg=purple8}}
-        {\CellSetStyle {##1} {####1} {bg=olive8}}
+\prgNewFunction \funcColor {} {
+  \intStepOneInline {1} {\arabic{rowcount}} {
+    \intStepOneInline {1} {\arabic{colcount}} {
+      \intSet \lTmpaInt {\cellGetText {##1} {####1}}
+      \intCompareTF {\lTmpaInt} > {0}
+        {\cellSetStyle {##1} {####1} {bg=purple8}}
+        {\cellSetStyle {##1} {####1} {bg=olive8}}
     }
   }
 }
 \IgnoreSpacesOff
-\begin{tblr}{hlines,vlines,colspec={*{3}{Q[r,$]}},process=\FuncColor}
+\begin{tblr}{hlines,vlines,colspec={*{3}{Q[r,$]}},process=\funcColor}
   -1 &  2 &  3 \\
    4 &  5 & -6 \\
    7 & -8 &  9 \\
@@ -77,14 +77,14 @@ Other & Other \\
 \definecolorseries{tblrow}{rgb}{last}{lightb}{white}
 \resetcolorseries[3]{tblrow}
 \IgnoreSpacesOn
-\PrgNewFunction \FuncSeries {} {
-  \IntStepInline {1} {1} {\arabic{rowcount}} {
-    \TlSet \lTmpaTl {\IntMathMod {##1-1} {3}}
-    \RowSetStyle {##1} {\Expand{bg=tblrow!![\lTmpaTl]}}
+\prgNewFunction \funcSeries {} {
+  \intStepOneInline {1} {\arabic{rowcount}} {
+    \tlSet \lTmpaTl {\intMathMod {##1-1} {3}}
+    \rowSetStyle {##1} {\expWhole{bg=tblrow!![\lTmpaTl]}}
   }
 }
 \IgnoreSpacesOff
-\begin{tblr}{hlines,process=\FuncSeries}
+\begin{tblr}{hlines,process=\funcSeries}
   Row1 & 1 \\
   Row2 & 2 \\
   Row3 & 3 \\
@@ -98,30 +98,30 @@ Other & Other \\
 
 \BEGINTEST{functional: evaluate every occurrence of a function}
 \IgnoreSpacesOn
-\PrgNewFunction \SomeFunc {m} {
-  \Return {#1 & #1 \\}
+\prgNewFunction \someFunc {m} {
+  \prgReturn {#1 & #1 \\}
 }
-\PrgNewFunction \OtherFunc {} {
-  \Return {Other & Other \\}
+\prgNewFunction \otherFunc {} {
+  \prgReturn {Other & Other \\}
 }
 \IgnoreSpacesOff
-\begin{tblr}[evaluate=\SomeFunc]{hlines}
+\begin{tblr}[evaluate=\someFunc]{hlines}
   Row1 & 1 \\
   Row2 & 2 \\
-  \SomeFunc{Text}
+  \someFunc{Text}
   Row3 & 3 \\
   Row4 & 4 \\
-  \SomeFunc{Text}
+  \someFunc{Text}
   Row5 & 5 \\
   Row6 & 6 \\
 \end{tblr}
-\begin{tblr}[evaluate=\OtherFunc]{hlines}
+\begin{tblr}[evaluate=\otherFunc]{hlines}
   Row1 & 1 \\
   Row2 & 2 \\
-  \OtherFunc
+  \otherFunc
   Row3 & 3 \\
   Row4 & 4 \\
-  \OtherFunc
+  \otherFunc
   Row5 & 5 \\
   Row6 & 6 \\
 \end{tblr}
@@ -130,13 +130,13 @@ Other & Other \\
 \bigskip\hrule\bigskip
 
 \BEGINTEST{functional: input files inside tabularray tables}
-\begin{tblr}[evaluate=\FileInput]{hlines}
+\begin{tblr}[evaluate=\fileInput]{hlines}
   Row1 & 1 \\
   Row2 & 2 \\
-  \FileInput{test1.tmp}
+  \fileInput{test1.tmp}
   Row3 & 3 \\
   Row4 & 4 \\
-  \FileInput{test2.tmp}
+  \fileInput{test2.tmp}
   Row5 & 5 \\
   Row6 & 6 \\
 \end{tblr}

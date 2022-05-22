@@ -7030,23 +7030,23 @@
         \LogTblrTracing { step = do ~ functional ~ calculation }
         \__tblr_prop_item:nn { inner } { process }
       }
-    \PrgNewFunction \CellGetText { m m }
+    \prgNewFunction \cellGetText { m m }
       {
-        \Expand { \__tblr_spec_item:nn { text } { [##1][##2] } }
+        \expWhole { \__tblr_spec_item:nn { text } { [##1][##2] } }
       }
-    \PrgNewFunction \CellSetText { m m m }
+    \prgNewFunction \cellSetText { m m m }
       {
         \__tblr_spec_gput:nnn { text } { [##1][##2] } {##3}
       }
-    \PrgNewFunction \CellSetStyle { m m m }
+    \prgNewFunction \cellSetStyle { m m m }
       {
         \tblr_set_cell:nnnn {##1} {##2} {} {##3}
       }
-    \PrgNewFunction \RowSetStyle { m m }
+    \prgNewFunction \rowSetStyle { m m }
       {
         \tblr_set_row:nnn {##1} {} {##2}
       }
-    \PrgNewFunction \ColumnSetStyle { m m }
+    \prgNewFunction \columnSetStyle { m m }
       {
         \tblr_set_column:nnn {##1} {} {##2}
       }

@@ -2605,7 +2605,7 @@ These two new keys are useful for doing functional programming inside tables.
 \subsection{Outer key \texttt{evaluate} in action}
 
 With outer key \verb!evaluate!, you can evaluate every occurrence of a specified protected function
-(defined with \verb!\PrgNewFunction!) and replace it with the return value before splitting the table body.
+(defined with \verb!\prgNewFunction!) and replace it with the return value before splitting the table body.
 
 The first application of \verb!evaluate! key is for inputting files inside tables.
 Assume you have two files \verb!test1.tmp! and \verb!test2.tmp! with the following contents:
@@ -2629,15 +2629,15 @@ Other & Other \\
 \end{filecontents*}
 \end{codehigh}
 
-Then you can input them with outer specification \verb!evaluate=\FileInput!.
-The \verb!\FileInput! function is provided by \verb!functional! package.
+Then you can input them with outer specification \verb!evaluate=\fileInput!.
+The \verb!\fileInput! function is provided by \verb!functional! package.
 
 \begin{demohigh}
-\begin{tblr}[evaluate=\FileInput]{hlines}
+\begin{tblr}[evaluate=\fileInput]{hlines}
   Row1 & 1 \\
-  \FileInput{test1.tmp}
+  \fileInput{test1.tmp}
   Row3 & 3 \\
-  \FileInput{test2.tmp}
+  \fileInput{test2.tmp}
   Row5 & 5 \\
 \end{tblr}
 \end{demohigh}
@@ -2647,30 +2647,30 @@ and use \verb!evaluate! key to evaluate them inside tables.
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\PrgNewFunction \SomeFunc {m} {
-  \Return {#1 & #1 \\}
+\prgNewFunction \someFunc {m} {
+  \prgReturn {#1 & #1 \\}
 }
 \IgnoreSpacesOff
-\begin{tblr}[evaluate=\SomeFunc]{hlines}
+\begin{tblr}[evaluate=\someFunc]{hlines}
   Row1 & 1 \\
-  \SomeFunc{Text}
+  \someFunc{Text}
   Row3 & 3 \\
-  \SomeFunc{Text}
+  \someFunc{Text}
   Row5 & 5 \\
 \end{tblr}
 \end{demohigh}
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\PrgNewFunction \OtherFunc {} {
-  \Return {Other & Other \\}
+\prgNewFunction \otherFunc {} {
+  \prgReturn {Other & Other \\}
 }
 \IgnoreSpacesOff
-\begin{tblr}[evaluate=\OtherFunc]{hlines}
+\begin{tblr}[evaluate=\otherFunc]{hlines}
   Row1 & 1 \\
-  \OtherFunc
+  \otherFunc
   Row3 & 3 \\
-  \OtherFunc
+  \otherFunc
   Row5 & 5 \\
 \end{tblr}
 \end{demohigh}
@@ -2679,59 +2679,59 @@ You can even generate the whole table with some function.
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\PrgNewFunction \MakeEmptyTable {mm}  {
-  \TlSet \lTmpaTl {\IntReplicate {\IntEval{#2-1}} {&}}
-  \TlPutRight \lTmpaTl {\\}
-  \IntReplicate {#1} {\TlUse \lTmpaTl}
+\prgNewFunction \makeEmptyTable {mm}  {
+  \tlSet \lTmpaTl {\intReplicate {\intEval{#2-1}} {&}}
+  \tlPutRight \lTmpaTl {\\}
+  \intReplicate {#1} {\tlUse \lTmpaTl}
 }
 \IgnoreSpacesOff
-\begin{tblr}[evaluate=\MakeEmptyTable]{hlines,vlines}
-  \MakeEmptyTable{3}{7}
+\begin{tblr}[evaluate=\makeEmptyTable]{hlines,vlines}
+  \makeEmptyTable{3}{7}
 \end{tblr}
 \end{demohigh}
 
 \subsection{Inner key \texttt{process} in action}
 
 With inner key \verb!process!, you can modify the contents and styles before the table is built.
-Several public functions defined with \verb!\PrgNewFuncton! are provided for you:
+Several public functions defined with \verb!\prgNewFuncton! are provided for you:
 
 \begin{itemize}
-  \item \verb!\CellGetText{<rownum>}{<colnum>}!
-  \item \verb!\CellSetText{<rownum>}{<colnum>}{<text>}!
-  \item \verb!\CellSetStyle{<rownum>}{<colnum>}{<style>}!
-  \item \verb!\RowSetStyle{<rownum>}{<style>}!
-  \item \verb!\ColumnSetStyle{<colnum>}{<style>}!
+  \item \verb!\cellGetText{<rownum>}{<colnum>}!
+  \item \verb!\cellSetText{<rownum>}{<colnum>}{<text>}!
+  \item \verb!\cellSetStyle{<rownum>}{<colnum>}{<style>}!
+  \item \verb!\rowSetStyle{<rownum>}{<style>}!
+  \item \verb!\columnSetStyle{<colnum>}{<style>}!
 \end{itemize}
 
 As the first example, let's calculate the sums of cells column by column:
 
 \IgnoreSpacesOn
-\PrgNewFunction \FuncSum {} {
-  \IntStepOneInline {1} {\arabic{colcount}} {
-    \IntZero \lTmpaInt
-    \IntStepOneInline {1} {\arabic{rowcount}-1} {
-      \IntAdd \lTmpaInt {\CellGetText {####1} {##1}}
+\prgNewFunction \funcSum {} {
+  \intStepOneInline {1} {\arabic{colcount}} {
+    \intZero \lTmpaInt
+    \intStepOneInline {1} {\arabic{rowcount}-1} {
+      \intAdd \lTmpaInt {\cellGetText {####1} {##1}}
     }
-    \CellSetText {\Expand{\arabic{rowcount}}} {##1} {\IntUse\lTmpaInt}
+    \cellSetText {\expWhole{\arabic{rowcount}}} {##1} {\intUse\lTmpaInt}
   }
 }
 \IgnoreSpacesOff
 \begin{codehigh}
 \IgnoreSpacesOn
-\PrgNewFunction \FuncSum {} {
-  \IntStepOneInline {1} {\arabic{colcount}} {
-    \IntZero \lTmpaInt
-    \IntStepOneInline {1} {\arabic{rowcount}-1} {
-      \IntAdd \lTmpaInt {\CellGetText {####1} {##1}}
+\prgNewFunction \funcSum {} {
+  \intStepOneInline {1} {\arabic{colcount}} {
+    \intZero \lTmpaInt
+    \intStepOneInline {1} {\arabic{rowcount}-1} {
+      \intAdd \lTmpaInt {\cellGetText {####1} {##1}}
     }
-    \CellSetText {\Expand{\arabic{rowcount}}} {##1} {\IntUse\lTmpaInt}
+    \cellSetText {\expWhole{\arabic{rowcount}}} {##1} {\intUse\lTmpaInt}
   }
 }
 \IgnoreSpacesOff
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{colspec={rrr},process=\FuncSum}
+\begin{tblr}{colspec={rrr},process=\funcSum}
 \hline
   1 & 2 & 3 \\
   4 & 5 & 6 \\
@@ -2745,26 +2745,26 @@ As the first example, let's calculate the sums of cells column by column:
 Now, let's set background colors of cells depending on their contents:
 
 \IgnoreSpacesOn
-\PrgNewFunction \FuncColor {} {
-  \IntStepOneInline {1} {\arabic{rowcount}} {
-    \IntStepOneInline {1} {\arabic{colcount}} {
-      \IntSet \lTmpaInt {\CellGetText {##1} {####1}}
-      \IntCompareTF {\lTmpaInt} > {0}
-        {\CellSetStyle {##1} {####1} {bg=purple8}}
-        {\CellSetStyle {##1} {####1} {bg=olive8}}
+\prgNewFunction \funcColor {} {
+  \intStepOneInline {1} {\arabic{rowcount}} {
+    \intStepOneInline {1} {\arabic{colcount}} {
+      \intSet \lTmpaInt {\cellGetText {##1} {####1}}
+      \intCompareTF {\lTmpaInt} > {0}
+        {\cellSetStyle {##1} {####1} {bg=purple8}}
+        {\cellSetStyle {##1} {####1} {bg=olive8}}
     }
   }
 }
 \IgnoreSpacesOff
 \begin{codehigh}
 \IgnoreSpacesOn
-\PrgNewFunction \FuncColor {} {
-  \IntStepOneInline {1} {\arabic{rowcount}} {
-    \IntStepOneInline {1} {\arabic{colcount}} {
-      \IntSet \lTmpaInt {\CellGetText {##1} {####1}}
-      \IntCompareTF {\lTmpaInt} > {0}
-        {\CellSetStyle {##1} {####1} {bg=purple8}}
-        {\CellSetStyle {##1} {####1} {bg=olive8}}
+\prgNewFunction \funcColor {} {
+  \intStepOneInline {1} {\arabic{rowcount}} {
+    \intStepOneInline {1} {\arabic{colcount}} {
+      \intSet \lTmpaInt {\cellGetText {##1} {####1}}
+      \intCompareTF {\lTmpaInt} > {0}
+        {\cellSetStyle {##1} {####1} {bg=purple8}}
+        {\cellSetStyle {##1} {####1} {bg=olive8}}
     }
   }
 }
@@ -2772,7 +2772,7 @@ Now, let's set background colors of cells depending on their contents:
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{hlines,vlines,cells={r,$},process=\FuncColor}
+\begin{tblr}{hlines,vlines,cells={r,$},process=\funcColor}
   -1 &  2 &  3 \\
    4 &  5 & -6 \\
    7 & -8 &  9 \\
@@ -2785,10 +2785,10 @@ We can also use color series of \verb!xcolor! package to color table rows:
 \definecolorseries{tblrow}{rgb}{last}{lightb}{white}
 \resetcolorseries[3]{tblrow}
 \IgnoreSpacesOn
-\PrgNewFunction \FuncSeries {} {
-  \IntStepOneInline {1} {\arabic{rowcount}} {
-    \TlSet \lTmpaTl {\IntMathMod {##1-1} {3}}
-    \RowSetStyle {##1} {\Expand{bg=tblrow!![\lTmpaTl]}}
+\prgNewFunction \funcSeries {} {
+  \intStepOneInline {1} {\arabic{rowcount}} {
+    \tlSet \lTmpaTl {\intMathMod {##1-1} {3}}
+    \rowSetStyle {##1} {\expWhole{bg=tblrow!![\lTmpaTl]}}
   }
 }
 \IgnoreSpacesOff
@@ -2797,17 +2797,17 @@ We can also use color series of \verb!xcolor! package to color table rows:
 \definecolorseries{tblrow}{rgb}{last}{lightb}{white}
 \resetcolorseries[3]{tblrow}
 \IgnoreSpacesOn
-\PrgNewFunction \FuncSeries {} {
-  \IntStepOneInline {1} {\arabic{rowcount}} {
-    \TlSet \lTmpaTl {\IntMathMod {##1-1} {3}}
-    \RowSetStyle {##1} {\Expand{bg=tblrow!![\lTmpaTl]}}
+\prgNewFunction \funcSeries {} {
+  \intStepOneInline {1} {\arabic{rowcount}} {
+    \tlSet \lTmpaTl {\intMathMod {##1-1} {3}}
+    \rowSetStyle {##1} {\expWhole{bg=tblrow!![\lTmpaTl]}}
   }
 }
 \IgnoreSpacesOff
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{hlines,process=\FuncSeries}
+\begin{tblr}{hlines,process=\funcSeries}
   Row1 & 1 \\
   Row2 & 2 \\
   Row3 & 3 \\
