@@ -3309,7 +3309,10 @@
             \tl_set:Nx \l__tblr_w_tl { \dim_eval:n { \box_wd:N \l__tblr_b_box } }
             \__tblr_spec_gput_if_larger:nee { vline }
               { [#2](##1) / @vline-width } { \l__tblr_w_tl }
-            \dim_add:Nn \l__tblr_w_dim { \l__tblr_w_tl }
+            \dim_add:Nn \l__tblr_w_dim
+              {
+                \__tblr_spec_item:nn  { vline } { [#2](##1) / @vline-width }
+              }
             \dim_add:Nn \l__tblr_w_dim { \l__tblr_s_tl }
           }
         \dim_add:Nn \l__tblr_w_dim { - \l__tblr_s_tl }
@@ -3375,7 +3378,10 @@
               }
             \__tblr_spec_gput_if_larger:nee { hline }
               { [#1](##1) / @hline-height } { \l__tblr_h_tl }
-            \dim_add:Nn \l__tblr_h_dim { \l__tblr_h_tl }
+            \dim_add:Nn \l__tblr_h_dim
+              {
+                \__tblr_spec_item:nn  { vline } { [#2](##1) / @vline-width }
+              }
             \dim_add:Nn \l__tblr_h_dim { \l__tblr_s_tl }
           }
         \dim_add:Nn \l__tblr_h_dim { - \l__tblr_s_tl }
