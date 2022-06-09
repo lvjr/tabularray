@@ -3216,12 +3216,18 @@
 
 %% prepare stretch option of the table
 \fp_new:N \l__tblr_stretch_fp
+\dim_new:N \l__tblr_strut_dp_dim
+\dim_new:N \l__tblr_strut_ht_dim
 \cs_new_protected:Npn \__tblr_prepare_stretch:
   {
     \fp_set:Nn \l__tblr_stretch_fp
-      { \__tblr_prop_item:ne { inner } { stretch } }
+      { \__tblr_prop_item:nn { inner } { stretch } }
     \fp_compare:nNnTF \l__tblr_stretch_fp > \c_zero_fp
       {
+        \dim_set:Nn \l__tblr_strut_dp_dim
+          { \fp_use:N \l__tblr_stretch_fp \box_dp:N \strutbox }
+        \dim_set:Nn \l__tblr_strut_ht_dim
+          { \fp_use:N \l__tblr_stretch_fp \box_ht:N \strutbox }
         \cs_set_eq:NN \__tblr_leave_vmode: \mode_leave_vertical:
         \cs_set_eq:NN \__tblr_process_stretch: \__tblr_process_stretch_real:
       }
@@ -3235,21 +3241,17 @@
 \cs_new_eq:NN \__tblr_leave_vmode: \mode_leave_vertical:
 \cs_new_protected:Npn \__tblr_process_stretch_real:
   {
-    \dim_set:Nn \l_tmpa_dim
-      { \fp_use:N \l__tblr_stretch_fp \box_dp:N \strutbox }
-    \dim_compare:nNnT \l_tmpa_dim > { \box_dp:N \l_tmpb_box }
+    \dim_compare:nNnT \l__tblr_strut_dp_dim > { \box_dp:N \l_tmpb_box }
       {
         \box_set_dp:Nn \l_tmpa_box
           {
               \box_dp:N \l_tmpa_box
             - \box_dp:N \l_tmpb_box
-            + \l_tmpa_dim
+            + \l__tblr_strut_dp_dim
           }
-        \box_set_dp:Nn \l_tmpb_box { \l_tmpa_dim }
+        \box_set_dp:Nn \l_tmpb_box { \l__tblr_strut_dp_dim }
       }
-    \dim_set:Nn \l_tmpa_dim
-      { \fp_use:N \l__tblr_stretch_fp \box_ht:N \strutbox }
-    \dim_compare:nNnT \l_tmpa_dim > { \box_ht:N \l_tmpa_box }
+    \dim_compare:nNnT \l__tblr_strut_ht_dim > { \box_ht:N \l_tmpa_box }
       {
         \hbox_set:Nn \l_tmpa_box { \box_use:N \l_tmpa_box }
         \hbox_set:Nn \l_tmpb_box { \box_use:N \l_tmpb_box }
@@ -3257,9 +3259,9 @@
           {
               \box_ht:N \l_tmpb_box
             - \box_ht:N \l_tmpa_box
-            + \l_tmpa_dim
+            + \l__tblr_strut_ht_dim
           }
-        \box_set_ht:Nn \l_tmpa_box { \l_tmpa_dim }
+        \box_set_ht:Nn \l_tmpa_box { \l__tblr_strut_ht_dim }
         %% return vbox for vertical-align: \c__tblr_middle_m_tl
         \vbox_set_top:Nn \l_tmpa_box { \box_use:N \l_tmpa_box }
         \vbox_set:Nn \l_tmpb_box { \box_use:N \l_tmpb_box }
