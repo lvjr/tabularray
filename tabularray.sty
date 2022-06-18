@@ -3206,7 +3206,7 @@
 
 \cs_new_protected:Npn \__tblr_calc_cell_and_line_sizes:
   {
-    \__tblr_make_strut_box:
+    \__tblr_prepare_stretch:
     \__tblr_calculate_line_sizes:
     \__tblr_calculate_cell_sizes:
     \LogTblrTracing { cell, row, column, hline, vline }
@@ -3214,54 +3214,60 @@
     \__tblr_adjust_sizes_for_span_cells:
   }
 
-%% make strut box from stretch option of the table
-
-\box_new:N \l__tblr_strut_ht_box
-\box_new:N \l__tblr_strut_dp_box
-
-\cs_new_protected:Npn \__tblr_make_strut_box:
+%% prepare stretch option of the table
+\fp_new:N \l__tblr_stretch_fp
+\dim_new:N \l__tblr_strut_dp_dim
+\dim_new:N \l__tblr_strut_ht_dim
+\cs_new_protected:Npn \__tblr_prepare_stretch:
   {
-    \tl_set:Nx \l__tblr_s_tl { \__tblr_prop_item:ne { inner } { stretch } }
-    \fp_compare:nNnTF { \l__tblr_s_tl } > {0}
+    \fp_set:Nn \l__tblr_stretch_fp
+      { \__tblr_prop_item:nn { inner } { stretch } }
+    \fp_compare:nNnTF \l__tblr_stretch_fp > \c_zero_fp
       {
-        \hbox_set:Nn \l__tblr_strut_ht_box
-          { \vrule height \l__tblr_s_tl \box_ht:N \strutbox width ~ 0pt }
-        \hbox_set:Nn \l__tblr_strut_dp_box
-          { \vrule depth \l__tblr_s_tl \box_dp:N \strutbox width ~ 0pt }
-        \cs_set_eq:NN \__tblr_use_strut_ht_box: \__tblr_use_strut_ht_box_real:
-        \cs_set_eq:NN \__tblr_use_strut_dp_box: \__tblr_use_strut_dp_box_real:
+        \dim_set:Nn \l__tblr_strut_dp_dim
+          { \fp_use:N \l__tblr_stretch_fp \box_dp:N \strutbox }
+        \dim_set:Nn \l__tblr_strut_ht_dim
+          { \fp_use:N \l__tblr_stretch_fp \box_ht:N \strutbox }
+        \cs_set_eq:NN \__tblr_leave_vmode: \mode_leave_vertical:
+        \cs_set_eq:NN \__tblr_process_stretch: \__tblr_process_stretch_real:
       }
       {
-        \fp_compare:nNnTF { \l__tblr_s_tl } < {0}
-          {
-            \cs_set_eq:NN \__tblr_use_strut_ht_box: \__tblr_use_strut_ht_box_vmode:
-          }
-          {
-            \cs_set_eq:NN \__tblr_use_strut_ht_box: \__tblr_use_strut_ht_box_hmode:
-          }
-        \cs_set_eq:NN \__tblr_use_strut_dp_box: \__tblr_use_strut_dp_box_ignore:
+        \cs_set_eq:NN \__tblr_process_stretch: \prg_do_nothing:
+        \fp_compare:nNnTF \l__tblr_stretch_fp < \c_zero_fp
+          { \cs_set_eq:NN \__tblr_leave_vmode: \@setminipage } % for lists (see issue #99)
+          { \cs_set_eq:NN \__tblr_leave_vmode: \mode_leave_vertical: }
       }
   }
-
-\cs_new_protected:Npn \__tblr_use_strut_ht_box_real:
+\cs_new_eq:NN \__tblr_leave_vmode: \mode_leave_vertical:
+\cs_new_protected:Npn \__tblr_process_stretch_real:
   {
-    \mode_leave_vertical:
-    \box_use:N \l__tblr_strut_ht_box
+    \dim_compare:nNnT \l__tblr_strut_dp_dim > { \box_dp:N \l_tmpb_box }
+      {
+        \box_set_dp:Nn \l_tmpa_box
+          {
+              \box_dp:N \l_tmpa_box
+            - \box_dp:N \l_tmpb_box
+            + \l__tblr_strut_dp_dim
+          }
+        \box_set_dp:Nn \l_tmpb_box { \l__tblr_strut_dp_dim }
+      }
+    \dim_compare:nNnT \l__tblr_strut_ht_dim > { \box_ht:N \l_tmpa_box }
+      {
+        \hbox_set:Nn \l_tmpa_box { \box_use:N \l_tmpa_box }
+        \hbox_set:Nn \l_tmpb_box { \box_use:N \l_tmpb_box }
+        \box_set_ht:Nn \l_tmpb_box
+          {
+              \box_ht:N \l_tmpb_box
+            - \box_ht:N \l_tmpa_box
+            + \l__tblr_strut_ht_dim
+          }
+        \box_set_ht:Nn \l_tmpa_box { \l__tblr_strut_ht_dim }
+        %% return vbox for vertical-align: \c__tblr_middle_m_tl
+        \vbox_set_top:Nn \l_tmpa_box { \box_use:N \l_tmpa_box }
+        \vbox_set:Nn \l_tmpb_box { \box_use:N \l_tmpb_box }
+      }
   }
-\cs_new_protected:Npn \__tblr_use_strut_ht_box_hmode:
-  {
-    \mode_leave_vertical:
-  }
-\cs_new_protected:Npn \__tblr_use_strut_ht_box_vmode:
-  {
-    \@minipagetrue % for lists (see issue #99)
-  }
-
-\cs_new_protected:Npn \__tblr_use_strut_dp_box_real:
-  {
-    \box_use:N \l__tblr_strut_dp_box
-  }
-\cs_new_protected:Npn \__tblr_use_strut_dp_box_ignore: { }
+\cs_new_eq:NN \__tblr_process_stretch: \__tblr_process_stretch_real:
 
 %% Calculate the thickness for every hline and vline
 \cs_new_protected:Npn \__tblr_calculate_line_sizes:
@@ -3309,7 +3315,10 @@
             \tl_set:Nx \l__tblr_w_tl { \dim_eval:n { \box_wd:N \l__tblr_b_box } }
             \__tblr_spec_gput_if_larger:nee { vline }
               { [#2](##1) / @vline-width } { \l__tblr_w_tl }
-            \dim_add:Nn \l__tblr_w_dim { \l__tblr_w_tl }
+            \dim_add:Nn \l__tblr_w_dim
+              {
+                \__tblr_spec_item:nn  { vline } { [#2](##1) / @vline-width }
+              }
             \dim_add:Nn \l__tblr_w_dim { \l__tblr_s_tl }
           }
         \dim_add:Nn \l__tblr_w_dim { - \l__tblr_s_tl }
@@ -3375,7 +3384,10 @@
               }
             \__tblr_spec_gput_if_larger:nee { hline }
               { [#1](##1) / @hline-height } { \l__tblr_h_tl }
-            \dim_add:Nn \l__tblr_h_dim { \l__tblr_h_tl }
+            \dim_add:Nn \l__tblr_h_dim
+              {
+                \__tblr_spec_item:nn  { hline } { [#1](##1) / @hline-height }
+              }
             \dim_add:Nn \l__tblr_h_dim { \l__tblr_s_tl }
           }
         \dim_add:Nn \l__tblr_h_dim { - \l__tblr_s_tl }
@@ -3622,9 +3634,11 @@
           }
         \__tblr_restore_counters:n { cell }
       }
+    \tl_put_left:NV \l__tblr_c_tl \l__tblr_f_tl
     \tl_set:Nx \l__tblr_cell_fg_tl
       { \__tblr_data_item:neen { cell } {#1} {#2} { foreground } }
-    \tl_put_left:NV \l__tblr_c_tl \l__tblr_f_tl
+    \tl_if_empty:NF \l__tblr_cell_fg_tl
+      { \exp_args:NV \color \l__tblr_cell_fg_tl }
     \__tblr_get_vcell_and_sizes:NN \l__tblr_c_tl \l__tblr_w_tl
     \group_end:
   }
@@ -3686,10 +3700,9 @@
 \cs_new_protected:Npn \__tblr_get_vcell_and_sizes:NN #1 #2
   {
     \group_begin:
-    \__tblr_save_counters:n { cell }
-    \vbox_set_top:Nn \l_tmpa_box { \__tblr_make_vcell_text:NN #1 #2 }
-    \__tblr_restore_counters:n { cell }
     \vbox_set:Nn \l_tmpb_box { \__tblr_make_vcell_text:NN #1 #2 }
+    \vbox_set_top:Nn \l_tmpa_box { \vbox_unpack:N \l_tmpb_box }
+    \__tblr_process_stretch:
     \dim_gset:Nn \g__tblr_cell_wd_dim { \box_wd:N \l_tmpb_box }
     \dim_gset:Nn \g__tblr_cell_ht_dim
       { \box_ht:N \l_tmpb_box + \box_dp:N \l_tmpb_box }
@@ -3738,13 +3751,10 @@
     \dim_set:Nn \tex_hsize:D { #2 }
     \TblrParboxRestore
     \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
-    %% \mode_leave_vertical: has been moved into \__tblr_use_strut_ht_box:
-    \__tblr_use_strut_ht_box:
-    \tl_if_empty:NF \l__tblr_cell_fg_tl { \exp_args:NV \color \l__tblr_cell_fg_tl }
+    \__tblr_leave_vmode:
     \bool_if:NTF \l__tblr_cell_math_mode_bool
       { #1 }
       { \__tblr_rescan_cell_tokens:N #1 }
-    \__tblr_use_strut_dp_box:
   }
 
 %% When using verb option, there is an end-of-line character at the end.
