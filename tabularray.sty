@@ -2258,12 +2258,12 @@
   }
 \cs_generate_variant:Nn \__tblr_row_unknown_key:n { V }
 
-\NewTableCommand \pagebreak
+\NewTableCommand \pagebreak [1] [4]
   {
     \hborder { pagebreak = yes }
   }
 
-\NewTableCommand \nopagebreak
+\NewTableCommand \nopagebreak [1] [4]
   {
     \hborder { pagebreak = no }
   }
