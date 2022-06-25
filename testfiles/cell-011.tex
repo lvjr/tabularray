@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{array}
+\usepackage{tabularray}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+\SetTblrInner{rowsep=0pt}
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{testing new implementation for stretch option #265}
+\begin{tabular}{|p{4cm}|l|}
+\hline
+pgrs pgrs pgrs pgrs pgrs pgrs. the quick brown fox jumps over the lazy dog. abcd abcd abcd. & t \\
+\hline
+\end{tabular}
+\begin{tblr}{|p{4cm}|l|}
+\hline
+pgrs pgrs pgrs pgrs pgrs pgrs. the quick brown fox jumps over the lazy dog. abcd abcd abcd. & t \\
+\hline
+\end{tblr}
+\par\smallskip
+\begin{tabular}{|b{4cm}|l|}
+\hline
+pgrs pgrs pgrs pgrs pgrs pgrs. the quick brown fox jumps over the lazy dog. abcd abcd abcd. & b \\
+\hline
+\end{tabular}
+\begin{tblr}{|b{4cm}|l|}
+\hline
+pgrs pgrs pgrs pgrs pgrs pgrs. the quick brown fox jumps over the lazy dog. abcd abcd abcd. & b \\
+\hline
+\end{tblr}
+\par\smallskip
+\begin{tabular}{|m{4cm}|l|}
+\hline
+pgrs pgrs pgrs pgrs pgrs pgrs. the quick brown fox jumps over the lazy dog. abcd abcd abcd. & m \\
+\hline
+\end{tabular}
+\begin{tblr}{|m{4cm}|l|}
+\hline
+pgrs pgrs pgrs pgrs pgrs pgrs. the quick brown fox jumps over the lazy dog. abcd abcd abcd. & m \\
+\hline
+\end{tblr}
+\ENDTEST
+
+\end{document}

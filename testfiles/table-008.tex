@@ -4,6 +4,13 @@
 
 \input{regression-test}
 
+%% share rownum counter (#269, davidcarlisle/dpctex#33)
+\makeatletter
+\ExplSyntaxOn
+\int_new:N \c@rownum
+\ExplSyntaxOff
+\makeatother
+
 %\usepackage{array}
 \usepackage{tabularray}
 

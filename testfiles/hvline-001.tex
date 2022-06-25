@@ -28,4 +28,29 @@ Seven & Eight &  Nine \\
 \end{tblr}
 \ENDTEST
 
+\bigskip\hrule\bigskip
+
+\BEGINTEST{hline and vline segments of different widths #260}
+\begin{tblr}{
+  hlines, vlines,
+  hline{2} = {1}{1}{4pt},
+  hline{2} = {2}{1}{2pt},
+  hline{2} = {1}{2}{2pt},
+  hline{2} = {2}{2}{4pt},
+}
+  Alpha   & Beta \\
+  Epsilon & Zeta \\
+\end{tblr}
+\begin{tblr}{
+  hlines, vlines,
+  vline{2} = {1}{1}{4pt},
+  vline{2} = {2}{1}{2pt},
+  vline{2} = {1}{2}{2pt},
+  vline{2} = {2}{2}{4pt},
+}
+  Alpha   & Beta \\
+  Epsilon & Zeta \\
+\end{tblr}
+\ENDTEST
+
 \end{document}

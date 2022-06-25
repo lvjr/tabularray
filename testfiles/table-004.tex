@@ -45,4 +45,80 @@
 \end{tblr}
 \ENDTEST
 
+\bigskip\hrule\bigskip
+
+\BEGINTEST{table nesting: restore table commands #31}
+\begin{tabular}{c}
+\hline
+  Outer Cell \\
+\hline
+  \begin{tblr}{c}
+  \hline
+    text \\
+  \hline
+  \end{tblr} \\
+\hline
+  $\begin{tblr}{c}
+  \hline
+    a+b \\
+  \hline
+  \end{tblr}$ \\
+\hline
+\end{tabular}
+\quad
+\begin{tblr}{c}
+\hline
+  Outer Cell \\
+\hline
+  \begin{tabular}{c}
+  \hline
+    text \\
+  \hline
+  \end{tabular} \\
+\hline
+  $\begin{array}{c}
+  \hline
+    a+b \\
+  \hline
+  \end{array}$ \\
+\hline
+\end{tblr}
+\quad
+\begin{tabular}{c}
+\hline
+  Outer Cell \\
+\hline
+  \begin{tblr}{c}
+  \SetHline{-}{1pt}
+    text \\
+  \SetHline{-}{1pt}
+  \end{tblr} \\
+\hline
+  $\begin{tblr}{c}
+  \SetHline{-}{1pt}
+    a+b \\
+  \SetHline{-}{1pt}
+  \end{tblr}$ \\
+\hline
+\end{tabular}
+\quad
+\begin{tblr}{c}
+\SetHline{-}{dashed}
+  Outer Cell \\
+\SetHline{-}{dashed}
+  \begin{tabular}{c}
+  \hline
+    text \\
+  \hline
+  \end{tabular} \\
+\SetHline{-}{dashed}
+  $\begin{array}{c}
+  \hline
+    a+b \\
+  \hline
+  \end{array}$ \\
+\SetHline{-}{dashed}
+\end{tblr}
+\ENDTEST
+
 \end{document}
