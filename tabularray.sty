@@ -957,8 +957,14 @@
         \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_a_tl
         \exp_args:NcV \NewDocumentCommand
           { __tblr_table_command_ \cs_to_str:N #1 :w } \l__tblr_a_tl { #4 }
-        \exp_args:NcV \NewDocumentCommand
-          { __tblr_table_command_ \cs_to_str:N #1 _gobble :w } \l__tblr_a_tl { }
+        \cs_if_exist:NTF #1
+          {
+            \cs_set_eq:cN { __tblr_table_command_ \cs_to_str:N #1 _saved:w } #1
+          }
+          {
+            \exp_args:NcV \NewDocumentCommand
+              { __tblr_table_command_ \cs_to_str:N #1 _saved:w } \l__tblr_a_tl { }
+          }
         \IfValueTF { #3 }
           {
             \tl_gset:cn { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } {-#2}
@@ -979,7 +985,7 @@
 \cs_new_protected:Npn \__tblr_disable_table_commands:
   {
     \clist_map_inline:Nn \g__tblr_table_commands_clist
-      { \cs_set_eq:Nc ##1 { __tblr_table_command_ \cs_to_str:N ##1 _gobble:w } }
+      { \cs_set_eq:Nc ##1 { __tblr_table_command_ \cs_to_str:N ##1 _saved:w } }
   }
 
 \cs_new_protected:Npn \__tblr_execute_table_commands:
