@@ -6855,53 +6855,52 @@
       \end{+array}
     } { }
     \NewDocumentEnvironment { +bmatrix } { O{} +b } {
-      \left[\begin{+array}{
+      \begin{+array}{
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
-        cells = {c}, ##1
+        cells = {c}, delimiter = {left = [, right = ]}, ##1
       }
         ##2
-      \end{+array}\right]
-      \ignorespacesafterend
+      \end{+array}
     } { }
     \NewDocumentEnvironment { +Bmatrix } { O{} +b } {
-      \left\lbrace\begin{+array}{
+      \begin{+array} {
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
-        cells = {c}, ##1
+        cells = {c}, delimiter = {left = \lbrace, right = \rbrace}, ##1
       }
         ##2
-      \end{+array}\right\rbrace
+      \end{+array}
     } { }
     \NewDocumentEnvironment { +pmatrix } { O{} +b } {
-      \left(\begin{+array}{
+      \begin{+array} {
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
-        cells = {c}, ##1
+        cells = {c}, delimiter = {left = (, right = )}, ##1
       }
         ##2
-      \end{+array}\right)
+      \end{+array}
     } { }
     \NewDocumentEnvironment { +vmatrix } { O{} +b } {
-      \left\lvert\begin{+array}{
+      \begin{+array} {
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
-        cells = {c}, ##1
+        cells = {c}, delimiter = {left = \lvert, right = \rvert}, ##1
       }
         ##2
-      \end{+array}\right\rvert
+      \end{+array}
     } { }
     \NewDocumentEnvironment { +Vmatrix } { O{} +b } {
-      \left\lVert\begin{+array}{
+      \begin{+array} {
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
-        cells = {c}, ##1
+        cells = {c}, delimiter = {left = \lVert, right = \rVert}, ##1
       }
         ##2
-      \end{+array}\right\rVert
+      \end{+array}
     } { }
     \NewDocumentEnvironment { +cases } { O{} +b } {
-      \left\lbrace\begin{+array}{
+      \begin{+array} {
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
-        colspec = {ll}, stretch = 1.2, ##1
+        colspec = {ll}, stretch = 1.2, delimiter = {left=\lbrace, right=.}, ##1
       }
         ##2
-      \end{+array}\right.
+      \end{+array}
     } { }
   }
 
