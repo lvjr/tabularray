@@ -6843,66 +6843,66 @@
 
 \NewTblrLibrary { amsmath }
   {
-    \RequirePackage { amsmath, environ }
+    \RequirePackage { amsmath }
     \NewTblrEnviron { +array }
     \SetTblrInner[+array]{colsep = 5pt}
-    \NewEnviron { +matrix } [1] [] {
-      \begin{+array}[expand = \BODY]{
+    \NewDocumentEnvironment { +matrix } { O{} +b } {
+      \begin{+array}{
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
         cells = {c}, ##1
       }
-        \BODY
+        ##2
       \end{+array}
-    }
-    \NewEnviron { +bmatrix } [1] [] {
-      \left[\begin{+array}[expand = \BODY]{
+    } { }
+    \NewDocumentEnvironment { +bmatrix } { O{} +b } {
+      \left[\begin{+array}{
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
         cells = {c}, ##1
       }
-        \BODY
+        ##2
       \end{+array}\right]
       \ignorespacesafterend
-    }
-    \NewEnviron { +Bmatrix } [1] [] {
-      \left\lbrace\begin{+array}[expand = \BODY]{
+    } { }
+    \NewDocumentEnvironment { +Bmatrix } { O{} +b } {
+      \left\lbrace\begin{+array}{
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
         cells = {c}, ##1
       }
-        \BODY
+        ##2
       \end{+array}\right\rbrace
-    }
-    \NewEnviron { +pmatrix } [1] [] {
-      \left(\begin{+array}[expand = \BODY]{
+    } { }
+    \NewDocumentEnvironment { +pmatrix } { O{} +b } {
+      \left(\begin{+array}{
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
         cells = {c}, ##1
       }
-        \BODY
+        ##2
       \end{+array}\right)
-    }
-    \NewEnviron { +vmatrix } [1] [] {
-      \left\lvert\begin{+array}[expand = \BODY]{
+    } { }
+    \NewDocumentEnvironment { +vmatrix } { O{} +b } {
+      \left\lvert\begin{+array}{
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
         cells = {c}, ##1
       }
-        \BODY
+        ##2
       \end{+array}\right\rvert
-    }
-    \NewEnviron { +Vmatrix } [1] [] {
-      \left\lVert\begin{+array}[expand = \BODY]{
+    } { }
+    \NewDocumentEnvironment { +Vmatrix } { O{} +b } {
+      \left\lVert\begin{+array}{
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
         cells = {c}, ##1
       }
-        \BODY
+        ##2
       \end{+array}\right\rVert
-    }
-    \NewEnviron { +cases } [1] [] {
-      \left\lbrace\begin{+array}[expand = \BODY]{
+    } { }
+    \NewDocumentEnvironment { +cases } { O{} +b } {
+      \left\lbrace\begin{+array}{
         column{1} = {leftsep = 0pt}, column{Z} = {rightsep = 0pt},
         colspec = {ll}, stretch = 1.2, ##1
       }
-        \BODY
+        ##2
       \end{+array}\right.
-    }
+    } { }
   }
 
 %% Library booktabs and commands \toprule, \midrule, \bottomrule
