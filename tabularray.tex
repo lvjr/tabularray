@@ -2141,7 +2141,10 @@ You can select one of them with \verb!\SetTblrTemplate! command.
 
 \subsection{Continuation Templates}
 
-Let us have a look at the code for defining templates of continuation text first:
+Let us have a look at the code for defining templates of continuation text first:%
+\footnote{To tell the truth, the default \texttt{conthead-text} and \texttt{contfoot-text}
+are actually stored in commands \texttt{\string\tblrcontheadname} and \texttt{\string\tblrcontfootname}
+respectively. And you may contribute your translations of them to \textbf{babel} package.}
 
 \begin{codehigh}
 \DefTblrTemplate{contfoot-text}{normal}{Continued on next page}
@@ -2959,7 +2962,7 @@ in \verb!tabularray! environments with \verb!rowsep=0pt!, such as
 \section{The Future}
 
 Starting from 2022, except for hotfix releases for critical bugs,
-new releases will be published every three or six months.
+every new release will be published on the first day of some month.
 You may watch the milestones page for the scheduled dates of upcoming releases
 and their changes:\newline
 \centerline{\url{https://github.com/lvjr/tabularray/milestones}}

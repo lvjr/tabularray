@@ -389,7 +389,10 @@ You can select one of them with \verb!\SetTblrTemplate! command.
 
 \subsection{Continuation Templates}
 
-Let us have a look at the code for defining templates of continuation text first:
+Let us have a look at the code for defining templates of continuation text first:%
+\footnote{To tell the truth, the default \texttt{conthead-text} and \texttt{contfoot-text}
+are actually stored in commands \texttt{\string\tblrcontheadname} and \texttt{\string\tblrcontfootname}
+respectively. And you may contribute your translations of them to \textbf{babel} package.}
 
 \begin{codehigh}
 \DefTblrTemplate{contfoot-text}{normal}{Continued on next page}
