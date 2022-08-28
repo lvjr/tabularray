@@ -2580,7 +2580,8 @@
 %% #1: env name; #2: specifications
 \NewDocumentCommand \SetTblrInner { O{tblr} m }
   {
-    \tl_put_right:cn { l__tblr_default_ #1 _inner_tl } { , #2 }
+    \clist_map_inline:nn {#1}
+      { \tl_put_right:cn { l__tblr_default_ ##1 _inner_tl } { , #2 } }
     \ignorespaces
   }
 \cs_new_eq:NN \SetTblrDefault \SetTblrInner
@@ -2588,7 +2589,8 @@
 %% #1: env name; #2: specifications
 \NewDocumentCommand \SetTblrOuter { O{tblr} m }
   {
-    \tl_put_right:cn { l__tblr_default_ #1 _outer_tl } { , #2 }
+    \clist_map_inline:nn {#1}
+      { \tl_put_right:cn { l__tblr_default_ ##1 _outer_tl } { , #2 } }
     \ignorespaces
   }
 
