@@ -4794,7 +4794,17 @@
 %%> \section{Table Continuation Templates}
 %%% --------------------------------------------------------
 
-\DefTblrTemplate { contfoot-text } { normal } { Continued ~ on ~ next ~ page }
+\tl_if_exist:NF \tblrcontfootname
+  {
+    \tl_set:Nn \tblrcontfootname { Continued ~ on ~ next ~ page }
+  }
+
+\tl_if_exist:NF \tblrcontheadname
+  {
+    \tl_set:Nn \tblrcontheadname { ( Continued ) }
+  }
+
+\DefTblrTemplate { contfoot-text } { normal } { \tblrcontfootname }
 \SetTblrTemplate { contfoot-text } { normal }
 
 \DefTblrTemplate { contfoot } { empty } { }
@@ -4818,7 +4828,7 @@
   }
 \SetTblrTemplate { contfoot } { normal }
 
-\DefTblrTemplate { conthead-text } { normal } { ( Continued ) }
+\DefTblrTemplate { conthead-text } { normal } { \tblrcontheadname }
 \SetTblrTemplate { conthead-text } { normal }
 
 \DefTblrTemplate { conthead } { empty } { }
