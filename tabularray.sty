@@ -3032,7 +3032,7 @@
     colspec, rowspec, column, row, cell, hline, vline, hborder, vborder, width,
     rowhead, rowfoot, columns, rows, cells, hlines, vlines, % hborders, vborders,
     leftsep, rightsep, colsep, abovesep, belowsep, rowsep, rulesep,
-    baseline, hspan, vspan, stretch, verb,
+    baseline, hspan, vspan, stretch, verb, delimiter
   }
 
 \keys_define:nn { tblr }
@@ -3059,6 +3059,7 @@
     rulesep .code:n = \__tblr_keys_gput:nn { rulesep } {#1},
     rowhead .code:n = \__tblr_keys_gput:nn { rowhead } {#1},
     rowfoot .code:n = \__tblr_keys_gput:nn { rowfoot } {#1},
+    delimiter .code:n = \__tblr_set_delimiter:n {#1},
     baseline .code:n = \__tblr_outer_gput_spec:nn { baseline } {#1},
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
@@ -3098,6 +3099,17 @@
     \__tblr_prop_gput:nnn { inner } {#1} {#2}
   }
 \cs_generate_variant:Nn \__tblr_keys_gput:nn { nx }
+
+\keys_define:nn { tblr-delimiter }
+  {
+    left .code:n  = \__tblr_keys_gput:nn { delim-left } { \left #1 },
+    right .code:n = \__tblr_keys_gput:nn { delim-right } { \right #1 }
+  }
+
+\cs_new_protected:Npn \__tblr_set_delimiter:n #1
+  {
+    \keys_set:nn { tblr-delimiter } {#1}
+  }
 
 %%% --------------------------------------------------------
 %%> \section{Initialize and Parse Table Outer Specifications}
@@ -5767,9 +5779,16 @@
 \regex_const:Nn \c__tblr_is_positive_integer_regex { ^ \d+ $ }
 \regex_const:Nn \c__tblr_is_negative_integer_regex { ^ - \d+ $ }
 
+\tl_new:N \l__tblr_delim_left_tl
+\tl_new:N \l__tblr_delim_right_tl
+
 \cs_new_protected:Npn \__tblr_valign_whole:Nn #1 #2
   {
     \group_begin:
+    \tl_set:Nx \l__tblr_delim_left_tl
+      { \__tblr_prop_item:nn { inner } { delim-left } }
+    \tl_set:Nx \l__tblr_delim_right_tl
+      { \__tblr_prop_item:nn { inner } { delim-right } }
     \tl_set:Nn \__tblr_vbox_align_tl {#2}
     \dim_set:Nn \l__tblr_t_dim { \box_ht:N #1 + \box_dp:N #1 }
     \tl_case:NnF \__tblr_vbox_align_tl
@@ -5805,13 +5824,40 @@
               { \__tblr_valign_whole_middle:N #1 }
           }
       }
-    \box_use_drop:N #1
+    %% we have done the job when valign is m or c
+    \box_if_empty:NF #1 { \__tblr_add_delimiters_to_box:N #1 }
     \group_end:
+  }
+
+%% We use the idea of delarray package to shift table box
+%% when there are delimiters around the table
+\cs_new_protected:Npn \__tblr_add_delimiters_to_box:N #1
+  {
+    \tl_if_empty:NTF \l__tblr_delim_left_tl
+      { \box_use_drop:N #1 }
+      {
+        \box_move_down:nn
+          {
+            ( \box_dp:N #1 - \box_ht:N #1 ) / 2
+            + \tex_fontdimen:D 22 \tex_textfont:D 2
+          }
+          { \__tblr_get_vcenter_box:N #1 }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_get_vcenter_box:N #1
+  {
+    \hbox:n
+      {
+        $ \m@th \l__tblr_delim_left_tl
+        \tex_vcenter:D { \vbox_unpack_drop:N #1 }
+        \l__tblr_delim_right_tl $
+      }
   }
 
 \cs_new_protected:Npn \__tblr_valign_whole_middle:N #1
   {
-    \hbox:n { $ \m@th \tex_vcenter:D { \vbox_unpack_drop:N #1 } $ }
+    \__tblr_get_vcenter_box:N #1
   }
 
 \cs_new_protected:Npn \__tblr_valign_whole_top:N #1
