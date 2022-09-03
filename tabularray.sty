@@ -4570,7 +4570,7 @@
   {
     \prop_put:Nnn \l__tblr_element_styles_prop {#1} {#2}
   }
-\cs_generate_variant:Nn \__tblr_style_put:nn { nV, ne, en }
+\cs_generate_variant:Nn \__tblr_style_put:nn { nV, ne, en, eV }
 
 \cs_new:Npn \__tblr_style_item:n #1
   {
@@ -4613,6 +4613,7 @@
     l       .meta:n = { halign = l },
     c       .meta:n = { halign = c },
     r       .meta:n = { halign = r },
+    j       .meta:n = { halign = j },
     fg      .code:n = \__tblr_element_gput_style:nn { fg } {#1},
     font    .code:n = \__tblr_element_gput_style:nn { font } {#1},
     hang    .code:n = \__tblr_element_gput_style:nn { hang } {#1},
@@ -4634,7 +4635,7 @@
         \tl_set_rescan:Nnn \l__tblr_f_tl {} {#1}
         \tl_if_head_eq_catcode:VNTF \l__tblr_f_tl \scan_stop:
           {
-            \__tblr_style_put:en { \l__tblr_element_name_tl / font } \l__tblr_f_tl
+            \__tblr_style_put:eV { \l__tblr_element_name_tl / font } \l__tblr_f_tl
           }
           {
             \__tblr_style_put:en { \l__tblr_element_name_tl / #1 } {#2}
