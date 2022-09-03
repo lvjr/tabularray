@@ -4863,9 +4863,9 @@
 \DefTblrTemplate { caption-lot } { empty } { }
 \DefTblrTemplate { caption-lot } { normal }
   {
-    \tl_set:Nx \l__tblr_caption_short_tl { \InsertTblrText { entry } }
-    \tl_if_empty:NT \l__tblr_caption_short_tl
-      { \tl_set:Nx \l__tblr_caption_short_tl { \InsertTblrText { caption } } }
+    \tl_if_empty:NTF \lTblrEntryTl
+      { \tl_set_eq:NN \l__tblr_caption_short_tl \lTblrCaptionTl }
+      { \tl_set_eq:NN \l__tblr_caption_short_tl \lTblrEntryTl }
     \addcontentsline { lot } { table }
       { \protect\numberline { \thetable } { \l__tblr_caption_short_tl } }
   }
@@ -5386,20 +5386,34 @@
       \l__tblr_table_lastfoot_box  { \UseTblrTemplate { lastfoot } { default } }
   }
 
+\tl_new:N \lTblrCaptionTl
+\tl_new:N \lTblrEntryTl
+\tl_new:N \lTblrLabelTl
+\clist_new:N \lTblrRefMoreClist
+
 \cs_new_protected:Npn \__tblr_build_table_label_entry:
   {
-    \tl_set:Nx \l_tmpa_tl { \InsertTblrText { label } }
-    \tl_if_eq:NnTF \l_tmpa_tl { none }
+    \tl_set:Nx \lTblrCaptionTl { \InsertTblrText { caption } }
+    \tl_set:Nx \lTblrEntryTl { \InsertTblrText { entry } }
+    \tl_set:Nx \lTblrLabelTl { \InsertTblrText { label } }
+    \tl_if_eq:NnTF \lTblrLabelTl { none }
       {
         \SetTblrTemplate { caption-tag }{ empty }
         \SetTblrTemplate { caption-sep }{ empty }
       }
       {
         \refstepcounter { table }
-        \tl_if_empty:NF \l_tmpa_tl { \exp_args:NV \label \l_tmpa_tl }
+        \tl_if_empty:NF \lTblrLabelTl
+          {
+            \clist_map_inline:Nn \lTblrRefMoreClist
+              { \ExpTblrTemplate { caption-label } { ##1 } }
+            \exp_args:NV \label \lTblrLabelTl
+          }
       }
-    \tl_set:Nx \l_tmpb_tl { \InsertTblrText { entry } }
-    \tl_if_eq:NnF \l_tmpb_tl { none }
+    %% We put caption-lot code at last, so that an user can modify \lTblrEntryTl
+    %% in a caption-label template. For example, an user may want to use
+    %% short caption in nameref, but at the same time not to add LoT entry.
+    \tl_if_eq:NnF \lTblrEntryTl { none }
       { \UseTblrTemplate { caption-lot } { default } }
   }
 
@@ -7127,6 +7141,28 @@
       }
   }
 
+%% Library nameref and its caption-label template
+
+\NewTblrLibrary { nameref }
+  {
+    \RequirePackage { nameref }
+    \clist_if_in:NnF \lTblrRefMoreClist { nameref }
+      {
+        \clist_put_right:Nn \lTblrRefMoreClist { nameref }
+        \DefTblrTemplate { caption-label }{ nameref }
+          {
+            \tl_if_eq:NnTF \lTblrEntryTl { none }
+              { \exp_args:NV \GetTitleString \lTblrCaptionTl }
+              {
+                \tl_if_empty:NTF \lTblrEntryTl
+                  { \exp_args:NV \GetTitleString \lTblrCaptionTl }
+                  { \exp_args:NV \GetTitleString \lTblrEntryTl }
+              }
+            \tl_set_eq:NN \@currentlabelname \GetTitleStringResult
+          }
+      }
+  }
+
 %% Library siunitx and S columns
 
 \NewTblrLibrary { siunitx }
@@ -7181,3 +7217,19 @@
     \clist_gput_left:Nn \g__tblr_table_known_keys_clist { measure }
     \keys_define:nn { tblr } { measure .tl_set:N = \l__tblr_inner_spec_measure_tl }
   }
+
+%% Library zref and its caption-label template
+
+\NewTblrLibrary { zref }
+  {
+    \RequirePackage { zref-user }
+    \clist_if_in:NnF \lTblrRefMoreClist { zref }
+      {
+        \clist_put_right:Nn \lTblrRefMoreClist { zref }
+        \DefTblrTemplate { caption-label }{ zref }
+          {
+            \exp_args:NV \zlabel \lTblrLabelTl
+          }
+      }
+  }
+
