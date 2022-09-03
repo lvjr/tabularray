@@ -5406,7 +5406,7 @@
         \tl_if_empty:NF \lTblrLabelTl
           {
             \clist_map_inline:Nn \lTblrRefMoreClist
-              { \ExpTblrTemplate { caption-label } { ##1 } }
+              { \ExpTblrTemplate { caption-ref } { ##1 } }
             \exp_args:NV \label \lTblrLabelTl
           }
       }
@@ -7141,7 +7141,7 @@
       }
   }
 
-%% Library nameref and its caption-label template
+%% Library nameref and its caption-ref template
 
 \NewTblrLibrary { nameref }
   {
@@ -7149,7 +7149,7 @@
     \clist_if_in:NnF \lTblrRefMoreClist { nameref }
       {
         \clist_put_right:Nn \lTblrRefMoreClist { nameref }
-        \DefTblrTemplate { caption-label }{ nameref }
+        \DefTblrTemplate { caption-ref }{ nameref }
           {
             \tl_if_eq:NnTF \lTblrEntryTl { none }
               { \exp_args:NV \GetTitleString \lTblrCaptionTl }
@@ -7218,7 +7218,7 @@
     \keys_define:nn { tblr } { measure .tl_set:N = \l__tblr_inner_spec_measure_tl }
   }
 
-%% Library zref and its caption-label template
+%% Library zref and its caption-ref template
 
 \NewTblrLibrary { zref }
   {
@@ -7226,7 +7226,7 @@
     \clist_if_in:NnF \lTblrRefMoreClist { zref }
       {
         \clist_put_right:Nn \lTblrRefMoreClist { zref }
-        \DefTblrTemplate { caption-label }{ zref }
+        \DefTblrTemplate { caption-ref }{ zref }
           {
             \exp_args:NV \zlabel \lTblrLabelTl
           }
