@@ -1,0 +1,59 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\UseTblrLibrary{nameref}
+
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{nameref: testing} % issue #236 and #256
+Refer to Table \ref{tblr:mylongtblr1}: \nameref{tblr:mylongtblr1}.\par
+Refer to Table \ref{tblr:mylongtblr2}: \nameref{tblr:mylongtblr2}.\par
+Refer to Table \ref{tblr:mylongtblr3}: \nameref{tblr:mylongtblr3}.
+
+\begin{longtblr}[
+  caption = {My longtblr long caption one},
+  entry = {My longtblr entry},
+  label = {tblr:mylongtblr1},
+]{
+  colspec = {Q[10em]Q[10em]}, hlines
+}
+  A & B \\
+  C & D \\
+\end{longtblr}
+
+\begin{longtblr}[
+  caption = {My longtblr long caption two},
+  label = {tblr:mylongtblr2},
+]{
+  colspec = {Q[10em]Q[10em]}, hlines
+}
+  A & B \\
+  C & D \\
+\end{longtblr}
+
+\begin{longtblr}[
+  caption = {My longtblr long caption three},
+  entry = none,
+  label = {tblr:mylongtblr3},
+]{
+  colspec = {Q[10em]Q[10em]}, hlines
+}
+  A & B \\
+  C & D \\
+\end{longtblr}
+\ENDTEST
+
+\end{document}

@@ -1,0 +1,80 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\UseTblrLibrary{zref}
+
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\renewcommand\thetable{\arabic{section}.\arabic{subsection}.\arabic{table}}
+
+\makeatletter
+\zref@newprop{table}{\arabic{table}}
+\zref@newprop{section}{\arabic{section}}
+\zref@newprop{subsection}{\arabic{subsection}}
+\zref@addprop{main}{table}
+\zref@addprop{main}{section}
+\zref@addprop{main}{subsection}
+\makeatother 
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{zref: testing} % issue #202 and #256
+\begin{longtblr}[caption=First,label=tab1]{*{4}{Q[2cm]}}
+    \hline
+     Alpha   & Beta  & Gamma  & Delta \\
+    \hline
+     Epsilon & Zeta  & Eta    & Theta \\
+    \hline
+     Iota    & Kappa & Lambda & Mu    \\
+    \hline
+\end{longtblr}
+
+\section{Section 1}
+
+\begin{longtblr}[caption=Second,label=tab2]{*{4}{Q[2cm]}}
+    \hline
+     Alpha   & Beta  & Gamma  & Delta \\
+    \hline
+     Epsilon & Zeta  & Eta    & Theta \\
+    \hline
+     Iota    & Kappa & Lambda & Mu    \\
+    \hline
+\end{longtblr}
+
+\subsection{Subsection 1}
+
+\begin{longtblr}[caption=Third,label=tab3]{*{4}{Q[2cm]}}
+    \hline
+     Alpha   & Beta  & Gamma  & Delta \\
+    \hline
+     Epsilon & Zeta  & Eta    & Theta \\
+    \hline
+     Iota    & Kappa & Lambda & Mu    \\
+    \hline
+\end{longtblr}
+
+Default: \zref{tab1}, \zref{tab2}, \zref{tab3}.
+
+Default: \zref[default]{tab1}, \zref[default]{tab2}, \zref[default]{tab3}.
+
+Page: \zref[page]{tab1}, \zref[page]{tab2}, \zref[page]{tab3}.
+
+Table: \zref[table]{tab1}, \zref[table]{tab2}, \zref[table]{tab3}.
+
+Section: \zref[section]{tab1}, \zref[section]{tab2}, \zref[section]{tab3}.
+
+Subsection: \zref[subsection]{tab1}, \zref[subsection]{tab2}, \zref[subsection]{tab3}.
+\ENDTEST
+
+\end{document}

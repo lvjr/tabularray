@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\usepackage{array}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\hrule
+
+\START
+
+\vspace{2em}
+
+\BEGINTEST{setting multiple environments at the same time} % issue #37
+\newcommand\tblrbody{
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+}
+\SetTblrInner[tblr,talltblr,longtblr]{vlines}
+\SetTblrOuter[tblr,talltblr,longtblr]{expand=\tblrbody}
+\begin{table}[!htpb]
+\centering
+\caption{Short Table}
+\begin{tblr}{hlines}
+  \tblrbody
+\end{tblr} 
+\end{table}
+\begin{table}[!htpb]
+\centering
+\begin{talltblr}[
+  caption = Tall Table
+]{hlines}
+  \tblrbody
+\end{talltblr}
+\end{table}
+\begin{longtblr}[
+  caption = Long Table
+]{hlines}
+  \tblrbody
+\end{longtblr}
+\ENDTEST
+
+\end{document}

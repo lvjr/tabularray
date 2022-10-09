@@ -1,0 +1,71 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1cm]{geometry}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+\UseTblrLibrary{amsmath}
+
+\usepackage{array}
+\usepackage{delarray}
+
+\SetTblrTracing{none}
+\UseTblrLibrary{varwidth}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{testing delimiters} % issue #300
+Hello$\begin{tblr}{}
+  alpha & beta \\
+  delta & gamma \\ 
+\end{tblr}$World
+\qquad
+Hello$\begin{tblr}{
+  delimiter = {left=[,right=]}
+}
+  alpha & beta \\
+  delta & gamma \\ 
+\end{tblr}$World
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{testing +bmatrix} % issue #300
+\setlength\arraycolsep{0pt}
+\begin{tabular}{llllll}
+    a &
+    $\begin{array}[t]\lbrack{c}\rbrack
+        x \\ y \\ z
+    \end{array}$ &
+    b &
+    $\begin{array}[b]\lbrack{c}\rbrack
+        x \\ y \\ z
+    \end{array}$ &
+    c &
+    $\begin{array}[c]\lbrack{c}\rbrack
+        x \\ y \\ z
+    \end{array}$
+\end{tabular}
+\qquad
+\begin{tblr}{llllll}
+    a &
+    $\begin{+bmatrix}[baseline=t]
+        x \\ y \\ z
+    \end{+bmatrix}$ &
+    b &
+    $\begin{+bmatrix}[baseline=b]
+        x \\ y \\ z
+    \end{+bmatrix}$ &
+    c &
+    $\begin{+bmatrix}[baseline=m]
+        x \\ y \\ z
+    \end{+bmatrix}$
+\end{tblr}
+\ENDTEST
+
+\end{document}
