@@ -26,7 +26,7 @@ of \verb!tblr! environment, which include new interfaces described in Chapter \r
 of \verb!tblr! environment, most of which are used for long tables (see Chapter \ref{chap:long}).
 
 You can use \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
-to set default inner and outer specifications of tables, respectively.
+to set default inner and outer specifications of tables, respectively (see Section \ref{sec:default}).
 
 \section{Inner Specifications}
 
@@ -75,6 +75,16 @@ The following example shows that we can replace \verb!\arraystretch! parameter w
  Alpha   & Beta  & Gamma  & Delta \\
  Epsilon & Zeta  & Eta    & Theta \\
  Iota    & Kappa & Lambda & Mu    \\
+\end{tblr}
+\end{demohigh}
+
+By replacing stretch with row heights, we can get perfect vertical centering for your numerical tables.
+
+\begin{demohigh}
+\begin{tblr}{hlines, stretch=0, rows={ht=\baselineskip}}
+  2021 & 2022 & 2023 \\
+  0.4  & 0.5  & 0.6  \\
+  1.1  & 2.2  & 3.3  \\
 \end{tblr}
 \end{demohigh}
 
@@ -279,16 +289,30 @@ The macro \underline{can not} be defined with \verb!\NewDocumentCommand! or
 \end{demohigh}
 
 \section{Default Specifications}
+\label{sec:default}
 
 \verb!Tabularray! package provides \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
 for you to change the default inner and outer specifications of tables.
 
-In the below example, the first line draws all hlines and vlines for all tables created afterwards,
-while the second line makes all tables created afterwards vertically align at the last row.
+In general different \verb!tabularray! environments (\verb!tblr!, \verb!talltblr!,
+\verb!longtblr!, etc) could have different default specifications.
+You can list the environments in the optional arguments of these two commands,
+and they only apply to \verb!tblr! environment when the optional arguments are omitted.
+
+In the following example, the first line draws all hlines and vlines for all \verb!tblr! tables
+created afterwards, while the second line makes all \verb!tblr! tables created afterwards
+vertically align at the last row.
 
 \begin{codehigh}
 \SetTblrInner{hlines,vlines}
 \SetTblrOuter{baseline=B}
+\end{codehigh}
+
+And the following example sets zero \verb!rowsep! for all \verb!tblr! and \verb!longtblr! tables
+created afterwards.
+
+\begin{codehigh}
+\SetTblrInner[tblr,longtblr]{rowsep=0pt}
 \end{codehigh}
 
 \section{New Tabularray Environments}
@@ -305,10 +329,6 @@ Text \begin{mytblr}{cccc}
  Iota    & Kappa & Lambda & Mu    \\
 \end{mytblr} Text
 \end{demohigh}
-
-If not giving the optional argument to \verb!\SetTblrInner! or \verb!\SetTblrOuter! command,
-we set the default specifications for \verb!tblr! environment.
-And different tabularray environments could have different default specifications.
 
 \section{New General Environments}
 

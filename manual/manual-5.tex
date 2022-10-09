@@ -460,6 +460,11 @@ We can also use color series of \verb!xcolor! package to color table rows:
 \end{tblr}
 \end{demohigh}
 
+\section{Library \texttt{nameref}}
+
+From version 2022D, you can load \verb!nameref! library
+to make \verb!\nameref! and \verb!longtblr! work together.
+
 \section{Library \texttt{siunitx}}
 
 When writing \verb!\UseTblrLibrary{siunitx}! in the preamble of the document,
@@ -596,5 +601,10 @@ The following example also needs \verb!enumitem! package and its \verb!nosep! op
 Note that option \verb!stretch=-1! also removes struts from cells, therefore it may not work well
 in \verb!tabularray! environments with \verb!rowsep=0pt!, such as
 \verb!booktabs!/\verb!longtabs!/\verb!talltabs! environments from \verb!booktabs! library.
+
+\section{Library \texttt{zref}}
+
+From version 2022D, you can load \verb!zref! library
+to make \verb!\zref! and \verb!longtblr! work together.
 
 \end{document}
