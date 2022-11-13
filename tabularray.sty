@@ -62,6 +62,27 @@
 
 \cs_set_eq:NN \TblrNewPage \newpage
 
+%% Note that \cs_if_exist:NTF doesn't treat \relax as an existing command.
+%% Therefore we define our \__tblr_cs_if_defined:NTF here.
+\prg_set_conditional:Npnn \__tblr_cs_if_defined:N #1 { p, T, F, TF }
+  {
+    %% \if_cs_exist:N = \ifdefined in eTeX
+    \if_cs_exist:N #1
+      \prg_return_true:
+    \else:
+      \prg_return_false:
+    \fi:
+  }
+\prg_set_conditional:Npnn \__tblr_cs_if_defined:c #1 { p, T, F, TF }
+  {
+    %% \if_cs_exist:w = \ifcsname in eTeX
+    \if_cs_exist:w #1 \cs_end:
+      \prg_return_true:
+    \else:
+      \prg_return_false:
+    \fi:
+  }
+
 \cs_generate_variant:Nn \msg_error:nnnn { nnVn }
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nxn, Nxx, NxV }
@@ -957,7 +978,8 @@
         \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_a_tl
         \exp_args:NcV \NewDocumentCommand
           { __tblr_table_command_ \cs_to_str:N #1 :w } \l__tblr_a_tl { #4 }
-        \cs_if_exist:NTF #1
+        %% we can not use \cs_if_exist:NTF here (see issue #328)
+        \__tblr_cs_if_defined:NTF #1
           {
             \cs_set_eq:cN { __tblr_table_command_ \cs_to_str:N #1 _saved:w } #1
           }
