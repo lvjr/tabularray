@@ -1004,6 +1004,9 @@
     \int_set:Nn \c@colnum {#2}
   }
 
+%% Add \empty as a table command so that users can write \\\empty\hline (see #328)
+\NewTableCommand\empty{}
+
 %% Table commands are defined only inside tblr environments,
 %% but some packages such as csvsimple need to use them outside tblr environments,
 %% therefore we define some of them first here.
