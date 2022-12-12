@@ -4856,6 +4856,10 @@
   }
 \SetTblrTemplate { contfoot } { normal }
 
+\DefTblrTemplate { conthead-pre } { empty } { }
+\DefTblrTemplate { conthead-pre } { normal } { \space }
+\SetTblrTemplate { conthead-pre } { normal }
+
 \DefTblrTemplate { conthead-text } { normal } { \tblrcontheadname }
 \SetTblrTemplate { conthead-text } { normal }
 
@@ -4987,7 +4991,7 @@
         \UseTblrTemplate { caption-tag } { default }
         \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
-        \space
+        \UseTblrTemplate { conthead-pre } { default }
         \UseTblrTemplate { conthead-text } { default }
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
@@ -5009,7 +5013,7 @@
         \UseTblrTemplate { caption-tag } { default }
         \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
-        \space
+        \UseTblrTemplate { conthead-pre } { default }
         \UseTblrTemplate { conthead-text } { default }
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
@@ -5043,7 +5047,7 @@
     \UseTblrTemplate { caption-tag } { default }
     \UseTblrTemplate { caption-sep } { default }
     \UseTblrTemplate { caption-text } { default }
-    \space
+    \UseTblrTemplate { conthead-pre } { default }
     \UseTblrTemplate { conthead-text } { default }
     \par
   }
@@ -5419,6 +5423,10 @@
       { \tl_if_eq_p:NN \lTblrEntryTl \c_tblr_none_tl }
     \bool_set:Nn \l__tblr_table_no_label_bool
       { \tl_if_eq_p:NN \lTblrLabelTl \c_tblr_none_tl }
+    \bool_if:NT \l__tblr_table_no_title_bool
+      {
+        \SetTblrTemplate { conthead-pre } { empty }
+      }
     \bool_if:NT \l__tblr_table_no_label_bool
       {
         \SetTblrTemplate { caption-tag }{ empty }
