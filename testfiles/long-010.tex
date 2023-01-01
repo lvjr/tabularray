@@ -1,0 +1,26 @@
+%  -*- coding: utf-8 -*-
+\documentclass[12pt]{article}
+\usepackage[a6paper,margin=15mm]{geometry}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+
+\SetTblrTracing{none}
+
+\begin{document}
+
+\START
+
+\BEGINTEST{testing `label=none`} % issue #335
+\begin{longtblr}[label=none, caption=Title]{colspec={XXXX}, rowhead=1, hlines}
+   1 &  1  &  1  &  1 \\
+   2 &  2  &  2  &  2 \\
+   3 &  3  &  3  &  3 \\ \pagebreak
+   4 &  4  &  4  &  4 \\
+   5 &  5  &  5  &  5
+\end{longtblr}
+\ENDTEST
+
+\end{document}

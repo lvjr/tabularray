@@ -58,3 +58,10 @@ jobs:
       run: |
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\win32;" + ${env:PATH}
         texlua ppmcheck.lua
+    - name: Upload png and md5
+      uses: actions/upload-artifact@v3
+      with:
+        name: png-and-md5
+        path: |
+          testfiles/*.png
+          testfiles/*.md5

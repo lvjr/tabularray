@@ -4856,6 +4856,10 @@
   }
 \SetTblrTemplate { contfoot } { normal }
 
+\DefTblrTemplate { conthead-pre } { empty } { }
+\DefTblrTemplate { conthead-pre } { normal } { \space }
+\SetTblrTemplate { conthead-pre } { normal }
+
 \DefTblrTemplate { conthead-text } { normal } { \tblrcontheadname }
 \SetTblrTemplate { conthead-text } { normal }
 
@@ -4987,7 +4991,7 @@
         \UseTblrTemplate { caption-tag } { default }
         \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
-        \space
+        \UseTblrTemplate { conthead-pre } { default }
         \UseTblrTemplate { conthead-text } { default }
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
@@ -5009,7 +5013,7 @@
         \UseTblrTemplate { caption-tag } { default }
         \UseTblrTemplate { caption-sep } { default }
         \UseTblrTemplate { caption-text } { default }
-        \space
+        \UseTblrTemplate { conthead-pre } { default }
         \UseTblrTemplate { conthead-text } { default }
       }
     \dim_compare:nNnTF { \box_wd:N \l__tblr_caption_box } > { \hsize }
@@ -5043,7 +5047,7 @@
     \UseTblrTemplate { caption-tag } { default }
     \UseTblrTemplate { caption-sep } { default }
     \UseTblrTemplate { caption-text } { default }
-    \space
+    \UseTblrTemplate { conthead-pre } { default }
     \UseTblrTemplate { conthead-text } { default }
     \par
   }
@@ -5373,6 +5377,9 @@
 \cs_new_protected:Npn \__tblr_build_table_head_foot:
   {
     \__tblr_get_table_width:
+    % make each of \lTblrCaptionTl, \lTblrEntryTl, \lTblrLabelTl and the
+    % three corresponding booleans available in all head-foot templates
+    \__tblr_set_table_label_entry:
     \__tblr_build_table_head_aux:Nn \l__tblr_table_firsthead_box
       {
         \__tblr_build_table_label_entry:
@@ -5400,9 +5407,37 @@
       }
   }
 
+\bool_new:N \l__tblr_table_no_title_bool
+\bool_new:N \l__tblr_table_no_entry_bool
+\bool_new:N \l__tblr_table_no_label_bool
+\tl_const:Nn \c_tblr_none_tl { none }
+
+\cs_new_protected:Npn \__tblr_set_table_label_entry:
+  {
+    \tl_set:Nx \lTblrCaptionTl { \InsertTblrText { caption } }
+    \tl_set:Nx \lTblrEntryTl { \InsertTblrText { entry } }
+    \tl_set:Nx \lTblrLabelTl { \InsertTblrText { label } }
+    \bool_set:Nn \l__tblr_table_no_title_bool
+      { \tl_if_empty_p:N \lTblrCaptionTl }
+    \bool_set:Nn \l__tblr_table_no_entry_bool
+      { \tl_if_eq_p:NN \lTblrEntryTl \c_tblr_none_tl }
+    \bool_set:Nn \l__tblr_table_no_label_bool
+      { \tl_if_eq_p:NN \lTblrLabelTl \c_tblr_none_tl }
+    \bool_if:NT \l__tblr_table_no_title_bool
+      {
+        \SetTblrTemplate { conthead-pre } { empty }
+      }
+    \bool_if:NT \l__tblr_table_no_label_bool
+      {
+        \SetTblrTemplate { caption-tag }{ empty }
+        \SetTblrTemplate { caption-sep }{ empty }
+      }
+  }
+
 \cs_new_protected:Npn \__tblr_build_tall_table_head_foot:
   {
     \__tblr_get_table_width:
+    \__tblr_set_table_label_entry:
     \__tblr_build_table_head_aux:Nn \l__tblr_table_firsthead_box
       {
         \__tblr_build_table_label_entry:
@@ -5419,14 +5454,7 @@
 
 \cs_new_protected:Npn \__tblr_build_table_label_entry:
   {
-    \tl_set:Nx \lTblrCaptionTl { \InsertTblrText { caption } }
-    \tl_set:Nx \lTblrEntryTl { \InsertTblrText { entry } }
-    \tl_set:Nx \lTblrLabelTl { \InsertTblrText { label } }
-    \tl_if_eq:NnTF \lTblrLabelTl { none }
-      {
-        \SetTblrTemplate { caption-tag }{ empty }
-        \SetTblrTemplate { caption-sep }{ empty }
-      }
+    \bool_if:NF \l__tblr_table_no_label_bool
       {
         \refstepcounter { table }
         \tl_if_empty:NF \lTblrLabelTl
@@ -5439,7 +5467,7 @@
     %% We put caption-lot code at last, so that an user can modify \lTblrEntryTl
     %% in a caption-label template. For example, an user may want to use
     %% short caption in nameref, but at the same time not to add LoT entry.
-    \tl_if_eq:NnF \lTblrEntryTl { none }
+    \bool_if:NF \l__tblr_table_no_entry_bool
       { \UseTblrTemplate { caption-lot } { default } }
   }
 
