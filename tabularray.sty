@@ -7103,11 +7103,16 @@
       {
         \tl_set:Nx \l__tblr_evaluate_tl
           { \__tblr_spec_item:nn { outer } { evaluate } }
-        \tl_set:Nx \l__tblr_evaluate_tl { \tl_head:N \l__tblr_evaluate_tl }
         \tl_if_empty:NF \l__tblr_evaluate_tl
           {
-            \exp_last_unbraced:NNV
-            \__tblr_evaluate_table_body:NN \l__tblr_body_tl \l__tblr_evaluate_tl
+            \tl_if_eq:NnTF \l__tblr_evaluate_tl { all }
+              {
+                \tlSet \l__tblr_body_tl { \evalWhole {\expValue \l__tblr_body_tl} }
+              }
+              {
+                \exp_last_unbraced:NNV
+                \__tblr_evaluate_table_body:NN \l__tblr_body_tl \l__tblr_evaluate_tl
+              }
           }
       }
     %% Evaluate every occurrence of the specified function
