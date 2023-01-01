@@ -114,10 +114,10 @@ local function ppmcheck(job)
                     .. " -compose src " .. diffname
         print("creating image diff file " .. diffname)
         run(testdir, cmd)
-        elseif arg[1] == "save" then
-          saveimgmd5(imgname, md5file, newmd5)
-        end
+      elseif arg[1] == "save" then
+        saveimgmd5(imgname, md5file, newmd5)
       end
+    end
   else
     errorlevel = 0
     saveimgmd5(imgname, md5file, newmd5)
