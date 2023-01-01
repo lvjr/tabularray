@@ -6365,12 +6365,6 @@
       {
         \tl_set:Nn \l__tblr_vline_abovepos_tl {0} % default position
       }
-    \tl_set:Nx \l__tblr_vline_belowpos_tl
-      { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / belowpos } }
-    \tl_if_empty:NT \l__tblr_vline_belowpos_tl
-      {
-        \tl_set:Nn \l__tblr_vline_belowpos_tl {0} % default position
-      }
     \fp_compare:nNnF { \l__tblr_vline_abovepos_tl } = {0}
       {
         \dim_set:Nn \l_tmpa_dim
@@ -6386,8 +6380,10 @@
           }
       }
     %% To join two vline segment above and below a cline,
-    %% we choose to extend every vline downwards a little (#55).
-    \fp_compare:nNnTF { \l__tblr_vline_belowpos_tl } = {0}
+    %% we choose to extend every vline downwards a little (#55, #272).
+    \tl_set:Nx \l__tblr_vline_belowpos_tl
+      { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / belowpos } }
+    \tl_if_empty:NTF \l__tblr_vline_belowpos_tl
       {
         \dim_set:Nn \l__tblr_vline_belowskip_dim
           {
