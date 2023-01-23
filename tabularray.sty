@@ -2656,10 +2656,13 @@
     \group_align_safe_end:
   }
 
+\bool_new:N \lTblrMeasuringBool
+
 %% Read, split and build the table
 \cs_new_protected:Npn \__tblr_builder:nnn #1 #2 #3
   {
     \int_gincr:N \g_tblr_level_int
+    \bool_set_true:N \lTblrMeasuringBool
     \__tblr_clear_prop_lists:
     \__tblr_clear_spec_lists:
     \LogTblrTracing { step = init ~ table ~ outer ~ spec}
@@ -2685,6 +2688,7 @@
     \LogTblrTracing { step = calculate ~ cell ~ and ~ line ~ sizes}
     \__tblr_enable_content_commands:
     \__tblr_calc_cell_and_line_sizes:
+    \bool_set_false:N \lTblrMeasuringBool
     \LogTblrTracing { step = build ~ the ~ whole ~ table}
     \__tblr_build_whole:
     \int_gdecr:N \g_tblr_level_int
