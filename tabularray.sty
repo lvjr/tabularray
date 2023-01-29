@@ -942,7 +942,7 @@
 
 \regex_const:Nn \c__tblr_child_name_regex { ^ [U-Z] $ }
 
-%% Convert X, Y, Z to the indexes of the last three childs, respectively
+%% Convert U, V, W, X, Y, Z to the indexes of the last six childs, respectively
 \cs_new_protected_nopar:Npn \__tblr_child_name_to_index:nN #1 #2
   {
     \regex_match:NnTF \c__tblr_child_name_regex {#1}
