@@ -1,0 +1,107 @@
+
+\LWR@ProvidesPackagePass{tabularray}[2023-02-11]
+\UseTblrLibrary{hook,html}
+
+\ExplSyntaxOn
+
+%%% ----------------------------------------------
+%%> Tabularray Tables
+%%% ----------------------------------------------
+
+\AddToHook { tabularray/table/before }
+  {
+    \LWR@htmlblocktag { table~border="1" }
+    \LWR@stoppars
+  }
+\AddToHook { tabularray/table/after }
+  {
+    \LWR@htmlblocktag { /table }
+    %\LWR@startpars
+  }
+
+%%% ----------------------------------------------
+%%> Tabularray Rows
+%%% ----------------------------------------------
+
+%% We can use public hooks instead
+%\cs_new_protected:Npn \LWR@HTML@__tblr_build_row:N #1
+%  {
+%    \LWR@htmltag { tr }
+%    \LWR@print@__tblr_build_row:N { #1 }
+%    \LWR@htmltag { /tr }
+%    \LWR@orignewline
+%  }
+%\LWR@formatted { __tblr_build_row:N }
+
+%% Here we use public hooks
+\AddToHook { tabularray/row/before }
+  {
+    \LWR@htmltag{ tr }
+  }
+\AddToHook { tabularray/row/after }
+  {
+    \LWR@htmltag { /tr }
+    \LWR@orignewline
+  }
+
+%%% ----------------------------------------------
+%%> Tabularray Cells
+%%% ----------------------------------------------
+
+%% It doesn't work well!
+%\AddToHook{tabularray/cell/before}{\LWR@htmltag{td}}
+%\AddToHook{tabularray/cell/after}{\LWR@htmltag{/td}}
+
+%% We don't need to use \LWR@formatted if we don't use the original definition
+%\cs_new_protected:Npn \LWR@HTML@__tblr_build_cell_content:NN #1 #2
+%  {
+%    \LWR@htmltag { td }
+%    \__tblr_get_cell_text:nn {#1} {#2}
+%    \LWR@htmltag{ /td }
+%  }
+%\LWR@formatted { __tblr_build_cell_content:NN }
+
+%% Here we redefine directly this function
+\cs_set_protected:Npn \__tblr_build_cell_content:NN #1 #2
+  {
+    \LWR@htmltag { td }
+    \__tblr_get_cell_text:nn {#1} {#2}
+    \LWR@htmltag{ /td }
+  }
+
+%% A hack to get only the cell text at the final typesetting
+\cs_new_protected:Npn \LWR@HTML@__tblr_get_cell_text_real:nn #1 #2
+  {
+    \bool_if:NTF \lTblrMeasuringBool
+      { \LWR@print@__tblr_get_cell_text_real:nn {#1} {#2} }
+      { \__tblr_spec_item:ne { text } { [#1] [#2] } }
+  }
+\LWR@formatted { __tblr_get_cell_text_real:nn }
+
+%% Remove background boxes of cells
+\cs_set_protected:Npn \__tblr_build_cell_background:NN #1 #2 { }
+
+%%% ----------------------------------------------
+%%> Tabularray Rules and Boxes
+%%% ----------------------------------------------
+
+%% Remove hrules and vrules
+\cs_set:Npn \tblr_hrule_ht:n #1 {}
+\cs_set:Npn \tblr_vrule_wd_ht_dp:nnn #1 #2 #3 {}
+
+%% Remove some outer boxes
+\cs_set_protected:Npn \tblr_vbox_set:Nn #1 #2 { #2 }
+%\cs_set_protected:Npn \tblr_box_use:N #1 { } % we don't need it?
+
+%% We don't need to contruct tables from boxes
+\cs_set_protected:Npn \__tblr_put_one_hline:n #1 { }
+\cs_set_protected:Npn \__tblr_put_one_vline:n #1 { }
+\cs_set_protected:Npn \__tblr_put_one_cell:n #1 { #1 }
+\cs_set_protected:Npn \__tblr_put_one_row:n #1 { #1 }
+
+%% We don't need to vertically align short tables
+\cs_set_protected:Npn \__tblr_valign_whole:Nn #1 #2 { }
+
+\ExplSyntaxOff
+
+\endinput
