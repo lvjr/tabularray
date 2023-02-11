@@ -8,9 +8,35 @@
 
 \begin{document}
 
-\chapter{The Source Code}
+\chapter{History and Future}
 
-%\CodeHigh{lite}
-\dochighinput[language=latex/latex3]{tabularray.sty}
+\section{The Future}
+
+Starting from 2022, except for hotfix releases for critical bugs,
+every new release will be published on the first day of some month.
+You may watch the milestones page for the scheduled dates of upcoming releases
+and their changes:\newline
+\centerline{\url{https://github.com/lvjr/tabularray/milestones}}
+
+To make the upcoming releases more stable, you are very welcome to test the latest package file
+in the repository. To test it, you only need to download the following \verb!tabularray.sty!
+and put it into the folder of your TeX documents:\newline
+\centerline{\url{https://github.com/lvjr/tabularray/raw/main/tabularray.sty}}
+
+\section{The History}
+
+The change log of \verb!tabularray! package will be updated on the wiki page:\newline
+\centerline{\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}}
+
+In version 2022A, there were several breaking changes:
+
+\begin{itemize}[nosep]
+  \item \verb!\multicolumn! command was removed; it is better to use \verb!\SetCell! command.
+  \item \verb!\multirow! command was removed; it is better to use \verb!\SetCell! command.
+  \item \verb!\firsthline! command was removed; it is better to use \verb!baseline=T! option.
+  \item \verb!\lasthline! command was removed; it is better to use \verb!baseline=B! option.
+\end{itemize}
+
+For your old documents, you can still rollback to version 2021 by \verb!\usepackage{tabularray}[=v2021]!.
 
 \end{document}

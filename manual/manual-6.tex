@@ -8,35 +8,52 @@
 
 \begin{document}
 
-\chapter{History and Future}
+\chapter{Tips and Tricks}
 
-\section{The Future}
+\section{Control Horizontal Alignment}
 
-Starting from 2022, except for hotfix releases for critical bugs,
-every new release will be published on the first day of some month.
-You may watch the milestones page for the scheduled dates of upcoming releases
-and their changes:\newline
-\centerline{\url{https://github.com/lvjr/tabularray/milestones}}
+You can control horizontal alignment of cells in \texttt{tabularray} with
+\href{https://www.ctan.org/pkg/ragged2e}{\texttt{ragged2e}} package,
+by redefining some of the following commands:
 
-To make the upcoming releases more stable, you are very welcome to test the latest package file
-in the repository. To test it, you only need to download the following \verb!tabularray.sty!
-and put it into the folder of your TeX documents:\newline
-\centerline{\url{https://github.com/lvjr/tabularray/raw/main/tabularray.sty}}
+\begin{codehigh}
+\RenewDocumentCommand\TblrAlignBoth{}{\justifying}
+\RenewDocumentCommand\TblrAlignLeft{}{\RaggedRight}
+\RenewDocumentCommand\TblrAlignCenter{}{\Centering}
+\RenewDocumentCommand\TblrAlignRight{}{\RaggedLeft}
+\end{codehigh}
 
-\section{The History}
+Please read the documentation of \texttt{ragged2e} package for more details of
+their alignment commands.
 
-The change log of \verb!tabularray! package will be updated on the wiki page:\newline
-\centerline{\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}}
+\section{Use Safe Verbatim Commands}
 
-In version 2022A, there were several breaking changes:
+Due to the limitation of TeX, even if you have passed \texttt{verb} option to a
+\texttt{tabularray} table, you still could not use some special characters in a
+\verb!\verb! command. As an replacement, you may use \verb|\fakeverb| command from \href{https://www.ctan.org/pkg/codehigh}{\texttt{codehigh}} package.
 
-\begin{itemize}[nosep]
-  \item \verb!\multicolumn! command was removed; it is better to use \verb!\SetCell! command.
-  \item \verb!\multirow! command was removed; it is better to use \verb!\SetCell! command.
-  \item \verb!\firsthline! command was removed; it is better to use \verb!baseline=T! option.
-  \item \verb!\lasthline! command was removed; it is better to use \verb!baseline=B! option.
-\end{itemize}
+The \verb|\fakeverb| command will remove the backslashes in the following control symbols before
+typesetting its content: \fakeverb{\\\\}, \fakeverb{\\\{}, \fakeverb{\\\}}, \fakeverb{\\\#}, \fakeverb{\\\^} and \texttt{\textbackslash\textvisiblespace}, \fakeverb{\\\%}.
+Also the argument of \verb|\fakeverb| command need to be enclosed with curly braces.
+Therefore it could be safely used inside \verb|tabularray| tables and other LaTeX commands.
 
-For your old documents, you can still rollback to version 2021 by \verb!\usepackage{tabularray}[=v2021]!.
+Here is an example of using \verb!\fakeverb! commands inside a \verb|tblr| environment
+(you don't need \texttt{verb} option to use \verb!\fakeverb!):
+
+\begin{demohigh}
+\begin{tblr}{hlines}
+  Special & \fakeverb{\abc{}$&^_^uvw 123} \\
+  Spacing & \fakeverb{\bfseries\ \#\%}    \\
+  Nesting & \fbox{\fakeverb{$\left\\\{A\right.$\#}}
+\end{tblr}
+\end{demohigh}
+
+In the above example, balanced curly braces and control words (such as \verb!\bfseries!)
+need not to be escaped---only several special characters need to be escaped.
+Please read the documentation of \texttt{codehigh} package for more details of
+\verb|\fakeverb| commands.%
+\footnote{By the way, \fakeverb{\EscVerb} command from
+\href{https://www.ctan.org/pkg/fvextra}{\texttt{fvextra}} package is similar to
+\fakeverb{\fakeverb} command, but with \fakeverb{\EscVerb} you need to escape every control word.}
 
 \end{document}
