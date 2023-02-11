@@ -1,0 +1,212 @@
+
+%%% --------------------------------------------------------
+%%% for tex4ht-4ht.tex to update tabularray.4ht file
+%%% --------------------------------------------------------
+%%% need to remove line "\Hinput{tabularray}" in tabularray.4ht 
+
+\<tabularray.4ht\><<< 
+% tabularray.4ht (|version), generated from |jobname.tex 
+% Copyright 2022 TeX Users Group 
+|<TeX4ht license text|> 
+|<tabularray definitions|>
+|<tabularray table and rows|>
+|<tabularray lines|>
+|<tabularray cell|>
+\Hinput{tabularray} 
+\endinput
+>>> \AddFile{9}{tabularray}
+
+\<tabularray definitions\><<<
+\NewConfigure{tabularray}{8}
+\NewConfigure{tabularrayignoredcell}{2}
+\NewConfigure{tabularrayattributes}[1]{\concat:config\CellAttributes{#1\space}}
+\NewConfigure{tabularraystyles}[1]{\concat:config\CellStyle{#1}}
+\NewConfigure{tabularraycolumnwidth}{1}
+
+\ExplSyntaxOn
+\NewConfigure{tabularrayhalign}[2]{%
+  \cs_set:cpn{tabularray_halign:#1}{#2}
+}
+
+\NewConfigure{tabularrayvalign}[2]{%
+  \cs_set:cpn{tabularray_valign:#1}{#2}
+}
+\ExplSyntaxOff
+>>>
+
+Insert basic tags for table and rows
+
+\<tabularray table and rows\><<<
+\ExplSyntaxOn
+\long\def\:tempa#1#2#3#4{%
+  % insert <table>...</table>
+  \a:tabularray\o:__tblr_environ_code:nnnn:{#1}{#2}{#3}{#4}\b:tabularray
+}
+\HLet\__tblr_environ_code:nnnn\:tempa
+
+\long\def\:tempa#1{\xdef\HRow{\@arabic\c@rownum}\c:tabularray\o:__tblr_build_row:N:{#1}\d:tabularray}
+\HLet\__tblr_build_row:N\:tempa
+\ExplSyntaxOff
+>>>
+
+Tabularray uses hrules in many places, it is not practical to redefine all commands that contain them,
+se we disable underscores that are produced for rules using special.
+
+\<tabularray lines\><<<
+% disable rules
+\ht:special{t4ht@_}
+>>>
+
+We detect borders for each cell using these functions. They can be then set using CSS.
+
+Tabularray supports multiple rules between rows and cells, but these would be too difficult to support
+using CSS, so we don't try that.
+
+\<tabularray lines\><<<
+\ExplSyntaxOn
+% #1 row number, #2 column, #3 hline number (there can be multiple), #4 css property to be set
+\def\:tblr:hlinestyle#1#2#3#4{
+  % get line height
+  \tl_set:Nx \l__tblr_h_tl{ \__tblr_spec_item:ne { hline } { [#1](#3) / @hline-height } }
+  % get dash style
+  \def\@tblr@dash{} % remove "dash" word from the variable for correct CSS string
+  \tl_set:Nx \l__tblr_f_tl{\__tblr_spec_item:ne { hline } { [#1][#2](#3) / @dash }}
+  % create CSS only when a dash style is set 
+  \tl_if_empty:NF\l__tblr_f_tl{
+    % get hline color
+    \tl_set:Nx \l__tblr_g_tl { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / fg } }
+    \def\:hlinecolor{\#000000}
+    % convert color to CSS value if color is set
+    \tl_if_empty:NF\l__tblr_g_tl{\get:xcolorcss{\l__tblr_g_tl}\:hlinecolor}
+    % \Configure{tabularraystyles} doesn't expand attributes, so we need to expand it here
+    % otherwise, we would get wrong color and hline style in the last row, because this macro is called twice here
+    \cs_set:cx{#4:}{#4:\dim_to_decimal_in_unit:nn{\l__tblr_h_tl*2}{1px}px~\l__tblr_f_tl\space~\:hlinecolor;}
+    \Configure{tabularraystyles}{\csname#4:\endcsname}
+  }
+}
+
+\def\:tblr:vlinestyle#1#2#3#4{
+  \tl_set:Nx \l__tblr_t_tl{ \__tblr_spec_item:ne { vline } { [#2](#3) / @vline-width } }
+  \def\@tblr@dash{} % remove "dash" word from the variable for correct CSS string
+  \tl_set:Nx \l__tblr_f_tl{\__tblr_spec_item:ne { vline } { [#1][#2](#3) / @dash }}
+  \tl_if_empty:NF\l__tblr_f_tl{
+    \tl_set:Nx \l__tblr_g_tl { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / fg } }
+    \def\:hlinecolor{\#000000}
+    % convert color to CSS value if color is set
+    \tl_if_empty:NF\l__tblr_g_tl{\get:xcolorcss{\l__tblr_g_tl}\:hlinecolor}
+    % \Configure{tabularraystyles} doesn't expand attributes, so we need to expand it here
+    % otherwise, we would get wrong color and hline style in the last row, because this macro is called twice here
+    \cs_set:cx{#4:}{#4:\dim_to_decimal_in_unit:nn{\l__tblr_t_tl*2}{1px}px~\l__tblr_f_tl\space~\:hlinecolor;}
+    \Configure{tabularraystyles}{\csname#4:\endcsname}
+  }
+}
+\ExplSyntaxOff
+>>>
+
+The code for cell is a bit complicated. We need to construct CSS properties
+for horizontal and vertical alignment, background color and rules. 
+
+\<tabularray cell\><<<
+\ExplSyntaxOn
+\long\def\:tempa#1#2{%
+% find columns that are covered by rowspan and colspan
+  \xdef\HCol{\@arabic\c@colnum}
+  \xdef\HRow{\@arabic\c@rownum}
+  \xdef\HMultispan{\l__tblr_cell_colspan_tl}
+  \xdef\HRowspan{\l__tblr_cell_rowspan_tl}
+  \let\CellAttributes\@empty
+  \let\CellStyle\@empty
+  % calculate ignored cells, if the current cell uses colspan or rowspan
+  \int_step_inline:nnn{\c@rownum }{\c@rownum - 1 + \l__tblr_cell_rowspan_tl}{
+    \int_step_inline:nnn{\c@colnum }{\c@colnum - 1  + \l__tblr_cell_colspan_tl}{
+      % the loop always matches the current cell, we must ignore it
+      \str_if_eq:eeF{\HCol.\HRow}{####1.##1}{%
+        \cs_gset:cpn{ignoredcell-####1-##1}{}
+      }
+    }
+  }
+  \cs_if_exist_use:c{tabularray_halign:\g__tblr_cell_halign_tl}
+  \cs_if_exist_use:c{tabularray_valign:\g__tblr_cell_valign_tl}
+  % the vertical aligment can be set also in \g__tblr_cell_middle_tl, so we should try it as well
+  \cs_if_exist_use:c{tabularray_valign:\g__tblr_cell_middle_tl}
+  % calculate column width
+  \dim_compare:nNnT {\__tblr_data_item:nen{column}{\HCol}{@col-width}} > {0pt}{
+    \__tblr_get_table_width:% initialize \tablewidth
+    \edef\HColWidth{\fp_eval:n{\__tblr_data_item:nen{column}{\HCol}{@col-width}/\tablewidth*100}\%}
+    % save table width, preferably in CSS
+    \a:tabularraycolumnwidth%
+  }
+  % there can be multiple hlines for each cell, but we only suport the first one, because of limitations of CSS
+  \:tblr:hlinestyle{#1}{#2}{1}{border-top}
+  \int_compare:nNnT{\HRow + \HRowspan - 1} = {\c@rowcount}{% 
+    % draw hline below the last row
+    \:tblr:hlinestyle{\int_eval:n{\c@rownum + 1}}{#2}{1}{border-bottom}
+  }
+  % the same is true for vlines
+  \:tblr:vlinestyle{#1}{#2}{1}{border-left}
+  \int_compare:nNnT{\HCol + \HMultispan - 1} = {\c@colcount}{%
+    % draw hline below the last row
+    \:tblr:vlinestyle{#1}{\int_eval:n{\c@colnum + 1}}{1}{border-right}
+  }
+  % support for the background color
+  \tl_set:Nx \l__tblr_b_tl
+  { \__tblr_data_item:neen { cell } {#1} {#2} { background } }
+  % save background color to the list of CSS, if it is set
+  \tl_if_empty:NF \l__tblr_b_tl{
+    \get:xcolorcss{\l__tblr_b_tl}\:bgcolor
+    \Configure{tabularraystyles}{background-color: \:bgcolor;}
+  }
+  % We can use something like \Configure{tabularrayattributes}{rowspan="\HRowspan"} in \Configure{tabularray}
+  % to declare correct attributes for joined cells
+  \int_compare:nNnT {\HRowspan} > {1}{\g:tabularray}
+  \int_compare:nNnT {\HMultispan} > {1}{\h:tabularray}
+  \cs_if_exist:cTF{ignoredcell-\the\c@colnum-\the\c@rownum}{%
+    \a:tabularrayignoredcell\e:tabularray\o:__tblr_build_cell_content:NN:{#1}{#2}\f:tabularray\b:tabularrayignoredcell
+  }{%
+    \e:tabularray\o:__tblr_build_cell_content:NN:{#1}{#2}\f:tabularray
+  }
+  % the ignored cell is global, so we must undefine it after the thes
+  \cs_undefine:c{ignoredcell-\the\c@colnum-\the\c@rownum}%
+}
+\HLet\__tblr_build_cell_content:NN\:tempa
+
+\ExplSyntaxOff
+>>>
+
+%%% --------------------------------------------------------
+%%% for tex4ht-html4.tex to update html4.4ht file 
+%%% --------------------------------------------------------
+
+\<configure html4 tabularray\><<<
+\Configure{tabularray}{
+  \ifvmode\IgnorePar\fi\EndP
+  \gHAdvance\Next:TableNo by 1 \global\let\TableNo=\Next:TableNo%
+  \HCode{<table class="tabularray \@currenvir" id="tbl-\TableNo">}
+}{\ifvmode\IgnorePar\fi\EndP\HCode{</table>}}
+{\HCode{<tr id="row-\TableNo\HRow-">}}{\HCode{</tr>}}
+{\HCode{<td id="cell\TableNo-\HRow-\HCol" style="\CellStyle" \CellAttributes>}}{\HCode{</td>}}
+{\Configure{tabularrayattributes}{rowspan="\HRowspan"}}
+{\Configure{tabularrayattributes}{colspan="\HMultispan"}}{}
+
+% cells hidden by cell and row spans. they shouldn't be included in HTML, so we hide them using comments
+\Configure{tabularrayignoredcell}{\HCode{<!-- ignored cell: }}{\HCode{ -->}}
+
+% this is a default alignment, so we can ignore it, to save some space in the generated files
+% \Configure{tabularrayhalign}{l}{\Configure{tabularraystyles}{text-align:left;}}
+\Configure{tabularrayhalign}{r}{\Configure{tabularraystyles}{text-align:right;}}
+\Configure{tabularrayhalign}{c}{\Configure{tabularraystyles}{text-align:center;}}
+\Configure{tabularrayhalign}{j}{\Configure{tabularraystyles}{text-align:justify;}}
+
+% this is a default alignment, so we can ignore it, to save some space in the generated files
+% \Configure{tabularrayvalign}{m}{\Configure{tabularraystyles}{vertical-align:middle;}}
+\Configure{tabularrayvalign}{h}{\Configure{tabularraystyles}{vertical-align:top;}}
+\Configure{tabularrayvalign}{p}{\Configure{tabularraystyles}{vertical-align:top;}}
+\Configure{tabularrayvalign}{f}{\Configure{tabularraystyles}{vertical-align:bottom;}}
+% the vertical alignment of the following two is not correct, but CSS doesn't support the correct one
+\Configure{tabularrayvalign}{t}{\Configure{tabularraystyles}{vertical-align:top;}}
+\Configure{tabularrayvalign}{b}{\Configure{tabularraystyles}{vertical-align:bottom;}}
+
+% Save column width only on the first row
+\Configure{tabularraycolumnwidth}{\ifnum\HRow=1\Css{\#tbl-\TableNo\space td:nth-child(\HCol){width:\HColWidth;}}\fi}
+\Css{table.tabularray{table-layout: fixed;border-collapse:collapse;margin:0.3em 0;}}
+>>>
