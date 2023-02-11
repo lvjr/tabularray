@@ -1,0 +1,38 @@
+
+\documentclass[b5paper]{article}
+\usepackage{tabularray}
+\usepackage{xcolor}
+\setlength\parindent{0pt}
+\begin{document}
+
+\section{A table without borders}
+
+\begin{tblr}{lccr}
+ Alpha   & Beta  & Gamma   & Delta \\
+ Epsilon & Zeta  & Eta     & Theta \\
+ Iota    & Kappa & Lambda  & Mu    \\
+\end{tblr}
+
+\section{A table with borders}
+
+\begin{tblr}{
+  rowspec={|[0.08em,blue]Q|Q|[dashed,purple]Q|[0.08em]},
+  colspec={|[1pt]l|[green]c|[dotted]c|[cyan]r|[1pt]},
+}
+  Alpha   & Beta  & Gamma   & Delta \\
+  Epsilon & Zeta  & Eta     & Theta \\
+  Iota    & Kappa & Lambda  & Mu    \\
+\end{tblr}
+
+\section{A table with background colors}
+
+\begin{tblr}{
+  colspec={|l|c|c|r|}, hlines,
+  cell{1}{4}={azure7}, cell{2}{1}={cyan7}, cell{3}{3}={red7},
+}
+  Alpha   & Beta  & Gamma   & Delta \\
+  Epsilon & Zeta  & Eta     & Theta \\
+  Iota    & Kappa & Lambda  & Mu    \\
+\end{tblr}
+
+\end{document}

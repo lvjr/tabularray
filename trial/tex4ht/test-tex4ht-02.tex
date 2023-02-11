@@ -1,0 +1,40 @@
+
+\documentclass[b5paper]{article}
+\usepackage{tabularray}
+%\usepackage{xcolor}
+\setlength\parindent{0pt}
+\begin{document}
+
+\section{One table with multispan cells}
+
+Some Text.
+
+\begin{tblr}{
+  hlines, vlines,
+  cell{1}{1} = {r=2}{}, cell{1}{2} = {c=2}{}, cell{1}{4} = {r=2,c=2}{},
+}
+2 Rows & 2 Columns &     & 2 Rows 2 Columns &     \\
+       & 2-2       & 2-3 &                  &     \\
+3-1    & 3-2       & 3-3 & 3-4              & 3-5 \\
+\end{tblr}
+
+More Text.
+
+\section{Another table with multispan cells}
+
+Some Text.
+
+\begin{tblr}{
+  hlines, vlines,
+  cell{1}{1} = {r=3}{m}, cell{1}{2} = {c=3}{c},
+  cell{2}{4} = {r=3}{m}, cell{4}{1} = {c=3}{c},
+}
+3 Rows    & 3 Columns & 1-3 & 1-4    \\
+          & 2-2       & 2-3 & 3 Rows \\
+          & 3-2       & 3-3 & 3-4    \\
+3 Columns & 4-2       & 4-3 & 4-4    \\
+\end{tblr}
+
+More Text.
+
+\end{document}
