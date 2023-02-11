@@ -1,0 +1,74 @@
+
+\NeedsTeXFormat{LaTeX2e}[2020-10-01]
+\ProvidesExplPackage{tagpdf-tabularray}{2023-02-11}{2023@}{tagpdf and tabularray}
+\RequirePackage{tabularray}
+\UseTblrLibrary{hook,html}
+
+\AddToHook { env/tblr/before }
+  {
+    \tagpdfparaOff
+  }
+\AddToHook { env/tblr/after }
+  {
+    %% We need to manually close current paragraph to avoid the following error.
+    %% ! Package tagpdf Error: The number of automatic begin (11) and end (12) para
+    %% (tagpdf)                hooks differ!
+    \par
+    \tagpdfparaOn
+  }
+
+\AddToHook { tabularray/trial/before }
+  {
+    \tag_stop:n { tabularray }
+  }
+\AddToHook { tabularray/trial/after }
+  {
+    \tag_start:n { tabularray }
+  }
+
+\AddToHook { tabularray/table/before }
+  {
+    %\tag_mc_end_push:
+    %\__tagtblr_close_paragraph:n { table/before }
+    %\tagpdfparaOff
+    \tagstructbegin { tag=Table }
+  }
+\AddToHook { tabularray/table/after }
+  {
+    \tagstructend %%Table
+    %\tagpdfparaOn
+    %\tag_mc_begin_pop:n { }
+  }
+
+\AddToHook { tabularray/row/before }
+  {
+    %\__tagtblr_close_paragraph:n { row/before }
+    \tagstructbegin { tag=TR }
+  }
+\AddToHook { tabularray/row/after }
+  {
+    \tagstructend %%TR
+  }
+
+\AddToHook { tabularray/cell/before }
+  {
+    %\__tagtblr_close_paragraph:n { cell/before }
+    \tagpdfparaOn
+    \tagstructbegin { tag=TD }
+    \tagmcbegin { }
+  }
+\AddToHook{ tabularray/cell/after }
+  {
+    \tagmcend
+    \tagstructend %%TD
+    \tagpdfparaOff
+  }
+
+\cs_new_protected:Npn \__tagtblr_close_paragraph:n #1
+  {
+    %% \tagmcifinT and \tagmcifinF are missing
+    \tag_mc_if_in:T { \tagmcend }
+    \tl_set:Nx \l_tmpa_tl { \tag_get:n { struct_tag } }
+    \tl_log:x { current_tag ~ at ~ #1 ~ = ~ \l_tmpa_tl }
+    \tl_if_eq:NnT \l_tmpa_tl { P } { \tagstructend }
+  }

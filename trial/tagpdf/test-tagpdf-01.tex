@@ -1,0 +1,30 @@
+%  -*- coding: utf-8 -*-
+
+\DocumentMetadata{testphase=phase-II}
+\documentclass[b5paper]{article}
+
+\usepackage{tagpdf}
+\tagpdfsetup{paratagging-show}
+\ExplSyntaxOn
+\color_set_eq:nn {savedred} {red}
+\AddToHook {para/end} [hackbefore] {\color_set_eq:nn{red}{blue}}
+\AddToHook {para/end} [hackafter] {\color_set_eq:nn{red}{savedred}}
+\DeclareHookRule {para/end} {hackbefore} {<} {tagpdf}
+\DeclareHookRule {para/end} {tagpdf} {<} {hackafter}
+\ExplSyntaxOff
+
+\usepackage{tagpdf-tabularray}
+
+\begin{document}
+
+Some text.
+
+\begin{tblr}{hlines, vlines, colspec={lccr}}
+  Alpha   & Beta  & Gamma   & Delta \\
+  Epsilon & Zeta  & Eta     & Theta \\
+  Iota    & Kappa & Lambda  & Mu    \\
+\end{tblr}
+
+More text.
+
+\end{document}
