@@ -15,8 +15,8 @@ TEST 2: testing @ expression in math mode
 ============================================================
 TEST 3: testing !, < and > specifiers
 ============================================================
-LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line ....
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line ....
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line ....
 LaTeX Font Info:    External font `cmex10' loaded for size
