@@ -10,6 +10,7 @@
 
 \SetTblrTracing{none}
 \UseTblrLibrary{varwidth}
+\setlength\parindent{0pt}
 
 \begin{document}
 
@@ -70,6 +71,57 @@
   \cline{2-3}
     A & B & C \\
   \hline
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{vline positions when belowpos=0}% #272
+\begin{tblr}{
+  hlines = {leftpos=0,rightpos=0,2pt},
+  hlines = {2}{-}{leftpos=0,rightpos=0,2pt},
+  vlines = {2pt},
+  vline{2} = {1}{abovepos=0,belowpos=0},
+  vline{3} = {1}{abovepos=0.5,belowpos=0},
+  vline{4} = {1}{abovepos=1,belowpos=0},
+  vline{2} = {2}{abovepos=0,belowpos=0},
+  vline{3} = {2}{abovepos=0,belowpos=0.5},
+  vline{4} = {2}{abovepos=0,belowpos=1},
+}
+  AAAAAA & BBBBB  & CCCCC  \\
+  AAAAA  & BBBBBB & CCCCCC 
+\end{tblr}
+\quad
+\begin{tblr}{
+  hlines = {leftpos=0,rightpos=0,2pt},
+  hlines = {2}{-}{leftpos=0,rightpos=0,2pt},
+  vlines = {2pt},
+  vline{1} = {abovepos=0,belowpos=0},
+  vline{2} = {abovepos=0,belowpos=0.00000001},
+  vline{3} = {abovepos=0,belowpos=1},
+}
+  AAAAAA & BBBBB  \\
+  AAAAA  & BBBBBB
+\end{tblr}
+\quad
+\begin{tblr}{
+    hline{1} = {1}{-}{},
+    hline{1} = {2}{-}{rightpos=0.5, leftpos=0.5},
+    hline{1} = {3}{-}{rightpos=0, leftpos=0},
+    hline{4} = {1}{-}{rightpos=0, leftpos=0},
+    hline{4} = {2}{-}{rightpos=0.5, leftpos=0.5},
+    hline{4} = {3}{-}{},
+    vline{1} = {1}{-}{abovepos=1, belowpos=1},
+    vline{1} = {2}{-}{abovepos=0.5, belowpos=0.5},
+    vline{1} = {3}{-}{},
+    vline{4} = {1}{-}{},
+    vline{4} = {2}{-}{abovepos=0.5, belowpos=0.5},
+    vline{4} = {3}{-}{abovepos=1, belowpos=1},
+    colsep = 5pt,
+  }
+  Alpha & Beta & Gamma \\
+  One   & Two  & Three \\
+  Tic   & Tac  & Toe \\
 \end{tblr}
 \ENDTEST
 

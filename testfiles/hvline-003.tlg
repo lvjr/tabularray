@@ -1,7 +1,7 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 ============================================================
-TEST 1: testing decimal numbers
+TEST 1: testing leftpos and rightpos
 ============================================================
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line ....
@@ -9,18 +9,12 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line ....
 ============================================================
 ============================================================
-TEST 2: testing @ expression in math mode
+TEST 2: testing abovepos and belowpos
 ============================================================
 ============================================================
 ============================================================
-TEST 3: testing !, < and > specifiers
+TEST 3: vline positions when belowpos=0
 ============================================================
-LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line ....
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line ....
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line ....
 ============================================================
 [1
-] (rowcol-001.aux)
+] (hvline-003.aux)
