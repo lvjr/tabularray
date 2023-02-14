@@ -5573,10 +5573,11 @@
                 % \pagetotal maybe exceed \pagegoal after adding presep,
                 % or after adding rowhead or rowfoot of the table.
                 % In these cases, we will not typeset table in this page,
-                % but rather do some negative \vskip and execute \newpage.
+                % but rather force a page break.
                 \group_begin:
                   \dim_set:Nn \l_tmpb_dim
                     {
+                      % Enough to overfill the page (including shrink).
                       \pagegoal - \pagetotal + \l_tmpa_dim
                       + \__tblr_box_height:N \l__tblr_table_firsthead_box
                       + \__tblr_box_height:N \l__tblr_table_firstfoot_box
