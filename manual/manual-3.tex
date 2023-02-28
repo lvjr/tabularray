@@ -48,7 +48,7 @@ there are several inner specifications which are described in Table~\ref{key:inn
   \K{colsep} & set horizontal space to both sides of every column & \V{6pt} \\
   \K{hspan} & horizontal span algorithm: \V{default}, \V{even}, or \V{minimal} & \V{default} \\
   \K{vspan} & vertical span algorithm: \V{default} or \V{even} & \V{default} \\
-  \K{verb} & you need this key to use verb commands & \None \\
+  %\K{verb} & you need this key to use verb commands & \None \\
   \K{baseline} & set the baseline of the table & \V{m} \\
 \end{spectblr}
 
@@ -168,14 +168,17 @@ The following examples show the results from different \verb!vspan! values.
 
 \subsection{Use Verbatim Commands}
 
-With \verb!verb! key, you can write \verb!\verb! commands in the cell text:
+%With \verb!verb! key, you can write \verb!\verb! commands in the cell text:
+%
+%\begin{demohigh}
+%\begin{tblr}{hlines,verb}
+%  20 & 30 & \verb!\hello{world}!40 \\
+%  50 & \verb!\hello!60 & 70 \\
+%\end{tblr}
+%\end{demohigh}
 
-\begin{demohigh}
-\begin{tblr}{hlines,verb}
-  20 & 30 & \verb!\hello{world}!40 \\
-  50 & \verb!\hello!60 & 70 \\
-\end{tblr}
-\end{demohigh}
+The inner key \verb!verb! is obsolete from version 2023A, and will be removed in the future.
+Instead you can use more reliable \verb!\fakeverb! command (see Section \ref{sec:fakeverb}).
 
 \subsection{Set Baseline for the Table}
 
@@ -263,15 +266,17 @@ Therefore the following two tables are the same:
 
 \subsection{Expand Macros First}
 
-\verb!Tabularray! need to see every \verb!&! and \verb!\\! when splitting the table body
-with \verb!l3regex!. And you can not put cell text inside any table command defined with
-\verb!\NewTableCommand!. But you could use outer specification \verb!expand! to make \verb!tabularray!
-expand every occurrence of a specified macro \underline{once} before splitting the table body.
-The macro \underline{can not} be defined with \verb!\NewDocumentCommand! or
-\verb!\NewExpandableDocumentCommand!, and \underline{can not} have optional argument.
+In contrast to traditional \verb!tabular! environment, \verb!tabularray! environments
+need to see every \verb!&! and \verb!\\! when splitting the table body with \verb!l3regex!.
+And you can not put cell text inside any table command defined with \verb!\NewTableCommand!.
+But you could use outer key \verb!expand! to make \verb!tabularray! expand
+every occurrence of a specified macro \underline{once} before splitting the table body.
+Note that you \underline{can not} expand a command defined with \verb!\NewDocumentCommand!.
+
+To expand a command without optional argument, you can define it with \verb!\newcommand!.
 
 \begin{demohigh}
-\def\tblrbody{
+\newcommand*\tblrbody{
  \hline
   20 & 30 & 40 \\
   50 & 60 & 70 \\
@@ -288,7 +293,23 @@ The macro \underline{can not} be defined with \verb!\NewDocumentCommand! or
 \end{tblr}
 \end{demohigh}
 
-\section{Default Specifications}
+To expand commands with optional arguments, you \underline{can not} define them
+with \verb!\newcommand!. But you can define them with \verb!\NewExpandableDocumentCommand!,
+and use option \verb!expand=\expanded! to do exhaustive expansions.
+
+\begin{demohigh}
+\NewExpandableDocumentCommand\yes{O{Yes}m}{\SetCell{bg=green9}#1}
+\NewExpandableDocumentCommand\no{O{No}m}{\SetCell{bg=red9}#1}
+\begin{tblr}[expand=\expanded]{hlines}
+  What I get               & is below              \\
+  \expanded{\yes{}}        & \expanded{\no{}}      \\
+  \expanded{\yes[Great]{}} & \expanded{\no[Bad]{}}
+\end{tblr}
+\end{demohigh}
+
+Note that you need to protect fragile commands (if any) inside them with \verb!\unexpanded! command.
+
+\section{Default Specifications}%
 \label{sec:default}
 
 \verb!Tabularray! package provides \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
