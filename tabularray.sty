@@ -878,6 +878,7 @@
   {
     \seq_set_split:Nnn \l_tmpa_seq {-} { #2 - Z }
     \tl_set:Nx \l__tblr_child_from_tl { \seq_item:Nn \l_tmpa_seq {1} }
+    \__tblr_child_name_to_index:VN \l__tblr_child_from_tl \l__tblr_child_from_tl
     \tl_set:Nx \l__tblr_child_to_tl { \seq_item:Nn \l_tmpa_seq {2} }
     \tl_use:c { int_if_ #1 :nF } { \l__tblr_child_from_tl }
       {
