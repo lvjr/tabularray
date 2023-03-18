@@ -19,6 +19,14 @@ TEST 3: named indexes U-Z in child from
 ============================================================
 TEST 4: name indexes U-Z ensured positive
 ============================================================
+! Package tabularray Error: Named index ``U'' (-1) out of bound [1, 4].
+Type <return> to continue.
+ ...                                              
+l. ...\end
+          {tblr}
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
 ============================================================
 [1
 ] (extra-002.aux)

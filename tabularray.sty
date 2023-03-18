@@ -84,6 +84,7 @@
   }
 
 \cs_generate_variant:Nn \msg_error:nnnn { nnVn }
+\cs_generate_variant:Nn \msg_error:nnnnn { nnnVV }
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nxn, Nxx, NxV }
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
@@ -943,6 +944,9 @@
 
 \regex_const:Nn \c__tblr_child_name_regex { ^ [U-Z] $ }
 
+\msg_new:nnn { tabularray } { named-index-out-of-bound }
+  { Named ~ index ~ ``#1'' ~ (#2) ~ out ~ of ~ bound ~ [1, ~ #3].  }
+
 %% Convert U, V, W, X, Y, Z to the indexes of the last six childs, respectively
 \cs_new_protected_nopar:Npn \__tblr_child_name_to_index:nN #1 #2
   {
@@ -951,7 +955,11 @@
         \tl_set:Nx #2
           { \int_eval:n { \l_tblr_childs_total_tl + \int_from_alph:n {#1} - 26 } }
         \int_compare:nNnT #2 < 1
-          { \tl_set:Nn #2 {1} }
+          {
+            \msg_error:nnnVV { tabularray } { named-index-out-of-bound }
+              {#1} {#2} {\l_tblr_childs_total_tl}
+            \tl_set:Nn #2 {1}
+          }
       }
       { \tl_set:Nx #2 { #1 } }
   }
