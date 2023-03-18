@@ -950,6 +950,8 @@
       {
         \tl_set:Nx #2
           { \int_eval:n { \l_tblr_childs_total_tl + \int_from_alph:n {#1} - 26 } }
+        \int_compare:nNnT #2 < 1
+          { \tl_set:Nn #2 {1} }
       }
       { \tl_set:Nx #2 { #1 } }
   }
