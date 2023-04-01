@@ -167,6 +167,24 @@
 \dim_new:N \leftsep
 \dim_new:N \rightsep
 
+%% Some functions for lwarp to remove rules and boxes
+\cs_new:Npn \tblr_hrule_ht:n #1
+  {
+    \hrule height ~ #1 \scan_stop:
+  }
+\cs_new:Npn \tblr_vrule_wd_ht_dp:nnn #1 #2 #3
+  {
+    \vrule width ~ #1 ~ height ~ #2 ~ depth ~ #3 \scan_stop:
+  }
+\cs_new_protected:Npn \tblr_box_use:N #1
+  {
+    \box_use:N #1
+  }
+\cs_new_protected:Npn \tblr_vbox_set:Nn #1 #2
+  {
+    \vbox_set:Nn #1 {#2}
+  }
+
 %%% --------------------------------------------------------
 %%> \section{Data Structures Based on Property Lists}
 %%% --------------------------------------------------------
@@ -2662,6 +2680,7 @@
 \cs_new_protected:Npn \__tblr_builder:nnn #1 #2 #3
   {
     \int_gincr:N \g_tblr_level_int
+    \__tblr_hook_use:n { tabularray/trial/before }
     \bool_set_true:N \lTblrMeasuringBool
     \__tblr_clear_prop_lists:
     \__tblr_clear_spec_lists:
@@ -2689,6 +2708,7 @@
     \__tblr_enable_content_commands:
     \__tblr_calc_cell_and_line_sizes:
     \bool_set_false:N \lTblrMeasuringBool
+    \__tblr_hook_use:n { tabularray/trial/after }
     \LogTblrTracing { step = build ~ the ~ whole ~ table}
     \__tblr_build_whole:
     \int_gdecr:N \g_tblr_level_int
@@ -5505,6 +5525,7 @@
 
 \cs_new_protected:Npn \__tblr_build_whole:
   {
+    \__tblr_hook_use:n { tabularray/table/before }
     \tl_if_eq:enTF { \__tblr_spec_item:nn { outer } { long } } { true }
       { \__tblr_build_long_table:e { \__tblr_spec_item:nn { outer } { halign } } }
       {
@@ -5518,6 +5539,7 @@
               { \__tblr_spec_item:nn { outer } { baseline } }
           }
       }
+    \__tblr_hook_use:n { tabularray/table/after }
   }
 
 \dim_new:N \l__tblr_remain_height_dim
@@ -5796,7 +5818,7 @@
 \cs_new_protected:Npn \__tblr_build_one_table:nnNN #1 #2 #3 #4
   {
     \box_clear:N \l__tblr_table_hlines_box
-    \vbox_set:Nn \l__tblr_table_box
+    \tblr_vbox_set:Nn \l__tblr_table_box
       {
         \int_step_variable:nnNn {#1} {#2} \l__tblr_i_tl
           {
@@ -5804,9 +5826,9 @@
               { \int_compare_p:nNn { \l__tblr_i_tl } > {#1} }
               { \bool_if_p:N #3 }
               { \__tblr_put_one_hline:n { \__tblr_build_hline:V \l__tblr_i_tl } }
-            \hrule height ~ 0pt % remove lineskip between hlines and rows
+            \tblr_hrule_ht:n { 0pt } % remove lineskip between hlines and rows
             \__tblr_put_one_row:n { \__tblr_build_row:N \l__tblr_i_tl }
-            \hrule height ~ 0pt
+            \tblr_hrule_ht:n { 0pt }
           }
         \bool_if:NT #4
           {
@@ -5818,7 +5840,7 @@
             - \box_ht:N \l__tblr_table_hlines_box
             - \box_dp:N \l__tblr_table_hlines_box
           }
-        \box_use:N \l__tblr_table_hlines_box
+        \tblr_box_use:N \l__tblr_table_hlines_box
       }
   }
 
@@ -6253,11 +6275,11 @@
     \__tblr_get_row_inner_height_depth:VNNNN #1
       \l__tblr_row_ht_dim \l__tblr_row_dp_dim
       \l__tblr_row_abovesep_dim \l__tblr_row_belowsep_dim
-    \vrule width ~ 0pt ~ height ~ \l__tblr_row_ht_dim ~ depth ~ \l__tblr_row_dp_dim
+    \__tblr_hook_use:n { tabularray/row/before }
+    \tblr_vrule_wd_ht_dp:nnn {0pt} {\l__tblr_row_ht_dim} {\l__tblr_row_dp_dim}
     \hbox_set:Nn \l__tblr_row_vlines_box
       {
-        \vrule width ~ 0pt ~ height ~ \l__tblr_row_ht_dim
-                           ~ depth ~ \l__tblr_row_dp_dim
+        \tblr_vrule_wd_ht_dp:nnn {0pt} {\l__tblr_row_ht_dim} {\l__tblr_row_dp_dim}
       }
     \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
@@ -6269,6 +6291,7 @@
       { \__tblr_build_vline_segment:nn {#1} { \int_eval:n {\c@colcount + 1} } }
     \skip_horizontal:n { - \box_wd:N \l__tblr_row_vlines_box }
     \box_use:N \l__tblr_row_vlines_box
+    \__tblr_hook_use:n { tabularray/row/after }
   }
 
 %% Read from table specifications and calculate inner height/depth of the row
@@ -6442,8 +6465,12 @@
       }
   }
 
-\tl_new:N \l__tblr_cell_rowspan_tl
-\tl_new:N \l__tblr_cell_colspan_tl
+%% These public variables are updated by default before building a cell
+\tl_new:N \lTblrCellRowSpanTl
+\tl_new:N \lTblrCellColSpanTl
+\tl_new:N \lTblrCellBackgroundTl
+\bool_new:N \lTblrCellOmittedBool
+
 \dim_new:N \l__tblr_cell_wd_dim
 \dim_new:N \l__tblr_cell_ht_dim
 
@@ -6460,17 +6487,17 @@
       { \__tblr_data_item:nen { column } {#2} { leftsep} }
     \tl_set:Nx \l__tblr_y_tl
       { \__tblr_data_item:nen { column } {#2} { rightsep } }
-    \tl_set:Nx \l__tblr_cell_colspan_tl
+    \tl_set:Nx \lTblrCellColSpanTl
       { \__tblr_data_item:neen { cell } {#1} {#2} { colspan } }
-    \int_compare:nNnTF { \l__tblr_cell_colspan_tl } < {2}
+    \int_compare:nNnTF { \lTblrCellColSpanTl } < {2}
       { \dim_set:Nn \l__tblr_cell_wd_dim { \l__tblr_w_tl } }
       {
         \__tblr_get_span_horizontal_sizes:NNNNN #1 #2
           \l__tblr_o_dim \l__tblr_cell_wd_dim \l__tblr_q_dim
       }
-    \tl_set:Nx \l__tblr_cell_rowspan_tl
+    \tl_set:Nx \lTblrCellRowSpanTl
       { \__tblr_data_item:neen { cell } {#1} {#2} { rowspan } }
-    \int_compare:nNnTF { \l__tblr_cell_rowspan_tl } < {2}
+    \int_compare:nNnTF { \lTblrCellRowSpanTl } < {2}
       { \dim_set:Nn \l__tblr_cell_ht_dim { \l__tblr_h_tl } }
       {
         \__tblr_get_span_vertical_sizes:NNNNN #1 #2
@@ -6482,8 +6509,73 @@
     \group_end:
   }
 
+%% These public variables are updated by html library before building a cell
+\tl_new:N \lTblrCellAboveBorderStyleTl
+\tl_new:N \lTblrCellAboveBorderWidthTl
+\tl_new:N \lTblrCellAboveBorderColorTl
+\tl_new:N \lTblrCellBelowBorderStyleTl
+\tl_new:N \lTblrCellBelowBorderWidthTl
+\tl_new:N \lTblrCellBelowBorderColorTl
+\tl_new:N \lTblrCellLeftBorderStyleTl
+\tl_new:N \lTblrCellLeftBorderWidthTl
+\tl_new:N \lTblrCellLeftBorderColorTl
+\tl_new:N \lTblrCellRightBorderStyleTl
+\tl_new:N \lTblrCellRightBorderWidthTl
+\tl_new:N \lTblrCellRihgtBorderColorTl
+
+%% #1: row number in tl; #2: column number in tl
+%% This function is called only when html library is loaded.
+%% The properties can be used by tagpdf, tex4ht and lwarp packages
+\cs_new_protected:Npn \__tblr_expose_cell_properties:NN #1 #2
+  {
+    \__tblr_expose_cell_border:NNnn #1 #2 { hline } { Above }
+    \tl_set:Nx \l_tmpa_tl { \int_eval:n { #1 + \lTblrCellRowSpanTl } }
+    \__tblr_expose_cell_border:NNnn \l_tmpa_tl #2 { hline } { Below }
+    \__tblr_expose_cell_border:NNnn #1 #2 { vline } { Left }
+    \tl_set:Nx \l_tmpb_tl { \int_eval:n { #2 + \lTblrCellColSpanTl } }
+    \__tblr_expose_cell_border:NNnn #1 \l_tmpb_tl { vline } { Right }
+  }
+
+\tl_new:N \l__tblr_dash_value_tl
+\tl_new:N \l__tblr_dash_value_head_tl
+\tl_new:N \l__tblr_dash_value_tail_tl
+\tl_new:N \l__tblr_width_value_tl
+\tl_new:N \l__tblr_color_value_tl
+
+%% #1: row number in tl; #2: column number in tl;
+%% #3: hline or vline; #4: position of border (Above/Below/Left/Right).
+\cs_new_protected:Npn \__tblr_expose_cell_border:NNnn #1 #2 #3 #4
+  {
+    %% get border style
+    \tl_set:Nx \l__tblr_dash_value_tl %% may be empty
+      { \__tblr_spec_item:ne { #3 } { [#1][#2](1) / @dash } }
+    \tl_set:Nx \l__tblr_dash_value_head_tl { \tl_head:N \l__tblr_dash_value_tl }
+    \tl_set:Nx \l__tblr_dash_value_tail_tl { \tl_tail:N \l__tblr_dash_value_tl }
+    \exp_args:NV \tl_if_eq:NNTF \l__tblr_dash_value_head_tl \@tblr@dash
+      {
+        \tl_set_eq:cN { lTblrCell #4 BorderStyleTl } \l__tblr_dash_value_tail_tl
+        %% get border width
+        \tl_set:Nx \l__tblr_width_value_tl
+          { \__tblr_spec_item:ne { #3 } { [#1][#2](1) / wd } }
+        \tl_if_empty:NTF \l__tblr_width_value_tl
+          { \tl_set:cn { lTblrCell #4 BorderWidthTl } { 0.4pt } }
+          { \tl_set_eq:cN { lTblrCell #4 BorderWidthTl } \l__tblr_width_value_tl }
+        %% get border color
+        \tl_set:cx { lTblrCell #4 BorderColorTl }
+          { \__tblr_spec_item:ne { #3 } { [#1][#2](1) / fg } }
+      }
+      {
+        \tl_clear:c { lTblrCell #4 BorderStyleTl }
+        \tl_set:cn { lTblrCell #4 BorderWidthTl } { 0pt }
+        \tl_clear:c { lTblrCell #4 BorderColorTl }
+      }
+  }
+
 \cs_new_protected:Npn \__tblr_build_cell_content:NN #1 #2
   {
+    \bool_if:NT \l__tblr_html_variables_bool
+      { \__tblr_expose_cell_properties:NN #1 #2 }
+    \__tblr_hook_use:n { tabularray/cell/before }
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_cell_wd_dim }
       {
         \tl_if_eq:NnTF \g__tblr_cell_halign_tl {j}
@@ -6502,7 +6594,7 @@
             \c__tblr_valign_m_tl
               {
                 \vfil
-                \int_compare:nNnT { \l__tblr_cell_rowspan_tl } < {2}
+                \int_compare:nNnT { \lTblrCellRowSpanTl } < {2}
                   {
                     \box_set_ht:Nn \l__tblr_a_box
                       { \__tblr_data_item:nen { row } {#1} { @row-upper } }
@@ -6522,7 +6614,7 @@
             \c__tblr_valign_f_tl
               {
                 \vfil
-                \int_compare:nNnTF { \l__tblr_cell_rowspan_tl } < {2}
+                \int_compare:nNnTF { \lTblrCellRowSpanTl } < {2}
                   {
                     \box_set_dp:Nn \l__tblr_a_box
                       { \__tblr_data_item:nen { row } {#1} { @row-foot } }
@@ -6532,7 +6624,7 @@
                       {
                         \__tblr_data_item:nen
                           { row }
-                          { \int_eval:n { #1 + \l__tblr_cell_rowspan_tl - 1 } }
+                          { \int_eval:n { #1 + \lTblrCellRowSpanTl - 1 } }
                           { @row-foot }
                       }
                   }
@@ -6550,16 +6642,22 @@
     \skip_horizontal:n { \l__tblr_x_tl }
     \box_use:N \l__tblr_c_box
     \skip_horizontal:n { \l__tblr_y_tl - \l__tblr_cell_wd_dim + \l__tblr_w_tl }
+    \__tblr_hook_use:n { tabularray/cell/after }
   }
 
 \cs_new_protected:Npn \__tblr_build_cell_background:NN #1 #2
   {
-    \int_compare:nNnT { \__tblr_data_item:neen { cell } {#1} {#2} { omit } } = {0}
+    \bool_set:Nn \lTblrCellOmittedBool
       {
-        \group_begin:
-        \tl_set:Nx \l__tblr_b_tl
+        \int_compare_p:nNn
+          { \__tblr_data_item:neen { cell } {#1} {#2} { omit } } = {1}
+      }
+    \bool_if:NF \lTblrCellOmittedBool
+      {
+        \tl_set:Nx \lTblrCellBackgroundTl
           { \__tblr_data_item:neen { cell } {#1} {#2} { background } }
-        \tl_if_empty:NF \l__tblr_b_tl
+        \group_begin:
+        \tl_if_empty:NF \lTblrCellBackgroundTl
           {
             \__tblr_get_cell_background_width:NNN #1 #2 \l_tmpa_dim
             \__tblr_get_cell_background_depth:NNN #1 #2 \l_tmpb_dim
@@ -6567,7 +6665,7 @@
               { \dim_use:N \l_tmpa_dim }
               { \l__tblr_row_ht_dim }
               { \dim_use:N \l_tmpb_dim }
-              { \l__tblr_b_tl }
+              { \lTblrCellBackgroundTl }
           }
         \group_end:
       }
@@ -6576,7 +6674,7 @@
 %% #1: row number; #2: column number; #3 resulting dimension
 \cs_new_protected:Npn \__tblr_get_cell_background_width:NNN #1 #2 #3
   {
-    \int_compare:nNnTF { \l__tblr_cell_colspan_tl } < {2}
+    \int_compare:nNnTF { \lTblrCellColSpanTl } < {2}
       { \dim_set:Nn #3 { \l__tblr_x_tl + \l__tblr_w_tl + \l__tblr_y_tl } }
       {
         \dim_set:Nn #3 { \l__tblr_o_dim + \l__tblr_cell_wd_dim + \l__tblr_q_dim }
@@ -6586,7 +6684,7 @@
 %% #1: row number; #2: column number; #3 resulting dimension
 \cs_new_protected:Npn \__tblr_get_cell_background_depth:NNN #1 #2 #3
   {
-    \int_compare:nNnTF { \l__tblr_cell_rowspan_tl } < {2}
+    \int_compare:nNnTF { \lTblrCellRowSpanTl } < {2}
       { \dim_set_eq:NN #3 \l__tblr_row_dp_dim }
       {
         \dim_set:Nn #3
@@ -6622,7 +6720,7 @@
     \dim_zero:N #4
     \dim_add:Nn #4
       { \prop_item:Ne \l__tblr_row_item_skip_size_prop { item[#1] } }
-    \int_step_inline:nnn { #1 + 1 } { #1 + \l__tblr_cell_rowspan_tl - 1 }
+    \int_step_inline:nnn { #1 + 1 } { #1 + \lTblrCellRowSpanTl - 1 }
       {
         \dim_add:Nn #4
           {
@@ -6634,7 +6732,7 @@
     \dim_set:Nn #5
       {
         \__tblr_data_item:nen { row }
-          { \int_eval:n { #1 + \l__tblr_cell_rowspan_tl - 1 } } { belowsep }
+          { \int_eval:n { #1 + \lTblrCellRowSpanTl - 1 } } { belowsep }
       }
     %\tl_log:x { cell[#1][#2] ~:~ \dim_use:N #3, \dim_use:N #4, \dim_use:N #5 }
   }
@@ -6651,7 +6749,7 @@
     \dim_zero:N #4
     \dim_add:Nn #4
       { \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[#2] } }
-    \int_step_inline:nnn { #2 + 1 } { #2 + \l__tblr_cell_colspan_tl - 1 }
+    \int_step_inline:nnn { #2 + 1 } { #2 + \lTblrCellColSpanTl - 1 }
       {
         \dim_add:Nn #4
           {
@@ -6663,7 +6761,7 @@
     \dim_set:Nn #5
       {
         \__tblr_data_item:nen { column }
-          { \int_eval:n {#2 + \l__tblr_cell_colspan_tl - 1} } { rightsep }
+          { \int_eval:n {#2 + \lTblrCellColSpanTl - 1} } { rightsep }
       }
     %\tl_log:x { cell[#1][#2] ~:~ \dim_use:N #3, \dim_use:N #4, \dim_use:N #5 }
   }
@@ -7198,6 +7296,29 @@
       {
         \tblr_set_column:nnn {##1} {} {##2}
       }
+  }
+
+%% Library hook provides some public hooks
+
+\cs_new_protected:Npn \__tblr_hook_use:n #1 {}
+
+\NewTblrLibrary { hook }
+  {
+    \cs_set_eq:NN \__tblr_hook_use:n \hook_use:n
+    \hook_new_pair:nn { tabularray/trial/before } { tabularray/trial/after }
+    \hook_new_pair:nn { tabularray/table/before } { tabularray/table/after }
+    \hook_new_pair:nn { tabularray/row/before } { tabularray/row/after }
+    \hook_new_pair:nn { tabularray/cell/before } { tabularray/cell/after }
+  }
+
+%% Library html provides more public variables
+%% These variables can be used by tagpdf, tex4ht and lwarp packages
+
+\bool_new:N \l__tblr_html_variables_bool
+
+\NewTblrLibrary { html }
+  {
+    \bool_set_true:N \l__tblr_html_variables_bool
   }
 
 %% Library nameref and its caption-ref template
