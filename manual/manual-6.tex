@@ -59,11 +59,11 @@ Please read the documentation of \texttt{codehigh} package for more details of
 
 \section{Acronym Expansion}
 
-When building the table, \texttt{tabularray} has to render each cell twice:
+When building a table, \texttt{tabularray} has to render each cell twice:
 the first time for measuring the size of the cell and the second time for actually typesetting the table.
-As a result, acronym management packages that spell-out long definitions on their first use and print short definitions thereafter will be impacted by this process.
+As a result, acronym management packages that spell out long definitions on their first use and print short definitions thereafter will be impacted by this process.
 
-To enable expected acronym behavior despite this process, \texttt{tabularry} sets the value of a Boolean variable, \verb|\lTblrMeasuringBool|, to indicate whether it is building a cell to measure its size or render the table.
+To enable expected acronym behavior despite this process, \texttt{tabularray} sets the value of a Boolean variable, \verb|\lTblrMeasuringBool|, to indicate whether it is building a cell to measure its size or render the table.
 
 Although there are multiple acronym management packages, we provide two examples here.
 
