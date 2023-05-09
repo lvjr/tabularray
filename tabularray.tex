@@ -3061,6 +3061,32 @@ Please read the documentation of \texttt{codehigh} package for more details of
 \href{https://www.ctan.org/pkg/fvextra}{\texttt{fvextra}} package is similar to
 \fakeverb{\fakeverb} command, but with \fakeverb{\EscVerb} you need to escape every control word.}
 
+\section{Acronym Expansion}
+
+When building the table, \texttt{tabularray} has to render each cell twice:
+the first time for measuring the size of the cell and the second time for actually typesetting the table.
+As a result, acronym management packages that spell-out long definitions on their first use and print short definitions thereafter will be impacted by this process.
+
+To enable expected acronym behavior despite this process, \texttt{tabularry} sets the value of a Boolean variable, \verb|\lTblrMeasuringBool|, to indicate whether it is building a cell to measure its size or render the table.
+
+Although there are multiple acronym management packages, we provide two examples here.
+
+The \texttt{acro} package has an \verb|\acswitchoff| macro to bypass marking an acronym's first use.
+
+\begin{codehigh}
+\newcommand\myac[1]{\IfBooleanT\lTblrMeasuringBool{\acswitchoff}\ac{#1}}
+\end{codehigh}
+
+The \texttt{acronym} package uses starred versions of its macros to bypass marking an acronym's first use.
+
+\begin{codehigh}
+\newcommand\myac[1]{%
+    \IfBooleanT{\lTblrMeasuringBool}{\ac*{#1}}%
+    \IfBooleanF{\lTblrMeasuringBool}{\ac{#1}}}
+\end{codehigh}
+
+In both of these examples, the new \verb|\myac| command enables you to check the \texttt{tabularray} measuring status before expanding it within the \texttt{tblr} environment so you can prevent it from being marked as used before it actually appears in your document.
+
 \chapter{History and Future}
 
 \section{The Future}
