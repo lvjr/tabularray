@@ -42,7 +42,7 @@ hence totally separating the styles and the contents of tables.
   \verb!\SetColumn!                              & \K{column}, \K{colspec} \\
 \end{newtblr}
 
-\section{Hlines and Vlines}
+\section{Hlines and Vlines}\label{sec:hlines-vlines}
 
 All available keys for hlines and vlines are described in Table \ref{key:hline} and Table \ref{key:vline}.
 
@@ -58,6 +58,9 @@ All available keys for hlines and vlines are described in Table \ref{key:hline} 
   \underline{\K{fg}}   & rule color name & \None \\
   \K{leftpos}          & crossing or trimming position at the left side  & \V{1} \\
   \K{rightpos}         & crossing or trimming position at the right side & \V{1} \\
+  \K{l}                & same as \K{leftpos}, default \V{-0.8} & \V{1} \\
+  \K{r}                & same as \K{rightpos}, default \V{-0.8} & \V{1} \\
+  \K{lr}               & crossing or trimming positions at both sides, default \V{-0.8} & \V{1} \\
   \K{endpos}           & adjust leftpos/rightpos for only the leftmost/rightmost column & \V{false} \\
 \end{spectblr}
 \vspace{-2em}

@@ -117,8 +117,11 @@ command, which is simpler than the \verb!booktabs! usage
 \end{tblr}
 \end{demohigh}
 
-From version 2021N (2021-09-01), trim options (\verb!l!, \verb!r!, \verb!lr!)
-for \verb!\cmidrule! command are also supported.
+From version 2021N (2021-09-01), you can set trimming positions of
+\verb!\cmidrule! and \verb!\cmidrulemore!, using newly introduced trimming
+options (\verb!leftpos!, \verb!rightpos!, \verb!endpos!, \verb!l!, \verb!r!,
+and \verb!lr!) (see Section~\ref{sec:hlines-vlines}).
+Option \verb!endpos! is already applied to these two commands.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -132,11 +135,10 @@ for \verb!\cmidrule! command are also supported.
 \end{tblr}
 \end{demohigh}
 
-Note that you need to put \verb!l!, \verb!r! or \verb!lr! option into
-the \underline{\color{red3}square brackets}.
-and the possible values are decimal numbers between \verb!-1! and \verb!0!,
-where \verb!-1! means trimming the whole colsep, and \verb!0! means no trimming.
-The default value is \verb!-0.8!, which makes similar result as \verb!booktabs! package does.
+Since \verb!booktabs! tables usually don't have vlines, the meaningful values
+here are decimal numbers between \verb!-1! and \verb!0!.
+The default value \verb!-0.8! for \verb!l!, \verb!r!, and \verb!lr! is chosen to
+make similar result as \verb!booktabs! package does.
 
 There is also a \verb!booktabs! environment for you. With this environment,
 the default \verb!rowsep=0pt!, but extra vertical space will be added by
