@@ -60,8 +60,11 @@ $f(x)=\begin{+cases}
 
 With \verb!\UseTblrLibrary{booktabs}! in the preamble of the document,
 \verb!tabularray! will load \verb!booktabs! package,
-and define \verb!\toprule!, \verb!\midrule!,
-\verb!\bottomrule! and \verb!\cmidrule! inside \verb!tblr! environment.
+and define
+  \verb!\toprule!, \verb!\midrule!, \verb!\bottomrule!,
+  \verb!\cmidrule!, \verb!\cmidrulemore!, \verb!\morecmidrules!,
+  \verb!\specialrule!, \verb!\addrowspace!, and \verb!\addlinespace!
+as table commands.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -92,7 +95,9 @@ you can also specify rule width and color in the optional argument of any of the
 \end{tblr}
 \end{demohigh}
 
-If you need more than one \verb!\cmidrule!s, you can use \verb!\cmidrulemore! command.
+If you need more than one \verb!\cmidrule!s, you can use \verb!\cmidrulemore!
+command, which is simpler than the \verb!booktabs! usage
+\verb!\morecmidrules\cmidrule!.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -166,7 +171,8 @@ and the third argument sets \verb!abovesep! of current row,
 \end{booktabs}
 \end{demohigh}
 
-At last, there is also an \verb!\addlinespace! command.
+At last, there is also an \verb!\addlinespace! command, with an alternative
+name \verb!\addrowspace!.
 You can specify the size of vertical space to be added in its optional argument,
 and the default size is \verb!0.5em!.
 This command adds one half of the space to \verb!belowsep! of previous row,
