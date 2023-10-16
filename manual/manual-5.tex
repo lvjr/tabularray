@@ -83,6 +83,12 @@ as table commands.
 Just like \verb!\hline! and \verb!\cline! commands,
 you can also specify rule width and color in the optional argument of any of these commands.
 
+Like in \verb!booktabs!, by default
+  width of \verb!\toprule! and \verb!\bottomrule! are determined by \verb!\heavyrulewidth!,
+  width of \verb!\midrule! is determined by \verb!\lightrulewidth!, and
+  width of \verb!\cmidrule! and \verb!\cmidrulemore! are determined by \verb!\cmidrulewidth!, respectively.
+All three \verb!\...rulewidth! are dimensions.
+
 \begin{demohigh}
 \begin{tblr}{llll}
 \toprule[2pt,purple3]
@@ -173,8 +179,9 @@ and the third argument sets \verb!abovesep! of current row,
 
 At last, there is also an \verb!\addlinespace! command, with an alternative
 name \verb!\addrowspace!.
-You can specify the size of vertical space to be added in its optional argument,
-and the default size is \verb!0.5em!.
+You can specify the size of vertical space to be added in its optional
+argument, and the default size is determinted by \verb!\defaultaddspace!
+dimension, initially \verb!0.5em!.
 This command adds one half of the space to \verb!belowsep! of previous row,
 and the other half to \verb!abovesep! of current row.
 
