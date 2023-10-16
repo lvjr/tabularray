@@ -81,7 +81,8 @@ as table commands.
 \end{demohigh}
 
 Just like \verb!\hline! and \verb!\cline! commands,
-you can also specify rule width and color in the optional argument of any of these commands.
+you can also specify rule width and color by using hline keys in the optional
+argument of any of these commands.
 
 Like in \verb!booktabs!, by default
   width of \verb!\toprule! and \verb!\bottomrule! are determined by \verb!\heavyrulewidth!,
@@ -102,8 +103,9 @@ All three \verb!\...rulewidth! are dimensions.
 \end{demohigh}
 
 If you need more than one \verb!\cmidrule!s, you can use \verb!\cmidrulemore!
-command, which is simpler than the \verb!booktabs! usage
+command, which is simpler than the \verb!booktabs! usage 
 \verb!\morecmidrules\cmidrule!.
+\verb!\cmidrulemore! can receive hline keys in an optional argument too.
 
 \begin{demohigh}
 \begin{tblr}{llll}
