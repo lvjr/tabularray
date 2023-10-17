@@ -233,6 +233,7 @@ there are several other outer specifications which are described in Table~\ref{k
   \K{long} & change the table to a long table & \None \\
   \K{tall} & change the table to a tall table & \None \\
   \K{expand} & you need this key to use verb commands & \None \\
+  \K{expand+} & like \K{expand} but appends to previous values & \None \\
 \end{spectblr}
 
 \subsection{Set Baseline in Another Way}
@@ -270,19 +271,27 @@ In contrast to traditional \verb!tabular! environment, \verb!tabularray! environ
 need to see every \verb!&! and \verb!\\! when splitting the table body with \verb!l3regex!.
 And you can not put cell text inside any table command defined with \verb!\NewTableCommand!.
 But you could use outer key \verb!expand! to make \verb!tabularray! expand
-every occurrence of a specified macro \underline{once} before splitting the table body.
+every occurrence of any of the specified macros \underline{once} and \underline{in the given oder} before splitting the table body.
 Note that you \underline{can not} expand a command defined with \verb!\NewDocumentCommand!.
+You can also use \verb!expand+! if you still want to keep the macros in the current \verb!expand! setting.
 
 To expand a command without optional argument, you can define it with \verb!\newcommand!.
 
 \begin{demohigh}
+\newcommand*\tblrrowa{
+	20 & 30 & 40 \\ }
+\newcommand*\tblrrowb{
+	50 & 60 & 70 \\ }
+
 \newcommand*\tblrbody{
  \hline
-  20 & 30 & 40 \\
-  50 & 60 & 70 \\
+  \tblrrowa
+  \tblrrowb
  \hline
 }
-\begin{tblr}[expand=\tblrbody]{ccc}
+
+\SetTblrOuter{expand=\tblrbody\tblrrowa}
+\begin{tblr}[expand+=\tblrrowb]{ccc}
  \hline
   AA & BB & CC \\
   \tblrbody
