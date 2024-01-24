@@ -29,10 +29,10 @@ jobs:
     - name: Install pdftoppm
       run:
         sudo apt-get install poppler-utils
-    - name: Test tabularray with ppmcheck
+    - name: Test tabularray with ppmcheckpdf
       run: |
         export PATH=${{github.workspace}}/tmp/texlive/bin/x86_64-linux:$PATH
-        texlua ppmcheck.lua
+        texlua buildend.lua
   build-windows:
     runs-on: windows-latest
     steps:
@@ -54,10 +54,10 @@ jobs:
       run: |
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\windows;" + ${env:PATH}
         tlmgr install wintools.windows
-    - name: Test tabularray with ppmcheck
+    - name: Test tabularray with ppmcheckpdf
       run: |
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\windows;" + ${env:PATH}
-        texlua ppmcheck.lua
+        texlua buildend.lua
     - name: Upload png and md5
       uses: actions/upload-artifact@v3
       with:
