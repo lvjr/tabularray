@@ -2771,11 +2771,9 @@
   {
     \__tblr_hook_split_before:
     \tl_set:Nx \l__tblr_expand_tl { \__tblr_spec_item:nn { outer } { expand } }
-    \tl_set:Nx \l__tblr_expand_tl { \tl_head:N \l__tblr_expand_tl }
-    \tl_if_empty:NF \l__tblr_expand_tl
+    \tl_map_inline:Nn \l__tblr_expand_tl
       {
-        \exp_last_unbraced:NNV
-        \__tblr_expand_table_body:NN \l__tblr_body_tl \l__tblr_expand_tl
+        \__tblr_expand_table_body:NN \l__tblr_body_tl ##1
       }
   }
 
@@ -3213,6 +3211,7 @@
     B       .meta:n = { baseline = B },
     valign  .meta:n = { baseline = #1 }, % obsolete, will be removed some day
     expand  .code:n = \__tblr_outer_gput_spec:nn { expand } {#1},
+    expand+ .code:n = \__tblr_outer_gconcat_spec:nn { expand } {#1},
     headsep .code:n = \__tblr_outer_gput_spec:nn { headsep } {#1},
     footsep .code:n = \__tblr_outer_gput_spec:nn { footsep } {#1},
     presep  .code:n = \__tblr_outer_gput_spec:nn { presep }  {#1},
@@ -3229,6 +3228,11 @@
     \__tblr_spec_gput:nen { outer } {#1} {#2}
   }
 \cs_generate_variant:Nn \__tblr_outer_gput_spec:nn { ne }
+
+\cs_new_protected:Npn \__tblr_outer_gconcat_spec:nn #1 #2
+  {
+    \__tblr_outer_gput_spec:ne {#1} { \__tblr_spec_item:nn { outer } { #1 } \exp_not:n { #2 } }
+  }
 
 \regex_const:Nn \c__tblr_option_key_name_regex { ^ [A-Za-z\-] + $ }
 
