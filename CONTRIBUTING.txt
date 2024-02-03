@@ -17,12 +17,12 @@ Contribution to the Manual
 Contribution to the Code
 ------------------------
 
-- You need to install `l3build` package into your TeX distribution first.
+- You need to install `l3build` and `ppmcheckpdf` packages into your TeX distribution first.
 
 - After edting the source code, run `l3build check` to compile test files.
 
-- On Windows, run `texlua ppmcheck.lua` to compare MD5 checksums for test outputs.
+- On Windows, run `texlua buildend.lua` to compare MD5 checksums for test outputs.
 
-- The project use `pdftoppm` program to convert PDF to PNG and make MD5 checksums.
-  But unfortunately `pdftoppm` create PNG with different MD5 checksums on Linux.
+- The project uses `pdftoppm` program to convert PDF to PNG and makes MD5 checksums.
+  But unfortunately `pdftoppm` creates PNG with different MD5 checksums on Linux.
   Therefore you can not do the previous step on Linux. Maybe someone can help.
