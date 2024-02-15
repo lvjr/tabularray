@@ -1104,6 +1104,9 @@
 \dim_zero_new:N \rulewidth
 \dim_set:Nn \rulewidth {0.4pt}
 
+\prop_new:N \g__tblr_defined_hdash_styles_prop
+\prop_new:N \g__tblr_defined_vdash_styles_prop
+
 \prop_gset_from_keyval:Nn \g__tblr_defined_hdash_styles_prop
   { solid = \hrule height \rulewidth }
 \prop_gset_from_keyval:Nn \g__tblr_defined_vdash_styles_prop
@@ -2970,6 +2973,13 @@
 %%% --------------------------------------------------------
 %%> \section{Initialize Table Inner Specifications}
 %%% --------------------------------------------------------
+
+\prop_new:N \g__tblr_initial_table_prop
+\prop_new:N \g__tblr_initial_rows_prop
+\prop_new:N \g__tblr_initial_columns_prop
+\prop_new:N \g__tblr_initial_cells_prop
+\prop_new:N \g__tblr_initial_hlines_prop
+\prop_new:N \g__tblr_initial_vlines_prop
 
 \prop_gset_from_keyval:Nn \g__tblr_initial_table_prop
   {
