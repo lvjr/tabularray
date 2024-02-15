@@ -5609,8 +5609,19 @@
                 % \pagetotal maybe exceed \pagegoal after adding presep,
                 % or after adding rowhead or rowfoot of the table.
                 % In these cases, we will not typeset table in this page,
-                % but rather do some negative \vskip and execute \newpage.
-                \skip_vertical:n { \pagegoal - \pagetotal }
+                % but rather force a page break.
+                \group_begin:
+                  \dim_set:Nn \l_tmpb_dim
+                    {
+                      % Enough to overfill the page (including shrink).
+                      \pagegoal - \pagetotal + \l_tmpa_dim
+                      + \__tblr_box_height:N \l__tblr_table_firsthead_box
+                      + \__tblr_box_height:N \l__tblr_table_firstfoot_box
+                    }
+                  \skip_vertical:n { \l_tmpb_dim }
+                  \tex_penalty:D 9999
+                  \skip_vertical:n { -\l_tmpb_dim }
+                \group_end:
               }
               {
                 \__tblr_build_page_table:nnx {#1}
@@ -5618,8 +5629,8 @@
                   { \int_use:N \l__tblr_prev_i_int }
                 \int_incr:N \l__tblr_table_page_int
                 \int_set:Nn \l__tblr_long_from_int { \l__tblr_prev_i_int + 1 }
+                \TblrNewPage
               }
-            \TblrNewPage
             \hbox{}\kern-\topskip\nobreak
             \noindent
             \LogTblrTracing { page }
