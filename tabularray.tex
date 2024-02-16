@@ -1616,17 +1616,17 @@ To expand a command without optional argument, you can define it with \verb!\new
 
 \begin{demohigh}
 \newcommand*\tblrrowa{
-	20 & 30 & 40 \\ }
+  20 & 30 & 40 \\
+}
 \newcommand*\tblrrowb{
-	50 & 60 & 70 \\ }
-
+  50 & 60 & 70 \\
+}
 \newcommand*\tblrbody{
  \hline
   \tblrrowa
   \tblrrowb
  \hline
 }
-
 \SetTblrOuter{expand=\tblrbody\tblrrowa}
 \begin{tblr}[expand+=\tblrrowb]{ccc}
  \hline
@@ -2873,6 +2873,16 @@ We can also use color series of \verb!xcolor! package to color table rows:
   Row6 & 6 \\
 \end{tblr}
 \end{demohigh}
+
+\section{Library \texttt{hook}}
+
+This library is experimental, please see\\
+\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
+
+\section{Library \texttt{html}}
+
+This library is experimental, please see\\
+\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
 
 \section{Library \texttt{nameref}}
 
