@@ -62,7 +62,7 @@ If you don't like it, you could use \verb!\SetTblrInner! command:
  Iota    & Kappa & Lambda & Mu    \\
 \hline
 \end{tblr}
-\end{demohigh} 
+\end{demohigh}
 
 But in many cases, this \verb!rowsep! is useful:
 
@@ -101,7 +101,7 @@ just enclose the cell text with braces and use \verb!\\! to break lines:
  {L \\ Left} & {C \\ Cent \\ Center} & R \\
 \hline
 \end{tblr}
-\end{demohigh} 
+\end{demohigh}
 
 \section{Cell Alignment}
 
@@ -117,7 +117,7 @@ other columns are defined as \verb!Q! columns with some options):
  {Top Baseline \\ Left Left} & Middle Center & {Right Right \\ Bottom Baseline} \\
 \hline
 \end{tblr}
-\end{demohigh} 
+\end{demohigh}
 
 Note that you can use more meaningful \verb!t! instead of \verb!p! for top baseline alignment.
 For some users who are familiar with word processors,
@@ -271,7 +271,7 @@ which will help us to locate cells when the tables are rather complex:
 \begin{demohigh}
 \begin{tblr}{|ll|c|rr|}
 \hline
- \SetCell[r=3,c=2]{h} r=3 c=2 & 1-2 & \SetCell[r=2,c=3]{r} r=2 c=3 & 1-4 & 1-5 \\ 
+ \SetCell[r=3,c=2]{h} r=3 c=2 & 1-2 & \SetCell[r=2,c=3]{r} r=2 c=3 & 1-4 & 1-5 \\
  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
 \hline
  3-1 & 3-2 & MIDDLE & \SetCell[r=3,c=2]{f} r=3 c=2 & 3-5 \\

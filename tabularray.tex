@@ -209,7 +209,7 @@ If you don't like it, you could use \verb!\SetTblrInner! command:
  Iota    & Kappa & Lambda & Mu    \\
 \hline
 \end{tblr}
-\end{demohigh} 
+\end{demohigh}
 
 But in many cases, this \verb!rowsep! is useful:
 
@@ -248,7 +248,7 @@ just enclose the cell text with braces and use \verb!\\! to break lines:
  {L \\ Left} & {C \\ Cent \\ Center} & R \\
 \hline
 \end{tblr}
-\end{demohigh} 
+\end{demohigh}
 
 \section{Cell Alignment}
 
@@ -264,7 +264,7 @@ other columns are defined as \verb!Q! columns with some options):
  {Top Baseline \\ Left Left} & Middle Center & {Right Right \\ Bottom Baseline} \\
 \hline
 \end{tblr}
-\end{demohigh} 
+\end{demohigh}
 
 Note that you can use more meaningful \verb!t! instead of \verb!p! for top baseline alignment.
 For some users who are familiar with word processors,
@@ -418,7 +418,7 @@ which will help us to locate cells when the tables are rather complex:
 \begin{demohigh}
 \begin{tblr}{|ll|c|rr|}
 \hline
- \SetCell[r=3,c=2]{h} r=3 c=2 & 1-2 & \SetCell[r=2,c=3]{r} r=2 c=3 & 1-4 & 1-5 \\ 
+ \SetCell[r=3,c=2]{h} r=3 c=2 & 1-2 & \SetCell[r=2,c=3]{r} r=2 c=3 & 1-4 & 1-5 \\
  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
 \hline
  3-1 & 3-2 & MIDDLE & \SetCell[r=3,c=2]{f} r=3 c=2 & 3-5 \\
@@ -607,7 +607,7 @@ hence totally separating the styles and the contents of tables.
   \verb!\SetColumn!                              & \K{column}, \K{colspec} \\
 \end{newtblr}
 
-\section{Hlines and Vlines}
+\section{Hlines and Vlines}\label{sec:hlines-vlines}
 
 All available keys for hlines and vlines are described in Table \ref{key:hline} and Table \ref{key:vline}.
 
@@ -623,6 +623,9 @@ All available keys for hlines and vlines are described in Table \ref{key:hline} 
   \underline{\K{fg}}   & rule color name & \None \\
   \K{leftpos}          & crossing or trimming position at the left side  & \V{1} \\
   \K{rightpos}         & crossing or trimming position at the right side & \V{1} \\
+  \K{l}                & same as \K{leftpos}, default \V{-0.8} & \V{1} \\
+  \K{r}                & same as \K{rightpos}, default \V{-0.8} & \V{1} \\
+  \K{lr}               & crossing or trimming positions at both sides, default \V{-0.8} & \V{1} \\
   \K{endpos}           & adjust leftpos/rightpos for only the leftmost/rightmost column & \V{false} \\
 \end{spectblr}
 \vspace{-2em}
@@ -869,7 +872,7 @@ You can use child selectors in the mandatory argument of \verb!\cline!.
 \end{demohigh}
 
 Commands \verb!\SetHline! combines the usages of \verb!\hline! and \verb!\cline!:
- 
+
 \begin{demohigh}
 \begin{tblr}{llll}
 \SetHline{1-3}{blue5,1pt}
@@ -2471,8 +2474,11 @@ $f(x)=\begin{+cases}
 
 With \verb!\UseTblrLibrary{booktabs}! in the preamble of the document,
 \verb!tabularray! will load \verb!booktabs! package,
-and define \verb!\toprule!, \verb!\midrule!,
-\verb!\bottomrule! and \verb!\cmidrule! inside \verb!tblr! environment.
+and define
+  \verb!\toprule!, \verb!\midrule!, \verb!\bottomrule!,
+  \verb!\cmidrule!, \verb!\cmidrulemore!, \verb!\morecmidrules!,
+  \verb!\specialrule!, \verb!\addrowspace!, and \verb!\addlinespace!
+as table commands.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -2489,7 +2495,14 @@ and define \verb!\toprule!, \verb!\midrule!,
 \end{demohigh}
 
 Just like \verb!\hline! and \verb!\cline! commands,
-you can also specify rule width and color in the optional argument of any of these commands.
+you can also specify rule width and color by using hline keys in the optional
+argument of any of these commands.
+
+Like in \verb!booktabs!, by default
+  width of \verb!\toprule! and \verb!\bottomrule! are determined by \verb!\heavyrulewidth!,
+  width of \verb!\midrule! is determined by \verb!\lightrulewidth!, and
+  width of \verb!\cmidrule! and \verb!\cmidrulemore! are determined by \verb!\cmidrulewidth!, respectively.
+All three \verb!\...rulewidth! are dimensions.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -2503,7 +2516,10 @@ you can also specify rule width and color in the optional argument of any of the
 \end{tblr}
 \end{demohigh}
 
-If you need more than one \verb!\cmidrule!s, you can use \verb!\cmidrulemore! command.
+If you need more than one \verb!\cmidrule!s, you can use \verb!\cmidrulemore!
+command, which is simpler than the \verb!booktabs! usage
+\verb!\morecmidrules\cmidrule!.
+\verb!\cmidrulemore! can receive hline keys in an optional argument too.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -2517,8 +2533,11 @@ If you need more than one \verb!\cmidrule!s, you can use \verb!\cmidrulemore! co
 \end{tblr}
 \end{demohigh}
 
-From version 2021N (2021-09-01), trim options (\verb!l!, \verb!r!, \verb!lr!)
-for \verb!\cmidrule! command are also supported.
+From version 2021N (2021-09-01), you can set trimming positions of
+\verb!\cmidrule! and \verb!\cmidrulemore!, using newly introduced trimming
+options (\verb!leftpos!, \verb!rightpos!, \verb!endpos!, \verb!l!, \verb!r!,
+and \verb!lr!) (see Section~\ref{sec:hlines-vlines}).
+Option \verb!endpos! is already applied to these two commands.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -2532,11 +2551,10 @@ for \verb!\cmidrule! command are also supported.
 \end{tblr}
 \end{demohigh}
 
-Note that you need to put \verb!l!, \verb!r! or \verb!lr! option into
-the \underline{\color{red3}square brackets}.
-and the possible values are decimal numbers between \verb!-1! and \verb!0!,
-where \verb!-1! means trimming the whole colsep, and \verb!0! means no trimming.
-The default value is \verb!-0.8!, which makes similar result as \verb!booktabs! package does.
+Since \verb!booktabs! tables usually don't have vlines, the meaningful values
+here are decimal numbers between \verb!-1! and \verb!0!.
+The default value \verb!-0.8! for \verb!l!, \verb!r!, and \verb!lr! is chosen to
+make similar result as \verb!booktabs! package does.
 
 There is also a \verb!booktabs! environment for you. With this environment,
 the default \verb!rowsep=0pt!, but extra vertical space will be added by
@@ -2577,9 +2595,11 @@ and the third argument sets \verb!abovesep! of current row,
 \end{booktabs}
 \end{demohigh}
 
-At last, there is also an \verb!\addlinespace! command.
-You can specify the size of vertical space to be added in its optional argument,
-and the default size is \verb!0.5em!.
+At last, there is also an \verb!\addlinespace! command, with an alternative
+name \verb!\addrowspace!.
+You can specify the size of vertical space to be added in its optional
+argument, and the default size is determinted by \verb!\defaultaddspace!
+dimension, initially \verb!0.5em!.
 This command adds one half of the space to \verb!belowsep! of previous row,
 and the other half to \verb!abovesep! of current row.
 
