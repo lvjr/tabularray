@@ -4029,10 +4029,10 @@
 
 %% Compute column widths when there are some extendable columns
 
-\dim_new:N \l__column_target_dim
-\prop_new:N \l__column_coefficient_prop
-\prop_new:N \l__column_natural_width_prop
-\prop_new:N \l__column_computed_width_prop
+\dim_new:N \l__tblr_column_target_dim
+\prop_new:N \l__tblr_column_coefficient_prop
+\prop_new:N \l__tblr_column_natural_width_prop
+\prop_new:N \l__tblr_column_computed_width_prop
 
 \msg_new:nnn { tabularray } { table-width-too-small }
   { Table ~ width ~ is ~ too ~ small, ~ need ~ #1 ~ more! }
@@ -4040,13 +4040,13 @@
 \cs_new_protected:Npn \__tblr_compute_extendable_column_width:
   {
     \__tblr_collect_extendable_column_width:
-    \dim_compare:nNnTF { \l__column_target_dim } < { 0pt }
+    \dim_compare:nNnTF { \l__tblr_column_target_dim } < { 0pt }
       {
         \msg_warning:nnx { tabularray } { table-width-too-small }
-          { \dim_abs:n { \l__column_target_dim } }
+          { \dim_abs:n { \l__tblr_column_target_dim } }
       }
       {
-        \prop_if_empty:NF \l__column_coefficient_prop
+        \prop_if_empty:NF \l__tblr_column_coefficient_prop
           { \__tblr_adjust_extendable_column_width: }
       }
   }
@@ -4055,11 +4055,11 @@
   {
     \tl_set:Nx \l_tmpa_tl { \__tblr_prop_item:nn { inner } { width } }
     \tl_if_empty:NTF \l_tmpa_tl
-      { \dim_set_eq:NN \l__column_target_dim \linewidth }
-      { \dim_set:Nn \l__column_target_dim { \l_tmpa_tl } }
-    \prop_clear:N \l__column_coefficient_prop
-    \prop_clear:N \l__column_natural_width_prop
-    \prop_clear:N \l__column_computed_width_prop
+      { \dim_set_eq:NN \l__tblr_column_target_dim \linewidth }
+      { \dim_set:Nn \l__tblr_column_target_dim { \l_tmpa_tl } }
+    \prop_clear:N \l__tblr_column_coefficient_prop
+    \prop_clear:N \l__tblr_column_natural_width_prop
+    \prop_clear:N \l__tblr_column_computed_width_prop
     \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
       {
         \tl_set:Nx \l__tblr_a_tl
@@ -4071,28 +4071,28 @@
         \dim_compare:nNnTF { \l__tblr_a_tl } < { 0pt } % column width unset
           {
             \dim_compare:nNnTF { \l__tblr_b_tl pt } = { 0pt }
-              { \dim_sub:Nn \l__column_target_dim { \l__tblr_c_tl } }
+              { \dim_sub:Nn \l__tblr_column_target_dim { \l__tblr_c_tl } }
               {
-                \prop_put:Nxx \l__column_coefficient_prop
+                \prop_put:Nxx \l__tblr_column_coefficient_prop
                   { \l__tblr_j_tl } { \l__tblr_b_tl }
-                \prop_put:Nxn \l__column_computed_width_prop
+                \prop_put:Nxn \l__tblr_column_computed_width_prop
                   { \l__tblr_j_tl } { 0pt }
                 \dim_compare:nNnF { \l__tblr_b_tl pt } > { 0pt }
                   {
-                    \prop_put:Nxx \l__column_natural_width_prop
+                    \prop_put:Nxx \l__tblr_column_natural_width_prop
                       { \l__tblr_j_tl } { \l__tblr_c_tl }
                   }
               }
           }
-          { \dim_sub:Nn \l__column_target_dim { \l__tblr_a_tl } }
+          { \dim_sub:Nn \l__tblr_column_target_dim { \l__tblr_a_tl } }
         \tl_set:Nx \l__tblr_a_tl
           { \__tblr_spec_item:ne { vline } { [\l__tblr_j_tl] / @vline-width } }
         \tl_set:Nx \l__tblr_b_tl
           { \__tblr_data_item:nen { column } { \l__tblr_j_tl } { leftsep } }
         \tl_set:Nx \l__tblr_c_tl
           { \__tblr_data_item:nen { column } { \l__tblr_j_tl } { rightsep } }
-        \dim_set:Nn \l__column_target_dim
-          { \l__column_target_dim - \l__tblr_a_tl - \l__tblr_b_tl - \l__tblr_c_tl }
+        \dim_set:Nn \l__tblr_column_target_dim
+          { \l__tblr_column_target_dim - \l__tblr_a_tl - \l__tblr_b_tl - \l__tblr_c_tl }
       }
     \tl_set:Nx \l__tblr_a_tl
       {
@@ -4100,23 +4100,23 @@
           { [\int_eval:n {\c@colcount + 1}] / @vline-width }
       }
     \tl_if_empty:NF \l__tblr_a_tl
-      { \dim_sub:Nn \l__column_target_dim { \l__tblr_a_tl } }
+      { \dim_sub:Nn \l__tblr_column_target_dim { \l__tblr_a_tl } }
     \LogTblrTracing { target }
   }
 
 %% If all columns have negative coefficients and small natural widths,
-%% \l__column_coefficient_prop will be empty after one or more rounds.
+%% \l__tblr_column_coefficient_prop will be empty after one or more rounds.
 %% We reset @row-height, etc for \linewidth graphics in X columns (issue #80)
 \cs_new_protected:Npn \__tblr_adjust_extendable_column_width:
   {
     \bool_while_do:nn
-      { \dim_compare_p:nNn { \l__column_target_dim } > { \hfuzz } }
+      { \dim_compare_p:nNn { \l__tblr_column_target_dim } > { \hfuzz } }
       {
-        \prop_if_empty:NTF \l__column_coefficient_prop
+        \prop_if_empty:NTF \l__tblr_column_coefficient_prop
           { \__tblr_adjust_extendable_column_width_negative: }
           { \__tblr_adjust_extendable_column_width_once: }
       }
-    \prop_map_inline:Nn \l__column_computed_width_prop
+    \prop_map_inline:Nn \l__tblr_column_computed_width_prop
       {
         \__tblr_data_gput:nnne { column } {##1} { width } {##2}
         \__tblr_data_gput:nnnn { column } {##1} { @col-width } { 0pt }
@@ -4136,38 +4136,38 @@
 \cs_new_protected:Npn \__tblr_adjust_extendable_column_width_once:
   {
     \dim_zero:N \l_tmpa_dim
-    \prop_map_inline:Nn \l__column_coefficient_prop
+    \prop_map_inline:Nn \l__tblr_column_coefficient_prop
       {
         \dim_add:Nn \l_tmpa_dim { \dim_abs:n { ##2 pt } }
       }
     \tl_set:Nx \l__tblr_w_tl
-      { \dim_ratio:nn { \l__column_target_dim } { \l_tmpa_dim } }
-    \dim_zero:N \l__column_target_dim
-    \prop_map_inline:Nn \l__column_coefficient_prop
+      { \dim_ratio:nn { \l__tblr_column_target_dim } { \l_tmpa_dim } }
+    \dim_zero:N \l__tblr_column_target_dim
+    \prop_map_inline:Nn \l__tblr_column_coefficient_prop
       {
         \tl_set:Nx \l__tblr_a_tl
           { \dim_eval:n { \dim_abs:n { ##2 pt } * \l__tblr_w_tl } }
         \dim_compare:nNnTF { ##2 pt } > { 0pt }
           {
             \__tblr_add_dimen_value:Nnn
-              \l__column_computed_width_prop { ##1 } { \l__tblr_a_tl }
+              \l__tblr_column_computed_width_prop { ##1 } { \l__tblr_a_tl }
           }
           {
             \tl_set:Nx \l__tblr_b_tl
-              { \prop_item:Nn \l__column_natural_width_prop { ##1 } }
+              { \prop_item:Nn \l__tblr_column_natural_width_prop { ##1 } }
             \tl_set:Nx \l__tblr_c_tl
-              { \prop_item:Nn \l__column_computed_width_prop { ##1 } }
+              { \prop_item:Nn \l__tblr_column_computed_width_prop { ##1 } }
             \dim_compare:nNnTF { \l__tblr_a_tl + \l__tblr_c_tl } > { \l__tblr_b_tl }
               {
-                \prop_put:Nnx \l__column_computed_width_prop
+                \prop_put:Nnx \l__tblr_column_computed_width_prop
                   { ##1 } { \l__tblr_b_tl }
-                \dim_add:Nn \l__column_target_dim
+                \dim_add:Nn \l__tblr_column_target_dim
                   { \l__tblr_a_tl + \l__tblr_c_tl - \l__tblr_b_tl }
-                \prop_remove:Nn \l__column_coefficient_prop { ##1 }
+                \prop_remove:Nn \l__tblr_column_coefficient_prop { ##1 }
               }
               {
                 \__tblr_add_dimen_value:Nnn
-                  \l__column_computed_width_prop { ##1 } { \l__tblr_a_tl }
+                  \l__tblr_column_computed_width_prop { ##1 } { \l__tblr_a_tl }
               }
           }
       }
@@ -4177,16 +4177,16 @@
 \cs_new_protected:Npn \__tblr_adjust_extendable_column_width_negative:
   {
     \dim_zero:N \l_tmpa_dim
-    \prop_map_inline:Nn \l__column_natural_width_prop
+    \prop_map_inline:Nn \l__tblr_column_natural_width_prop
       { \dim_add:Nn \l_tmpa_dim { ##2 } }
     \tl_set:Nx \l_tmpa_tl
-      { \dim_ratio:nn { \l__column_target_dim } { \l_tmpa_dim } }
-    \dim_zero:N \l__column_target_dim
-    \prop_map_inline:Nn \l__column_natural_width_prop
+      { \dim_ratio:nn { \l__tblr_column_target_dim } { \l_tmpa_dim } }
+    \dim_zero:N \l__tblr_column_target_dim
+    \prop_map_inline:Nn \l__tblr_column_natural_width_prop
       {
         \tl_set:Nx \l_tmpb_tl { \dim_eval:n { ##2 * \l_tmpa_tl } }
         \__tblr_add_dimen_value:Nnn
-          \l__column_computed_width_prop { ##1 } { \l_tmpb_tl }
+          \l__tblr_column_computed_width_prop { ##1 } { \l_tmpb_tl }
       }
     \LogTblrTracing { target }
   }
@@ -6325,9 +6325,9 @@
 %% #1: the row number; #2: resulting inner height; #3: resulting inner depth;
 %% #4: restulting abovesep; #5: restulting belowsep.
 
-\dim_new:N \l__row_upper_dim
-\dim_new:N \l__row_lower_dim
-\dim_new:N \l__row_vpace_dim
+\dim_new:N \l__tblr_row_upper_dim
+\dim_new:N \l__tblr_row_lower_dim
+\dim_new:N \l__tblr_row_vpace_dim
 
 \cs_new_protected:Npn \__tblr_get_row_inner_height_depth:nNNNN #1 #2 #3 #4 #5
   {
@@ -6335,17 +6335,17 @@
       { \__tblr_data_item:nen { row } {#1} { abovesep } }
     \dim_set:Nn #5
       { \__tblr_data_item:nen { row } {#1} { belowsep } }
-    \dim_set:Nn \l__row_upper_dim
+    \dim_set:Nn \l__tblr_row_upper_dim
       {  \__tblr_data_item:nen { row } {#1} { @row-upper } }
-    \dim_set:Nn \l__row_lower_dim
+    \dim_set:Nn \l__tblr_row_lower_dim
       {  \__tblr_data_item:nen { row } {#1} { @row-lower } }
-    \dim_set:Nn \l__row_vpace_dim
+    \dim_set:Nn \l__tblr_row_vpace_dim
       {
         ( \__tblr_data_item:nen { row } {#1} { @row-height }
-          - \l__row_upper_dim - \l__row_lower_dim ) / 2
+          - \l__tblr_row_upper_dim - \l__tblr_row_lower_dim ) / 2
       }
-    \dim_set:Nn #2 { #4 + \l__row_vpace_dim + \l__row_upper_dim }
-    \dim_set:Nn #3 { \l__row_lower_dim + \l__row_vpace_dim + #5 }
+    \dim_set:Nn #2 { #4 + \l__tblr_row_vpace_dim + \l__tblr_row_upper_dim }
+    \dim_set:Nn #3 { \l__tblr_row_lower_dim + \l__tblr_row_vpace_dim + #5 }
   }
 \cs_generate_variant:Nn \__tblr_get_row_inner_height_depth:nNNNN { V }
 
@@ -6995,10 +6995,10 @@
 
 \cs_new_protected:Npn \__tblr_log_tracing_target:
   {
-    \dim_log:N \l__column_target_dim
-    \prop_log:N \l__column_coefficient_prop
-    \prop_log:N \l__column_natural_width_prop
-    \prop_log:N \l__column_computed_width_prop
+    \dim_log:N \l__tblr_column_target_dim
+    \prop_log:N \l__tblr_column_coefficient_prop
+    \prop_log:N \l__tblr_column_natural_width_prop
+    \prop_log:N \l__tblr_column_computed_width_prop
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_cellspan:
