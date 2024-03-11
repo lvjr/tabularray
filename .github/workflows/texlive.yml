@@ -59,7 +59,7 @@ jobs:
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\windows;" + ${env:PATH}
         texlua buildend.lua
     - name: Upload png and md5
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: png-and-md5
         path: |
