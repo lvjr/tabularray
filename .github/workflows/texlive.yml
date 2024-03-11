@@ -12,7 +12,7 @@ jobs:
   build-ubuntu:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install TeX Live
       run: |
         export PATH=${{github.workspace}}/tmp/texlive/bin/x86_64-linux:$PATH
@@ -36,7 +36,7 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install TeX Live
       run: |
         ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\windows;" + ${env:PATH}
