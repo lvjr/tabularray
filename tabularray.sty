@@ -3529,7 +3529,7 @@
       { \__tblr_data_item:neen { cell } {#1} {#2} { halign } }
     \tl_set:Nx \l__tblr_v_tl
       { \__tblr_data_item:neen { cell } {#1} {#2} { valign } }
-    \tl_case:NnF \l__tblr_v_tl
+    \token_case_meaning:NnF \l__tblr_v_tl
       {
         \c__tblr_valign_t_tl
           {
@@ -3793,13 +3793,13 @@
       { \box_ht:N \l_tmpb_box + \box_dp:N \l_tmpb_box }
     \dim_gset:Nn \g__tblr_cell_head_dim { \box_ht:N \l_tmpa_box }
     \dim_gset:Nn \g__tblr_cell_foot_dim { \box_dp:N \l_tmpb_box }
-    \tl_case:Nn \g__tblr_cell_valign_tl
+    \token_case_meaning:Nn \g__tblr_cell_valign_tl
       {
         \c__tblr_valign_h_tl
           { \box_use:N \l_tmpa_box }
         \c__tblr_valign_m_tl
           {
-            \tl_case:Nn \g__tblr_cell_middle_tl
+            \token_case_meaning:Nn \g__tblr_cell_middle_tl
               {
                 \c__tblr_middle_t_tl
                   { \box_use:N \l_tmpa_box }
@@ -3867,7 +3867,7 @@
 
 \cs_new_protected:Npn \__tblr_get_middle_cell_upper_lower:NNNNN #1 #2 #3 #4 #5
   {
-    \tl_case:Nn \g__tblr_cell_middle_tl
+    \token_case_meaning:Nn \g__tblr_cell_middle_tl
       {
         \c__tblr_middle_t_tl
           {
@@ -3905,7 +3905,7 @@
       { \__tblr_data_item:neen { cell } {#1} {#2} { rowspan } }
     \int_compare:nNnT { \l__tblr_r_tl } > {1}
       {
-        \tl_case:Nn \g__tblr_cell_valign_tl
+        \token_case_meaning:Nn \g__tblr_cell_valign_tl
           {
             \c__tblr_valign_h_tl
               {
@@ -5922,7 +5922,7 @@
       { \__tblr_prop_item:nn { inner } { delim-right } }
     \tl_set:Nn \l__tblr_vbox_align_tl {#2}
     \dim_set:Nn \l__tblr_t_dim { \box_ht:N #1 + \box_dp:N #1 }
-    \tl_case:NnF \l__tblr_vbox_align_tl
+    \token_case_meaning:NnF \l__tblr_vbox_align_tl
       {
         \c__tblr_vbox_m_tl
           { \__tblr_valign_whole_middle:N #1 }
@@ -6614,7 +6614,7 @@
       }
     \vbox_set_to_ht:Nnn \l__tblr_b_box { \l__tblr_cell_ht_dim }
       {
-        \tl_case:Nn \g__tblr_cell_valign_tl
+        \token_case_meaning:Nn \g__tblr_cell_valign_tl
           {
             \c__tblr_valign_m_tl
               {
