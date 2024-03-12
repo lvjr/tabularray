@@ -2477,21 +2477,21 @@
 
 \NewDocumentCommand \NewColumnType { m O{0} o m }
   {
-    \tl_set:Nn \g__tblr_column_or_row_tl { column }
+    \tl_gset:Nn \g__tblr_column_or_row_tl { column }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
   }
 
 \NewDocumentCommand \NewRowType { m O{0} o m }
   {
-    \tl_set:Nn \g__tblr_column_or_row_tl { row }
+    \tl_gset:Nn \g__tblr_column_or_row_tl { row }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
   }
 
 \NewDocumentCommand \NewColumnRowType { m O{0} o m }
   {
-    \tl_set:Nn \g__tblr_column_or_row_tl { column }
+    \tl_gset:Nn \g__tblr_column_or_row_tl { column }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
-    \tl_set:Nn \g__tblr_column_or_row_tl { row }
+    \tl_gset:Nn \g__tblr_column_or_row_tl { row }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
   }
 
