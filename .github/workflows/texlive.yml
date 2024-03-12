@@ -4,59 +4,41 @@ name: Test tabularray in TeX Live
 
 on: [push, pull_request]
 
-env:
-  TLCurrent: https://mirrors.rit.edu/CTAN/systems/texlive/tlnet
-  TLHistoric: https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2021/tlnet-final
-
 jobs:
   build-ubuntu:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Install TeX Live
-      run: |
-        export PATH=${{github.workspace}}/tmp/texlive/bin/x86_64-linux:$PATH
-        wget ${{env.TLCurrent}}/install-tl-unx.tar.gz
-        tar -xzf install-tl-unx.tar.gz
-        cd install-tl-20*
-        ./install-tl --profile ../.github/workflows/texlive.profile --repository=${{env.TLCurrent}}
-        echo $(cat ${{github.workspace}}/.github/workflows/texlive.package) | xargs tlmgr install
-        tlmgr update --self --all --no-auto-install --repository=${{env.TLCurrent}}
+      uses: teatimeguest/setup-texlive-action@v3
+      with:
+        package-file: .github/workflows/texlive.package
+        update-all-packages: true
     - name: Test tabularray with l3build
       run: |
-        export PATH=${{github.workspace}}/tmp/texlive/bin/x86_64-linux:$PATH
         l3build check --debug --halt-on-error --show-log-on-error
     - name: Install pdftoppm
       run:
         sudo apt-get install poppler-utils
     - name: Test tabularray with ppmcheckpdf
       run: |
-        export PATH=${{github.workspace}}/tmp/texlive/bin/x86_64-linux:$PATH
         texlua buildend.lua
+
   build-windows:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
     - name: Install TeX Live
-      run: |
-        ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\windows;" + ${env:PATH}
-        Invoke-WebRequest -Uri ${{env.TLCurrent}}/install-tl.zip -OutFile install-tl.zip
-        Expand-Archive install-tl.zip -DestinationPath .
-        Set-Location install-tl-*
-        .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive.profile --repository=${{env.TLCurrent}}
-        ${{github.workspace}}/.github/workflows/texlive.bat
-        tlmgr update --self --all --no-auto-install --repository=${{env.TLCurrent}}
+      uses: teatimeguest/setup-texlive-action@v3
+      with:
+        packages: wintools.windows # for pdftoppm
+        package-file: .github/workflows/texlive.package
+        update-all-packages: true
     - name: Test tabularray with l3build
       run: |
-        ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\windows;" + ${env:PATH}
         l3build check --debug --halt-on-error --show-log-on-error
-    - name: Install pdftoppm
-      run: |
-        ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\windows;" + ${env:PATH}
-        tlmgr install wintools.windows
     - name: Test tabularray with ppmcheckpdf
       run: |
-        ${env:PATH} = "${{github.workspace}}\tmp\texlive\bin\windows;" + ${env:PATH}
         texlua buildend.lua
     - name: Upload png and md5
       uses: actions/upload-artifact@v4
