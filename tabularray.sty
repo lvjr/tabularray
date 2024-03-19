@@ -1430,7 +1430,7 @@
 \cs_new_protected:Npn \tblr_set_every_vline:nnn #1 #2 #3
   {
     \group_begin:
-    \int_step_inline:nn { \int_eval:n { \c@colcount + 1 } }
+    \int_step_inline:nn { \c@colcount + 1 }
       {
         \int_set:Nn \c@colnum {##1}
         \tblr_set_vline:nnn {#1} {#2} {#3}
