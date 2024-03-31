@@ -3712,7 +3712,7 @@
           {
             %% Note that font = \boldmath will increase cell width (issue #137)
             \hbox_set:Nn \l_tmpa_box { \l__tblr_f_tl \l__tblr_c_tl }
-            \tl_set:Nx \l__tblr_w_tl { \box_wd:N \l_tmpa_box }
+            \tl_set:Nx \l__tblr_w_tl { \dim_eval:n { \box_wd:N \l_tmpa_box } }
           }
           {
             \__tblr_get_cell_size_with_box:
@@ -3759,7 +3759,7 @@
         \end{varwidth}
         \end{tblrNoHyper}
       }
-    \tl_set:Nx \l__tblr_w_tl { \box_wd:N \l_tmpa_box }
+    \tl_set:Nx \l__tblr_w_tl { \dim_eval:n { \box_wd:N \l_tmpa_box } }
   }
 
 \cs_new_protected:Npn \__tblr_get_cell_size_with_hbox:
