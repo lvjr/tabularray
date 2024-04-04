@@ -5557,6 +5557,8 @@
   }
 
 \dim_new:N \l__tblr_remain_height_dim
+\int_new:N \l__tblr_long_row_after_head_int
+\int_new:N \l__tblr_long_row_before_foot_int
 \int_new:N \l__tblr_long_from_int
 \int_new:N \l__tblr_long_to_int
 \int_new:N \l__tblr_curr_i_int
@@ -5589,16 +5591,31 @@
     \dim_set:Nn \l__tblr_remain_height_dim
       { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
     \int_set:Nn \l__tblr_long_from_int { \l__tblr_row_head_tl + 1 }
+    \int_set:Nn \l__tblr_long_row_after_head_int { \l__tblr_long_from_int }
     \int_set:Nn \l__tblr_long_to_int { \c@rowcount - ( \l__tblr_row_foot_tl + 0 ) }
+    \int_set:Nn \l__tblr_long_row_before_foot_int { \l__tblr_long_to_int }
     \int_set:Nn \l__tblr_curr_i_int { \l__tblr_long_from_int - 1 }
     \int_do_while:nNnn { \l__tblr_curr_i_int } < { \l__tblr_long_to_int }
       {
         \int_set_eq:NN \l__tblr_prev_i_int \l__tblr_curr_i_int
+        % Copy the abovesep from the row below the head to the row below the head on the current page
+        \__tblr_data_gput:nene { row } { \int_use:N \l__tblr_long_from_int }
+          { abovesep } { \__tblr_data_item:nen { row } { \int_use:N \l__tblr_long_row_after_head_int } { abovesep } }
         \__tblr_get_next_table_rows:NNNN
           \l__tblr_long_to_int \l__tblr_curr_i_int
           \l_tmpa_dim \l__tblr_page_break_curr_bool
+        % Add the difference between the belowsep from the row above the foot and the row
+        % tested for a pagebreak to make the total table height on the page accurate
+        \dim_set:Nn \l_tmpb_dim
+        {
+          \l_tmpa_dim
+          +
+          \__tblr_data_item:nen { row } { \int_use:N \l__tblr_long_row_before_foot_int } { belowsep }
+          -
+          \__tblr_data_item:nen { row } { \int_use:N \l__tblr_prev_i_int } { belowsep }
+        }
         \__tblr_check_table_page_break:NNN
-          \l__tblr_remain_height_dim \l_tmpa_dim \l__tblr_page_break_prev_bool
+          \l__tblr_remain_height_dim \l_tmpb_dim \l__tblr_page_break_prev_bool
         \__tblr_do_if_tracing:nn { page } { \int_log:N \l__tblr_curr_i_int }
         \bool_if:NTF \l__tblr_page_break_prev_bool
           {
@@ -5624,6 +5641,9 @@
                 \group_end:
               }
               {
+                % Copy the belowsep from the row above the foot to the row above the foot on the current page
+                \__tblr_data_gput:nene { row } { \int_use:N \l__tblr_prev_i_int }
+                  { belowsep } { \__tblr_data_item:nen { row } { \int_use:N \l__tblr_long_row_before_foot_int } { belowsep } }
                 \__tblr_build_page_table:nnx {#1}
                   { \int_use:N \l__tblr_long_from_int }
                   { \int_use:N \l__tblr_prev_i_int }
