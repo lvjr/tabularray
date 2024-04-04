@@ -18,6 +18,8 @@ cjkpunct
 cjkutils
 cleveref
 cm
+# for ppmcheck on table-011 which contains itemize env hence \textbullet
+cm-super
 ctablestack
 currfile
 diagbox
