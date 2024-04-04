@@ -5606,13 +5606,19 @@
           \l_tmpa_dim \l__tblr_page_break_curr_bool
         % Add the difference between the belowsep from the row above the foot and the row
         % tested for a pagebreak to make the total table height on the page accurate
-        \dim_set:Nn \l_tmpb_dim
+        \int_compare:nNnTF {\l__tblr_prev_i_int} > { 0 }
         {
-          \l_tmpa_dim
-          +
-          \__tblr_data_item:nen { row } { \int_use:N \l__tblr_long_row_before_foot_int } { belowsep }
-          -
-          \__tblr_data_item:nen { row } { \int_use:N \l__tblr_prev_i_int } { belowsep }
+          \dim_set:Nn \l_tmpb_dim
+          {
+            \l_tmpa_dim
+            +
+            \__tblr_data_item:nen { row } { \int_use:N \l__tblr_long_row_before_foot_int } { belowsep }
+            -
+            \__tblr_data_item:nen { row } { \int_use:N \l__tblr_prev_i_int } { belowsep }
+          }
+        }
+        {
+          \dim_set:Nn \l_tmpb_dim \l_tmpa_dim
         }
         \__tblr_check_table_page_break:NNN
           \l__tblr_remain_height_dim \l_tmpb_dim \l__tblr_page_break_prev_bool
