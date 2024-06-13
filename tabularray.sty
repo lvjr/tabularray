@@ -5804,7 +5804,7 @@
 %% #1: table alignment
 %% For tall table, we need to leave vmode first.
 %% Since there may be \centering in table environment,
-%% We use \raggedright to reset alignement for table head/foot.
+%% We use \raggedright to reset alignment for table head/foot.
 \cs_new_protected:Npn \__tblr_build_tall_table:n #1
   {
     \mode_leave_vertical:
@@ -7275,7 +7275,7 @@
           }
       }
     %% Evaluate every occurrence of the specified function
-    %% Note that funtional package runs every return processor inside a group
+    %% Note that functional package runs every return processor inside a group
     %% #1: tl with table content; #2: function to be evaluated
     \tl_new:N \g__tblr_functional_result_tl
     \cs_new_protected:Npn \__tblr_evaluate_table_body:NN ##1 ##2

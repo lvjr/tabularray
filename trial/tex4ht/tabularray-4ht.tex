@@ -97,7 +97,7 @@ for horizontal and vertical alignment, background color and rules.
   \let\CellStyle\@empty
   \cs_if_exist_use:c{tabularray_halign:\g__tblr_cell_halign_tl}
   \cs_if_exist_use:c{tabularray_valign:\g__tblr_cell_valign_tl}
-  % the vertical aligment can be set also in \g__tblr_cell_middle_tl, so we should try it as well
+  % the vertical alignment can be set also in \g__tblr_cell_middle_tl, so we should try it as well
   \cs_if_exist_use:c{tabularray_valign:\g__tblr_cell_middle_tl}
   % calculate column width
   \dim_compare:nNnT {\__tblr_data_item:nen{column}{\HCol}{@col-width}} > {0pt}{
