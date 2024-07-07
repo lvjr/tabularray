@@ -4,7 +4,9 @@ Don't change this file in any respect.
 TEST 1: long table: pagebreak and nopagebreak
 ============================================================
 [1
-] [2] [3]
+]
+[2]
+[3]
 ============================================================
 [4] (long-003.aux)
 Package rerunfilecheck Info: File `long-003.out' has not changed.
