@@ -957,18 +957,29 @@
     \int_step_inline:nnn { \l__tblr_child_from_tl } { \l__tblr_child_to_tl }
       { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
   }
-
 \regex_const:Nn \c__tblr_child_name_regex { ^ [U-Z] $ }
+\regex_const:Nn \c__tblr_child_name_regexII { ^ '([1-9][0-9]*) $ }
 
-%% Convert U, V, W, X, Y, Z to the indexes of the last six childs, respectively
+%% Convert special syntaxe for indexes
 \cs_new_protected_nopar:Npn \__tblr_child_name_to_index:nN #1 #2
   {
+    %% Convert U, V, W, X, Y, Z to the indexes of the last six childs, respectively
     \regex_match:NnTF \c__tblr_child_name_regex {#1}
       {
         \tl_set:Nx #2
           { \int_eval:n { \l_tblr_childs_total_tl + \int_from_alph:n {#1} - 26 } }
       }
-      { \tl_set:Nx #2 { #1 } }
+      {
+       %% Convert 'nn to nn starting from the last child
+       \regex_extract_once:NnNTF \c__tblr_child_name_regexII {#1} \l_foo_seq
+        { 
+          \tl_set:Nx \l_foo_value {\seq_item:Nn \l_foo_seq {1}}
+          \tl_set:Nx #2
+                    { \int_eval:n { \l_tblr_childs_total_tl + 1 - \l_foo_value } }
+        }
+      
+        { \tl_set:Nx #2 { #1 } }
+      }
   }
 \cs_generate_variant:Nn \__tblr_child_name_to_index:nN { VN }
 
