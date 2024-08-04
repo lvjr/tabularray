@@ -957,10 +957,11 @@
     \int_step_inline:nnn { \l__tblr_child_from_tl } { \l__tblr_child_to_tl }
       { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
   }
+
 \regex_const:Nn \c__tblr_child_name_regex { ^ [U-Z] $ }
 \regex_const:Nn \c__tblr_child_name_regexII { ^ '([1-9][0-9]*) $ }
 
-%% Convert special syntaxe for indexes
+%% Convert special syntax for indexes
 \cs_new_protected_nopar:Npn \__tblr_child_name_to_index:nN #1 #2
   {
     %% Convert U, V, W, X, Y, Z to the indexes of the last six childs, respectively
