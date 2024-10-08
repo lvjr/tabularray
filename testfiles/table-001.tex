@@ -3,16 +3,25 @@
 \pagestyle{empty}
 
 \input{regression-test}
+\ExplSyntaxOn
+\sys_ensure_backend:
+\debug_on:n { check-declarations }
+\ExplSyntaxOff
 
 \usepackage{array}
+\START
 \usepackage{tabularray}
+
+\AddToHook{package/varwidth/before}{\OMIT}
+\AddToHook{package/varwidth/after}{\TIMO}
 
 \SetTblrTracing{none}
 \UseTblrLibrary{varwidth}
 
+\OMIT
 \begin{document}
+\TIMO
 
-\START
 \hrule\bigskip
 
 \BEGINTEST{start tabularray in vertical mode}
