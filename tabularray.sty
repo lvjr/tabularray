@@ -318,7 +318,7 @@
       {
         \clist_map_inline:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
           {
-            \tl_gclear:c { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_##1_tl }
+            \tl_gclear_new:c { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_##1_tl }
           }
       }
       { \clist_new:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } }
@@ -326,6 +326,8 @@
 
 \cs_new_protected:Npn \__tblr_spec_gput:nnn #1 #2 #3
   {
+    \tl_if_exist:cF { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl }
+      { \tl_new:c { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl } }
     \tl_gset:cn
       { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl } {#3}
     \clist_gput_right:cx { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } {#2}
@@ -619,8 +621,10 @@
       }
       {
         \int_gincr:N \g__tblr_data_str_value_count_int
+        \tl_new:c { g__tblr_data_ \tl_to_str:n {#1} _to_int_tl }
         \tl_gset:cx { g__tblr_data_ \tl_to_str:n {#1} _to_int_tl }
           { \int_use:N \g__tblr_data_str_value_count_int }
+        \tl_new:c { g__tblr_data_ \int_use:N \g__tblr_data_str_value_count_int _to_str_tl }
         \tl_gset:cn
           { g__tblr_data_ \int_use:N \g__tblr_data_str_value_count_int _to_str_tl }
           { \exp_not:n {#1} }
@@ -1016,6 +1020,7 @@
             \exp_args:NcV \NewDocumentCommand
               { __tblr_table_command_ \cs_to_str:N #1 _saved:w } \l__tblr_a_tl { }
           }
+        \tl_new:c { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl }
         \IfValueTF { #3 }
           {
             \tl_gset:cn { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } {-#2}
@@ -2488,21 +2493,21 @@
 
 \NewDocumentCommand \NewColumnType { m O{0} o m }
   {
-    \tl_set:Nn \g__tblr_column_or_row_tl { column }
+    \tl_gset:Nn \g__tblr_column_or_row_tl { column }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
   }
 
 \NewDocumentCommand \NewRowType { m O{0} o m }
   {
-    \tl_set:Nn \g__tblr_column_or_row_tl { row }
+    \tl_gset:Nn \g__tblr_column_or_row_tl { row }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
   }
 
 \NewDocumentCommand \NewColumnRowType { m O{0} o m }
   {
-    \tl_set:Nn \g__tblr_column_or_row_tl { column }
+    \tl_gset:Nn \g__tblr_column_or_row_tl { column }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
-    \tl_set:Nn \g__tblr_column_or_row_tl { row }
+    \tl_gset:Nn \g__tblr_column_or_row_tl { row }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
   }
 
@@ -2941,7 +2946,7 @@
 \cs_new_protected:Npn \__tblr_extract_one_table_command:N #1
   {
     \int_set:Nn \l__tblr_a_int
-      { \cs:w g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl \cs_end: }
+      { \tl_use:c { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } }
     \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl {#1}
     \int_compare:nNnTF {\l__tblr_a_int} < {0}
       {
@@ -3661,9 +3666,9 @@
 \tl_new:N \l__tblr_cell_cmd_tl
 \tl_new:N \l__tblr_cell_mode_tl
 \bool_new:N \l__tblr_cell_math_mode_bool
-\tl_const:Nn \l__tblr_cell_math_style_tl  { \relax }
-\tl_const:Nn \l__tblr_cell_imath_style_tl { \textstyle }
-\tl_const:Nn \l__tblr_cell_dmath_style_tl { \displaystyle }
+\tl_const:Nn \c__tblr_cell_math_style_tl { \relax }
+\tl_const:Nn \c__tblr_cell_imath_style_tl { \textstyle }
+\tl_const:Nn \c__tblr_cell_dmath_style_tl { \displaystyle }
 
 %% Get cell text, #1: row number, #2: column number
 %% If the width of the cell is not set, split it with \\ and compute the width
@@ -3700,7 +3705,7 @@
       {
         \bool_set_true:N \l__tblr_cell_math_mode_bool
         \tl_put_left:Nv \l__tblr_c_tl
-          { l__tblr_cell_ \l__tblr_cell_mode_tl _style_tl }
+          { c__tblr_cell_ \l__tblr_cell_mode_tl _style_tl }
         \tl_put_left:Nn \l__tblr_c_tl { $ }
         \tl_put_right:Nn \l__tblr_c_tl { $ }
       }
@@ -4744,6 +4749,8 @@
 
 \cs_new_protected:Npn \__tblr_def_template:n #1
   {
+    \tl_if_exist:cF { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+      { \tl_new:c { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl } }
     \tl_set_eq:cN { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
       \l__tblr_template_code_tl
   }
@@ -4762,10 +4769,23 @@
     \ignorespaces
   }
 
+\msg_new:nnn { tabularray } { template-undefined }
+  {
+    Undefined ~ template ~ "#2" ~ for ~ element ~ "#1".
+  }
 \cs_new_protected:Npn \__tblr_set_template:n #1
   {
-    \tl_set_eq:cc { l__tblr_template_ #1 _default_tl }
-      { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+    \tl_if_exist:cTF { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+      {
+        \tl_if_exist:cF { l__tblr_template_ #1 _default_tl }
+          { \tl_new:c { l__tblr_template_ #1 _default_tl } }
+        \tl_set_eq:cc { l__tblr_template_ #1 _default_tl }
+          { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+      }
+      {
+        \msg_error:nnee { tabularray } { template-undefined }
+          { #1 } { \l__tblr_template_name_tl }
+      }
   }
 \cs_generate_variant:Nn \__tblr_set_template:n { V }
 
@@ -4873,11 +4893,13 @@
 
 \tl_if_exist:NF \tblrcontfootname
   {
+    \tl_new:N \tblrcontfootname
     \tl_set:Nn \tblrcontfootname { Continued ~ on ~ next ~ page }
   }
 
 \tl_if_exist:NF \tblrcontheadname
   {
+    \tl_new:N \tblrcontheadname
     \tl_set:Nn \tblrcontheadname { ( Continued ) }
   }
 
@@ -5909,14 +5931,14 @@
     \vbox_set:Nn \l__tblr_table_box { \hbox:n { \__tblr_build_hline:n { #1 } } }
   }
 
-\tl_new:N \__tblr_vbox_align_tl
-\tl_const:Nn \__tblr_vbox_t_tl {t}
-\tl_const:Nn \__tblr_vbox_T_tl {T}
-\tl_const:Nn \__tblr_vbox_m_tl {m}
-\tl_const:Nn \__tblr_vbox_M_tl {M}
-\tl_const:Nn \__tblr_vbox_c_tl {c}
-\tl_const:Nn \__tblr_vbox_b_tl {b}
-\tl_const:Nn \__tblr_vbox_B_tl {B}
+\tl_new:N \l__tblr_vbox_align_tl
+\tl_const:Nn \c__tblr_vbox_t_tl {t}
+\tl_const:Nn \c__tblr_vbox_T_tl {T}
+\tl_const:Nn \c__tblr_vbox_m_tl {m}
+\tl_const:Nn \c__tblr_vbox_M_tl {M}
+\tl_const:Nn \c__tblr_vbox_c_tl {c}
+\tl_const:Nn \c__tblr_vbox_b_tl {b}
+\tl_const:Nn \c__tblr_vbox_B_tl {B}
 
 \regex_const:Nn \c__tblr_is_positive_integer_regex { ^ \d+ $ }
 \regex_const:Nn \c__tblr_is_negative_integer_regex { ^ - \d+ $ }
@@ -5931,37 +5953,37 @@
       { \__tblr_prop_item:nn { inner } { delim-left } }
     \tl_set:Nx \l__tblr_delim_right_tl
       { \__tblr_prop_item:nn { inner } { delim-right } }
-    \tl_set:Nn \__tblr_vbox_align_tl {#2}
+    \tl_set:Nn \l__tblr_vbox_align_tl {#2}
     \dim_set:Nn \l__tblr_t_dim { \box_ht:N #1 + \box_dp:N #1 }
-    \tl_case:NnF \__tblr_vbox_align_tl
+    \tl_case:NnF \l__tblr_vbox_align_tl
       {
-        \__tblr_vbox_m_tl
+        \c__tblr_vbox_m_tl
           { \__tblr_valign_whole_middle:N #1 }
-        \__tblr_vbox_c_tl
+        \c__tblr_vbox_c_tl
           { \__tblr_valign_whole_middle:N #1 }
-        \__tblr_vbox_M_tl
+        \c__tblr_vbox_M_tl
           { \__tblr_valign_whole_middle_row_or_border:N #1 }
-        \__tblr_vbox_t_tl
+        \c__tblr_vbox_t_tl
           { \__tblr_valign_whole_top:N #1 }
-        \__tblr_vbox_T_tl
+        \c__tblr_vbox_T_tl
           {
-            \tl_set:Nn \__tblr_vbox_align_tl {1}
+            \tl_set:Nn \l__tblr_vbox_align_tl {1}
             \__tblr_valign_whole_at_row_from_above:N #1
           }
-        \__tblr_vbox_b_tl
+        \c__tblr_vbox_b_tl
           { \__tblr_valign_whole_bottom:N #1 }
-        \__tblr_vbox_B_tl
+        \c__tblr_vbox_B_tl
           {
-            \tl_set:Nx \__tblr_vbox_align_tl { \int_use:N \c@rowcount }
+            \tl_set:Nx \l__tblr_vbox_align_tl { \int_use:N \c@rowcount }
             \__tblr_valign_whole_at_row_from_below:N #1
           }
       }
       {
-        \regex_match:NVTF \c__tblr_is_positive_integer_regex \__tblr_vbox_align_tl
+        \regex_match:NVTF \c__tblr_is_positive_integer_regex \l__tblr_vbox_align_tl
           { \__tblr_valign_whole_at_row:N #1 }
           {
             \regex_match:NVTF
-              \c__tblr_is_negative_integer_regex \__tblr_vbox_align_tl
+              \c__tblr_is_negative_integer_regex \l__tblr_vbox_align_tl
               { \__tblr_valign_whole_at_border:N #1 }
               { \__tblr_valign_whole_middle:N #1 }
           }
@@ -6029,18 +6051,18 @@
   {
     \int_if_odd:nTF { \c@rowcount }
       {
-        \tl_set:Nx \__tblr_vbox_align_tl { \int_eval:n { (\c@rowcount + 1) / 2 } }
+        \tl_set:Nx \l__tblr_vbox_align_tl { \int_eval:n { (\c@rowcount + 1) / 2 } }
         \__tblr_valign_whole_at_row_from_above:N #1
       }
       {
-        \tl_set:Nx \__tblr_vbox_align_tl { \int_eval:n { \c@rowcount / 2 + 1 } }
+        \tl_set:Nx \l__tblr_vbox_align_tl { \int_eval:n { \c@rowcount / 2 + 1 } }
         \__tblr_valign_whole_at_border_from_above:N #1
       }
   }
 
 \cs_new_protected:Npn \__tblr_valign_whole_at_row:N #1
   {
-    \int_compare:nNnTF { 2 * \__tblr_vbox_align_tl } > { \c@rowcount }
+    \int_compare:nNnTF { 2 * \l__tblr_vbox_align_tl } > { \c@rowcount }
       { \__tblr_valign_whole_at_row_from_below:N #1 }
       { \__tblr_valign_whole_at_row_from_above:N #1 }
   }
@@ -6048,10 +6070,10 @@
 \cs_new_protected:Npn \__tblr_valign_whole_at_row_from_above:N #1
   {
     \dim_set:Nn \l__tblr_h_dim
-      { \__tblr_valign_get_hline_total:n { \__tblr_vbox_align_tl } }
+      { \__tblr_valign_get_hline_total:n { \l__tblr_vbox_align_tl } }
     \dim_add:Nn \l__tblr_h_dim
-      { \__tblr_valign_get_row_height:n { \__tblr_vbox_align_tl } }
-    \int_step_inline:nn { \__tblr_vbox_align_tl - 1 }
+      { \__tblr_valign_get_row_height:n { \l__tblr_vbox_align_tl } }
+    \int_step_inline:nn { \l__tblr_vbox_align_tl - 1 }
       {
         \dim_add:Nn \l__tblr_h_dim { \__tblr_valign_get_hline_total:n {##1} }
         \dim_add:Nn \l__tblr_h_dim { \__tblr_valign_get_row_total:n {##1} }
@@ -6065,8 +6087,8 @@
     \dim_set:Nn \l__tblr_d_dim
       { \__tblr_valign_get_hline_total:n { \int_eval:n {\c@rowcount + 1} } }
     \dim_add:Nn \l__tblr_d_dim
-      { \__tblr_valign_get_row_depth:n { \__tblr_vbox_align_tl } }
-    \int_step_inline:nnn { \__tblr_vbox_align_tl + 1 } { \c@rowcount }
+      { \__tblr_valign_get_row_depth:n { \l__tblr_vbox_align_tl } }
+    \int_step_inline:nnn { \l__tblr_vbox_align_tl + 1 } { \c@rowcount }
       {
         \dim_add:Nn \l__tblr_d_dim { \__tblr_valign_get_hline_total:n {##1} }
         \dim_add:Nn \l__tblr_d_dim { \__tblr_valign_get_row_total:n {##1} }
@@ -6077,8 +6099,8 @@
 
 \cs_new_protected:Npn \__tblr_valign_whole_at_border:N #1
   {
-    \tl_set:Nx \__tblr_vbox_align_tl { \int_eval:n { - \__tblr_vbox_align_tl } }
-    \int_compare:nNnTF { 2 * \__tblr_vbox_align_tl - 2 } > { \c@rowcount }
+    \tl_set:Nx \l__tblr_vbox_align_tl { \int_eval:n { - \l__tblr_vbox_align_tl } }
+    \int_compare:nNnTF { 2 * \l__tblr_vbox_align_tl - 2 } > { \c@rowcount }
       { \__tblr_valign_whole_at_border_from_below:N #1 }
       { \__tblr_valign_whole_at_border_from_above:N #1 }
   }
@@ -6086,8 +6108,8 @@
 \cs_new_protected:Npn \__tblr_valign_whole_at_border_from_above:N #1
   {
     \dim_set:Nn \l__tblr_h_dim
-      { \__tblr_valign_get_hline_total:n { \__tblr_vbox_align_tl } }
-    \int_step_inline:nn { \__tblr_vbox_align_tl - 1 }
+      { \__tblr_valign_get_hline_total:n { \l__tblr_vbox_align_tl } }
+    \int_step_inline:nn { \l__tblr_vbox_align_tl - 1 }
       {
         \dim_add:Nn \l__tblr_h_dim { \__tblr_valign_get_hline_total:n {##1} }
         \dim_add:Nn \l__tblr_h_dim { \__tblr_valign_get_row_total:n {##1} }
@@ -6099,7 +6121,7 @@
 \cs_new_protected:Npn \__tblr_valign_whole_at_border_from_below:N #1
   {
     \dim_zero:N \l__tblr_d_dim
-    \int_step_inline:nnn { \__tblr_vbox_align_tl } { \c@rowcount }
+    \int_step_inline:nnn { \l__tblr_vbox_align_tl } { \c@rowcount }
       {
         \dim_add:Nn \l__tblr_d_dim { \__tblr_valign_get_row_total:n {##1} }
         \dim_add:Nn \l__tblr_d_dim
@@ -7190,8 +7212,8 @@
 
 %% Library counter for resetting all counters
 
-\tl_new:N \__tblr_saved_trial_counters_tl
-\tl_new:N \__tblr_saved_cell_counters_tl
+\tl_new:N \l__tblr_saved_trial_counters_tl
+\tl_new:N \l__tblr_saved_cell_counters_tl
 
 \cs_new_protected:Npn \__tblr_save_counters:n #1 { }
 \cs_new_protected:Npn \__tblr_restore_counters:n #1 { }
@@ -7205,12 +7227,12 @@
     \cs_set_protected:Npn \__tblr_save_counters:n ##1
       {
         \def \@elt ####1 { \global\value{####1} = \the\value{####1} \relax }
-        \tl_set:cx { __tblr_saved_ ##1 _counters_tl } { \cl@@ckpt }
+        \tl_set:cx { l__tblr_saved_ ##1 _counters_tl } { \cl@@ckpt }
         \let \@elt = \relax
       }
     \cs_set_protected:Npn \__tblr_restore_counters:n ##1
       {
-        \tl_use:c { __tblr_saved_ ##1 _counters_tl }
+        \tl_use:c { l__tblr_saved_ ##1 _counters_tl }
       }
   }
 
