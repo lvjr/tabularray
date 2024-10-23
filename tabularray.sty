@@ -2695,6 +2695,9 @@
 
 \bool_new:N \lTblrMeasuringBool
 
+\tl_new:N \l__tblr_inner_spec_tl
+\cs_set_eq:NN \__tblr_hook_parse_inner_spec_before: \prg_do_nothing:
+
 %% Read, split and build the table
 \cs_new_protected:Npn \__tblr_builder:nnn #1 #2 #3
   {
@@ -2718,7 +2721,9 @@
     \__tblr_init_table_inner_spec:
     \LogTblrTracing { inner }
     \LogTblrTracing { step = parse ~ table ~ inner ~ spec}
-    \__tblr_parse_table_spec:n {#2}
+    \tl_set:Nn \l__tblr_inner_spec_tl {#2}
+    \__tblr_hook_parse_inner_spec_before:
+    \exp_args:NV \__tblr_parse_table_spec:n \l__tblr_inner_spec_tl
     \LogTblrTracing { step = execute ~ table ~ commands}
     \__tblr_execute_table_commands:
     \__tblr_disable_table_commands:
@@ -7381,6 +7386,17 @@
 \NewTblrLibrary { html }
   {
     \bool_set_true:N \l__tblr_html_variables_bool
+  }
+
+\NewTblrLibrary { keyvalue }
+  {
+    \RequirePackage { functional }
+    %% Evaluate every function in inner spec
+    \cs_set_protected:Npn \__tblr_hook_parse_inner_spec_before:
+      {
+        \tlSet \l__tblr_inner_spec_tl
+          { \evalWhole { \expValue \l__tblr_inner_spec_tl } }
+      }
   }
 
 %% Library nameref and its caption-ref template
