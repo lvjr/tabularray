@@ -18,7 +18,9 @@
 \usepackage[firstpage=true]{background}
 \backgroundsetup{contents={}}
 
-\UseTblrLibrary{amsmath,booktabs,counter,diagbox,functional,siunitx,varwidth}
+\UseTblrLibrary{
+  amsmath,booktabs,counter,diagbox,functional,keyvalue,siunitx,varwidth
+}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -2903,6 +2905,25 @@ This library is experimental, please see\\
 
 This library is experimental, please see\\
 \url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
+
+\section{Library \texttt{keyvalue}}
+
+With \verb!\UseTblrLibrary{keyvalue}! in the preamble of the document,
+\verb!tabularray! will load \href{https://ctan.org/pkg/functional}{\texttt{functional}} package,
+so as to evaluate every function (defined with \verb!\prgNewFunction!) within inner specifications,
+replacing it with its return value, before parsing the key-value pairs. Here is an example:
+
+\begin{demohigh}
+\begin{tblr}{
+  row{2} = {bg=\intIfOddTF{\value{page}}{\prgReturn{red7}}{\prgReturn{blue7}}}
+}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+Note that this library will conflict with inner key \verb!process! provided by \verb!functional! library.
 
 \section{Library \texttt{nameref}}
 
