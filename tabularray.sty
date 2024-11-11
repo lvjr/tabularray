@@ -83,6 +83,7 @@
     \fi:
   }
 
+\cs_generate_variant:Nn \keyval_parse:NNn { NNV }
 \cs_generate_variant:Nn \msg_error:nnnn { nnVn }
 \cs_generate_variant:Nn \msg_error:nnnnn { nnnVV }
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
@@ -7363,6 +7364,32 @@
       {
         \tblr_set_column:nnn {##1} {} {##2}
       }
+    %% Evaluate every function in inner specification
+    %% But we need to protect the value of "process" key
+    \clist_new:N \l__tblr_fun_keyvalue_clist
+    \cs_new_protected:Npn \__tblr_fun_i:n ##1
+      {
+        \clist_put_right:Nn \l__tblr_fun_keyvalue_clist { ##1 }
+      }
+    \cs_new_protected:Npn \__tblr_fun_ii:nn ##1 ##2
+      {
+        \tl_if_eq:nnTF { ##1 } { process }
+          {
+            \clist_put_right:Nn \l__tblr_fun_keyvalue_clist
+              { ##1 = {\evalNone{##2}} }
+          }
+          {
+            \clist_put_right:Nn \l__tblr_fun_keyvalue_clist
+              { ##1 = {##2} }
+          }
+      }
+    \cs_set_protected:Npn \__tblr_hook_parse_inner_spec_before:
+      {
+        \clist_clear:N \l__tblr_fun_keyvalue_clist
+        \keyval_parse:NNV \__tblr_fun_i:n \__tblr_fun_ii:nn \l__tblr_inner_spec_tl
+        \tlSet \l__tblr_inner_spec_tl
+          { \evalWhole { \expValue \l__tblr_fun_keyvalue_clist } }
+      }
   }
 
 %% Library hook provides some public hooks
@@ -7386,17 +7413,6 @@
 \NewTblrLibrary { html }
   {
     \bool_set_true:N \l__tblr_html_variables_bool
-  }
-
-\NewTblrLibrary { keyvalue }
-  {
-    \RequirePackage { functional }
-    %% Evaluate every function in inner spec
-    \cs_set_protected:Npn \__tblr_hook_parse_inner_spec_before:
-      {
-        \tlSet \l__tblr_inner_spec_tl
-          { \evalWhole { \expValue \l__tblr_inner_spec_tl } }
-      }
   }
 
 %% Library nameref and its caption-ref template

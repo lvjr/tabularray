@@ -19,7 +19,7 @@
 \backgroundsetup{contents={}}
 
 \UseTblrLibrary{
-  amsmath,booktabs,counter,diagbox,functional,keyvalue,siunitx,varwidth
+  amsmath,booktabs,counter,diagbox,functional,siunitx,varwidth
 }
 
 \usepackage{hyperref}
@@ -2676,9 +2676,43 @@ $\begin{tblr}{|c|cc|}
 With \verb!\UseTblrLibrary{functional}! in the preamble of the document,
 \verb!tabularray! will load \href{https://ctan.org/pkg/functional}{\texttt{functional}} package,
 and define outer key \verb!evaluate! and inner key \verb!process!.
-These two new keys are useful for doing functional programming inside tables.
+This library brings intuitive functional programming into \verb!tabularray! tables.
 
-\subsection{Outer key \texttt{evaluate} in action}
+\subsection{Evaluate inner specifications}
+
+With this library, \verb!tabularray! will evaluate every function
+(defined with \verb!\prgNewFunction!) within inner specifications,
+replacing it with its return value, before parsing the key-value pairs. Here is an example:
+
+\begin{demohigh}
+\begin{tblr}{
+  row{2} = {bg=\intIfOddTF{\value{page}}{\prgReturn{red7}}{\prgReturn{blue7}}}
+}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+You may like to define a new function for it if you need to use it several times:
+
+\begin{demohigh}
+\IgnoreSpacesOn
+\prgNewFunction \magicColor {mm} {
+  \intIfOddTF{\value{page}}{\prgReturn{#1}}{\prgReturn{#2}}
+}
+\IgnoreSpacesOff
+\begin{tblr}{
+  row{1} = {bg=\magicColor{yellow7}{brown7}},
+  row{3} = {bg=\magicColor{green7}{teal7}}
+}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
+\subsection{Evaluate table body}
 
 With outer key \verb!evaluate!, you can evaluate every occurrence of a specified protected function
 (defined with \verb!\prgNewFunction!) and replace it with the return value before splitting the table body.
@@ -2769,7 +2803,7 @@ You can even generate the whole table with some function.
 From version 2023A, you can evaluate all functions in the table body
 with option \texttt{evaluate=all}.
 
-\subsection{Inner key \texttt{process} in action}
+\subsection{Process table elements}
 
 With inner key \verb!process!, you can modify the contents and styles before the table is built.
 Several public functions defined with \verb!\prgNewFuncton! are provided for you:
@@ -2905,25 +2939,6 @@ This library is experimental, please see\\
 
 This library is experimental, please see\\
 \url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
-
-\section{Library \texttt{keyvalue}}
-
-With \verb!\UseTblrLibrary{keyvalue}! in the preamble of the document,
-\verb!tabularray! will load \href{https://ctan.org/pkg/functional}{\texttt{functional}} package,
-so as to evaluate every function (defined with \verb!\prgNewFunction!) within inner specifications,
-replacing it with its return value, before parsing the key-value pairs. Here is an example:
-
-\begin{demohigh}
-\begin{tblr}{
-  row{2} = {bg=\intIfOddTF{\value{page}}{\prgReturn{red7}}{\prgReturn{blue7}}}
-}
-  Alpha   & Beta  & Gamma  \\
-  Epsilon & Zeta  & Eta    \\
-  Iota    & Kappa & Lambda \\
-\end{tblr}
-\end{demohigh}
-
-Note that this library will conflict with inner key \verb!process! provided by \verb!functional! library.
 
 \section{Library \texttt{nameref}}
 
