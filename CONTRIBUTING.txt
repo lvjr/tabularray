@@ -19,7 +19,7 @@ Contribution to the Code
 
 - You need to install `l3build` and `ppmcheckpdf` packages into your TeX distribution first.
 
-- After edting the source code, run `l3build check` to compile test files.
+- After editing the source code, run `l3build check` to compile test files.
 
 - Then run `texlua buildend.lua` to compare MD5 checksums for test outputs.
 
