@@ -9,8 +9,14 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{4pt plus 1pt minus 1pt}
 
-\usepackage{codehigh} % https://ctan.org/pkg/codehigh
+\ExplSyntaxOn
+\sys_ensure_backend:
+\debug_on:n { check-declarations }
 \usepackage{tabularray}
+\debug_off:n { check-declarations }
+\ExplSyntaxOff
+
+\usepackage{codehigh} % https://ctan.org/pkg/codehigh
 \usepackage{array,multirow,amsmath}
 \usepackage{chemmacros,environ}
 \usepackage{enumitem}
