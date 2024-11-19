@@ -9,8 +9,23 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{4pt plus 1pt minus 1pt}
 
+\makeatletter
+\ExplSyntaxOn
+\NewDocumentCommand\MyDebugSingle{m}{
+  \@ifpackageloaded{docmute}{#1}{
+    \str_if_eq:onTF{\jobname}{tabularray}{#1}{
+      \sys_ensure_backend:
+      \debug_on:n{check-declarations}
+      #1
+      \debug_off:n{check-declarations}
+    }
+  }
+}
+\ExplSyntaxOff
+\makeatother
+\MyDebugSingle{\usepackage{tabularray}}
+
 \usepackage{codehigh} % https://ctan.org/pkg/codehigh
-\usepackage{tabularray}
 \usepackage{array,multirow,amsmath}
 \usepackage{chemmacros,environ}
 \usepackage{enumitem}
