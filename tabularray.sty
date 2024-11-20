@@ -7507,3 +7507,13 @@
       }
   }
 
+%%% --------------------------------------------------------
+%%> \section{Rewrite Some Code with Lua}
+%%% --------------------------------------------------------
+
+\sys_if_engine_luatex:T
+  {
+    \RequirePackage { luatexbase }
+    \directlua { require("tabularray.lua") }
+  }
+
