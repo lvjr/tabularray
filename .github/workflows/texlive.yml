@@ -16,7 +16,7 @@ jobs:
     - name: Install TeX Live
       uses: teatimeguest/setup-texlive-action@v3
       with:
-        package-file: .github/workflows/texlive.package
+        package-file: .github/workflows/texlive-package.txt
         update-all-packages: true
     - name: Test tabularray with l3build
       run: |
@@ -34,7 +34,7 @@ jobs:
     - name: Install TeX Live
       uses: teatimeguest/setup-texlive-action@v3
       with:
-        package-file: .github/workflows/texlive.package
+        package-file: .github/workflows/texlive-package.txt
         update-all-packages: true
     - name: Test tabularray with l3build
       run: |
