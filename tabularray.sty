@@ -7076,12 +7076,19 @@
     \cs_new_protected:cpn { __tblr_use_lib_ #1: } {#2}
   }
 
+%% Note that \prg_do_nothing: is an existing command.
 \NewDocumentCommand \UseTblrLibrary { m }
   {
     \clist_map_inline:nn {#1}
       {
-        \use:c { __tblr_use_lib_ ##1: }
-        \cs_undefine:c { __tblr_use_lib_ ##1: }
+        \cs_if_exist:cTF { __tblr_use_lib_ ##1: }
+          {
+            \use:c { __tblr_use_lib_ ##1: }
+            \cs_gset_eq:cN { __tblr_use_lib_ ##1: } \prg_do_nothing:
+          }
+          {
+            \RequirePackage { tabularray-library-##1 }
+          }
       }
   }
 
