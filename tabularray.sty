@@ -4126,13 +4126,17 @@
     \LogTblrTracing { target }
   }
 
+%% Users may modify \hfuzz, so we use our hfuzz dim variable (see issue #445)
+\dim_new:N \l__tblr_hfuzz_dim
+\dim_set:Nn \l__tblr_hfuzz_dim { 0.1pt }
+
 %% If all columns have negative coefficients and small natural widths,
 %% \l__tblr_column_coefficient_prop will be empty after one or more rounds.
 %% We reset @row-height, etc for \linewidth graphics in X columns (issue #80)
 \cs_new_protected:Npn \__tblr_adjust_extendable_column_width:
   {
     \bool_while_do:nn
-      { \dim_compare_p:nNn { \l__tblr_column_target_dim } > { \hfuzz } }
+      { \dim_compare_p:nNn { \l__tblr_column_target_dim } > { \l__tblr_hfuzz_dim } }
       {
         \prop_if_empty:NTF \l__tblr_column_coefficient_prop
           { \__tblr_adjust_extendable_column_width_negative: }
