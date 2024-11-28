@@ -3,6 +3,7 @@
 ```
 Package: Typeset tabulars and arrays with LaTeX3
 Copyright: 2021-2024 (c) Jianrui Lyu <tolvjr@163.com>
+Copyright: 2023-2024 (c) Yukai Chou <muzimuzhi@gmail.com>
 CTAN: https://ctan.org/pkg/tabularray
 Repository: https://github.com/lvjr/tabularray
 Repository: https://bitbucket.org/lvjr/tabularray
@@ -35,7 +36,6 @@ The following are all contributors to the package:
   - [IsaacOscar](https://github.com/lvjr/tabularray/commits?author=IsaacOscar) (Isaac Oscar Gariano)
   - [krlmlr](https://github.com/lvjr/tabularray/commits?author=krlmlr) (Kirill Müller)
   - [mbertucci47](https://github.com/lvjr/tabularray/commits?author=mbertucci47) (Matthew Bertucci)
-  - [muzimuzhi](https://github.com/lvjr/tabularray/commits?author=muzimuzhi) (Yukai Chou)
   - [pkl97](https://github.com/lvjr/tabularray/commits?author=pkl97)
   - [qinglee](https://github.com/lvjr/tabularray/commits?author=qinglee) (Qing Lee)
   - [SainoNamkho](https://github.com/lvjr/tabularray/commits?author=SainoNamkho)
