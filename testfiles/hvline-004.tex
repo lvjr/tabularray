@@ -16,28 +16,28 @@
 \hrule\bigskip
 
 \BEGINTEST{empty text}
-  \begin{tblr}{
-    hlines,
-    vlines,
-    hline{1}={text={}},
-    vline{1}={text={}},
-  }
-    a
-  \end{tblr}
+\begin{tblr}{
+  hlines,
+  vlines,
+  hline{1}={text={}},
+  vline{1}={text={}},
+}
+  a
+\end{tblr}
 \ENDTEST
 
 \bigskip\hrule\bigskip
 
 % lvjr/tabularray#303
 \BEGINTEST{fragile text}
-  \begin{tblr}{
-    hlines,
-    vlines,
-    hline{1}={text={\def\x{}\rlap{--h--}}},
-    vline{1}={text={\textbf{v}}},
-  }
-    a
-  \end{tblr}
+\begin{tblr}{
+  hlines,
+  vlines,
+  hline{1}={text={\def\x{}\rlap{--h--}}},
+  vline{1}={text={\textbf{v}}},
+}
+  a
+\end{tblr}
 \ENDTEST
 
 \end{document}
