@@ -1,7 +1,8 @@
 %%% % -*- coding: utf-8 -*-
 %%% ----------------------------------------------------------------------------
 %%% Tabularray: Typeset tabulars and arrays with LaTeX3
-%%% Copyright : 2021-2023 (c) Jianrui Lyu <tolvjr@163.com>
+%%% Copyright : 2021-2024 (c) Jianrui Lyu <tolvjr@163.com>
+%%% Copyright : 2023-2024 (c) Yukai Chou <muzimuzhi@gmail.com>
 %%% Repository: https://github.com/lvjr/tabularray
 %%% License   : The LaTeX Project Public License 1.3c
 %%% ----------------------------------------------------------------------------
@@ -1189,8 +1190,8 @@
 %%> \section{Set Hlines and Vlines}
 %%% --------------------------------------------------------
 
-\tl_const:Nn \@tblr@dash { dash }
-\tl_const:Nn \@tblr@text { text }
+\quark_new:N \q__tblr_dash
+\quark_new:N \q__tblr_text
 
 \regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
 
@@ -1255,7 +1256,8 @@
   {
     \group_begin:
     \keys_set_groups:nnn { tblr-hline } { text } {#3}
-    \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text }
+    % true if "text=" is set
+    \tl_if_eq:NNF \l__tblr_hline_dash_tl \q__tblr_text
       {
         \__tblr_set_hline_num:n {#1}
         \tl_clear:N \l__tblr_hline_dash_tl
@@ -1331,8 +1333,8 @@
 
 \keys_define:nn { tblr-hline }
   {
-    dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 },
-    text .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text #1 },
+    dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \q__tblr_dash #1 },
+    text .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \q__tblr_text #1 },
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_hline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_hline_fg_tl {#1},
@@ -1351,7 +1353,7 @@
 \cs_new_protected:Npn \__tblr_hline_unknown_key:n #1
   {
     \prop_if_in:NnTF \g__tblr_defined_hdash_styles_prop {#1}
-      { \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 } }
+      { \tl_set:Nn \l__tblr_hline_dash_tl { \q__tblr_dash #1 } }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
           { \tl_set:Nn \l__tblr_hline_fg_tl {#1} }
@@ -1368,7 +1370,9 @@
     \__tblr_get_childs:nx {#1} { \int_use:N \c@colcount }
     \clist_map_inline:Nn \l_tblr_childs_clist
       {
-        \__tblr_set_hline_option:nnn { ##1 } { @dash } { \l__tblr_hline_dash_tl }
+        % prevent expansion of vline text (see issue #303)
+        \__tblr_set_hline_option:nnn { ##1 } { @dash } 
+          { \exp_not:V \l__tblr_hline_dash_tl }
         \tl_if_empty:NF \l__tblr_hline_wd_tl
           {
             \__tblr_set_hline_option:nnn { ##1 } { wd } { \l__tblr_hline_wd_tl }
@@ -1497,7 +1501,8 @@
   {
     \group_begin:
     \keys_set_groups:nnn { tblr-vline } { text } {#3}
-    \tl_if_eq:NnF \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text }
+    % true if "text=" is set
+    \tl_if_eq:NNF \l__tblr_vline_dash_tl \q__tblr_text
       {
         \__tblr_set_vline_num:n {#1}
         \tl_clear:N \l__tblr_vline_dash_tl
@@ -1573,8 +1578,8 @@
 
 \keys_define:nn { tblr-vline }
   {
-    dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 },
-    text .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text #1 },
+    dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \q__tblr_dash #1 },
+    text .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \q__tblr_text #1 },
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_vline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_vline_fg_tl {#1},
@@ -1586,7 +1591,7 @@
 \cs_new_protected:Npn \__tblr_vline_unknown_key:n #1
   {
     \prop_if_in:NnTF \g__tblr_defined_vdash_styles_prop {#1}
-      { \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 } }
+      { \tl_set:Nn \l__tblr_vline_dash_tl { \q__tblr_dash #1 } }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
           { \tl_set:Nn \l__tblr_vline_fg_tl {#1} }
@@ -1605,7 +1610,8 @@
       {
         \__tblr_spec_gput:nee { vline }
           { [##1][\int_use:N \c@colnum](\l__tblr_vline_num_tl) / @dash }
-          { \l__tblr_vline_dash_tl }
+          % prevent expansion of vline text (see issue #303)
+          { \exp_not:V \l__tblr_vline_dash_tl }
         \tl_if_empty:NF \l__tblr_vline_wd_tl
           {
             \__tblr_spec_gput:nee { vline }
@@ -3050,7 +3056,6 @@
   }
 
 \tl_new:N \l__tblr_inner_spec_measure_tl
-\tl_new:N \l__tblr_inner_spec_verb_tl
 
 \cs_new_protected:Npn \__tblr_init_table_inner_spec:
   {
@@ -3099,7 +3104,6 @@
           { [\int_eval:n { \c@colcount + 1}] / ##1 } {##2}
       }
     \tl_clear:N \l__tblr_inner_spec_measure_tl
-    \tl_clear:N \l__tblr_inner_spec_verb_tl
     \keys_set:nv { tblr } { l__tblr_default_ \l__tblr_env_name_tl _inner_tl }
   }
 
@@ -3113,7 +3117,7 @@
     colspec, rowspec, column, row, cell, hline, vline, hborder, vborder, width,
     rowhead, rowfoot, columns, rows, cells, hlines, vlines, % hborders, vborders,
     leftsep, rightsep, colsep, abovesep, belowsep, rowsep, rulesep,
-    baseline, hspan, vspan, stretch, verb, delimiter
+    baseline, hspan, vspan, stretch, delimiter
   }
 
 \keys_define:nn { tblr }
@@ -3124,8 +3128,6 @@
     hspan .code:n = \__tblr_keys_gput:nn { hspan } {#1},
     vspan .code:n = \__tblr_keys_gput:nn { vspan } {#1},
     stretch .code:n = \__tblr_keys_gput:nn { stretch } {#1},
-    verb   .tl_set:N = \l__tblr_inner_spec_verb_tl,
-    verb  .default:n = lite,
     columns .code:n = \__tblr_set_every_column_aux:n {#1},
     rows    .code:n = \__tblr_set_every_row_aux:n {#1},
     cells   .code:n = \__tblr_set_every_cell_aux:n {#1},
@@ -3445,9 +3447,8 @@
     \tl_if_empty:NF \l__tblr_w_tl { \dim_set:Nn \rulewidth { \l__tblr_w_tl } }
     \tl_set:Nx \l__tblr_d_tl
       { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / @dash } }
-    \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
     \tl_set:Nx \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
-    \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
+    \tl_if_head_eq_meaning:VNTF \l__tblr_d_tl \q__tblr_dash
       {
         \__tblr_get_vline_dash_style:N \l__tblr_b_tl
         \xleaders \l__tblr_b_tl \vfil
@@ -3515,7 +3516,7 @@
       { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / @dash } }
     \tl_set:Nx \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
     \tl_set:Nx \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
-    \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
+    \tl_if_head_eq_meaning:VNTF \l__tblr_d_tl \q__tblr_dash
       {
         \__tblr_get_hline_dash_style:N \l__tblr_b_tl
         \xleaders \l__tblr_b_tl \hfil
@@ -3780,7 +3781,7 @@
         \begin{tblrNoHyper}
         \begin{varwidth}{\paperwidth}
            \l__tblr_f_tl
-           \__tblr_rescan_cell_tokens:N \l__tblr_c_tl
+           \l__tblr_c_tl
         \end{varwidth}
         \end{tblrNoHyper}
       }
@@ -3799,7 +3800,7 @@
         \hbox_set:Nn \l__tblr_measured_cell_box
           {
             \l__tblr_f_tl
-            \__tblr_rescan_cell_tokens:N \l_tmpa_tl
+            \l_tmpa_tl
           }
         \tl_set:Nx \l__tblr_w_tl
           { \dim_max:nn { \l__tblr_w_tl } { \box_wd:N \l__tblr_measured_cell_box } }
@@ -3865,24 +3866,6 @@
     \box_if_empty:NTF \l__tblr_measured_cell_box
       { #1 }
       { \hbox_unpack_drop:N \l__tblr_measured_cell_box }
-  }
-
-%% When using verb option, there is an end-of-line character at the end.
-%% This character causes extra horizontal space at the end when "measure=hbox",
-%% or causes extra vertical space at the end with "measure=vbox".
-%% Therefore we have to use an \empty to remove it.
-%% See https://tex.stackexchange.com/q/213659
-\cs_new_protected:Npn \__tblr_rescan_cell_tokens:N #1
-  {
-    \tl_if_empty:NTF \l__tblr_inner_spec_verb_tl
-      { #1 }
-      {
-        %% insert space characters after some control sequences first (issue #112)
-        \regex_replace_all:nnN { (\c{[A-Za-z]*}) ([A-Za-z]) } { \1 \  \2 } #1
-        \regex_replace_all:nnN { . } { \c{string} \0 } #1
-        \tl_set:Nx #1 { #1 \noexpand \empty }
-        \exp_args:NV \tex_scantokens:D #1
-      }
   }
 
 %% #1: total height dimension; #2: head dimension; #3: foot dimension;
@@ -4129,13 +4112,17 @@
     \LogTblrTracing { target }
   }
 
+%% Users may modify \hfuzz, so we use our hfuzz dim variable (see issue #445)
+\dim_new:N \l__tblr_hfuzz_dim
+\dim_set:Nn \l__tblr_hfuzz_dim { 0.1pt }
+
 %% If all columns have negative coefficients and small natural widths,
 %% \l__tblr_column_coefficient_prop will be empty after one or more rounds.
 %% We reset @row-height, etc for \linewidth graphics in X columns (issue #80)
 \cs_new_protected:Npn \__tblr_adjust_extendable_column_width:
   {
     \bool_while_do:nn
-      { \dim_compare_p:nNn { \l__tblr_column_target_dim } > { \hfuzz } }
+      { \dim_compare_p:nNn { \l__tblr_column_target_dim } > { \l__tblr_hfuzz_dim } }
       {
         \prop_if_empty:NTF \l__tblr_column_coefficient_prop
           { \__tblr_adjust_extendable_column_width_negative: }
@@ -6604,8 +6591,6 @@
   }
 
 \tl_new:N \l__tblr_dash_value_tl
-\tl_new:N \l__tblr_dash_value_head_tl
-\tl_new:N \l__tblr_dash_value_tail_tl
 \tl_new:N \l__tblr_width_value_tl
 \tl_new:N \l__tblr_color_value_tl
 
@@ -6616,11 +6601,10 @@
     %% get border style
     \tl_set:Nx \l__tblr_dash_value_tl %% may be empty
       { \__tblr_spec_item:ne { #3 } { [#1][#2](1) / @dash } }
-    \tl_set:Nx \l__tblr_dash_value_head_tl { \tl_head:N \l__tblr_dash_value_tl }
-    \tl_set:Nx \l__tblr_dash_value_tail_tl { \tl_tail:N \l__tblr_dash_value_tl }
-    \exp_args:NV \tl_if_eq:NNTF \l__tblr_dash_value_head_tl \@tblr@dash
+    \tl_if_head_eq_meaning:VNTF \l__tblr_dash_value_tl \q__tblr_dash
       {
-        \tl_set_eq:cN { lTblrCell #4 BorderStyleTl } \l__tblr_dash_value_tail_tl
+        \tl_set:ce { lTblrCell #4 BorderStyleTl }
+          { \tl_tail:N \l__tblr_dash_value_tl }
         %% get border width
         \tl_set:Nx \l__tblr_width_value_tl
           { \__tblr_spec_item:ne { #3 } { [#1][#2](1) / wd } }
@@ -7079,12 +7063,19 @@
     \cs_new_protected:cpn { __tblr_use_lib_ #1: } {#2}
   }
 
+%% Note that \prg_do_nothing: is an existing command.
 \NewDocumentCommand \UseTblrLibrary { m }
   {
     \clist_map_inline:nn {#1}
       {
-        \use:c { __tblr_use_lib_ ##1: }
-        \cs_undefine:c { __tblr_use_lib_ ##1: }
+        \cs_if_exist:cTF { __tblr_use_lib_ ##1: }
+          {
+            \use:c { __tblr_use_lib_ ##1: }
+            \cs_gset_eq:cN { __tblr_use_lib_ ##1: } \prg_do_nothing:
+          }
+          {
+            \RequirePackage { tblrlib##1 }
+          }
       }
   }
 

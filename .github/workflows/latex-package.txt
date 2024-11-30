@@ -1,0 +1,42 @@
+# these packages are collected from tabularray.sty and its test files
+# to update all needed texlive packages from this file
+# run `texfindpkg -i latex-package.txt -o texlive-package.txt`
+
+-f # the following are latex packages
+amsfonts
+amsmath
+array
+blindtext
+booktabs
+diagbox
+enumitem
+environ
+epstopdf-base
+etoolbox
+functional
+geometry
+hyperref
+l3kernel
+lmodern
+mathtools
+multirow
+nameref
+ninecolors
+pict2e
+shortvrb
+siunitx
+tabularx
+varwidth
+xcolor
+xparse
+zref
+
+-p # the following are texlive packages
+cm-super # for ppmcheckpdf on table-011 which contains itemize env hence \textbullet
+ec
+l3build
+latex-bin # depends on latex
+luatex
+pdftex
+ppmcheckpdf
+xetex

@@ -29,9 +29,9 @@ their alignment commands.
 \section{Use Safe Verbatim Commands}%
 \label{sec:fakeverb}
 
-Due to the limitation of TeX, even if you have passed \texttt{verb} option to a
-\texttt{tabularray} table, you still could not use some special characters in a
-\verb!\verb! command. As an replacement, you may use \verb|\fakeverb| command from \href{https://www.ctan.org/pkg/codehigh}{\texttt{codehigh}} package.
+Due to the limitations of TeX,
+we are not able to make \fakeverb{\verb} command behave well inside \texttt{tabularray} tables.
+As a replacement, you may use \fakeverb{\fakeverb} command from \href{https://www.ctan.org/pkg/codehigh}{\texttt{codehigh}} package.
 
 The \verb|\fakeverb| command will remove the backslashes in the following control symbols before
 typesetting its content: \fakeverb{\\\\}, \fakeverb{\\\{}, \fakeverb{\\\}}, \fakeverb{\\\#}, \fakeverb{\\\^} and \texttt{\textbackslash\textvisiblespace}, \fakeverb{\\\%}.
