@@ -3056,6 +3056,7 @@
   }
 
 \tl_new:N \l__tblr_inner_spec_measure_tl
+\tl_set:Nn \l__tblr_inner_spec_measure_tl { hbox }
 
 \cs_new_protected:Npn \__tblr_init_table_inner_spec:
   {
@@ -3103,7 +3104,6 @@
         \__tblr_spec_gput:nen { vline }
           { [\int_eval:n { \c@colcount + 1}] / ##1 } {##2}
       }
-    \tl_clear:N \l__tblr_inner_spec_measure_tl
     \keys_set:nv { tblr } { l__tblr_default_ \l__tblr_env_name_tl _inner_tl }
   }
 
@@ -7478,6 +7478,7 @@
   {
     \RequirePackage { varwidth }
     \clist_gput_left:Nn \g__tblr_table_known_keys_clist { measure }
+    \tl_set:Nn \l__tblr_inner_spec_measure_tl { vbox }
     \keys_define:nn { tblr } { measure .tl_set:N = \l__tblr_inner_spec_measure_tl }
   }
 
