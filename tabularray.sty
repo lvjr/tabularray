@@ -3056,7 +3056,6 @@
   }
 
 \tl_new:N \l__tblr_inner_spec_measure_tl
-\tl_new:N \l__tblr_inner_spec_verb_tl
 
 \cs_new_protected:Npn \__tblr_init_table_inner_spec:
   {
@@ -3105,7 +3104,6 @@
           { [\int_eval:n { \c@colcount + 1}] / ##1 } {##2}
       }
     \tl_clear:N \l__tblr_inner_spec_measure_tl
-    \tl_clear:N \l__tblr_inner_spec_verb_tl
     \keys_set:nv { tblr } { l__tblr_default_ \l__tblr_env_name_tl _inner_tl }
   }
 
@@ -3119,7 +3117,7 @@
     colspec, rowspec, column, row, cell, hline, vline, hborder, vborder, width,
     rowhead, rowfoot, columns, rows, cells, hlines, vlines, % hborders, vborders,
     leftsep, rightsep, colsep, abovesep, belowsep, rowsep, rulesep,
-    baseline, hspan, vspan, stretch, verb, delimiter
+    baseline, hspan, vspan, stretch, delimiter
   }
 
 \keys_define:nn { tblr }
@@ -3130,8 +3128,6 @@
     hspan .code:n = \__tblr_keys_gput:nn { hspan } {#1},
     vspan .code:n = \__tblr_keys_gput:nn { vspan } {#1},
     stretch .code:n = \__tblr_keys_gput:nn { stretch } {#1},
-    verb   .tl_set:N = \l__tblr_inner_spec_verb_tl,
-    verb  .default:n = lite,
     columns .code:n = \__tblr_set_every_column_aux:n {#1},
     rows    .code:n = \__tblr_set_every_row_aux:n {#1},
     cells   .code:n = \__tblr_set_every_cell_aux:n {#1},
@@ -3782,7 +3778,7 @@
         \begin{tblrNoHyper}
         \begin{varwidth}{\paperwidth}
            \l__tblr_f_tl
-           \__tblr_rescan_cell_tokens:N \l__tblr_c_tl
+           \l__tblr_c_tl
         \end{varwidth}
         \end{tblrNoHyper}
       }
@@ -3801,7 +3797,7 @@
         \hbox_set:Nn \l_tmpa_box
           {
             \l__tblr_f_tl
-            \__tblr_rescan_cell_tokens:N \l_tmpa_tl
+            \l_tmpa_tl
           }
         \tl_set:Nx \l__tblr_w_tl
           { \dim_max:nn { \l__tblr_w_tl } { \box_wd:N \l_tmpa_box } }
@@ -3864,27 +3860,7 @@
     \TblrParboxRestore
     \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
     \__tblr_leave_vmode:
-    \bool_if:NTF \l__tblr_cell_math_mode_bool
-      { #1 }
-      { \__tblr_rescan_cell_tokens:N #1 }
-  }
-
-%% When using verb option, there is an end-of-line character at the end.
-%% This character causes extra horizontal space at the end when "measure=hbox",
-%% or causes extra vertical space at the end with "measure=vbox".
-%% Therefore we have to use an \empty to remove it.
-%% See https://tex.stackexchange.com/q/213659
-\cs_new_protected:Npn \__tblr_rescan_cell_tokens:N #1
-  {
-    \tl_if_empty:NTF \l__tblr_inner_spec_verb_tl
-      { #1 }
-      {
-        %% insert space characters after some control sequences first (issue #112)
-        \regex_replace_all:nnN { (\c{[A-Za-z]*}) ([A-Za-z]) } { \1 \  \2 } #1
-        \regex_replace_all:nnN { . } { \c{string} \0 } #1
-        \tl_set:Nx #1 { #1 \noexpand \empty }
-        \exp_args:NV \tex_scantokens:D #1
-      }
+    #1
   }
 
 %% #1: total height dimension; #2: head dimension; #3: foot dimension;
