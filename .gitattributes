@@ -1,1 +1,1 @@
-*.tlg text eol=lf
+*.tlg text !eol
