@@ -7393,6 +7393,8 @@
 
 \NewTblrLibrary { hook }
   {
+    %% We need varwidth to keep \lTblrMeasuringBool correct
+    \UseTblrLibrary { varwidth }
     \cs_set_eq:NN \__tblr_hook_use:n \hook_use:n
     \hook_new_pair:nn { tabularray/trial/before } { tabularray/trial/after }
     \hook_new_pair:nn { tabularray/table/before } { tabularray/table/after }
