@@ -7079,6 +7079,12 @@
       }
   }
 
+\prg_set_conditional:Npnn \__tblr_lib_if_used:n #1 { p, T, F, TF }
+  {
+    \tl_if_eq:cNTF { __tblr_use_lib_ #1: } \prg_do_nothing:
+      { \prg_return_true: } { \prg_return_false: }
+  }
+
 %% Library amsmath and environments +array, +matrix, +cases, ...
 
 \NewTblrLibrary { amsmath }
