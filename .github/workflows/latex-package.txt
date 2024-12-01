@@ -32,11 +32,12 @@ xparse
 zref
 
 -p # the following are texlive packages
-cm-super # for ppmcheckpdf on table-011 which contains itemize env hence \textbullet
+cm-super # for type1ec and for \textbullet in itemize in table-011 for ppmcheckpdf
 ec
 l3build
 latex-bin # depends on latex
 luatex
 pdftex
 ppmcheckpdf
+type1cm
 xetex
