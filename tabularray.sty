@@ -3766,7 +3766,7 @@
   {
     \hbox_set:Nn \l__tblr_measured_cell_box
       {
-        \begin{varwidth}{\paperwidth}
+        \begin{varwidth}[b]{\paperwidth}
           \TblrParboxRestore
           \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
           \__tblr_leave_vmode:
@@ -3775,6 +3775,8 @@
         \end{varwidth}
       }
     \tl_set:Nx \l__tblr_w_tl { \dim_eval:n { \box_wd:N \l__tblr_measured_cell_box } }
+    \vbox_set:Nn \l__tblr_measured_cell_box
+      { \box_use:N \l__tblr_measured_cell_box }
   }
 
 %% Measure cell width only and build it later when hook library is not loaded
@@ -3837,14 +3839,7 @@
     \group_begin:
     \box_if_empty:NTF \l__tblr_measured_cell_box
       { \vbox_set:Nn \l_tmpb_box { \__tblr_make_vcell_text:NN #1 #2 } }
-      {
-        \vbox_set:Nn \l_tmpb_box
-          {
-            \dim_set:Nn \tex_hsize:D { \l__tblr_w_tl }
-            \noindent
-            \hbox_unpack_drop:N \l__tblr_measured_cell_box
-          }
-      }
+      { \box_set_eq:NN \l_tmpb_box \l__tblr_measured_cell_box }
     \vbox_set_top:Nn \l_tmpa_box { \vbox_unpack:N \l_tmpb_box }
     \__tblr_process_stretch:
     \dim_gset:Nn \g__tblr_cell_wd_dim { \box_wd:N \l_tmpb_box }
