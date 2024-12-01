@@ -3676,7 +3676,6 @@
 \tl_const:Nn \c__tblr_cell_math_style_tl { \relax }
 \tl_const:Nn \c__tblr_cell_imath_style_tl { \textstyle }
 \tl_const:Nn \c__tblr_cell_dmath_style_tl { \displaystyle }
-\box_new:N \l__tblr_measured_cell_box
 
 %% Get cell text, #1: row number, #2: column number
 %% If the width of the cell is not set, split it with \\ and compute the width
@@ -3685,7 +3684,6 @@
   {
     \group_begin:
     \tl_set:Nx \l__tblr_c_tl { \__tblr_spec_item:ne { text } {[#1][#2]} }
-    \box_clear:N \l__tblr_measured_cell_box
     %% when the cell text is guarded by a pair of curly braces,
     %% we unbrace it and ignore cmd option of the cell, see issue #90.
     \bool_lazy_and:nnTF
@@ -3732,18 +3730,17 @@
       }
     \dim_compare:nNnT { \l__tblr_w_tl } < { 0pt } % column width unset
       {
-        \bool_if:NT \lTblrMeasuringBool { \__tblr_save_counters:n { cell } }
+        \__tblr_save_counters:n { cell }
         \bool_if:NTF \l__tblr_cell_math_mode_bool
           {
             %% Note that font = \boldmath will increase cell width (issue #137)
-            \hbox_set:Nn \l__tblr_measured_cell_box { \l__tblr_f_tl \l__tblr_c_tl }
-            \tl_set:Nx \l__tblr_w_tl
-              { \dim_eval:n { \box_wd:N \l__tblr_measured_cell_box } }
+            \hbox_set:Nn \l_tmpa_box { \l__tblr_f_tl \l__tblr_c_tl }
+            \tl_set:Nx \l__tblr_w_tl { \dim_eval:n { \box_wd:N \l_tmpa_box } }
           }
           {
             \__tblr_get_cell_size_with_box:
           }
-        \bool_if:NT \lTblrMeasuringBool { \__tblr_restore_counters:n { cell } }
+        \__tblr_restore_counters:n { cell }
       }
     \tl_put_left:NV \l__tblr_c_tl \l__tblr_f_tl
     \tl_set:Nx \l__tblr_cell_fg_tl
@@ -3797,13 +3794,13 @@
     \seq_map_variable:NNn \l_tmpa_seq \l_tmpa_tl
       {
         \__tblr_remove_braces:N \l_tmpa_tl
-        \hbox_set:Nn \l__tblr_measured_cell_box
+        \hbox_set:Nn \l_tmpa_box
           {
             \l__tblr_f_tl
             \l_tmpa_tl
           }
         \tl_set:Nx \l__tblr_w_tl
-          { \dim_max:nn { \l__tblr_w_tl } { \box_wd:N \l__tblr_measured_cell_box } }
+          { \dim_max:nn { \l__tblr_w_tl } { \box_wd:N \l_tmpa_box } }
       }
   }
 
@@ -3863,9 +3860,7 @@
     \TblrParboxRestore
     \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
     \__tblr_leave_vmode:
-    \box_if_empty:NTF \l__tblr_measured_cell_box
-      { #1 }
-      { \hbox_unpack_drop:N \l__tblr_measured_cell_box }
+    #1
   }
 
 %% #1: total height dimension; #2: head dimension; #3: foot dimension;
