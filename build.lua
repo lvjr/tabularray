@@ -7,6 +7,9 @@ sourcefiles = {"tabularray.sty"}
 supportdir = "./testfiles"
 checksuppfiles  = {"regression-test.cfg"}
 
+-- we need to check test files with different regression-test.cfg files
+checkconfigs = {"build", "confighook"}
+
 checkengines = {"xetex","pdftex"}
 checkruns = 2
 
