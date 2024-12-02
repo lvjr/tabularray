@@ -20,7 +20,7 @@ jobs:
         update-all-packages: true
     - name: Test tabularray with l3build
       run: |
-        l3build check --debug --halt-on-error --show-log-on-error
+        l3build check -cbuild --debug --halt-on-error --show-log-on-error
     - name: Install pdftoppm
       run:
         sudo apt-get install poppler-utils
@@ -38,7 +38,7 @@ jobs:
         update-all-packages: true
     - name: Test tabularray with l3build
       run: |
-        l3build check --debug --halt-on-error --show-log-on-error
+        l3build check -cbuild --debug --halt-on-error --show-log-on-error
     - name: Install pdftoppm
       run: |
         tlmgr install wintools.windows
