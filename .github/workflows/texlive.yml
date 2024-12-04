@@ -20,13 +20,13 @@ jobs:
         update-all-packages: true
     - name: Test tabularray with l3build
       run: |
-        l3build check -cbuild --debug --halt-on-error --show-log-on-error
+        l3build check -c build --debug --halt-on-error --show-log-on-error
     - name: Install pdftoppm
       run:
         sudo apt-get install poppler-utils
     - name: Test tabularray with ppmcheckpdf
       run: |
-        texlua buildend.lua
+        ppmcheckpdf check -c build
   build-windows:
     runs-on: windows-latest
     steps:
@@ -38,13 +38,13 @@ jobs:
         update-all-packages: true
     - name: Test tabularray with l3build
       run: |
-        l3build check -cbuild --debug --halt-on-error --show-log-on-error
+        l3build check -c build --debug --halt-on-error --show-log-on-error
     - name: Install pdftoppm
       run: |
         tlmgr install wintools.windows
     - name: Test tabularray with ppmcheckpdf
       run: |
-        texlua buildend.lua
+        ppmcheckpdf check -c build
     - name: Upload png and md5
       uses: actions/upload-artifact@v4
       with:
