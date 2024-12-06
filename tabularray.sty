@@ -7360,7 +7360,7 @@
         \tl_set_eq:NN ##1 \g__tblr_functional_result_tl
       }
     %% Add inner specification "process"
-    \clist_put_right:Nn \g__tblr_table_known_keys_clist { process }
+    \clist_gput_right:Nn \g__tblr_table_known_keys_clist { process }
     \keys_define:nn { tblr }
       { process .code:n = \__tblr_keys_gput:nn { process } {##1} }
     \cs_set:Npn \__tblr_functional_calculation:
