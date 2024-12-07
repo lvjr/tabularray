@@ -1,12 +1,6 @@
-# Based on https://github.com/CTeX-org/ctex-kit/blob/master/.github/workflows/test.yml
-
-name: Test tabularray in TeX Live
+name: Run regression tests in TeX Live
 
 on: [push, pull_request]
-
-env:
-  TLCurrent: https://mirrors.rit.edu/CTAN/systems/texlive/tlnet
-  TLHistoric: https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2021/tlnet-final
 
 jobs:
   build-ubuntu:

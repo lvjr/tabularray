@@ -1,0 +1,483 @@
+\documentclass{article}
+\usepackage[b5paper,margin=1.5cm]{geometry}
+\usepackage{float,ninecolors}
+\usepackage{l3benchmark}
+\usepackage{tabularray}
+\UseTblrLibrary{amsmath,booktabs,counter,diagbox,functional,siunitx,varwidth}
+\ExplSyntaxOn
+\let \replicate = \prg_replicate:nn
+\AtBeginDocument{\benchmark_tic:}
+\AtEndDocument{
+  \benchmark_toc:
+  \fp_log:n \g_benchmark_time_fp
+}
+\ExplSyntaxOff
+\NewDocumentCommand\mylipsum{O{1}}{%
+  \replicate{#1}{The quick brown fox jumps over the lazy dog. }%
+}
+\begin{document}
+
+\mylipsum[32]
+
+\begin{table}[H]
+\centering
+\caption{Some Table Caption}
+\begin{tblr}{|l|c|r|}
+\hline
+ Left & {Center \\ Cent \\ C} & {Right \\ R} \\
+\hline
+ {L \\ Left} & {C \\ Cent \\ Center} & R \\
+\hline
+\end{tblr}
+\end{table}
+
+\mylipsum[32]
+
+\begin{table}[H]
+\centering
+\caption{Some Table Caption}
+\begin{tblr}{Q[h,4em]Q[t,4em]Q[m,4em]Q[b,4em]Q[f,4em]}
+\hline
+ {row\\head} & {top\\line} & {middle} & {line\\bottom} & {row\\foot} \\
+\hline
+ {row\\head} & {top\\line} & {11\\22\\mid\\44\\55} & {line\\bottom} & {row\\foot} \\
+\hline
+\end{tblr}
+\end{table}
+
+\mylipsum[32]
+
+\begin{table}[H]
+\centering
+\caption{Some Table Caption}
+\begin{tblr}{|c|c|c|c|c|}
+\hline
+ \SetCell[r=2]{c} 2 Rows
+     & \SetCell[c=2]{c} 2 Columns
+           &     & \SetCell[r=2,c=2]{c} 2 Rows 2 Columns & \\
+\hline
+     & 2-2 & 2-3 &     &     \\
+\hline
+ 3-1 & 3-2 & 3-3 & 3-4 & 3-5 \\
+\hline
+\end{tblr}
+\end{table}
+
+\mylipsum[32]
+
+\begin{table}[H]
+\centering
+\caption{Some Table Caption}
+\begin{tblr}{width=0.8\linewidth,colspec={|X[2,l]|X[3,l]|X[-1,r]|X[r]|}}
+\hline
+ Alpha & Beta & Gamma & Delta \\
+\hline
+\end{tblr}
+\end{table}
+
+\mylipsum[32]
+
+\begin{table}[H]
+\centering
+\caption{Some Table Caption}
+\begin{tblr}{|l|[dotted]|[2pt]c|r|[solid]|[dashed]|}
+\hline
+One   &  Two  & Three \\
+\hline\hline[dotted]\hline
+Four  & Five  &   Six \\
+\hline[dashed]\hline[1pt]
+Seven & Eight &  Nine \\
+\hline
+\end{tblr}
+\end{table}
+
+\mylipsum[32]
+
+\begin{table}[H]
+\centering
+\caption{Some Table Caption}
+\begin{tblr}{colspec={lcr},rowspec={|Q[cyan7]|Q[azure7]|Q[blue7]|}}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{table}
+
+\mylipsum[32]
+
+\begin{table}[H]
+\centering
+\caption{Some Table Caption}
+\begin{tblr}{colspec={lcr},rowspec={|Q|Q|Q|}}
+ \SetColumn{brown7}
+ Alpha          & \SetColumn{yellow7}
+                  Beta            & \SetColumn{olive7}
+                                    Gamma  \\
+ Epsilon        & Zeta            & Eta    \\
+ Iota           & Kappa           & Lambda \\
+\end{tblr}
+\end{table}
+
+\mylipsum[32]
+
+\begin{table}[H]
+\centering
+\caption{Some Table Caption}
+\begin{tblr}{colspec={lcr},rowspec={|[2pt,green7]Q|[teal7]Q|[green7]Q|[3pt,teal7]}}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{table}
+
+\mylipsum[32]
+
+\begin{table}[H]
+\centering
+\caption{Some Table Caption}
+\begin{tblr}{colspec={|[2pt,violet5]l|[2pt,magenta5]c|[2pt,purple5]r|[2pt,red5]}}
+ Alpha   & Beta  & Gamma  \\
+ Epsilon & Zeta  & Eta    \\
+ Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{table}
+
+\mylipsum[32]
+
+\NewTblrTheme{fancy}{
+  \SetTblrStyle{firsthead}{font=\bfseries}
+  \SetTblrStyle{firstfoot}{fg=blue2}
+  \SetTblrStyle{middlefoot}{\itshape}
+  \SetTblrStyle{caption-tag}{red2}
+}
+\begin{longtblr}[
+  theme = fancy,
+  caption = {A Long Long Long Long Long Long Long Table},
+  entry = {Short Caption},
+  label = {tblr:test},
+  note{a} = {It is the first footnote.},
+  note{$\dag$} = {It is the second long long long long long long footnote.},
+  remark{Note} = {Some general note. Some general note. Some general note.},
+  remark{Source} = {Made up by myself. Made up by myself. Made up by myself.},
+]{
+  colspec = {XXX}, width = 0.85\linewidth,
+  rowhead = 2, rowfoot = 1,
+  row{odd} = {gray9}, row{even} = {brown9},
+  row{1-2} = {purple7}, row{Z} = {blue7},
+}
+\hline
+ Head    & Head  & Head    \\
+\hline
+ Head    & Head  & Head    \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta\TblrNote{a}       & Eta    \\
+\hline
+ Iota    & Kappa\TblrNote{$\dag$} & Lambda \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Foot    & Foot  & Foot    \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Foot    & Foot  & Foot    \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Foot    & Foot  & Foot    \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Foot    & Foot  & Foot    \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Foot    & Foot  & Foot    \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Foot    & Foot  & Foot    \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Foot    & Foot  & Foot    \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Foot    & Foot  & Foot    \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Foot    & Foot  & Foot    \\
+\hline
+ Alpha   & Beta  & Gamma   \\
+\hline
+ Epsilon & Zeta  & Eta     \\
+\hline
+ Iota    & Kappa & Lambda  \\
+\hline
+ Nu      & Xi    & Omicron \\
+\hline
+ Rho     & Sigma & Tau     \\
+\hline
+ Phi     & Chi   & Psi     \\
+\hline
+ Foot    & Foot  & Foot    \\
+\hline
+\end{longtblr}
+
+\end{document}

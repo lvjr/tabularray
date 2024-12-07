@@ -13,9 +13,11 @@ enumitem
 environ
 epstopdf-base
 etoolbox
+float
 functional
 geometry
 hyperref
+l3benchmark
 l3kernel
 lmodern
 mathtools

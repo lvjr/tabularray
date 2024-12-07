@@ -13,6 +13,7 @@ enumitem
 environ
 epstopdf-pkg
 etoolbox
+float
 fp
 functional
 geometry
@@ -23,6 +24,7 @@ infwarerr
 kvoptions
 kvsetkeys
 l3build
+l3experimental
 l3packages
 latex
 latex-bin
