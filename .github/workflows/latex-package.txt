@@ -40,6 +40,6 @@ l3build
 latex-bin # depends on latex
 luatex
 pdftex
-ppmcheckpdf
+#ppmcheckpdf # not in texlive 2022
 type1cm
 xetex

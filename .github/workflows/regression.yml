@@ -11,6 +11,7 @@ jobs:
       uses: teatimeguest/setup-texlive-action@v3
       with:
         package-file: .github/workflows/texlive-package.txt
+        packages: ppmcheckpdf
         update-all-packages: true
     - name: Test tabularray with l3build
       run: |

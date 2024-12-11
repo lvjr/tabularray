@@ -38,7 +38,6 @@ pdfescape
 pdftex
 pdftexcmds
 pict2e
-ppmcheckpdf
 refcount
 rerunfilecheck
 siunitx

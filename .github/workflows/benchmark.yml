@@ -7,8 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        #version: [2022, 2023, 2024] # ppmcheckpdf not in texlive 2022
-        version: [2023, 2024]
+        version: [2022, 2023, 2024]
     steps:
     - uses: actions/checkout@v4
     - name: Install TeX Live
