@@ -14,20 +14,20 @@ jobs:
     - name: Install TeX Live
       uses: teatimeguest/setup-texlive-action@v3
       with:
-        version: ${{ matrix.version }}
+        version: ${{matrix.version}}
         package-file: .github/workflows/texlive-package.txt
         packages: tabularray
         update-all-packages: true
-    - name: Run benchmark tests with previous package
+    - name: Run benchmark tests for tabularray package
       run: |
         cd benchmarks
-        pdflatex --interaction=nonstopmode tblrbenchmark.tex
-        xelatex --interaction=nonstopmode tblrbenchmark.tex
-        lualatex --interaction=nonstopmode tblrbenchmark.tex
-    - name: Run benchmark tests with current package
-      run: |
-        cp tabularray.sty benchmarks/tabularray.sty
-        cd benchmarks
-        pdflatex --interaction=nonstopmode tblrbenchmark.tex
-        xelatex --interaction=nonstopmode tblrbenchmark.tex
-        lualatex --interaction=nonstopmode tblrbenchmark.tex
+        texlua benchmark.lua ${{matrix.version}}
+    - name: Store benchmark result
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        name: Tabularray Benchmark in TeX Live ${{matrix.version}}
+        tool: "customSmallerIsBetter"
+        output-file-path: benchmarks/output-${{matrix.version}}.txt
+        benchmark-data-dir-path: benchmark/${{matrix.version}}
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        auto-push: true
