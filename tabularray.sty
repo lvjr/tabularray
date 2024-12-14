@@ -3770,6 +3770,8 @@
     \dim_compare:nNnT { \l__tblr_w_tl } < { 0pt } % column width unset
       {
         %% To keep \lTblrMeasuringBool correct we need measure=vstore from varwidth.
+        %% A temporary private hook for testfiles/supporthook/regression-test.cfg.
+        \use:c { __tblr_temp_hook_for_measure_vstore_testing: }
         \tl_if_eq:NnTF \l__tblr_inner_spec_measure_tl { vstore }
           {
             \__tblr_build_vcell_with_vstore:
