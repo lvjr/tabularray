@@ -3769,11 +3769,10 @@
     \box_clear:N \l__tblr_measured_cell_box
     \dim_compare:nNnT { \l__tblr_w_tl } < { 0pt } % column width unset
       {
-        %% To keep \lTblrMeasuringBool correct we need measure=vbox from varwidth.
-        %% As an experiment, we implement it only when hook library is loaded.
-        \__tblr_lib_if_used:nTF { hook }
+        %% To keep \lTblrMeasuringBool correct we need measure=vstore from varwidth.
+        \tl_if_eq:NnTF \l__tblr_inner_spec_measure_tl { vstore }
           {
-            \__tblr_build_vcell_with_vbox:
+            \__tblr_build_vcell_with_vstore:
           }
           {
             \__tblr_save_counters:n { cell }
@@ -3799,7 +3798,7 @@
   }
 
 %% Build cell vbox with varwidth and use it later when hook library is loaded
-\cs_new_protected:Npn  \__tblr_build_vcell_with_vbox:
+\cs_new_protected:Npn  \__tblr_build_vcell_with_vstore:
   {
     \hbox_set:Nn \l__tblr_measured_cell_box
       {
@@ -7460,6 +7459,7 @@
   {
     %% We need varwidth to keep \lTblrMeasuringBool correct
     \UseTblrLibrary { varwidth }
+    \tl_set:Nn \l__tblr_inner_spec_measure_tl { vstore }
     \cs_set_eq:NN \__tblr_hook_use:n \hook_use:n
     \hook_new_pair:nn { tabularray/trial/before } { tabularray/trial/after }
     \hook_new_pair:nn { tabularray/table/before } { tabularray/table/after }
