@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734163142537,
+  "lastUpdate": 1734175444941,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -336,6 +336,48 @@ window.BENCHMARK_DATA = {
             "value": 0.76387155702766,
             "unit": "ratio",
             "extra": "current time : previous time = 4.2685356140137 : 5.5880279541016"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "b0bb0216bc4381812a6ccbd09c9224d50cae9db5",
+          "message": "add measure=vstore option to varwidth library (#549)",
+          "timestamp": "2024-12-14T19:21:16+08:00",
+          "tree_id": "6023baa2c14c66f7fe3515d0c699e76ceb5de6d1",
+          "url": "https://github.com/lvjr/tabularray/commit/b0bb0216bc4381812a6ccbd09c9224d50cae9db5"
+        },
+        "date": 1734175444633,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.72889070137354,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.3545227050781 : 4.6022300720215"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.72680887348544,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4271202087402 : 4.7152976989746"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.75789346623934,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.2154846191406 : 5.5621070861816"
           }
         ]
       }
