@@ -213,6 +213,13 @@
     \keys_set_groups:nnn { tabularray / #1 } {#2} {#3}
   }
 
+\prg_set_conditional:Npnn \__tblr_keys_if_exist:nn #1 #2 { p, T, F, TF }
+  {
+    \keys_if_exist:nnTF { tabularray / #1 } { #2 }
+      { \prg_return_true: } { \prg_return_false: }
+  }
+\prg_generate_conditional_variant:Nnn \__tblr_keys_if_exist:nn { ne } { TF }
+
 %%% --------------------------------------------------------
 %%> \section{Data Structures Based on Property Lists}
 %%% --------------------------------------------------------
@@ -3137,13 +3144,16 @@
 %%> \section{Parse Table Inner Specifications}
 %%% --------------------------------------------------------
 
-\clist_new:N \g__tblr_table_known_keys_clist
-\clist_gset:Nn \g__tblr_table_known_keys_clist
+%% We must define these keys to make \__tblr_keys_if_exist work
+\__tblr_keys_define:nn { table / inner }
   {
-    colspec, rowspec, column, row, cell, hline, vline, hborder, vborder, width,
-    rowhead, rowfoot, columns, rows, cells, hlines, vlines, % hborders, vborders,
-    leftsep, rightsep, colsep, abovesep, belowsep, rowsep, rulesep,
-    baseline, hspan, vspan, stretch, delimiter
+    column  .code:n = ,
+    row     .code:n = ,
+    cell    .code:n = ,
+    hline   .code:n = ,
+    vline   .code:n = ,
+    hborder .code:n = ,
+    vborder .code:n =
   }
 
 \__tblr_keys_define:nn { table / inner }
@@ -3195,7 +3205,7 @@
   {
     \regex_extract_once:NnNTF \c__tblr_first_key_name_regex {#1} \l_tmpa_seq
       {
-        \clist_if_in:NxTF \g__tblr_table_known_keys_clist
+        \__tblr_keys_if_exist:neTF { table / inner }
           { \seq_item:Nn \l_tmpa_seq {2} }
           { \__tblr_keys_set:nn { table / inner } {#1} }
           { \__tblr_parse_colrow_spec:nn { column } {#1} }
@@ -7387,7 +7397,6 @@
         \tl_set_eq:NN ##1 \g__tblr_functional_result_tl
       }
     %% Add inner specification "process"
-    \clist_gput_right:Nn \g__tblr_table_known_keys_clist { process }
     \__tblr_keys_define:nn { table / inner }
       { process .code:n = \__tblr_keys_gput:nn { process } {##1} }
     \cs_set:Npn \__tblr_functional_calculation:
@@ -7541,7 +7550,6 @@
 \NewTblrLibrary { varwidth }
   {
     \RequirePackage { varwidth }
-    \clist_gput_left:Nn \g__tblr_table_known_keys_clist { measure }
     \tl_set:Nn \l__tblr_inner_spec_measure_tl { vbox }
     \__tblr_keys_define:nn { table / inner }
       { measure .tl_set:N = \l__tblr_inner_spec_measure_tl }
