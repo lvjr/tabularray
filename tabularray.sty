@@ -7534,3 +7534,32 @@
       }
   }
 
+%% Library tikzmark to add tikzmarks at the lower left corner of each cell
+
+\tl_new:N \l__tblr_tikzmark_prefix_tl
+\box_new:N \l__tblr_tikzmark_box
+
+\NewTblrLibrary { tikzmark }
+  {
+    \__tblr_keys_define:nn { table / inner }
+        { 
+            tikzmark ~ prefix .code:n = {
+                \tl_set:Nn \l__tblr_tikzmark_prefix_tl { ##1 - } 
+            } 
+        }
+    \UseTblrLibrary { hook }
+    \RequirePackage { tikz }
+    \usetikzlibrary { tikzmark }
+    \AddToHook { tabularray/cell/before } {
+        \hbox_set:Nn \l__tblr_tikzmark_box { 
+          \tikzmark{ \l__tblr_tikzmark_prefix_tl tblr - \arabic{colnum} - \arabic{rownum} } 
+        }
+        \box_set_trim:Nnnnn \l__tblr_tikzmark_box 
+            { 0.5\rulewidth }
+            { 0.5\rulewidth }
+            { -0.5\rulewidth }
+            { -0.5\rulewidth }
+        \box_move_down:nn { \dim_eval:n { \l__tblr_row_dp_dim } }
+            { \box_use:N \l__tblr_tikzmark_box }
+    }
+  }
