@@ -30,15 +30,15 @@ their alignment commands.
 \label{sec:fakeverb}
 
 Due to the limitations of TeX,
-we are not able to make \fakeverb{\verb} command behave well inside \texttt{tabularray} tables.
-As a replacement, you may use \fakeverb{\fakeverb} command from \href{https://www.ctan.org/pkg/codehigh}{\texttt{codehigh}} package.
+we are not able to make \CC{\verb} command behave well inside \PP{tabularray} tables.
+As a replacement, you may use \CC{\fakeverb} command from \href{https://www.ctan.org/pkg/codehigh}{\PP{codehigh}} package.
 
-The \verb|\fakeverb| command will remove the backslashes in the following control symbols before
-typesetting its content: \fakeverb{\\\\}, \fakeverb{\\\{}, \fakeverb{\\\}}, \fakeverb{\\\#}, \fakeverb{\\\^} and \texttt{\textbackslash\textvisiblespace}, \fakeverb{\\\%}.
-Also the argument of \verb|\fakeverb| command need to be enclosed with curly braces.
-Therefore it could be safely used inside \verb|tabularray| tables and other LaTeX commands.
+The \CC{\fakeverb} command will remove the backslashes in the following control symbols before
+typesetting its content: \CC{\\\\}, \CC{\\\{}, \CC{\\\}}, \CC{\\\#}, \CC{\\\^} and \texttt{\textbackslash\textvisiblespace}, \CC{\\\%}.
+Also the argument of \CC{\fakeverb} command need to be enclosed with curly braces.
+Therefore it could be safely used inside \PP{tabularray} tables and other LaTeX commands.
 
-Here is an example of using \verb!\fakeverb! commands inside a \verb|tblr| environment:
+Here is an example of using \CC{\fakeverb} commands inside a \EE{tblr} environment:
 
 \begin{demohigh}
 \begin{tblr}{hlines}
@@ -48,12 +48,12 @@ Here is an example of using \verb!\fakeverb! commands inside a \verb|tblr| envir
 \end{tblr}
 \end{demohigh}
 
-In the above example, balanced curly braces and control words (such as \verb!\bfseries!)
+In the above example, balanced curly braces and control words (such as \CC{\bfseries})
 need not to be escaped---only several special characters need to be escaped.
-Please read the documentation of \texttt{codehigh} package for more details of
-\verb|\fakeverb| commands.%
-\footnote{By the way, \fakeverb{\EscVerb} command from
-\href{https://www.ctan.org/pkg/fvextra}{\texttt{fvextra}} package is similar to
-\fakeverb{\fakeverb} command, but with \fakeverb{\EscVerb} you need to escape every control word.}
+Please read the documentation of \PP{codehigh} package for more details of
+\CC{\fakeverb} commands.%
+\footnote{By the way, \CC{\EscVerb} command from
+\href{https://www.ctan.org/pkg/fvextra}{\PP{fvextra}} package is similar to
+\CC{\fakeverb} command, but with \CC{\EscVerb} you need to escape every control word.}
 
 \end{document}

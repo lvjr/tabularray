@@ -228,8 +228,8 @@ Alpha   & Beta  & Gamma   \\
 \hline
 \end{longtblr}
 
-As you can see in the above example, the appearance of long tables of \verb!tabularray! package
-is similar to that of \verb!threeparttablex! packages.
+As you can see in the above example, the appearance of long tables of \PP{tabularray} package
+is similar to that of \PP{threeparttablex} packages.
 It supports table footnotes, but not page footnotes.
 
 \newpage
@@ -294,12 +294,12 @@ The source code for the above long table is shown below. It is mainly self-expla
 \end{longtblr}
 \end{codehigh}
 
-As you can see in the above code, we typeset long tables with \verb!longtblr! environment.
-And we can totally separate contents and styles of long tables with \verb!tabularray! package.
+As you can see in the above code, we typeset long tables with \EE{longtblr} environment.
+And we can totally separate contents and styles of long tables with \PP{tabularray} package.
 
 Row head and row foot consist of some lines of the table and should appear in every page.
-Their options are inner specifications and should be put in the mandatory argument of the \verb!longtblr! environment.
-In the above example, We set \verb!rowhead=2! and \verb!rowfoot=1!.
+Their options are inner specifications and should be put in the mandatory argument of the \EE{longtblr} environment.
+In the above example, We set \KV{rowhead=2} and \KV{rowfoot=1}.
 
 \begin{spectblr}[
   caption = {Inner Specifications for Row Heads and Row Foots}
@@ -310,7 +310,7 @@ In the above example, We set \verb!rowhead=2! and \verb!rowfoot=1!.
 \end{spectblr}
 
 Table head and table foot consist of the caption, continuation text, footnotes and remarks.
-Their options are outer specifications and should be put in the optional argument of the \verb!longtblr! environment.
+Their options are outer specifications and should be put in the optional argument of the \EE{longtblr} environment.
 
 \begin{spectblr}[
   caption = {Outer Specifications for Table Heads and Table Foots}
@@ -328,25 +328,25 @@ Their options are outer specifications and should be put in the optional argumen
   \KK{remark{<name>}} & table remark with \V{<name>} as tag & \None \\
 \end{spectblr}
 
-If you write \verb!entry=none!, \verb!tabularray! package will not add an entry in List of Tables.
-Therefore \verb!caption=text,entry=none! is similar to \verb!\caption[]{text}! in \verb!longtable!.
+If you write \KV{entry=none}, \PP{tabularray} package will not add an entry in List of Tables.
+Therefore \KV{caption=text,entry=none} is similar to \CC{\caption[]{text}} in \PP{longtable}.
 
-If you write \verb!label=none!, \verb!tabularray! package will not step \verb!table! counter,
-and set the \verb!caption-tag! and \verb!caption-sep! elements (see below) to empty.
-Therefore \verb!caption=text,entry=none,label=none! is similar to \verb!\caption*{text}!
-in \verb!longtable!, except for the counter.
+If you write \KV{label=none}, \PP{tabularray} package will not step \CO{table} counter,
+and set the \EN{caption-tag} and \EN{caption-sep} elements (see below) to empty.
+Therefore \KV{caption=text,entry=none,label=none} is similar to \CC{\caption*{text}}
+in \PP{longtable}, except for the counter.
 
 \section{Customize Templates}
 
 \subsection{Overview of Templates}
 
-The template system for table heads and table foots in \verb!tabularray! is largely inspired
-by \verb!beamer!, \verb!caption! and \verb!longtable! packages. For elements in Table \ref{tblr:element},
-you can use \verb!\DefTblrTemplate!\footnote{From version 2022A,
-\texttt{\string\DefTblrTemplate} has another name \texttt{\string\DeclareTblrTemplate}.}
+The template system for table heads and table foots in \PP{tabularray} is largely inspired
+by \PP{beamer}, \PP{caption} and \PP{longtable} packages. For elements in Table \ref{tblr:element},
+you can use \CC{\DefTblrTemplate}\footnote{From version 2022A,
+\CC{\DefTblrTemplate} has another name \CC{\DeclareTblrTemplate}.}
 to define and modify templates,
-and use \verb!\SetTblrTemplate! to choose default templates. In defining templates,
-you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrTemplate! commands.
+and use \CC{\SetTblrTemplate} to choose default templates. In defining templates,
+you can include other templates with \CC{\UseTblrTemplate} and \CC{\ExpTblrTemplate} commands.
 
 \begin{spectblr}[
   caption = {Elements for Table Heads and Table Foots},
@@ -380,12 +380,12 @@ you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrT
 \end{spectblr}
 
 An element which only includes short text is called a \underline{sub element}.
-Normally there is one \verb!-! in the name of a sub element.
+Normally there is one \TT{-} in the name of a sub element.
 An element which includes one or more paragraphs is called a \underline{main element}.
-Normally there isn't any \verb!-! in the name of a main element.
+Normally there isn't any \TT{-} in the name of a main element.
 
-For each of the above elements, two templates \verb!normal! and \verb!empty! are always defined.
-You can select one of them with \verb!\SetTblrTemplate! command.
+For each of the above elements, two templates \TN{normal} and \TN{empty} are always defined.
+You can select one of them with \CC{\SetTblrTemplate} command.
 
 \subsection{Continuation Templates}
 
@@ -401,12 +401,12 @@ respectively. And you may contribute your translations of them to \textbf{babel}
 \SetTblrTemplate{conthead-text}{normal}
 \end{codehigh}
 
-In the above code, command \verb!\DefTblrTemplate! defines the templates with name \verb!normal!,
-and then command \verb!\SetTblrTemplate! sets the templates with name \verb!normal! as default.
-The \verb!normal! template is always defined and set as default for any element in \verb!tabularray!.
+In the above code, command \CC{\DefTblrTemplate} defines the templates with name \TN{normal},
+and then command \CC{\SetTblrTemplate} sets the templates with name \TN{normal} as default.
+The \TN{normal} template is always defined and set as default for any element in \PP{tabularray}.
 Therefore you had better use another name when defining new templates.
 
-If you use \verb!default! as template name in \verb!\DefTblrTemplate!,
+If you use \TN{default} as template name in \CC{\DefTblrTemplate},
 you define and set it as default at the same time.
 Therefore the above code can be written in another way:
 
@@ -417,8 +417,8 @@ Therefore the above code can be written in another way:
 
 You may modify the code to customize continuation text to fit your needs.
 
-The templates for \verb!contfoot! and \verb!conthead! normally
-include the templates of their sub elements with \verb!\UseTblrTemplate! commands.
+The templates for \EN{contfoot} and \EN{conthead} normally
+include the templates of their sub elements with \CC{\UseTblrTemplate} commands.
 But you can also handle user settings such as horizontal alignment here.
 
 \begin{codehigh}
@@ -436,11 +436,11 @@ Normally a caption consists of three parts, and their templates are defined with
 \DefTblrTemplate{caption-text}{default}{\InsertTblrText{caption}}
 \end{codehigh}
 
-The command \verb!\InsertTblrText{caption}! inserts the value of \verb!caption! key,
-which you could write in the optional argument of \verb!longtblr! environment.
+The command \CC{\InsertTblrText{caption}} inserts the value of \K{caption} key,
+which you could write in the optional argument of \EE{longtblr} environment.
 
-The \verb!caption! template normally includes three sub templates with \verb!\UseTblrTemplate! commands:
-The \verb!caption! template will be used in \verb!firsthead! template.
+The \EN{caption} template normally includes three sub templates with \CC{\UseTblrTemplate} commands:
+The \EN{caption} template will be used in \EN{firsthead} template.
 
 \begin{codehigh}
 \DefTblrTemplate{caption}{default}{
@@ -450,8 +450,8 @@ The \verb!caption! template will be used in \verb!firsthead! template.
 }
 \end{codehigh}
 
-Furthermore \verb!capcont! template includes \verb!conthead! template as well.
-The \verb!capcont! template will be used in \verb!middlehead! and \verb!lasthead! templates.
+Furthermore \EN{capcont} template includes \EN{conthead} template as well.
+The \EN{capcont} template will be used in \EN{middlehead} and \EN{lasthead} templates.
 
 \begin{codehigh}
 \DefTblrTemplate{capcont}{default}{
@@ -483,9 +483,9 @@ The templates for table notes can be defined like this:
 }
 \end{codehigh}
 
-The \verb!\MapTblrNotes! command loops for all table notes,
-which are written in the optional argument of \verb!longtblr! environment.
-Inside the loop, you can use \verb!\InsertTblrNoteTag! and \verb!\InsertTblrNoteText!
+The \CC{\MapTblrNotes} command loops for all table notes,
+which are written in the optional argument of \EE{longtblr} environment.
+Inside the loop, you can use \CC{\InsertTblrNoteTag} and \CC{\InsertTblrNoteText}
 commands to insert current note tag and note text, respectively.
 
 The definition of remark templates are similar to note templates.
@@ -527,9 +527,9 @@ The templates for table heads and foots are defined as including other templates
 }
 \end{codehigh}
 
-Note that you can define the same template for multiple elements in \verb!\DefTblrTemplate! command.
+Note that you can define the same template for multiple elements in \CC{\DefTblrTemplate} command.
 If you only want to show table caption in the first page, you may change the definitions of
-\verb!middlehead! and \verb!lasthead! elements:
+\EN{middlehead} and \EN{lasthead} elements:
 
 \begin{codehigh}
 \DefTblrTemplate{middlehead,lasthead}{default}{
@@ -557,7 +557,7 @@ All available keys for template elements are described in Table \ref{key:element
   \K{hang}               & hangindent value & \V{0pt} or \V{0.7em} \\
 \end{spectblr}
 
-You may change the styles of elements with \verb!\SetTblrStyle! command:
+You may change the styles of elements with \CC{\SetTblrStyle} command:
 
 \begin{codehigh}
 \SetTblrStyle{firsthead}{font=\bfseries}
@@ -566,14 +566,14 @@ You may change the styles of elements with \verb!\SetTblrStyle! command:
 \SetTblrStyle{caption-tag}{red2}
 \end{codehigh}
 
-When you write \verb!\UseTblrTemplate{element}{default}! in defining a template,
-beside including template code of the \verb!element!, the foreground color and font commands
-of the \verb!element! will be set up automatically.
-In contrast, \verb!\ExpTblrTemplate{element}{default}! will only include template code.
+When you write \CC{\UseTblrTemplate{element}{default}} in defining a template,
+beside including template code of the \EN{element}, the foreground color and font commands
+of the \EN{element} will be set up automatically.
+In contrast, \CC{\ExpTblrTemplate{element}{default}} will only include template code.
 
 \section{Define Themes}
 
-You may define your own themes for table heads and foots with \verb!\NewTblrTheme! command.
+You may define your own themes for table heads and foots with \CC{\NewTblrTheme} command.
 a theme consists of some template and style settings. For example:
 \nopagebreak
 \begin{codehigh}
@@ -586,19 +586,19 @@ a theme consists of some template and style settings. For example:
 }
 \end{codehigh}
 
-After defining the theme \verb!fancy!, you can use it
-by writing \verb!theme=fancy! in the optional argument of \verb!longtblr! environment.
+After defining the theme \V{fancy}, you can use it
+by writing \KV{theme=fancy} in the optional argument of \EE{longtblr} environment.
 
 \section{Control Page Breaks}
 
-Just like \verb!longtable! package, inside \verb!longtblr! environment,
-you can use \verb!\\*! or \verb!\nopagebreak! to prohibit a page break,
-and use \verb!\pagebreak! to force a page break.
+Just like \PP{longtable} package, inside \EE{longtblr} environment,
+you can use \CC{\\\\*} or \CC{\nopagebreak} to prohibit a page break,
+and use \CC{\pagebreak} to force a page break.
 
 \section{Floatable Tall Tables}
 
-There is also a \verb!talltblr! environment as an alternative to \verb!threeparttable! environment.
-It can not cross multiple pages, but it can be put inside \verb!table! environment.
+There is also a \EE{talltblr} environment as an alternative to \EE{threeparttable} environment.
+It can not cross multiple pages, but it can be put inside \EE{table} environment.
 
 \begin{demohigh}
 TEXT\begin{talltblr}[

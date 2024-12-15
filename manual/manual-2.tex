@@ -13,12 +13,12 @@
 
 \section{Old and New Interfaces}
 
-With \verb!tabularray! package, you can change the styles of tables via old interfaces or new interfaces.
+With \PP{tabularray} package, you can change the styles of tables via old interfaces or new interfaces.
 
 The old interfaces consist of some table commands inside the table contents.
-Same as \verb!tabular! and \verb!array! environments,
+Same as \EE{tabular} and \EE{array} environments,
 all table commands \textcolor{red3}{must} be put at the beginning of the cell text.
-Also, new table commands \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
+Also, new table commands \textcolor{red3}{must} be defined with \CC{\NewTableCommand}.
 
 The new interfaces consist of some options inside the mandatory argument,
 hence totally separating the styles and the contents of tables.
@@ -80,7 +80,7 @@ All available keys for hlines and vlines are described in Table \ref{key:hline} 
 
 \subsection{Hlines and Vlines in New Interfaces}
 
-Options \verb!hlines! and \verb!vlines! are for setting all hlines and vlines, respectively.
+Options \K{hlines} and \K{vlines} are for setting all hlines and vlines, respectively.
 With empty value, all hlines/vlines will be solid.
 
 \begin{demohigh}
@@ -118,8 +118,8 @@ Another pair of braces before will select segments in all hlines/vlines.
 \end{tblr}
 \end{demohigh}
 
-The above example can be simplified with \verb!odd! and \verb!even! values.
-(More child selectors can be defined with \verb!\NewChildSelector! command.
+The above example can be simplified with \CS{odd} and \CS{even} values.
+(More child selectors can be defined with \CC{\NewChildSelector} command.
 Advanced users could read the source code for this.)
 
 \begin{demohigh}
@@ -135,7 +135,7 @@ Advanced users could read the source code for this.)
 \end{tblr}
 \end{demohigh}
 
-Another pair of braces before will draw more hlines/vlines (in which \verb!-! stands for all line segments).
+Another pair of braces before will draw more hlines/vlines (in which \V{-} stands for all line segments).
 
 \begin{demohigh}
 \begin{tblr}{
@@ -149,8 +149,8 @@ Another pair of braces before will draw more hlines/vlines (in which \verb!-! st
 
 Note that you \underline{must} use indexes in order: first 1, then 2, etc.
 
-Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlines, respectively.
-Their values are the same as options \verb!hlines! and \verb!vlines!:
+Options \KK{hline{i}} and \KK{vline{j}} are for setting some hlines and vlines, respectively.
+Their values are the same as options \K{hlines} and \K{vlines}:
 
 \begin{demohigh}
 \begin{tblr}{
@@ -167,7 +167,7 @@ Their values are the same as options \verb!hlines! and \verb!vlines!:
 \end{tblr}
 \end{demohigh}
 
-You can use \verb!U!, \verb!V!, \verb!W!, \verb!X!, \verb!Y!, \verb!Z! to
+You can use \V{U}, \V{V}, \V{W}, \V{X}, \V{Y}, \V{Z} to
 denote the last six children, respectively.
 It is especially useful when you are writing long tables:
 
@@ -186,7 +186,7 @@ It is especially useful when you are writing long tables:
 \end{tblr}
 \end{demohigh}
 
-Now we show the usage of \verb!text! key by the following example%
+Now we show the usage of \K{text} key by the following example%
 \footnote{Code from \url{https://tex.stackexchange.com/questions/603023/tabularray-and-tabularx-column-separator}.}:
 
 \begin{demohigh}
@@ -204,11 +204,11 @@ Now we show the usage of \verb!text! key by the following example%
 \end{tblr}
 \end{demohigh}
 
-You need to load \verb!chemmacros! package for the \verb!\ch! command.
+You need to load \PP{chemmacros} package for the \CC{\ch} command.
 
-The \verb!leftpos! and \verb!rightpos! keys specify crossing or trimming positions for hlines.
-The possible values for them are decimal numbers between \verb!-1! and \verb!1!.
-Their initial values are \verb!1!.
+The \K{leftpos} and \K{rightpos} keys specify crossing or trimming positions for hlines.
+The possible values for them are decimal numbers between \V{-1} and \V{1}.
+Their initial values are \V{1}.
 
 \begin{center}
 \begin{tblr}{width=0.5\textwidth,colspec={rX[l]},hlines}
@@ -218,8 +218,8 @@ Their initial values are \verb!1!.
 \end{tblr}
 \end{center}
 
-The \verb!abovepos! and \verb!belowpos! keys for vlines have similar meanings.
-But their initial values are \verb!0!.
+The \K{abovepos} and \K{belowpos} keys for vlines have similar meanings.
+But their initial values are \V{0}.
 
 \begin{center}
 \begin{tblr}{width=0.5\textwidth,colspec={rX[l]},hlines}
@@ -245,7 +245,7 @@ Here is an example for these four keys:
 \end{tblr}
 \end{demohigh}
 
-There is also an \verb!endpos! option for adjusting \verb!leftpos!/\verb!rightpos!
+There is also an \K{endpos} option for adjusting \K{leftpos}/\K{rightpos}
 for only the leftmost/rightmost column:
 
 \begin{demohigh}
@@ -263,7 +263,7 @@ for only the leftmost/rightmost column:
 
 \subsection{Hlines and Vlines in Old Interfaces}
 
-The \verb!\hline! command has an optional argument which accepts key-value options.
+The \CC{\hline} command has an optional argument which accepts key-value options.
 The available keys are described in Table \ref{key:hline}.
 
 \begin{demohigh}
@@ -278,7 +278,7 @@ The available keys are described in Table \ref{key:hline}.
 \end{tblr}
 \end{demohigh}
 
-The \verb!\cline! command also has an optional argument which is the same as \verb!\hline!.
+The \CC{\cline} command also has an optional argument which is the same as \CC{\hline}.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -292,7 +292,7 @@ The \verb!\cline! command also has an optional argument which is the same as \ve
 \end{tblr}
 \end{demohigh}
 
-You can use child selectors in the mandatory argument of \verb!\cline!.
+You can use child selectors in the mandatory argument of \CC{\cline}.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -306,7 +306,7 @@ You can use child selectors in the mandatory argument of \verb!\cline!.
 \end{tblr}
 \end{demohigh}
 
-Commands \verb!\SetHline! combines the usages of \verb!\hline! and \verb!\cline!:
+Commands \CC{\SetHline} combines the usages of \CC{\hline} and \CC{\cline}:
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -330,21 +330,21 @@ Commands \verb!\SetHline! combines the usages of \verb!\hline! and \verb!\cline!
 \end{tblr}
 \end{demohigh}
 
-In fact, table command \verb!\SetHline[<index>]{<columns>}{<styles>}! at the beginning of row \verb!i!
-is the same as table option \verb!hline{i}={<index>}{<columns>}{<styles>}!.
+In fact, table command \CC{\SetHline[<index>]{<columns>}{<styles>}} at the beginning of row \V{i}
+is the same as table option \KV{hline{i}={<index>}{<columns>}{<styles>}}.
 
-Also, table command \verb!\SetHlines[<index>]{<columns>}{<styles>}! at the beginning of some row
-is the same as table option \verb!hlines={<index>}{<columns>}{<styles>}!.
+Also, table command \CC{\SetHlines[<index>]{<columns>}{<styles>}} at the beginning of some row
+is the same as table option \KV{hlines={<index>}{<columns>}{<styles>}}.
 
-The usages of table commands \verb!\vline!, \verb!\rline!, \verb!\SetVline!, \verb!\SetVlines!
-are similar to those of \verb!\hline!, \verb!\cline!, \verb!\SetHline!, \verb!\SetHlines!, respectively.
+The usages of table commands \CC{\vline}, \CC{\rline}, \CC{\SetVline}, \CC{\SetVlines}
+are similar to those of \CC{\hline}, \CC{\cline}, \CC{\SetHline}, \CC{\SetHlines}, respectively.
 But normally you don't need to use them.
 
 \section{Hborders and Vborders}
 
-Options \verb!hborder{i}! and \verb!vborder{j}! are similar to \verb!hline{i}! and \verb!vline{j}!,
+Options \KK{hborder{i}} and \KK{vborder{j}} are similar to \KK{hline{i}} and \KK{vline{j}},
 respectively, but they hold border specifications not related to one specific hline and vline.
-All available keys for \verb!hborder{i}! and \verb!vborder{j}! are described in
+All available keys for \KK{hborder{i}} and \KK{vborder{j}} are described in
 Table~\ref{key:hborder} and Table~\ref{key:vborder}.
 
 \begin{spectblr}[
@@ -371,10 +371,10 @@ Table~\ref{key:hborder} and Table~\ref{key:vborder}.
   \K{rightspace+} & increase \V{leftsep} of current column  & \None \\
 \end{spectblr}
 
-Furthermore, table command \verb!\hborder{<specs>}! at the beginning of row \verb!i!
-is the same as table option \verb!hborder{i}={<specs>}!,
-and table command \verb!\vborder{<specs>}! at the beginning of column \verb!j!
-is the same as table option \verb!vborder{j}={<specs>}!.
+Furthermore, table command \CC{\hborder{<specs>}} at the beginning of row \V{i}
+is the same as table option \KV{hborder{i}={<specs>}},
+and table command \CC{\vborder{<specs>}} at the beginning of column \V{j}
+is the same as table option \KV{vborder{j}={<specs>}}.
 
 \section{Cells and Spancells}
 
@@ -416,7 +416,7 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
 
 \subsection{Cells and Spancells in New Interfaces}
 
-Option \verb!cells! is for setting all cells.
+Option \K{cells} is for setting all cells.
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{hlines={white},cells={c,blue7}}
@@ -427,8 +427,8 @@ Option \verb!cells! is for setting all cells.
 \end{tblr}
 \end{demohigh}
 
-Option \verb!cell{i}{j}! is for setting some cells,
-where \verb!i! stands for the row numbers and \verb!j! stands for the column numbers.
+Option \KK{cell{i}{j}} is for setting some cells,
+where \V{i} stands for the row numbers and \V{j} stands for the column numbers.
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -459,7 +459,7 @@ where \verb!i! stands for the row numbers and \verb!j! stands for the column num
 
 \subsection{Cells and Spancells in Old Interfaces}
 
-The \verb!\SetCell! command has a mandatory argument for setting the styles of current cell.
+The \CC{\SetCell} command has a mandatory argument for setting the styles of current cell.
 The available keys are described in Table \ref{key:cell}.
 
 \begin{demohigh}
@@ -474,7 +474,7 @@ The available keys are described in Table \ref{key:cell}.
 \end{tblr}
 \end{demohigh}
 
-The \verb!\SetCell! command also has an optional argument for setting the multispan of current cell.
+The \CC{\SetCell} command also has an optional argument for setting the multispan of current cell.
 The available keys are described in Table \ref{key:cellspan}.
 
 \begin{demohigh}
@@ -507,11 +507,11 @@ The available keys are described in Table \ref{key:cellspan}.
 \end{tblr}
 \end{demohigh}
 
-In fact, table command \verb!\SetCell[<span>]{<styles>}! at the beginning of cell at row \verb!i!
-and column \verb!j! is the same as table option \verb!cell{i}{j}={<span>}{<styles>}!.
+In fact, table command \CC{\SetCell[<span>]{<styles>}} at the beginning of cell at row \V{i}
+and column \V{j} is the same as table option \KV{cell{i}{j}={<span>}{<styles>}}.
 
-Also, table command \verb!\SetCells[<span>]{<styles>}! at the beginning of some cell
-is the same as table option \verb!cells={<span>}{<styles>}!.
+Also, table command \CC{\SetCells[<span>]{<styles>}} at the beginning of some cell
+is the same as table option \KV{cells={<span>}{<styles>}}.
 
 \section{Rows and Columns}
 
@@ -582,7 +582,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
 
 \subsection{Rows and Columns in New Interfaces}
 
-Options \verb!rows! and \verb!columns! are for setting all rows and columns, respectively.
+Options \K{rows} and \K{columns} are for setting all rows and columns, respectively.
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -595,7 +595,7 @@ Options \verb!rows! and \verb!columns! are for setting all rows and columns, res
 \end{tblr}
 \end{demohigh}
 
-Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns, respectively.
+Options \KK{row{i}} and \KK{column{j}} are for setting some rows and columns, respectively.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -613,7 +613,7 @@ Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns
 \end{tblr}
 \end{demohigh}
 
-The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!font! keys:
+The following example demonstrates the usages of \K{bg}, \K{fg} and \K{font} keys:
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -628,7 +628,7 @@ The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!
 \end{tblr}
 \end{demohigh}
 
-The following example demonstrates the usages of \verb!mode! key:
+The following example demonstrates the usages of \K{mode} key:
 \nopagebreak
 \begin{demohigh}
 $\begin{tblr}{
@@ -642,11 +642,11 @@ $\begin{tblr}{
 \hline
 \end{tblr}$
 \end{demohigh}
-Note that you \textcolor{red3}{cannot} write multiline math directly (such as \verb!\alpha \\ \beta!)
+Note that you \textcolor{red3}{cannot} write multiline math directly (such as \TT{\alpha\ \\\\ \beta})
 in any math-mode cell.
 
 The following example demonstrates the usages of
-\verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! keys:
+\K{abovesep}, \K{belowsep}, \K{leftsep}, \K{rightsep} keys:
 %\nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -660,7 +660,7 @@ The following example demonstrates the usages of
 \end{tblr}
 \end{demohigh}
 
-The following example shows that we can replace \verb!\\[dimen]! with \verb!belowsep+! key.
+The following example shows that we can replace \CC{\\\\[dimen]} with \K{belowsep+} key.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -674,7 +674,7 @@ The following example shows that we can replace \verb!\\[dimen]! with \verb!belo
 
 \subsection{Rows and Columns in Old Interfaces}
 
-The \verb!\SetRow! command has a mandatory argument for setting the styles of current row.
+The \CC{\SetRow} command has a mandatory argument for setting the styles of current row.
 The available keys are described in Table \ref{key:row}.
 
 \begin{demohigh}
@@ -689,25 +689,25 @@ The available keys are described in Table \ref{key:row}.
 \end{tblr}
 \end{demohigh}
 
-In fact, table command \verb!\SetRow{<styles>}! at the beginning of row \verb!i!
-is the same as table option \verb!row{i}={<styles>}!.
+In fact, table command \CC{\SetRow{<styles>}} at the beginning of row \V{i}
+is the same as table option \KV{row{i}={<styles>}}.
 
-Also, table command \verb!\SetRows{<styles>}! at the beginning of some row
-is the same as table option \verb!rows={<styles>}!.
+Also, table command \CC{\SetRows{<styles>}} at the beginning of some row
+is the same as table option \KV{rows={<styles>}}.
 
-The usages of table commands \verb!\SetColumn! and \verb!\SetColumns!
-are similar to those of \verb!\SetRow! and \verb!\SetRows!, respectively.
+The usages of table commands \CC{\SetColumn} and \CC{\SetColumns}
+are similar to those of \CC{\SetRow} and \CC{\SetRows}, respectively.
 But normally you don't need to use them.
 
 \section{Colspec and Rowspec}
 
-Options \verb!colspec!/\verb!rowspec! are for setting column/row specifications
+Options \K{colspec}/\K{rowspec} are for setting column/row specifications
 with column/row type specifiers.
 
 \subsection{Colspec and Width}
 
-Option \verb!width! is for setting the width of the table with extendable columns.
-The following example demonstrates the usage of \verb!width! option.
+Option \K{width} is for setting the width of the table with extendable columns.
+The following example demonstrates the usage of \K{width} option.
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{width=0.8\textwidth, colspec={|l|X[2]|X[3]|X[-1]|}}
@@ -717,8 +717,8 @@ The following example demonstrates the usage of \verb!width! option.
 \end{tblr}
 \end{demohigh}
 
-You can omit \verb!colspec! name if it is the only key you use inside the mandatory argument.
-The following example demonstrates the usages of \verb!$! and \verb!$$! keys:
+You can omit \K{colspec} name if it is the only key you use inside the mandatory argument.
+The following example demonstrates the usages of \KK{$} and \KK{$$} keys:
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{Q[l]Q[r,$]Q[r,$$]}
@@ -732,8 +732,8 @@ The following example demonstrates the usages of \verb!$! and \verb!$$! keys:
 
 \subsection{Column Types}
 
-The \verb!tabularray! package has only one type of primitive column: the \verb!Q! column.
-Other types of columns are defined as \verb!Q! columns with some keys.
+The \PP{tabularray} package has only one type of primitive column: the \Q{Q} column.
+Other types of columns are defined as \Q{Q} columns with some keys.
 
 \begin{codehigh}
 \NewColumnType{l}{Q[l]}
@@ -755,13 +755,13 @@ Other types of columns are defined as \verb!Q! columns with some keys.
 \end{tblr}
 \end{demohigh}
 
-Any new column type must be defined with \verb!\NewColumnType! command.
+Any new column type must be defined with \CC{\NewColumnType} command.
 It can have an optional argument when it's defined.
 
 \subsection{Row Types}
 
-The \verb!tabularray! package has only one type of primitive row: the \verb!Q! row.
-Other types of rows are defined as \verb!Q! rows with some keys.
+The \PP{tabularray} package has only one type of primitive row: the \Q{Q} row.
+Other types of rows are defined as \Q{Q} rows with some keys.
 
 \begin{codehigh}
 \NewRowType{l}{Q[l]}
@@ -782,7 +782,7 @@ Other types of rows are defined as \verb!Q! rows with some keys.
 \end{tblr}
 \end{demohigh}
 
-Any new row type must be defined with \verb!\NewRowType! command.
+Any new row type must be defined with \CC{\NewRowType} command.
 It can have an optional argument when it's defined.
 
 \end{document}
