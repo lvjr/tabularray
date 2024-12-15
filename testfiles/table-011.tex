@@ -14,6 +14,18 @@
 
 \setlength{\parindent}{0pt}
 
+%% see comments in https://github.com/lvjr/tabularray/issues/179
+%% we can not solve problems with itemize environment and \color command
+%% the fail with itemize environment is due to differences between \vbox and minipage
+%% the fail with \color command in pdflatex/lualatex is due to a bug of varwidth
+%% so we just skip measure=vstore tesing in this test file
+\ExplSyntaxOn
+\cs_set_protected:Npn \__tblr_temp_hook_for_measure_vstore_testing:
+  {
+    \tl_set:Nn \l__tblr_inner_spec_measure_tl { vbox }
+  }
+\ExplSyntaxOff
+
 \begin{document}
 
 \hrule
