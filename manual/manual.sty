@@ -52,9 +52,13 @@
 
 \setcounter{tocdepth}{1}
 
-\newcommand*{\K}[1]{\texttt{#1}}
-\newcommand*{\V}[1]{\texttt{#1}}
-\newcommand*{\None}{$\times$}
+\NewDocumentCommand\None{}{{\boldmath$\times$}}
+\NewDocumentCommand\K{m}{\texttt{#1}} % key
+\NewDocumentCommand\V{m}{\texttt{#1}} % value
+
+\NewDocumentCommand\KK{m}{\texttt{\fakeverb{#1}}} % key
+\NewDocumentCommand\VV{m}{\texttt{\fakeverb{#1}}} % value
+\NewDocumentCommand\CC{m}{\texttt{\fakeverb{#1}}} % command
 
 \NewTblrEnviron{newtblr}
 \SetTblrOuter[newtblr]{long}

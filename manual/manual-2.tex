@@ -26,20 +26,20 @@ hence totally separating the styles and the contents of tables.
 \begin{newtblr}[
   caption = {Old Interfaces and New Interfaces},
   label = {key:interface},
-]{verb}
-  Old Interfaces                                 & New Interfaces          \\
-  \verb!\SetHlines!                              & \K{hlines}              \\
-  \verb!\SetHline!, \verb!\hline!, \verb!\hborder!, \verb!\cline!
-                                                 & \K{hline}, \K{hborder}, \K{rowspec}  \\
-  \verb!\SetVlines!                              & \K{vlines}              \\
-  \verb!\SetVline!, \verb!\vline!, \verb!\vborder!, \verb!\rline!
-                                                 & \K{vline}, \K{vborder}, \K{colspec}  \\
-  \verb!\SetCells!                               & \K{cells}               \\
-  \verb!\SetCell!                                & \K{cell}                \\
-  \verb!\SetRows!                                & \K{rows}                \\
-  \verb!\SetRow!                                 & \K{row}, \K{rowspec}    \\
-  \verb!\SetColumns!                             & \K{columns}             \\
-  \verb!\SetColumn!                              & \K{column}, \K{colspec} \\
+]{}
+  Old Interfaces                               & New Interfaces          \\
+  \CC{\SetHlines}                              & \K{hlines}              \\
+  \CC{\SetHline}, \CC{\hline}, \CC{\hborder}, \CC{\cline}
+                                               & \K{hline}, \K{hborder}, \K{rowspec}  \\
+  \CC{\SetVlines}                              & \K{vlines}              \\
+  \CC{\SetVline}, \CC{\vline}, \CC{\vborder}, \CC{\rline}
+                                               & \K{vline}, \K{vborder}, \K{colspec}  \\
+  \CC{\SetCells}                               & \K{cells}               \\
+  \CC{\SetCell}                                & \K{cell}                \\
+  \CC{\SetRows}                                & \K{rows}                \\
+  \CC{\SetRow}                                 & \K{row}, \K{rowspec}    \\
+  \CC{\SetColumns}                             & \K{columns}             \\
+  \CC{\SetColumn}                              & \K{column}, \K{colspec} \\
 \end{newtblr}
 
 \section{Hlines and Vlines}\label{sec:hlines-vlines}
@@ -384,7 +384,7 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
   caption = {Keys for the Content of Cells},
   label = {key:cell},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{verb}
+]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
@@ -398,8 +398,8 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
   \K{fg}    & foreground color name & \None \\
   \K{font}  & font commands & \None \\
   \K{mode}  & set cell mode: \V{math}, \V{imath}, \V{dmath} or \V{text} & \None \\
-  \verb!$!  & same as \V{mode=math} & \None \\
-  \verb!$$! & same as \V{mode=dmath} & \None \\
+  \KK{$}  & same as \V{mode=math} & \None \\
+  \KK{$$} & same as \V{mode=dmath} & \None \\
   \K{cmd}   & execute command for the cell text & \None \\
   \K{preto} & prepend text to the cell & \None \\
   \K{appto} & append text to the cell & \None \\
@@ -521,7 +521,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   caption = {Keys for Rows},
   label = {key:row},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{verb}
+]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
@@ -535,8 +535,8 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{fg} & foreground color name & \None \\
   \K{font} & font commands & \None \\
   \K{mode}  & set mode for row cells: \V{math}, \V{imath}, \V{dmath} or \V{text} & \None \\
-  \verb!$!  & same as \V{mode=math} & \None \\
-  \verb!$$! & same as \V{mode=dmath} & \None \\
+  \KK{$}  & same as \V{mode=math} & \None \\
+  \KK{$$} & same as \V{mode=dmath} & \None \\
   \K{cmd}   & execute command for every cell text & \None \\
   \K{abovesep} & set vertical space above the row & \V{2pt} \\
   \K{abovesep+} & increase vertical space above the row & \None \\
@@ -552,7 +552,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   caption = {Keys for Columns},
   label = {key:column},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{verb}
+]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
@@ -567,8 +567,8 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{fg} & foreground color name & \None \\
   \K{font} & font commands & \None \\
   \K{mode}  & set mode for column cells: \V{math}, \V{imath}, \V{dmath} or \V{text} & \None \\
-  \verb!$!  & same as \V{mode=math} & \None \\
-  \verb!$$! & same as \V{mode=dmath} & \None \\
+  \KK{$}  & same as \V{mode=math} & \None \\
+  \KK{$$} & same as \V{mode=dmath} & \None \\
   \K{cmd}   & execute command for every cell text & \None \\
   \K{leftsep} & set horizontal space to the left of the column & \V{6pt} \\
   \K{leftsep+} & increase horizontal space to the left of the column & \None \\

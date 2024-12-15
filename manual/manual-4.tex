@@ -314,18 +314,18 @@ Their options are outer specifications and should be put in the optional argumen
 
 \begin{spectblr}[
   caption = {Outer Specifications for Table Heads and Table Foots}
-]{verb}
+]{}
   Key Name            & Key Description & Initial Value \\
-  \V{headsep}         & vertical space between table head and table body & \V{6pt} \\
-  \V{footsep}         & vertical space between table foot and table body & \V{6pt} \\
-  \V{presep}          & vertical space between table head and the above text & \verb!1.5\bigskipamount! \\
-  \V{postsep}         & vertical space between table foot and the below text & \verb!1.5\bigskipamount! \\
-  \V{theme}           & table theme (including settings for templates and styles) & \None \\
-  \V{caption}         & table caption & \None \\
-  \V{entry}           & short table caption to be put in List of Tables & \None \\
-  \V{label}           & table label & \None \\
-  \V{note\{<name>\}}   & table note with \V{<name>} as tag & \None \\
-  \V{remark\{<name>\}} & table remark with \V{<name>} as tag & \None \\
+  \K{headsep}         & vertical space between table head and table body & \V{6pt} \\
+  \K{footsep}         & vertical space between table foot and table body & \V{6pt} \\
+  \K{presep}          & vertical space between table head and the above text & \VV{1.5\bigskipamount} \\
+  \K{postsep}         & vertical space between table foot and the below text & \VV{1.5\bigskipamount} \\
+  \K{theme}           & table theme (including settings for templates and styles) & \None \\
+  \K{caption}         & table caption & \None \\
+  \K{entry}           & short table caption to be put in List of Tables & \None \\
+  \K{label}           & table label & \None \\
+  \KK{note{<name>}}   & table note with \V{<name>} as tag & \None \\
+  \KK{remark{<name>}} & table remark with \V{<name>} as tag & \None \\
 \end{spectblr}
 
 If you write \verb!entry=none!, \verb!tabularray! package will not add an entry in List of Tables.
