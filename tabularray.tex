@@ -65,6 +65,8 @@
 \NewDocumentCommand\LL{m}{\texttt{\fakeverb{#1}}} % library
 \NewDocumentCommand\PP{m}{\texttt{\fakeverb{#1}}} % package
 \NewDocumentCommand\FF{m}{\texttt{\fakeverb{#1}}} % file
+\NewDocumentCommand\KP{m}{\texttt{\fakeverb{#1}}} % key path
+\NewDocumentCommand\HP{m}{\texttt{\fakeverb{#1}}} % hook path
 \NewDocumentCommand\CS{m}{\texttt{\fakeverb{#1}}} % child selector
 \NewDocumentCommand\CO{m}{\texttt{\fakeverb{#1}}} % counter
 \NewDocumentCommand\EN{m}{\texttt{\fakeverb{#1}}} % element name
@@ -2950,13 +2952,13 @@ We can also use color series of \PP{xcolor} package to color table rows:
 
 \section{Library \texttt{hook}}
 
-This library is experimental, please see\\
-\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
+This library is experimental, please see Chapter \ref{chap:exp}.
+%\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
 
 \section{Library \texttt{html}}
 
-This library is experimental, please see\\
-\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
+This library is experimental, please see Chapter \ref{chap:exp}.
+%\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
 
 \section{Library \texttt{nameref}}
 
@@ -3154,14 +3156,79 @@ Please read the documentation of \PP{codehigh} package for more details of
 \CC{\fakeverb} command, but with \CC{\EscVerb} you need to escape every control word.}
 
 \chapter{Experimental Interfaces}
+\label{chap:exp}
 
 \mywarning{chapter}
 
-\section{Public Key Paths}
+\section{Experimental Public Key Paths}
 
-\section{Public Hook Paths}
+In version 2025A, all \PP{tabularray} key paths were cleaned up as follows:
+\begin{itemize}[nosep]
+  \item \KP{tabularray/table/inner} (from \KP{tblr})
+  \item \KP{tabularray/table/outer} (from \KP{tblr-outer})
+  \item \KP{tabularray/column/inner} (from \KP{tblr-column})
+  \item \KP{tabularray/row/inner} (from \KP{tblr-row})
+  \item \KP{tabularray/cell/inner} (from \KP{tblr-cell-spec})
+  \item \KP{tabularray/cell/outer} (from \KP{tblr-cell-span})
+  \item \KP{tabularray/hline/inner} (from \KP{tblr-hline})
+  \item \KP{tabularray/vline/inner} (from \KP{tblr-vline})
+  \item \KP{tabularray/hborder/inner} (from \KP{tblr-hborder})
+  \item \KP{tabularray/vborder/inner} (from \KP{tblr-vborder})
+\end{itemize}
+An advanced user or package writer can use \CC{\DeclareKeys} and \CC{\SetKeys} commands
+(provided by LaTeX format) to declare new keys and apply key-value lists, respectively.
 
-\section{Public Variables}
+\section{Experimental Public Hook Paths}
+
+All experimental public \PP{tabularray} hooks provided by \LL{hook} library are as follows:
+\begin{itemize}[nosep]
+  \item \HP{tabularray/trial/before}
+  \item \HP{tabularray/trial/after}
+  \item \HP{tabularray/table/before}
+  \item \HP{tabularray/table/after}
+  \item \HP{tabularray/row/before}
+  \item \HP{tabularray/row/after}
+  \item \HP{tabularray/cell/before}
+  \item \HP{tabularray/cell/after}
+\end{itemize}
+An advanced user or package writer can use \CC{\AddToHook} and \CC{\AddToHookNext} commands
+(provided by LaTeX format) to inject code to \PP{tabularray} tables.
+
+\section{Experimental Public Variables}
+
+This variable is always available throughout the whole typesetting process of tables:
+\begin{itemize}[nosep]
+  \item \CC{\lTblrMeasuringBool}: if \PP{tabularray} is doing trial typesetting.
+\end{itemize}
+You need to make sure \KV{measure=vstore} to make \CC{\lTblrMeasuringBool} correct.
+
+These variables are updated by default before building every cell:
+\begin{itemize}[nosep]
+  \item \CC{\lTblrCellRowSpanTl}: how many rows are spanned by current cell.
+  \item \CC{\lTblrCellColSpanTl}: how many columns are spanned by current cell.
+  \item \CC{\lTblrCellOmittedBool}: if current cell is spanned by another cell.
+  \item \CC{\lTblrCellBackgroundTl}: background color of current cell.
+\end{itemize}
+
+These variables are updated by \LL{html} library before building every cell:
+%(you need to write \CC{\UseTblrLibrary{html}} first):
+\begin{itemize}[nosep]
+  \item \CC{\lTblrCellAboveBorderStyleTl}
+  \item \CC{\lTblrCellAboveBorderWidthTl}
+  \item \CC{\lTblrCellAboveBorderColorTl}
+  \item \CC{\lTblrCellBelowBorderStyleTl}
+  \item \CC{\lTblrCellBelowBorderWidthTl}
+  \item \CC{\lTblrCellBelowBorderColorTl}
+  \item \CC{\lTblrCellLeftBorderStyleTl}
+  \item \CC{\lTblrCellLeftBorderWidthTl}
+  \item \CC{\lTblrCellLeftBorderColorTl}
+  \item \CC{\lTblrCellRightBorderStyleTl}
+  \item \CC{\lTblrCellRightBorderWidthTl}
+  \item \CC{\lTblrCellRightBorderColorTl}
+\end{itemize}
+In the above, \TT{BorderStyle}, \TT{BorderWidth}, \TT{BorderColor} are similar to
+\K{border-style}, \K{border-width}, \K{border-color} in HTML/CSS, respectively.
+\TT{BorderStyle} and \TT{BorderColor} are empty by default.
 
 \chapter{History and Future}
 
