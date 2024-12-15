@@ -221,6 +221,39 @@
 \prg_generate_conditional_variant:Nnn \__tblr_keys_if_exist:nn { ne } { TF }
 
 %%% --------------------------------------------------------
+%%> \section{Create and Use tabularray Hooks}
+%%% --------------------------------------------------------
+
+\cs_new_protected:Npn \__tblr_hook_new:n #1
+  {
+    \hook_new:n { tabularray / #1 }
+  }
+
+\cs_new_protected:Npn \__tblr_hook_new_pair:nn #1 #2
+  {
+    \hook_new_pair:nn { tabularray / #1 } { tabularray / #2 }
+  }
+
+\cs_new_protected:Npn \__tblr_hook_use_false:n #1 {}
+
+\cs_new_protected:Npn \__tblr_hook_use_true:n #1
+  {
+    \hook_use:n { tabularray / #1 }
+  }
+
+\cs_set_eq:NN \__tblr_hook_use:n \__tblr_hook_use_false:n
+
+\NewDocumentCommand \AddToTblrHook { m o +m }
+  {
+    \hook_gput_code:nnn  { tabularray / #1 } { #2 } { #3 }
+  }
+
+\NewDocumentCommand \AddToTblrHookNext { m +m }
+  {
+    \hook_gput_next_code:nn  { tabularray / #1 } { #2 }
+  }
+
+%%% --------------------------------------------------------
 %%> \section{Data Structures Based on Property Lists}
 %%% --------------------------------------------------------
 
@@ -2741,7 +2774,7 @@
 \cs_new_protected:Npn \__tblr_builder:nnn #1 #2 #3
   {
     \int_gincr:N \g_tblr_level_int
-    \__tblr_hook_use:n { tabularray/trial/before }
+    \__tblr_hook_use:n { trial / before }
     \bool_set_true:N \lTblrMeasuringBool
     \__tblr_clear_prop_lists:
     \__tblr_clear_spec_lists:
@@ -2771,7 +2804,7 @@
     \__tblr_enable_content_commands:
     \__tblr_calc_cell_and_line_sizes:
     \bool_set_false:N \lTblrMeasuringBool
-    \__tblr_hook_use:n { tabularray/trial/after }
+    \__tblr_hook_use:n { trial / after }
     \LogTblrTracing { step = build ~ the ~ whole ~ table}
     \__tblr_build_whole:
     \int_gdecr:N \g_tblr_level_int
@@ -5636,7 +5669,7 @@
 
 \cs_new_protected:Npn \__tblr_build_whole:
   {
-    \__tblr_hook_use:n { tabularray/table/before }
+    \__tblr_hook_use:n { table / before }
     \tl_if_eq:enTF { \__tblr_spec_item:nn { outer } { long } } { true }
       { \__tblr_build_long_table:e { \__tblr_spec_item:nn { outer } { halign } } }
       {
@@ -5650,7 +5683,7 @@
               { \__tblr_spec_item:nn { outer } { baseline } }
           }
       }
-    \__tblr_hook_use:n { tabularray/table/after }
+    \__tblr_hook_use:n { table / after }
   }
 
 \dim_new:N \l__tblr_remain_height_dim
@@ -6397,7 +6430,7 @@
     \__tblr_get_row_inner_height_depth:VNNNN #1
       \l__tblr_row_ht_dim \l__tblr_row_dp_dim
       \l__tblr_row_abovesep_dim \l__tblr_row_belowsep_dim
-    \__tblr_hook_use:n { tabularray/row/before }
+    \__tblr_hook_use:n { row / before }
     \tblr_vrule_wd_ht_dp:nnn {0pt} {\l__tblr_row_ht_dim} {\l__tblr_row_dp_dim}
     \hbox_set:Nn \l__tblr_row_vlines_box
       {
@@ -6413,7 +6446,7 @@
       { \__tblr_build_vline_segment:nn {#1} { \int_eval:n {\c@colcount + 1} } }
     \skip_horizontal:n { - \box_wd:N \l__tblr_row_vlines_box }
     \box_use:N \l__tblr_row_vlines_box
-    \__tblr_hook_use:n { tabularray/row/after }
+    \__tblr_hook_use:n { row / after }
   }
 
 %% Read from table specifications and calculate inner height/depth of the row
@@ -6694,7 +6727,7 @@
   {
     \bool_if:NT \l__tblr_html_variables_bool
       { \__tblr_expose_cell_properties:NN #1 #2 }
-    \__tblr_hook_use:n { tabularray/cell/before }
+    \__tblr_hook_use:n { cell / before }
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_cell_wd_dim }
       {
         \tl_if_eq:NnTF \g__tblr_cell_halign_tl {j}
@@ -6761,7 +6794,7 @@
     \skip_horizontal:n { \l__tblr_x_tl }
     \box_use:N \l__tblr_c_box
     \skip_horizontal:n { \l__tblr_y_tl - \l__tblr_cell_wd_dim + \l__tblr_w_tl }
-    \__tblr_hook_use:n { tabularray/cell/after }
+    \__tblr_hook_use:n { cell / after }
   }
 
 \cs_new_protected:Npn \__tblr_build_cell_background:NN #1 #2
@@ -7459,18 +7492,17 @@
 
 %% Library hook provides some public hooks
 
-\cs_new_protected:Npn \__tblr_hook_use:n #1 {}
-
 \NewTblrLibrary { hook }
   {
     %% We need varwidth to keep \lTblrMeasuringBool correct
     \UseTblrLibrary { varwidth }
     \tl_set:Nn \l__tblr_inner_spec_measure_tl { vstore }
-    \cs_set_eq:NN \__tblr_hook_use:n \hook_use:n
-    \hook_new_pair:nn { tabularray/trial/before } { tabularray/trial/after }
-    \hook_new_pair:nn { tabularray/table/before } { tabularray/table/after }
-    \hook_new_pair:nn { tabularray/row/before } { tabularray/row/after }
-    \hook_new_pair:nn { tabularray/cell/before } { tabularray/cell/after }
+    \cs_set_eq:NN \__tblr_hook_use:n \__tblr_hook_use_true:n
+    %% Be careful lthooks will not remove any spaces in hook paths
+    \__tblr_hook_new_pair:nn { trial / before } { trial / after }
+    \__tblr_hook_new_pair:nn { table / before } { table / after }
+    \__tblr_hook_new_pair:nn {   row / before } {   row / after }
+    \__tblr_hook_new_pair:nn {  cell / before } {  cell / after }
   }
 
 %% Library html provides more public variables
