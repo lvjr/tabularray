@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734184445283,
+  "lastUpdate": 1734225438679,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -504,6 +504,48 @@ window.BENCHMARK_DATA = {
             "value": 0.75731275453396,
             "unit": "ratio",
             "extra": "current time : previous time = 4.1980209350586 : 5.5433120727539"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "d62ed01eb8a02d64f4cece90958734060b40aff8",
+          "message": "apply \\lastbox trick to get cell vboxes with correct widths (#179)",
+          "timestamp": "2024-12-15T09:14:09+08:00",
+          "tree_id": "20e59cb3cd16cd4bb91b5ea9d8322ff3039c0c32",
+          "url": "https://github.com/lvjr/tabularray/commit/d62ed01eb8a02d64f4cece90958734060b40aff8"
+        },
+        "date": 1734225438233,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.72956122828437,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.3827590942383 : 4.6367034912109"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.73172277177026,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4888916015625 : 4.7680511474609"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.75483912103843,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.2902565002441 : 5.6836700439453"
           }
         ]
       }
