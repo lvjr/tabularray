@@ -7540,10 +7540,9 @@
 \dim_new:N \l__tblr_cell_inner_wd_dim
 \dim_new:N \l__tblr_cell_hcenter_dim
 \dim_new:N \l__tblr_cell_vcenter_dim
-\dim_new:N \l__tblr_table_height_dim
-\dim_new:N \l__tblr_table_depth_dim
-\dim_new:N \l__tblr_last_hline_height_dim
-\dim_new:N \l__tblr_last_vline_width_dim
+\dim_new:N \l__tblr_last_cell_table_ht_dim
+\dim_new:N \l__tblr_last_cell_table_dp_dim
+\dim_new:N \l__tblr_last_vline_wd_dim
 \box_new:N \l__tblr_tikz_node_box
 
 \NewTblrLibrary { tikz }
@@ -7558,7 +7557,7 @@
 
     \UseTblrLibrary { hook }
     \RequirePackage { tikz }
-    \tikzset {
+    \tikzset{
         tblr / cell ~ node / .style = {
             rectangle ,
             inner ~ sep = 0pt ,
@@ -7627,10 +7626,7 @@
                 \__tblr_get_table_width:
                 \__tblr_get_table_height:
                 \__tblr_get_table_depth:
-                \dim_set:Nn \l__tblr_last_hline_height_dim {
-                    \__tblr_spec_item:nn { hline } { [ \int_eval:n { \c@rowcount + 1 } ] / @hline-height }
-                }
-                \dim_set:Nn \l__tblr_last_vline_width_dim {
+                \dim_set:Nn \l__tblr_last_vline_wd_dim {
                     \__tblr_spec_item:nn { vline } { [ \int_eval:n { \c@colcount + 1 } ] / @vline-width }
                 }
                 \hbox_set:Nn \l__tblr_tikz_node_box {
@@ -7639,8 +7635,8 @@
                         tblr / table ~ node ,
                         tblr / table ,
                         text ~ width = \tablewidth ,
-                        text ~ height = \l__tblr_table_height_dim ,
-                        text ~ depth = \l__tblr_table_depth_dim
+                        text ~ height = \l__tblr_last_cell_table_ht_dim ,
+                        text ~ depth = \l__tblr_last_cell_table_dp_dim
                     ] (
                         \g__tblr_tikz_prefix_tl
                         tblr
@@ -7649,16 +7645,16 @@
                 }
                 \box_set_trim:Nnnnn \l__tblr_tikz_node_box {
                     0.5 \tablewidth +
-                    \l__tblr_last_vline_width_dim
+                    \l__tblr_last_vline_wd_dim
                 } {
-                    -0.5 \l__tblr_table_height_dim +
-                    0.5 \l__tblr_table_depth_dim
+                    -0.5 \l__tblr_last_cell_table_ht_dim +
+                    0.5 \l__tblr_last_cell_table_dp_dim
                 } {
                     -0.5 \tablewidth -
-                    \l__tblr_last_vline_width_dim
+                    \l__tblr_last_vline_wd_dim
                 } {
-                    0.5 \l__tblr_table_height_dim -
-                    0.5 \l__tblr_table_depth_dim
+                    0.5 \l__tblr_last_cell_table_ht_dim -
+                    0.5 \l__tblr_last_cell_table_dp_dim
                 }
                 \box_use:N \l__tblr_tikz_node_box
             }
@@ -7668,28 +7664,29 @@
 
 \cs_new_protected:Npn \__tblr_get_table_height:
   {
+    \dim_zero:N \l__tblr_last_cell_table_ht_dim
     \int_step_inline:nn { \c@rowcount - 1 } {
-        \dim_add:Nn \l__tblr_table_height_dim {
+        \dim_add:Nn \l__tblr_last_cell_table_ht_dim {
             \__tblr_valign_get_hline_total:n {##1}
         }
-        \dim_add:Nn \l__tblr_table_height_dim {
+        \dim_add:Nn \l__tblr_last_cell_table_ht_dim {
             \__tblr_valign_get_row_total:n {##1}
         }
     }
-    \dim_add:Nn \l__tblr_table_height_dim {
+    \dim_add:Nn \l__tblr_last_cell_table_ht_dim {
         \__tblr_valign_get_hline_total:n { \int_use:N \c@rowcount }
     }
-    \dim_add:Nn \l__tblr_table_height_dim {
+    \dim_add:Nn \l__tblr_last_cell_table_ht_dim {
         \__tblr_valign_get_row_height:n { \int_use:N \c@rowcount }
     }
   }
 
 \cs_new_protected:Npn \__tblr_get_table_depth:
   {
-    \dim_set:Nn \l__tblr_table_depth_dim {
+    \dim_set:Nn \l__tblr_last_cell_table_dp_dim {
         \__tblr_valign_get_row_depth:n { \int_use:N \c@rowcount }
     }
-    \dim_add:Nn \l__tblr_table_depth_dim {
+    \dim_add:Nn \l__tblr_last_cell_table_dp_dim {
         \__tblr_valign_get_hline_total:n { \int_eval:n { \c@rowcount + 1 } }
     }
   }
