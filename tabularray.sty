@@ -7575,32 +7575,162 @@
       }
   }
 
-%% Library tikzmark to add tikzmarks at the lower left corner of each cell
+%% Library to add tikz coordinates at the corners of each cell as well as of the whole table
 
-\tl_new:N \l__tblr_tikzmark_prefix_tl
-\box_new:N \l__tblr_tikzmark_box
+\tl_new:N \g__tblr_tikz_prefix_tl
+\dim_new:N \l__tblr_cell_inner_wd_dim
+\dim_new:N \l__tblr_cell_hcenter_dim
+\dim_new:N \l__tblr_cell_vcenter_dim
+\dim_new:N \l__tblr_table_height_dim
+\dim_new:N \l__tblr_table_depth_dim
+\dim_new:N \l__tblr_last_hline_height_dim
+\dim_new:N \l__tblr_last_vline_width_dim
+\box_new:N \l__tblr_tikz_node_box
 
-\NewTblrLibrary { tikzmark }
+\NewTblrLibrary { tikz }
   {
-    \__tblr_keys_define:nn { table / inner }
+    \keys_define:nn { tblr }
+    %\__tblr_keys_define:nn { table / inner }
         { 
-            tikzmark ~ prefix .code:n = {
-                \tl_set:Nn \l__tblr_tikzmark_prefix_tl { ##1 - } 
+            tikz ~ prefix .code:n = {
+                \tl_gset:Nn \g__tblr_tikz_prefix_tl { ##1 - } 
             } 
         }
+        
     \UseTblrLibrary { hook }
     \RequirePackage { tikz }
-    \usetikzlibrary { tikzmark }
-    \AddToHook { tabularray/cell/before } {
-        \hbox_set:Nn \l__tblr_tikzmark_box { 
-          \tikzmark{ \l__tblr_tikzmark_prefix_tl tblr - \arabic{colnum} - \arabic{rownum} } 
+    \tikzset {
+        tblr / cell ~ node / .style = {
+            rectangle ,
+            inner ~ sep = 0pt ,
+            draw = none ,
+            fill = none 
+        } ,
+        tblr / cell / .style = { } ,
+        tblr / table ~ node / .style = {
+            rectangle ,
+            inner ~ sep = 0pt ,
+            draw = none ,
+            fill = none 
+        } ,
+        tblr / table / .style = { } ,
+        tblr / overlay / .style = { }
+    }
+    
+    \NewDocumentEnvironment { tblrtikz } { } {
+      \begin{tikzpicture}[
+        remember ~ picture , 
+        overlay , 
+        name ~ prefix = \g__tblr_tikz_prefix_tl , 
+        tblr / overlay
+      ]
+    }{
+      \end{tikzpicture}
+    }
+    
+    \AddToHook { tabularray/cell/after } {
+        \dim_set:Nn \l__tblr_cell_inner_wd_dim { 
+            \l__tblr_x_tl + \l__tblr_y_tl + 
+            \l__tblr_cell_wd_dim
         }
-        \box_set_trim:Nnnnn \l__tblr_tikzmark_box 
-            { 0.5\rulewidth }
-            { 0.5\rulewidth }
-            { -0.5\rulewidth }
-            { -0.5\rulewidth }
-        \box_move_down:nn { \dim_eval:n { \l__tblr_row_dp_dim } }
-            { \box_use:N \l__tblr_tikzmark_box }
+        \hbox_set:Nn \l__tblr_tikz_node_box { 
+          \begin{tikzpicture}[remember ~ picture, overlay]
+            \node[
+                tblr / cell ~ node , 
+                tblr / cell ,
+                text ~ width = \l__tblr_cell_inner_wd_dim ,
+                text ~ height = \l__tblr_row_ht_dim , 
+                text ~ depth = \l__tblr_row_dp_dim
+            ] (
+                \g__tblr_tikz_prefix_tl 
+                tblr- 
+                \int_use:N \c@rownum - 
+                \int_use:N \c@colnum
+            ) at ( 0pt , 0pt ) { } ; 
+          \end{tikzpicture}
+        }
+        \dim_set:Nn \l__tblr_cell_hcenter_dim { 
+            0.5 \l__tblr_cell_inner_wd_dim 
+        }
+        \dim_set:Nn \l__tblr_cell_vcenter_dim {
+            0.5 \l__tblr_row_ht_dim -
+            0.5 \l__tblr_row_dp_dim 
+        }
+        \box_set_trim:Nnnnn \l__tblr_tikz_node_box  
+            { \l__tblr_cell_hcenter_dim }
+            { -\l__tblr_cell_vcenter_dim }
+            { -\l__tblr_cell_hcenter_dim } 
+            { \l__tblr_cell_vcenter_dim }
+        \box_use:N \l__tblr_tikz_node_box
+
+        \int_compare:nNnT { \c@rownum } = { \c@rowcount } {
+            \int_compare:nNnT { \c@colnum } = { \c@colcount } {
+                \__tblr_get_table_width:
+                \__tblr_get_table_height:
+                \__tblr_get_table_depth:
+                \dim_set:Nn \l__tblr_last_hline_height_dim {
+                    \__tblr_spec_item:nn { hline } { [ \int_eval:n { \c@rowcount + 1 } ] / @hline-height } 
+                }
+                \dim_set:Nn \l__tblr_last_vline_width_dim {
+                    \__tblr_spec_item:nn { vline } { [ \int_eval:n { \c@colcount + 1 } ] / @vline-width } 
+                }
+                \hbox_set:Nn \l__tblr_tikz_node_box { 
+                  \begin{tikzpicture}[remember ~ picture, overlay]
+                    \node[
+                        tblr / table ~ node , 
+                        tblr / table ,
+                        text ~ width = \tablewidth ,
+                        text ~ height = \l__tblr_table_height_dim ,
+                        text ~ depth = \l__tblr_table_depth_dim 
+                    ] (
+                        \g__tblr_tikz_prefix_tl 
+                        tblr
+                    ) at ( 0pt , 0pt ) { } ; 
+                  \end{tikzpicture}
+                }
+                \box_set_trim:Nnnnn \l__tblr_tikz_node_box { 
+                    0.5 \tablewidth +
+                    \l__tblr_last_vline_width_dim 
+                } { 
+                    -0.5 \l__tblr_table_height_dim +
+                    0.5 \l__tblr_table_depth_dim 
+                } { 
+                    -0.5 \tablewidth - 
+                    \l__tblr_last_vline_width_dim 
+                } { 
+                    0.5 \l__tblr_table_height_dim -
+                    0.5 \l__tblr_table_depth_dim  
+                }
+                \box_use:N \l__tblr_tikz_node_box
+            }
+        }
+    }
+  }
+
+\cs_new_protected:Npn \__tblr_get_table_height: 
+  {
+    \int_step_inline:nn { \c@rowcount - 1 } {
+        \dim_add:Nn \l__tblr_table_height_dim { 
+            \__tblr_valign_get_hline_total:n {##1} 
+        }
+        \dim_add:Nn \l__tblr_table_height_dim { 
+            \__tblr_valign_get_row_total:n {##1} 
+        }
+    }
+    \dim_add:Nn \l__tblr_table_height_dim { 
+        \__tblr_valign_get_hline_total:n { \int_use:N \c@rowcount } 
+    }
+    \dim_add:Nn \l__tblr_table_height_dim { 
+        \__tblr_valign_get_row_height:n { \int_use:N \c@rowcount }
+    }
+  }
+
+\cs_new_protected:Npn \__tblr_get_table_depth: 
+  {
+    \dim_set:Nn \l__tblr_table_depth_dim { 
+        \__tblr_valign_get_row_depth:n { \int_use:N \c@rowcount }
+    }
+    \dim_add:Nn \l__tblr_table_depth_dim { 
+        \__tblr_valign_get_hline_total:n { \int_eval:n { \c@rowcount + 1 } } 
     }
   }
