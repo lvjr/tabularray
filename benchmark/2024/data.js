@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734522614264,
+  "lastUpdate": 1734522659699,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -966,6 +966,48 @@ window.BENCHMARK_DATA = {
             "value": 0.76294369918002,
             "unit": "ratio",
             "extra": "current time : previous time = 4.2414703369141 : 5.5593490600586"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0306b7ff6e04eb6fce61983612c2516af18d82f4",
+          "message": "Merge pull request #554 from jasperhabicht/patch-1\n\nAdd tikz library",
+          "timestamp": "2024-12-18T19:48:15+08:00",
+          "tree_id": "a8dd8aada740f180b3661f3fb4a78db8b2b5a4db",
+          "url": "https://github.com/lvjr/tabularray/commit/0306b7ff6e04eb6fce61983612c2516af18d82f4"
+        },
+        "date": 1734522659365,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.73211301749666,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.3593292236328 : 4.5885391235352"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.72908832541482,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.419261932373 : 4.6897773742676"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.76712293073207,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.2676773071289 : 5.5632247924805"
           }
         ]
       }
