@@ -7538,8 +7538,8 @@
 
 \tl_new:N \g__tblr_tikz_prefix_tl
 \dim_new:N \l__tblr_cell_inner_wd_dim
-\dim_new:N \l__tblr_cell_hcenter_dim
-\dim_new:N \l__tblr_cell_vcenter_dim
+\dim_new:N \l__tblr_cell_inner_dp_dim
+\dim_new:N \l__tblr_cell_hanchor_dim
 \dim_new:N \l__tblr_last_cell_table_ht_dim
 \dim_new:N \l__tblr_last_cell_table_dp_dim
 \dim_new:N \l__tblr_last_vline_wd_dim
@@ -7549,144 +7549,184 @@
   {
     \keys_define:nn { tblr }
     %\__tblr_keys_define:nn { table / inner }
-        {
-            tikz ~ prefix .code:n = {
-                \tl_gset:Nn \g__tblr_tikz_prefix_tl { ##1 - }
-            }
-        }
+      {
+        tikz ~ prefix .code:n =
+          {
+            \tl_gset:Nn \g__tblr_tikz_prefix_tl { ##1 - }
+          }
+      }
 
     \UseTblrLibrary { hook }
     \RequirePackage { tikz }
-    \tikzset{
-        tblr / cell ~ node / .style = {
+    \tikzset
+      {
+        tblr / cell ~ node / .style =
+          {
             rectangle ,
             inner ~ sep = 0pt ,
             draw = none ,
             fill = none
-        } ,
+          } ,
         tblr / cell / .style = { } ,
-        tblr / table ~ node / .style = {
+        tblr / table ~ node / .style =
+          {
             rectangle ,
             inner ~ sep = 0pt ,
             draw = none ,
             fill = none
-        } ,
+          } ,
         tblr / table / .style = { } ,
         tblr / overlay / .style = { }
-    }
+      }
 
-    \NewDocumentEnvironment { tblrtikz } { } {
-      \begin{tikzpicture}[
-        remember ~ picture ,
-        overlay ,
-        name ~ prefix = \g__tblr_tikz_prefix_tl ,
-        tblr / overlay
-      ]
-    }{
-      \end{tikzpicture}
-    }
+    \NewDocumentEnvironment { tblrtikz } { }
+      {
+        \begin{tikzpicture}
+          [
+            remember ~ picture ,
+            overlay ,
+            name ~ prefix = \g__tblr_tikz_prefix_tl ,
+            tblr / overlay
+          ]
+      }
+      {
+        \end{tikzpicture}
+      }
 
-    \AddToHook { tabularray/cell/after } {
-        \dim_set:Nn \l__tblr_cell_inner_wd_dim {
-            \l__tblr_x_tl + \l__tblr_y_tl +
-            \l__tblr_cell_wd_dim
-        }
-        \hbox_set:Nn \l__tblr_tikz_node_box {
-          \begin{tikzpicture}[remember ~ picture, overlay]
-            \node[
-                tblr / cell ~ node ,
-                tblr / cell ,
-                text ~ width = \l__tblr_cell_inner_wd_dim ,
-                text ~ height = \l__tblr_row_ht_dim ,
-                text ~ depth = \l__tblr_row_dp_dim
-            ] (
-                \g__tblr_tikz_prefix_tl
-                tblr -
-                \int_use:N \c@rownum -
-                \int_use:N \c@colnum
-            ) at ( 0pt , 0pt ) { } ;
-          \end{tikzpicture}
-        }
-        \dim_set:Nn \l__tblr_cell_hcenter_dim {
-            0.5 \l__tblr_cell_inner_wd_dim
-        }
-        \dim_set:Nn \l__tblr_cell_vcenter_dim {
-            0.5 \l__tblr_row_ht_dim -
-            0.5 \l__tblr_row_dp_dim
-        }
+    \AddToHook { tabularray/cell/after }
+      {
+        \__tblr_get_cell_background_width:NNN
+            \c@rownum \c@colnum \l__tblr_cell_inner_wd_dim
+        \__tblr_get_cell_background_depth:NNN
+            \c@rownum \c@colnum\l__tblr_cell_inner_dp_dim
+        \dim_zero:N \l__tblr_cell_hanchor_dim
+        \tl_set:Ne \l__tblr_c_tl
+          { \__tblr_data_item:neen { cell }
+          { \int_use:N \c@rownum } { \int_use:N \c@colnum } { colspan } }
+        \int_step_inline:nn { \l__tblr_c_tl }
+          {
+            \int_compare:nNnT {##1} > { 1 }
+              {
+                \dim_add:Nn \l__tblr_cell_hanchor_dim
+                  {
+                    \__tblr_data_item:neen { cell } { \int_use:N \c@rownum } {##1} { @cell-width }
+                    -
+                    \__tblr_data_item:nen { column } {##1} { @col-width }
+                  }
+              }
+          }
+        \hbox_set:Nn \l__tblr_tikz_node_box
+          {
+            \begin{tikzpicture}[remember ~ picture, overlay]
+              \node
+                [
+                  tblr / cell ~ node ,
+                  tblr / cell ,
+                  text ~ width = \l__tblr_cell_inner_wd_dim ,
+                  text ~ height = \l__tblr_row_ht_dim ,
+                  text ~ depth = \l__tblr_cell_inner_dp_dim
+                ]
+                (
+                  \g__tblr_tikz_prefix_tl
+                  tblr -
+                  \int_use:N \c@rownum -
+                  \int_use:N \c@colnum
+                )
+                at ( 0pt , 0pt ) { } ;
+            \end{tikzpicture}
+          }
         \box_set_trim:Nnnnn \l__tblr_tikz_node_box
-            { \l__tblr_cell_hcenter_dim }
-            { -\l__tblr_cell_vcenter_dim }
-            { -\l__tblr_cell_hcenter_dim }
-            { \l__tblr_cell_vcenter_dim }
+          {
+            0.5 \l__tblr_cell_inner_wd_dim +
+            \l__tblr_cell_hanchor_dim
+          }
+          {
+            -0.5 \l__tblr_row_ht_dim +
+            0.5 \l__tblr_cell_inner_dp_dim
+          }
+          {
+            -0.5 \l__tblr_cell_inner_wd_dim -
+            \l__tblr_cell_hanchor_dim
+          }
+          {
+            0.5 \l__tblr_row_ht_dim -
+            0.5 \l__tblr_cell_inner_dp_dim
+          }
         \box_use:N \l__tblr_tikz_node_box
 
-        \int_compare:nNnT { \c@rownum } = { \c@rowcount } {
-            \int_compare:nNnT { \c@colnum } = { \c@colcount } {
+        \int_compare:nNnT { \c@rownum } = { \c@rowcount }
+          {
+            \int_compare:nNnT { \c@colnum } = { \c@colcount }
+              {
                 \__tblr_get_table_width:
                 \__tblr_get_table_height:
                 \__tblr_get_table_depth:
-                \dim_set:Nn \l__tblr_last_vline_wd_dim {
-                    \__tblr_spec_item:nn { vline } { [ \int_eval:n { \c@colcount + 1 } ] / @vline-width }
-                }
-                \hbox_set:Nn \l__tblr_tikz_node_box {
-                  \begin{tikzpicture}[remember ~ picture, overlay]
-                    \node[
-                        tblr / table ~ node ,
-                        tblr / table ,
-                        text ~ width = \tablewidth ,
-                        text ~ height = \l__tblr_last_cell_table_ht_dim ,
-                        text ~ depth = \l__tblr_last_cell_table_dp_dim
-                    ] (
-                        \g__tblr_tikz_prefix_tl
-                        tblr
-                    ) at ( 0pt , 0pt ) { } ;
-                  \end{tikzpicture}
-                }
-                \box_set_trim:Nnnnn \l__tblr_tikz_node_box {
+                \dim_set:Nn \l__tblr_last_vline_wd_dim
+                  {
+                    \__tblr_spec_item:nn { vline }
+                      { [ \int_eval:n { \c@colcount + 1 } ] / @vline-width }
+                  }
+                \hbox_set:Nn \l__tblr_tikz_node_box
+                  {
+                    \begin{tikzpicture}[remember ~ picture, overlay]
+                      \node
+                        [
+                          tblr / table ~ node ,
+                          tblr / table ,
+                          text ~ width = \tablewidth ,
+                          text ~ height = \l__tblr_last_cell_table_ht_dim ,
+                          text ~ depth = \l__tblr_last_cell_table_dp_dim
+                        ]
+                        (
+                          \g__tblr_tikz_prefix_tl
+                          tblr
+                        )
+                        at ( 0pt , 0pt ) { } ;
+                    \end{tikzpicture}
+                  }
+                \box_set_trim:Nnnnn \l__tblr_tikz_node_box
+                  {
                     0.5 \tablewidth +
                     \l__tblr_last_vline_wd_dim
-                } {
+                  }
+                  {
                     -0.5 \l__tblr_last_cell_table_ht_dim +
                     0.5 \l__tblr_last_cell_table_dp_dim
-                } {
+                  }
+                  {
                     -0.5 \tablewidth -
                     \l__tblr_last_vline_wd_dim
-                } {
+                  }
+                  {
                     0.5 \l__tblr_last_cell_table_ht_dim -
                     0.5 \l__tblr_last_cell_table_dp_dim
-                }
+                  }
                 \box_use:N \l__tblr_tikz_node_box
-            }
-        }
-    }
+              }
+          }
+      }
   }
 
 \cs_new_protected:Npn \__tblr_get_table_height:
   {
     \dim_zero:N \l__tblr_last_cell_table_ht_dim
-    \int_step_inline:nn { \c@rowcount - 1 } {
-        \dim_add:Nn \l__tblr_last_cell_table_ht_dim {
-            \__tblr_valign_get_hline_total:n {##1}
-        }
-        \dim_add:Nn \l__tblr_last_cell_table_ht_dim {
-            \__tblr_valign_get_row_total:n {##1}
-        }
-    }
-    \dim_add:Nn \l__tblr_last_cell_table_ht_dim {
-        \__tblr_valign_get_hline_total:n { \int_use:N \c@rowcount }
-    }
-    \dim_add:Nn \l__tblr_last_cell_table_ht_dim {
-        \__tblr_valign_get_row_height:n { \int_use:N \c@rowcount }
-    }
+    \int_step_inline:nn { \c@rowcount - 1 }
+      {
+        \dim_add:Nn \l__tblr_last_cell_table_ht_dim
+          { \__tblr_valign_get_hline_total:n {##1} }
+        \dim_add:Nn \l__tblr_last_cell_table_ht_dim
+          { \__tblr_valign_get_row_total:n {##1} }
+      }
+    \dim_add:Nn \l__tblr_last_cell_table_ht_dim
+      { \__tblr_valign_get_hline_total:n { \int_use:N \c@rowcount } }
+    \dim_add:Nn \l__tblr_last_cell_table_ht_dim
+      { \__tblr_valign_get_row_height:n { \int_use:N \c@rowcount } }
   }
 
 \cs_new_protected:Npn \__tblr_get_table_depth:
   {
-    \dim_set:Nn \l__tblr_last_cell_table_dp_dim {
-        \__tblr_valign_get_row_depth:n { \int_use:N \c@rowcount }
-    }
-    \dim_add:Nn \l__tblr_last_cell_table_dp_dim {
-        \__tblr_valign_get_hline_total:n { \int_eval:n { \c@rowcount + 1 } }
-    }
+    \dim_set:Nn \l__tblr_last_cell_table_dp_dim
+      { \__tblr_valign_get_row_depth:n { \int_use:N \c@rowcount } }
+    \dim_add:Nn \l__tblr_last_cell_table_dp_dim
+      { \__tblr_valign_get_hline_total:n { \int_eval:n { \c@rowcount + 1 } } }
   }
