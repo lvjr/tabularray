@@ -141,14 +141,16 @@
 \box_new:N \l__tblr_c_box % for cell box
 \box_new:N \l__tblr_d_box
 
-%% Total number of tblr tables
-\int_new:N \g__tblr_table_count_int
-
 %% Some commands for horizontal alignment
 \cs_new_eq:NN \__tblr_halign_command_j: \TblrAlignBoth
 \cs_new_eq:NN \__tblr_halign_command_l: \TblrAlignLeft
 \cs_new_eq:NN \__tblr_halign_command_c: \TblrAlignCenter
 \cs_new_eq:NN \__tblr_halign_command_r: \TblrAlignRight
+
+%% Total number of tblr tables, used for creating hyperref targets and tikz nodes.
+%% We need to save and restore it before and after measuring stage respectively,
+%% so we must define it with \newcounter command.
+\newcounter { tblrcount }
 
 %% Some counters for row and column numbering.
 %% We may need to restore all LaTeX counters in measuring and building cells,
@@ -2756,7 +2758,7 @@
 \cs_new_protected:Npn \__tblr_environ_code:nnnn #1 #2 #3 #4
   {
     \group_align_safe_begin:
-    \int_gincr:N \g__tblr_table_count_int
+    \int_gincr:N \c@tblrcount
     \tl_set:Nn \l__tblr_env_name_tl {#1}
     \mode_if_math:TF
       { \bool_set_true:N \l__tblr_math_mode_bool }
@@ -5236,7 +5238,7 @@
         \use:c { Hy@raisedlink }
           {
             \hypertarget
-              { tblr / \int_use:N \g__tblr_table_count_int / \tl_to_str:n {#1} }
+              { tblr / \int_use:N \c@tblrcount / \tl_to_str:n {#1} }
               { }
           }
       }
@@ -5248,7 +5250,7 @@
     \cs_if_exist:NTF \hyperlink
       {
         \hyperlink
-          { tblr / \int_use:N \g__tblr_table_count_int / \tl_to_str:n {#1} }
+          { tblr / \int_use:N \c@tblrcount / \tl_to_str:n {#1} }
           { #2 }
       }
       { #2 }
