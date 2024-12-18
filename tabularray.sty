@@ -3191,8 +3191,11 @@
     vborder .code:n =
   }
 
+\str_new:N \g__tblr_name_str
+
 \__tblr_keys_define:nn { table / inner }
   {
+    name .code:n = \__tblr_keys_gput:nn { name } {#1},
     colspec .code:n = \__tblr_parse_colrow_spec:nn { column } {#1},
     rowspec .code:n = \__tblr_parse_colrow_spec:nn { row } {#1},
     width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
@@ -3246,6 +3249,9 @@
           { \__tblr_parse_colrow_spec:nn { column } {#1} }
       }
       { \__tblr_parse_colrow_spec:nn { column } {#1} }
+    \str_gset:Nx \g__tblr_name_str { \__tblr_prop_item:ne { inner } { name } }
+    \str_if_empty:NT \g__tblr_name_str
+      { \str_gset:Nx \g__tblr_name_str { tblr \int_use:N \c@tblrcount } }
   }
 
 \cs_new_protected:Npn \__tblr_keys_gput:nn #1 #2
@@ -7587,7 +7593,6 @@
 
 %% Library tikz to add cell nodes and table nodes with tikz
 
-\tl_new:N \g__tblr_tikz_prefix_tl
 \dim_new:N \l__tblr_cell_inner_wd_dim
 \dim_new:N \l__tblr_cell_inner_dp_dim
 \dim_new:N \l__tblr_cell_hanchor_dim
@@ -7598,14 +7603,6 @@
 
 \NewTblrLibrary { tikz }
   {
-    \__tblr_keys_define:nn { table / inner }
-      {
-        tikz ~ prefix .code:n =
-          {
-            \tl_gset:Nn \g__tblr_tikz_prefix_tl { ##1 - }
-          }
-      }
-
     \UseTblrLibrary { hook }
     \RequirePackage { tikz }
     \tikzset
@@ -7635,7 +7632,7 @@
           [
             remember ~ picture ,
             overlay ,
-            name ~ prefix = \g__tblr_tikz_prefix_tl ,
+            name ~ prefix = \g__tblr_name_str - ,
             tblr / overlay
           ]
       }
@@ -7678,8 +7675,7 @@
                   text ~ depth = \l__tblr_cell_inner_dp_dim
                 ]
                 (
-                  \g__tblr_tikz_prefix_tl
-                  tblr -
+                  \g__tblr_name_str -
                   \int_use:N \c@rownum -
                   \int_use:N \c@colnum
                 )
@@ -7729,8 +7725,7 @@
                           text ~ depth = \l__tblr_last_cell_table_dp_dim
                         ]
                         (
-                          \g__tblr_tikz_prefix_tl
-                          tblr
+                          \g__tblr_name_str - table
                         )
                         at ( 0pt , 0pt ) { } ;
                     \end{tikzpicture}
