@@ -7583,31 +7583,6 @@
     \__tblr_keys_define:nn { column / inner } { guard .meta:n = { cmd = } }
   }
 
-%% Library varwidth and measure option
-
-\NewTblrLibrary { varwidth }
-  {
-    \RequirePackage { varwidth }
-    \tl_set:Nn \l__tblr_inner_spec_measure_tl { vbox }
-    \__tblr_keys_define:nn { table / inner }
-      { measure .tl_set:N = \l__tblr_inner_spec_measure_tl }
-  }
-
-%% Library zref and its caption-ref template
-
-\NewTblrLibrary { zref }
-  {
-    \RequirePackage { zref-user }
-    \clist_if_in:NnF \lTblrRefMoreClist { zref }
-      {
-        \clist_put_right:Nn \lTblrRefMoreClist { zref }
-        \DefTblrTemplate { caption-ref }{ zref }
-          {
-            \exp_args:NV \zlabel \lTblrLabelTl
-          }
-      }
-  }
-
 %% Library to add tikz coordinates at the corners of each cell as well as of the whole table
 
 \tl_new:N \g__tblr_tikz_prefix_tl
@@ -7803,4 +7778,29 @@
       { \__tblr_valign_get_row_depth:n { \int_use:N \c@rowcount } }
     \dim_add:Nn \l__tblr_last_cell_table_dp_dim
       { \__tblr_valign_get_hline_total:n { \int_eval:n { \c@rowcount + 1 } } }
+  }
+
+%% Library varwidth and measure option
+
+\NewTblrLibrary { varwidth }
+  {
+    \RequirePackage { varwidth }
+    \tl_set:Nn \l__tblr_inner_spec_measure_tl { vbox }
+    \__tblr_keys_define:nn { table / inner }
+      { measure .tl_set:N = \l__tblr_inner_spec_measure_tl }
+  }
+
+%% Library zref and its caption-ref template
+
+\NewTblrLibrary { zref }
+  {
+    \RequirePackage { zref-user }
+    \clist_if_in:NnF \lTblrRefMoreClist { zref }
+      {
+        \clist_put_right:Nn \lTblrRefMoreClist { zref }
+        \DefTblrTemplate { caption-ref }{ zref }
+          {
+            \exp_args:NV \zlabel \lTblrLabelTl
+          }
+      }
   }
