@@ -1,6 +1,6 @@
 name: Run benchmark tests in TeX Live
 
-on: [push, pull_request]
+on: push
 
 jobs:
   run-ubuntu:
