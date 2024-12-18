@@ -34,6 +34,7 @@ The following are all contributors to the package:
 
   - [dbitouze](https://github.com/lvjr/tabularray/commits?author=dbitouze) (Denis Bitouzé)
   - [IsaacOscar](https://github.com/lvjr/tabularray/commits?author=IsaacOscar) (Isaac Oscar Gariano)
+  - [jasperhabicht](https://github.com/lvjr/tabularray/commits?author=jasperhabicht) (Jasper Habicht)
   - [krlmlr](https://github.com/lvjr/tabularray/commits?author=krlmlr) (Kirill Müller)
   - [mbertucci47](https://github.com/lvjr/tabularray/commits?author=mbertucci47) (Matthew Bertucci)
   - [pkl97](https://github.com/lvjr/tabularray/commits?author=pkl97)
