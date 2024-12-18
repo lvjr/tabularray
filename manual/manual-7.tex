@@ -8,37 +8,79 @@
 
 \begin{document}
 
-\chapter{History and Future}
+\chapter{Experimental Interfaces}
+\label{chap:exp}
 
-\section{The Future}
+\mywarning{chapter}
 
-As a policy, \verb!tabularray! can support at most four TeX Live releases with latest updates.
-For example, \verb!tabularray! releases published in \the\year{} could be used in TeX Live
-\inteval{\year-3}--\the\year{} with latest updates.
+\section{Experimental Public Key Paths}
 
-To make the upcoming releases more stable, you are very welcome to test the latest package file
-in the repository. To test it, you only need to download the following \verb!tabularray.sty!
-and put it into the folder of your TeX documents:\newline
-\centerline{\url{https://github.com/lvjr/tabularray/raw/main/tabularray.sty}}
-
-\section{The History}
-
-The change log of \verb!tabularray! package will be updated on the wiki page:\newline
-\centerline{\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}}
-
-In version 2023A, inner key \verb!verb! was marked as obsolete,
-and it will be removed in the future. But don't worry too much,
-because you can stick to old version by \verb!\usepackage{tabularray}[=2023-03-01]!.
-
-In version 2022A, there were several breaking changes:
-
+In version 2025A, all \PP{tabularray} key paths were cleaned up as follows:
 \begin{itemize}[nosep]
-  \item \verb!\multicolumn! command was removed; it is better to use \verb!\SetCell! command.
-  \item \verb!\multirow! command was removed; it is better to use \verb!\SetCell! command.
-  \item \verb!\firsthline! command was removed; it is better to use \verb!baseline=T! option.
-  \item \verb!\lasthline! command was removed; it is better to use \verb!baseline=B! option.
+  \item \KP{tabularray/table/inner} (from \KP{tblr})
+  \item \KP{tabularray/table/outer} (from \KP{tblr-outer})
+  \item \KP{tabularray/column/inner} (from \KP{tblr-column})
+  \item \KP{tabularray/row/inner} (from \KP{tblr-row})
+  \item \KP{tabularray/cell/inner} (from \KP{tblr-cell-spec})
+  \item \KP{tabularray/cell/outer} (from \KP{tblr-cell-span})
+  \item \KP{tabularray/hline/inner} (from \KP{tblr-hline})
+  \item \KP{tabularray/vline/inner} (from \KP{tblr-vline})
+  \item \KP{tabularray/hborder/inner} (from \KP{tblr-hborder})
+  \item \KP{tabularray/vborder/inner} (from \KP{tblr-vborder})
+\end{itemize}
+An advanced user or package writer can use \CC{\DeclareKeys} and \CC{\SetKeys} commands
+(provided by LaTeX format) to declare new keys and apply key-value lists, respectively.
+
+\section{Experimental Public Hook Paths}
+
+All experimental public \PP{tabularray} hooks provided by \LL{hook} library are as follows:
+\begin{itemize}[nosep]
+  \item \HP{tabularray/trial/before}
+  \item \HP{tabularray/trial/after}
+  \item \HP{tabularray/table/before}
+  \item \HP{tabularray/table/after}
+  \item \HP{tabularray/row/before}
+  \item \HP{tabularray/row/after}
+  \item \HP{tabularray/cell/before}
+  \item \HP{tabularray/cell/after}
+\end{itemize}
+An advanced user or package writer can use \CC{\AddToHook} and \CC{\AddToHookNext} commands
+(provided by LaTeX format) to inject code to \PP{tabularray} tables.
+
+\section{Experimental Public Variables}
+
+This variable is always available throughout the whole typesetting process of tables:
+\begin{itemize}[nosep]
+  \item \CC{\lTblrMeasuringBool}: if \PP{tabularray} is doing trial typesetting.
+\end{itemize}
+You need to make sure \KV{measure=vstore} to make \CC{\lTblrMeasuringBool} correct.
+
+These variables are updated by default before building every cell:
+\begin{itemize}[nosep]
+  \item \CC{\lTblrCellRowSpanTl}: how many rows are spanned by current cell.
+  \item \CC{\lTblrCellColSpanTl}: how many columns are spanned by current cell.
+  \item \CC{\lTblrCellOmittedBool}: if current cell is spanned by another cell.
+  \item \CC{\lTblrCellBackgroundTl}: background color of current cell.
 \end{itemize}
 
-For your old documents, you can still rollback to version 2021 by \verb!\usepackage{tabularray}[=v2021]!.
+These variables are updated by \LL{html} library before building every cell:
+%(you need to write \CC{\UseTblrLibrary{html}} first):
+\begin{itemize}[nosep]
+  \item \CC{\lTblrCellAboveBorderStyleTl}
+  \item \CC{\lTblrCellAboveBorderWidthTl}
+  \item \CC{\lTblrCellAboveBorderColorTl}
+  \item \CC{\lTblrCellBelowBorderStyleTl}
+  \item \CC{\lTblrCellBelowBorderWidthTl}
+  \item \CC{\lTblrCellBelowBorderColorTl}
+  \item \CC{\lTblrCellLeftBorderStyleTl}
+  \item \CC{\lTblrCellLeftBorderWidthTl}
+  \item \CC{\lTblrCellLeftBorderColorTl}
+  \item \CC{\lTblrCellRightBorderStyleTl}
+  \item \CC{\lTblrCellRightBorderWidthTl}
+  \item \CC{\lTblrCellRightBorderColorTl}
+\end{itemize}
+In the above, \TT{BorderStyle}, \TT{BorderWidth}, \TT{BorderColor} are similar to
+\K{border-style}, \K{border-width}, \K{border-color} in HTML/CSS, respectively.
+\TT{BorderStyle} and \TT{BorderColor} are empty by default.
 
 \end{document}

@@ -8,9 +8,37 @@
 
 \begin{document}
 
-\chapter{The Source Code}
+\chapter{History and Future}
 
-%\CodeHigh{lite}
-\dochighinput[language=latex/latex3]{tabularray.sty}
+\section{The Future}
+
+As a policy, \PP{tabularray} can support at most four TeX Live releases with latest updates.
+For example, \PP{tabularray} releases published in \the\year{} could be used in TeX Live
+\inteval{\year-3}--\the\year{} with latest updates.
+
+To make the upcoming releases more stable, you are very welcome to test the latest package file
+in the repository. To test it, you only need to download the following \FF{tabularray.sty}
+and put it into the folder of your TeX documents:\newline
+\centerline{\url{https://github.com/lvjr/tabularray/raw/main/tabularray.sty}}
+
+\section{The History}
+
+The change log of \PP{tabularray} package will be updated on the wiki page:\newline
+\centerline{\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}}
+
+In version 2023A, inner key \K{verb} was marked as obsolete,
+and it will be removed in the future. But don't worry too much,
+because you can stick to old version by \CC{\usepackage{tabularray}[=2023-03-01]}.
+
+In version 2022A, there were several breaking changes:
+
+\begin{itemize}[nosep]
+  \item \CC{\multicolumn} command was removed; it is better to use \CC{\SetCell} command.
+  \item \CC{\multirow} command was removed; it is better to use \CC{\SetCell} command.
+  \item \CC{\firsthline} command was removed; it is better to use \KV{baseline=T} option.
+  \item \CC{\lasthline} command was removed; it is better to use \KV{baseline=B} option.
+\end{itemize}
+
+For your old documents, you can still rollback to version 2021 by \CC{\usepackage{tabularray}[=v2021]}.
 
 \end{document}

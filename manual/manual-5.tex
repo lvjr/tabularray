@@ -10,17 +10,17 @@
 
 \chapter{Use Some Libraries}
 
-The \verb!tabularray! package emulates or fixes some commands in other packages.
-To avoid potential conflict, you need to enable them with \verb!\UseTblrLibrary! command.
+The \PP{tabularray} package emulates or fixes some commands in other packages.
+To avoid potential conflict, you need to enable them with \CC{\UseTblrLibrary} command.
 
 \section{Library \texttt{amsmath}}
 
-With \verb!\UseTblrLibrary{amsmath}! in the preamble of the document,
-\verb!tabularray! will load \verb!amsmath! package, and define \verb!+array!, \verb!+matrix!,
-\verb!+bmatrix!, \verb!+Bmatrix!, \verb!+pmatrix!, \verb!+vmatrix!, \verb!+Vmatrix! and \verb!+cases!
-environments. Each of the environments is similar to the environment without \verb!+! prefix in its name,
-but has default \verb!rowsep=2pt! just as \verb!tblr! environment. Every environment
-except \verb!+array! accepts an optional argument, where you can write inner specifications.
+With \CC{\UseTblrLibrary{amsmath}} in the preamble of the document,
+\PP{tabularray} will load \PP{amsmath} package, and define \EE{+array}, \EE{+matrix},
+\EE{+bmatrix}, \EE{+Bmatrix}, \EE{+pmatrix}, \EE{+vmatrix}, \EE{+Vmatrix} and \EE{+cases}
+environments. Each of the environments is similar to the environment without \TT{+} prefix in its name,
+but has default \KV{rowsep=2pt} just as \EE{tblr} environment. Every environment
+except \EE{+array} accepts an optional argument, where you can write inner specifications.
 
 \begin{demo}
 $\begin{pmatrix}
@@ -58,12 +58,12 @@ $f(x)=\begin{+cases}
 
 \section{Library \texttt{booktabs}}
 
-With \verb!\UseTblrLibrary{booktabs}! in the preamble of the document,
-\verb!tabularray! will load \verb!booktabs! package,
+With \CC{\UseTblrLibrary{booktabs}} in the preamble of the document,
+\PP{tabularray} will load \PP{booktabs} package,
 and define
-  \verb!\toprule!, \verb!\midrule!, \verb!\bottomrule!,
-  \verb!\cmidrule!, \verb!\cmidrulemore!, \verb!\morecmidrules!,
-  \verb!\specialrule!, \verb!\addrowspace!, and \verb!\addlinespace!
+  \CC{\toprule}, \CC{\midrule}, \CC{\bottomrule},
+  \CC{\cmidrule}, \CC{\cmidrulemore}, \CC{\morecmidrules},
+  \CC{\specialrule}, \CC{\addrowspace}, and \CC{\addlinespace}
 as table commands.
 
 \begin{demohigh}
@@ -80,15 +80,15 @@ as table commands.
 \end{tblr}
 \end{demohigh}
 
-Just like \verb!\hline! and \verb!\cline! commands,
+Just like \CC{\hline} and \CC{\cline} commands,
 you can also specify rule width and color by using hline keys in the optional
 argument of any of these commands.
 
-Like in \verb!booktabs!, by default
-  width of \verb!\toprule! and \verb!\bottomrule! are determined by \verb!\heavyrulewidth!,
-  width of \verb!\midrule! is determined by \verb!\lightrulewidth!, and
-  width of \verb!\cmidrule! and \verb!\cmidrulemore! are determined by \verb!\cmidrulewidth!, respectively.
-All three \verb!\...rulewidth! are dimensions.
+Like in \PP{booktabs}, by default
+  width of \CC{\toprule} and \CC{\bottomrule} are determined by \CC{\heavyrulewidth},
+  width of \CC{\midrule} is determined by \CC{\lightrulewidth}, and
+  width of \CC{\cmidrule} and \CC{\cmidrulemore} are determined by \CC{\cmidrulewidth}, respectively.
+All three \CC{\...rulewidth} are dimensions.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -120,10 +120,10 @@ command, which is simpler than the \verb!booktabs! usage
 \end{demohigh}
 
 From version 2021N (2021-09-01), you can set trimming positions of
-\verb!\cmidrule! and \verb!\cmidrulemore!, using newly introduced trimming
-options (\verb!leftpos!, \verb!rightpos!, \verb!endpos!, \verb!l!, \verb!r!,
-and \verb!lr!) (see Section~\ref{sec:hlines-vlines}).
-Option \verb!endpos! is already applied to these two commands.
+\CC{\cmidrule} and \CC{\cmidrulemore}, using newly introduced trimming
+options (\K{leftpos}, \K{rightpos}, \K{endpos}, \K{l}, \K{r},
+and \K{lr}) (see Section~\ref{sec:hlines-vlines}).
+Option \K{endpos} is already applied to these two commands.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -137,15 +137,15 @@ Option \verb!endpos! is already applied to these two commands.
 \end{tblr}
 \end{demohigh}
 
-Since \verb!booktabs! tables usually don't have vlines, the meaningful values
-here are decimal numbers between \verb!-1! and \verb!0!.
-The default value \verb!-0.8! for \verb!l!, \verb!r!, and \verb!lr! is chosen to
-make similar result as \verb!booktabs! package does.
+Since \PP{booktabs} tables usually don't have vlines, the meaningful values
+here are decimal numbers between \V{-1} and \V{0}.
+The default value \V{-0.8} for \V{l}, \V{r}, and \V{lr} is chosen to
+make similar result as \PP{booktabs} package does.
 
-There is also a \verb!booktabs! environment for you. With this environment,
-the default \verb!rowsep=0pt!, but extra vertical space will be added by
-\verb!\toprule!, \verb!\midrule!, \verb!\bottomrule! and \verb!\cmidrule! commands.
-The sizes of vertical space are determined by \verb!\aboverulesep! and \verb!\belowrulesep! dimensions.
+There is also a \EE{booktabs} environment for you. With this environment,
+the default \KV{rowsep=0pt}, but extra vertical space will be added by
+\CC{\toprule}, \CC{\midrule}, \CC{\bottomrule} and \CC{\cmidrule} commands.
+The sizes of vertical space are determined by \CC{\aboverulesep} and \CC{\belowrulesep} dimensions.
 
 \begin{demohigh}
 \begin{booktabs}{
@@ -165,9 +165,9 @@ The sizes of vertical space are determined by \verb!\aboverulesep! and \verb!\be
 \end{demohigh}
 % S4     & 8 & 5 & 6 & 7 \\
 
-You can also use \verb!\specialrule! command.
-The second argument sets \verb!belowsep! of previous row,
-and the third argument sets \verb!abovesep! of current row,
+You can also use \CC{\specialrule} command.
+The second argument sets \K{belowsep} of previous row,
+and the third argument sets \K{abovesep} of current row,
 
 \begin{demohigh}
 \begin{booktabs}{row{2}={olive9}}
@@ -181,13 +181,13 @@ and the third argument sets \verb!abovesep! of current row,
 \end{booktabs}
 \end{demohigh}
 
-At last, there is also an \verb!\addlinespace! command, with an alternative
-name \verb!\addrowspace!.
+At last, there is also an \CC{\addlinespace} command, with an alternative
+name \CC{\addrowspace}.
 You can specify the size of vertical space to be added in its optional
-argument, and the default size is determinted by \verb!\defaultaddspace!
-dimension, initially \verb!0.5em!.
-This command adds one half of the space to \verb!belowsep! of previous row,
-and the other half to \verb!abovesep! of current row.
+argument, and the default size is determinted by \CC{\defaultaddspace}
+dimension, initially \V{0.5em}.
+This command adds one half of the space to \K{belowsep} of previous row,
+and the other half to \K{abovesep} of current row.
 
 \begin{demohigh}
 \begin{booktabs}{row{2}={olive9}}
@@ -201,14 +201,14 @@ and the other half to \verb!abovesep! of current row.
 \end{booktabs}
 \end{demohigh}
 
-From version 2022A (2022-03-01), there is a \verb!longtabs! environment
-for writing long \verb!booktabs! tables,
-and a \verb!talltabs! environment for writing tall \verb!booktabs! tables.
+From version 2022A (2022-03-01), there is a \EE{longtabs} environment
+for writing long \PP{booktabs} tables,
+and a \EE{talltabs} environment for writing tall \PP{booktabs} tables.
 
 \section{Library \texttt{counter}}
 
-You need to load \verb!counter! library with \verb!\UseTblrLibrary{counter}!,
-if you want to modify some LaTeX counters inside \verb!tabularray! tables.
+You need to load \LL{counter} library with \CC{\UseTblrLibrary{counter}},
+if you want to modify some LaTeX counters inside \PP{tabularray} tables.
 
 \begin{demohigh}
 \newcounter{mycnta}
@@ -222,9 +222,9 @@ if you want to modify some LaTeX counters inside \verb!tabularray! tables.
 
 \section{Library \texttt{diagbox}}
 
-When writing \verb!\UseTblrLibrary{diagbox}! in the preamble of the document,
-\verb!tabularray! package loads \verb!diagbox! package,
-and you can use \verb!\diagbox! and \verb!\diagboxthree! commands inside \verb!tblr! environment.
+When writing \CC{\UseTblrLibrary{diagbox}} in the preamble of the document,
+\PP{tabularray} package loads \PP{diagbox} package,
+and you can use \CC{\diagbox} and \CC{\diagboxthree} commands inside \EE{tblr} environment.
 
 \begin{demohigh}
 \begin{tblr}{hlines,vlines}
@@ -242,7 +242,7 @@ and you can use \verb!\diagbox! and \verb!\diagboxthree! commands inside \verb!t
 \end{tblr}
 \end{demohigh}
 
-You can also use \verb!\diagbox! and \verb!\diagboxthree! commands in math mode.
+You can also use \CC{\diagbox} and \CC{\diagboxthree} commands in math mode.
 \nopagebreak
 \begin{demohigh}
 $\begin{tblr}{|c|cc|}
@@ -257,15 +257,15 @@ $\begin{tblr}{|c|cc|}
 
 \section{Library \texttt{functional}}
 
-With \verb!\UseTblrLibrary{functional}! in the preamble of the document,
-\verb!tabularray! will load \href{https://ctan.org/pkg/functional}{\texttt{functional}} package,
-and define outer key \verb!evaluate! and inner key \verb!process!.
-This library brings intuitive functional programming into \verb!tabularray! tables.
+With \CC{\UseTblrLibrary{functional}} in the preamble of the document,
+\PP{tabularray} will load \href{https://ctan.org/pkg/functional}{\PP{functional}} package,
+and define outer key \K{evaluate} and inner key \K{process}.
+This library brings intuitive functional programming into \PP{tabularray} tables.
 
 \subsection{Evaluate inner specifications}
 
-With this library, \verb!tabularray! will evaluate every function
-(defined with \verb!\prgNewFunction!) within inner specifications,
+With this library, \PP{tabularray} will evaluate every function
+(defined with \CC{\prgNewFunction}) within inner specifications,
 replacing it with its return value, before parsing the key-value pairs. Here is an example:
 
 \begin{demohigh}
@@ -282,13 +282,13 @@ You may like to define a new function for it if you need to use it several times
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\prgNewFunction \magicColor {mm} {
+\prgNewFunction \colorMagic {mm} {
   \intIfOddTF{\value{page}}{\prgReturn{#1}}{\prgReturn{#2}}
 }
 \IgnoreSpacesOff
 \begin{tblr}{
-  row{1} = {bg=\magicColor{yellow7}{brown7}},
-  row{3} = {bg=\magicColor{green7}{teal7}}
+  row{1} = {bg=\colorMagic{yellow7}{brown7}},
+  row{3} = {bg=\colorMagic{green7}{teal7}}
 }
   Alpha   & Beta  & Gamma  \\
   Epsilon & Zeta  & Eta    \\
@@ -298,11 +298,11 @@ You may like to define a new function for it if you need to use it several times
 
 \subsection{Evaluate table body}
 
-With outer key \verb!evaluate!, you can evaluate every occurrence of a specified protected function
-(defined with \verb!\prgNewFunction!) and replace it with the return value before splitting the table body.
+With outer key \K{evaluate}, you can evaluate every occurrence of a specified protected function
+(defined with \CC{\prgNewFunction}) and replace it with the return value before splitting the table body.
 
-The first application of \verb!evaluate! key is for inputting files inside tables.
-Assume you have two files \verb!test1.tmp! and \verb!test2.tmp! with the following contents:
+The first application of \K{evaluate} key is for inputting files inside tables.
+Assume you have two files \FF{test1.tmp} and \FF{test2.tmp} with the following contents:
 
 \begin{filecontents*}[overwrite]{test1.tmp}
 Some & Some \\
@@ -323,8 +323,8 @@ Other & Other \\
 \end{filecontents*}
 \end{codehigh}
 
-Then you can input them with outer specification \verb!evaluate=\fileInput!.
-The \verb!\fileInput! function is provided by \verb!functional! package.
+Then you can input them with outer specification \KV{evaluate=\fileInput}.
+The \CC{\fileInput} function is provided by \PP{functional} package.
 
 \begin{demohigh}
 \begin{tblr}[evaluate=\fileInput]{hlines}
@@ -337,34 +337,34 @@ The \verb!\fileInput! function is provided by \verb!functional! package.
 \end{demohigh}
 
 In general, you can define your functions which return parts of table contents,
-and use \verb!evaluate! key to evaluate them inside tables.
+and use \K{evaluate} key to evaluate them inside tables.
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\prgNewFunction \someFunc {m} {
+\prgNewFunction \myFunOne {m} {
   \prgReturn {#1 & #1 \\}
 }
 \IgnoreSpacesOff
-\begin{tblr}[evaluate=\someFunc]{hlines}
+\begin{tblr}[evaluate=\myFunOne]{hlines}
   Row1 & 1 \\
-  \someFunc{Text}
+  \myFunOne{Text}
   Row3 & 3 \\
-  \someFunc{Text}
+  \myFunOne{Text}
   Row5 & 5 \\
 \end{tblr}
 \end{demohigh}
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\prgNewFunction \otherFunc {} {
+\prgNewFunction \myFunTwo {} {
   \prgReturn {Other & Other \\}
 }
 \IgnoreSpacesOff
-\begin{tblr}[evaluate=\otherFunc]{hlines}
+\begin{tblr}[evaluate=\myFunTwo]{hlines}
   Row1 & 1 \\
-  \otherFunc
+  \myFunTwo
   Row3 & 3 \\
-  \otherFunc
+  \myFunTwo
   Row5 & 5 \\
 \end{tblr}
 \end{demohigh}
@@ -389,21 +389,21 @@ with option \texttt{evaluate=all}.
 
 \subsection{Process table elements}
 
-With inner key \verb!process!, you can modify the contents and styles before the table is built.
-Several public functions defined with \verb!\prgNewFuncton! are provided for you:
+With inner key \K{process}, you can modify the contents and styles before the table is built.
+Several public functions defined with \CC{\prgNewFuncton} are provided for you:
 
 \begin{itemize}
-  \item \verb!\cellGetText{<rownum>}{<colnum>}!
-  \item \verb!\cellSetText{<rownum>}{<colnum>}{<text>}!
-  \item \verb!\cellSetStyle{<rownum>}{<colnum>}{<style>}!
-  \item \verb!\rowSetStyle{<rownum>}{<style>}!
-  \item \verb!\columnSetStyle{<colnum>}{<style>}!
+  \item \CC{\cellGetText{<rownum>}{<colnum>}}
+  \item \CC{\cellSetText{<rownum>}{<colnum>}{<text>}}
+  \item \CC{\cellSetStyle{<rownum>}{<colnum>}{<style>}}
+  \item \CC{\rowSetStyle{<rownum>}{<style>}}
+  \item \CC{\columnSetStyle{<colnum>}{<style>}}
 \end{itemize}
 
 As the first example, let's calculate the sums of cells column by column:
 
 \IgnoreSpacesOn
-\prgNewFunction \funcSum {} {
+\prgNewFunction \calcSum {} {
   \intStepOneInline {1} {\arabic{colcount}} {
     \intZero \lTmpaInt
     \intStepOneInline {1} {\arabic{rowcount}-1} {
@@ -415,7 +415,7 @@ As the first example, let's calculate the sums of cells column by column:
 \IgnoreSpacesOff
 \begin{codehigh}
 \IgnoreSpacesOn
-\prgNewFunction \funcSum {} {
+\prgNewFunction \calcSum {} {
   \intStepOneInline {1} {\arabic{colcount}} {
     \intZero \lTmpaInt
     \intStepOneInline {1} {\arabic{rowcount}-1} {
@@ -428,7 +428,7 @@ As the first example, let's calculate the sums of cells column by column:
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{colspec={rrr},process=\funcSum}
+\begin{tblr}{colspec={rrr},process=\calcSum}
 \hline
   1 & 2 & 3 \\
   4 & 5 & 6 \\
@@ -442,7 +442,7 @@ As the first example, let's calculate the sums of cells column by column:
 Now, let's set background colors of cells depending on their contents:
 
 \IgnoreSpacesOn
-\prgNewFunction \funcColor {} {
+\prgNewFunction \colorBack {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \intStepOneInline {1} {\arabic{colcount}} {
       \intSet \lTmpaInt {\cellGetText {##1} {####1}}
@@ -455,7 +455,7 @@ Now, let's set background colors of cells depending on their contents:
 \IgnoreSpacesOff
 \begin{codehigh}
 \IgnoreSpacesOn
-\prgNewFunction \funcColor {} {
+\prgNewFunction \colorBack {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \intStepOneInline {1} {\arabic{colcount}} {
       \intSet \lTmpaInt {\cellGetText {##1} {####1}}
@@ -469,20 +469,20 @@ Now, let's set background colors of cells depending on their contents:
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{hlines,vlines,cells={r,$},process=\funcColor}
+\begin{tblr}{hlines,vlines,cells={r,$},process=\colorBack}
   -1 &  2 &  3 \\
    4 &  5 & -6 \\
    7 & -8 &  9 \\
 \end{tblr}
 \end{demohigh}
 
-We can also use color series of \verb!xcolor! package to color table rows:
+We can also use color series of \PP{xcolor} package to color table rows:
 
 \definecolor{lightb}{RGB}{217,224,250}
 \definecolorseries{tblrow}{rgb}{last}{lightb}{white}
 \resetcolorseries[3]{tblrow}
 \IgnoreSpacesOn
-\prgNewFunction \funcSeries {} {
+\prgNewFunction \colorSeries {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \tlSet \lTmpaTl {\intMathMod {##1-1} {3}}
     \rowSetStyle {##1} {\expWhole{bg=tblrow!![\lTmpaTl]}}
@@ -494,7 +494,7 @@ We can also use color series of \verb!xcolor! package to color table rows:
 \definecolorseries{tblrow}{rgb}{last}{lightb}{white}
 \resetcolorseries[3]{tblrow}
 \IgnoreSpacesOn
-\prgNewFunction \funcSeries {} {
+\prgNewFunction \colorSeries {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \tlSet \lTmpaTl {\intMathMod {##1-1} {3}}
     \rowSetStyle {##1} {\expWhole{bg=tblrow!![\lTmpaTl]}}
@@ -504,7 +504,7 @@ We can also use color series of \verb!xcolor! package to color table rows:
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{hlines,process=\funcSeries}
+\begin{tblr}{hlines,process=\colorSeries}
   Row1 & 1 \\
   Row2 & 2 \\
   Row3 & 3 \\
@@ -516,24 +516,24 @@ We can also use color series of \verb!xcolor! package to color table rows:
 
 \section{Library \texttt{hook}}
 
-This library is experimental, please see\\
-\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
+This library is experimental, please see Chapter \ref{chap:exp}.
+%\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
 
 \section{Library \texttt{html}}
 
-This library is experimental, please see\\
-\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
+This library is experimental, please see Chapter \ref{chap:exp}.
+%\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
 
 \section{Library \texttt{nameref}}
 
-From version 2022D, you can load \verb!nameref! library
-to make \verb!\nameref! and \verb!longtblr! work together.
+From version 2022D, you can load \LL{nameref} library
+to make \CC{\nameref} and \EE{longtblr} work together.
 
 \section{Library \texttt{siunitx}}
 
-When writing \verb!\UseTblrLibrary{siunitx}! in the preamble of the document,
-\verb!tabularray! package loads \verb!siunitx! package,
-and defines \verb!S! column as \verb!Q! column with \verb!si! key.
+When writing \CC{\UseTblrLibrary{siunitx}} in the preamble of the document,
+\PP{tabularray} package loads \PP{siunitx} package,
+and defines \Q{S} column as \Q{Q} column with \K{si} key.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -561,7 +561,7 @@ and defines \verb!S! column as \verb!Q! column with \verb!si! key.
 
 Note that you need to use \underline{\color{red3}triple} pairs of curly braces to guard non-numeric cells.
 But it is cumbersome to enclose each cell with braces. From version 2022B (2022-06-01)
-a new key \verb!guard! is provided for cells and rows. With \verb!guard! key the previous example
+a new key \K{guard} is provided for cells and rows. With \K{guard} key the previous example
 can be largely simplified.
 
 \begin{demohigh}
@@ -577,7 +577,7 @@ can be largely simplified.
 \end{tblr}
 \end{demohigh}
 
-Also you must use \verb!l!, \verb!c! or \verb!r! to set horizontal alignment for non-numeric cells:
+Also you must use \K{l}, \K{c} or \K{r} to set horizontal alignment for non-numeric cells:
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -596,7 +596,7 @@ Also you must use \verb!l!, \verb!c! or \verb!r! to set horizontal alignment for
 \end{tblr}
 \end{demohigh}
 
-Both \verb!S! and \verb!s! columns are supported. In fact, These two columns have been defined as follows:
+Both \Q{S} and \Q{s} columns are supported. In fact, These two columns have been defined as follows:
 \begin{codehigh}
 \NewColumnType{S}[1][]{Q[si={#1},c]}
 \NewColumnType{s}[1][]{Q[si={#1},c,cmd=\TblrUnit]}
@@ -605,14 +605,14 @@ You don't need to and are not allowed to define them again.
 
 \section{Library \texttt{varwidth}}
 
-To build a nice table, \verb!tabularray! need to measure the widths of cells.
-By default, it uses \verb!\hbox! to measure the sizes.
+To build a nice table, \PP{tabularray} need to measure the widths of cells.
+By default, it uses \CC{\hbox} to measure the sizes.
 This causes an error if a cell contains some vertical material, such as lists or display maths.
 
-With \verb!\UseTblrLibrary{varwidth}! in the preamble of the document,
-\verb!tabularray! will load \verb!varwidth! package,
-and add a new inner specification \verb!measure! for tables.
-After setting \verb!measure=vbox!, it will use \verb!\vbox! to measure cell widths.
+With \CC{\UseTblrLibrary{varwidth}} in the preamble of the document,
+\PP{tabularray} will load \PP{varwidth} package,
+and add a new inner specification \K{measure} for tables.
+After setting \KV{measure=vbox}, it will use \CC{\vbox} to measure cell widths.
 
 \begin{demohigh}
 \begin{tblr}{hlines,measure=vbox}
@@ -626,8 +626,8 @@ After setting \verb!measure=vbox!, it will use \verb!\vbox! to measure cell widt
 \end{demohigh}
 
 From version 2022A (2022-03-01), you can remove extra space above and below lists,
-by adding option \verb!stretch=-1!.
-The following example also needs \verb!enumitem! package and its \verb!nosep! option:
+by adding option \KV{stretch=-1}.
+The following example also needs \PP{enumitem} package and its \K{nosep} option:
 
 {\centering\begin{tblr}{
   hlines,vlines,rowspec={Q[l,t]Q[l,b]},
@@ -662,13 +662,13 @@ The following example also needs \verb!enumitem! package and its \verb!nosep! op
 \end{codehigh}
 %\end{demohigh}
 
-Note that option \verb!stretch=-1! also removes struts from cells, therefore it may not work well
-in \verb!tabularray! environments with \verb!rowsep=0pt!, such as
-\verb!booktabs!/\verb!longtabs!/\verb!talltabs! environments from \verb!booktabs! library.
+Note that option \KV{stretch=-1} also removes struts from cells, therefore it may not work well
+in \PP{tabularray} environments with \KV{rowsep=0pt}, such as
+\EE{booktabs}/\EE{longtabs}/\EE{talltabs} environments from \LL{booktabs} library.
 
 \section{Library \texttt{zref}}
 
-From version 2022D, you can load \verb!zref! library
-to make \verb!\zref! and \verb!longtblr! work together.
+From version 2022D, you can load \LL{zref} library
+to make \CC{\zref} and \EE{longtblr} work together.
 
 \end{document}

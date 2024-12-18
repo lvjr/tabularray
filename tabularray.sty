@@ -141,14 +141,16 @@
 \box_new:N \l__tblr_c_box % for cell box
 \box_new:N \l__tblr_d_box
 
-%% Total number of tblr tables
-\int_new:N \g__tblr_table_count_int
-
 %% Some commands for horizontal alignment
 \cs_new_eq:NN \__tblr_halign_command_j: \TblrAlignBoth
 \cs_new_eq:NN \__tblr_halign_command_l: \TblrAlignLeft
 \cs_new_eq:NN \__tblr_halign_command_c: \TblrAlignCenter
 \cs_new_eq:NN \__tblr_halign_command_r: \TblrAlignRight
+
+%% Total number of tblr tables, used for creating hyperref targets and tikz nodes.
+%% We need to save and restore it before and after measuring stage respectively,
+%% so we must define it with \newcounter command.
+\newcounter { tblrcount }
 
 %% Some counters for row and column numbering.
 %% We may need to restore all LaTeX counters in measuring and building cells,
@@ -219,6 +221,39 @@
       { \prg_return_true: } { \prg_return_false: }
   }
 \prg_generate_conditional_variant:Nnn \__tblr_keys_if_exist:nn { ne } { TF }
+
+%%% --------------------------------------------------------
+%%> \section{Create and Use tabularray Hooks}
+%%% --------------------------------------------------------
+
+\cs_new_protected:Npn \__tblr_hook_new:n #1
+  {
+    \hook_new:n { tabularray / #1 }
+  }
+
+\cs_new_protected:Npn \__tblr_hook_new_pair:nn #1 #2
+  {
+    \hook_new_pair:nn { tabularray / #1 } { tabularray / #2 }
+  }
+
+\cs_new_protected:Npn \__tblr_hook_use_false:n #1 {}
+
+\cs_new_protected:Npn \__tblr_hook_use_true:n #1
+  {
+    \hook_use:n { tabularray / #1 }
+  }
+
+\cs_set_eq:NN \__tblr_hook_use:n \__tblr_hook_use_false:n
+
+\NewDocumentCommand \AddToTblrHook { m o +m }
+  {
+    \hook_gput_code:nnn  { tabularray / #1 } { #2 } { #3 }
+  }
+
+\NewDocumentCommand \AddToTblrHookNext { m +m }
+  {
+    \hook_gput_next_code:nn  { tabularray / #1 } { #2 }
+  }
 
 %%% --------------------------------------------------------
 %%> \section{Data Structures Based on Property Lists}
@@ -2723,7 +2758,7 @@
 \cs_new_protected:Npn \__tblr_environ_code:nnnn #1 #2 #3 #4
   {
     \group_align_safe_begin:
-    \int_gincr:N \g__tblr_table_count_int
+    \int_gincr:N \c@tblrcount
     \tl_set:Nn \l__tblr_env_name_tl {#1}
     \mode_if_math:TF
       { \bool_set_true:N \l__tblr_math_mode_bool }
@@ -2741,7 +2776,7 @@
 \cs_new_protected:Npn \__tblr_builder:nnn #1 #2 #3
   {
     \int_gincr:N \g_tblr_level_int
-    \__tblr_hook_use:n { tabularray/trial/before }
+    \__tblr_hook_use:n { trial / before }
     \bool_set_true:N \lTblrMeasuringBool
     \__tblr_clear_prop_lists:
     \__tblr_clear_spec_lists:
@@ -2771,7 +2806,7 @@
     \__tblr_enable_content_commands:
     \__tblr_calc_cell_and_line_sizes:
     \bool_set_false:N \lTblrMeasuringBool
-    \__tblr_hook_use:n { tabularray/trial/after }
+    \__tblr_hook_use:n { trial / after }
     \LogTblrTracing { step = build ~ the ~ whole ~ table}
     \__tblr_build_whole:
     \int_gdecr:N \g_tblr_level_int
@@ -3799,19 +3834,25 @@
     \group_end:
   }
 
+\box_new:N \g__tblr_last_box
+\box_new:N \l__tblr_temp_box
+
 %% Build cell vbox with varwidth and use it later when hook library is loaded
+%% We apply \lastbox trick to get the cell vbox with correct width
 \cs_new_protected:Npn  \__tblr_build_vcell_with_vstore:
   {
-    \hbox_set:Nn \l__tblr_measured_cell_box
+    \vbox_set:Nn \l__tblr_temp_box % we don't use it since its width is too large
       {
         \begin{varwidth}[t]{\paperwidth}
           \TblrParboxRestore
           \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
           \__tblr_leave_vmode:
-           \l__tblr_f_tl
-           \l__tblr_c_tl
+          \l__tblr_f_tl
+          \l__tblr_c_tl
         \end{varwidth}
+        \box_gset_to_last:N \g__tblr_last_box
       }
+    \box_set_eq:NN \l__tblr_measured_cell_box \g__tblr_last_box
     \tl_set:Nx \l__tblr_w_tl { \dim_eval:n { \box_wd:N \l__tblr_measured_cell_box } }
   }
 
@@ -3874,14 +3915,9 @@
   {
     \group_begin:
     \box_if_empty:NTF \l__tblr_measured_cell_box
-      {
-        \vbox_set:Nn \l_tmpb_box { \__tblr_make_vcell_text:NN #1 #2 }
-        \vbox_set_top:Nn \l_tmpa_box { \vbox_unpack:N \l_tmpb_box }
-      }
-      {
-        \vbox_set_top:Nn \l_tmpa_box { \box_use:N \l__tblr_measured_cell_box }
-        \vbox_set:Nn \l_tmpb_box { \box_use:N \l__tblr_measured_cell_box }
-      }
+      { \vbox_set_top:Nn \l_tmpa_box { \__tblr_make_vcell_text:NN #1 #2 } }
+      { \box_set_eq:NN \l_tmpa_box \l__tblr_measured_cell_box }
+    \vbox_set:Nn \l_tmpb_box { \vbox_unpack:N \l_tmpa_box }
     \__tblr_process_stretch:
     \dim_gset:Nn \g__tblr_cell_wd_dim { \box_wd:N \l_tmpb_box }
     \dim_gset:Nn \g__tblr_cell_ht_dim
@@ -5202,7 +5238,7 @@
         \use:c { Hy@raisedlink }
           {
             \hypertarget
-              { tblr / \int_use:N \g__tblr_table_count_int / \tl_to_str:n {#1} }
+              { tblr / \int_use:N \c@tblrcount / \tl_to_str:n {#1} }
               { }
           }
       }
@@ -5214,7 +5250,7 @@
     \cs_if_exist:NTF \hyperlink
       {
         \hyperlink
-          { tblr / \int_use:N \g__tblr_table_count_int / \tl_to_str:n {#1} }
+          { tblr / \int_use:N \c@tblrcount / \tl_to_str:n {#1} }
           { #2 }
       }
       { #2 }
@@ -5635,7 +5671,7 @@
 
 \cs_new_protected:Npn \__tblr_build_whole:
   {
-    \__tblr_hook_use:n { tabularray/table/before }
+    \__tblr_hook_use:n { table / before }
     \tl_if_eq:enTF { \__tblr_spec_item:nn { outer } { long } } { true }
       { \__tblr_build_long_table:e { \__tblr_spec_item:nn { outer } { halign } } }
       {
@@ -5649,7 +5685,7 @@
               { \__tblr_spec_item:nn { outer } { baseline } }
           }
       }
-    \__tblr_hook_use:n { tabularray/table/after }
+    \__tblr_hook_use:n { table / after }
   }
 
 \dim_new:N \l__tblr_remain_height_dim
@@ -6396,7 +6432,7 @@
     \__tblr_get_row_inner_height_depth:VNNNN #1
       \l__tblr_row_ht_dim \l__tblr_row_dp_dim
       \l__tblr_row_abovesep_dim \l__tblr_row_belowsep_dim
-    \__tblr_hook_use:n { tabularray/row/before }
+    \__tblr_hook_use:n { row / before }
     \tblr_vrule_wd_ht_dp:nnn {0pt} {\l__tblr_row_ht_dim} {\l__tblr_row_dp_dim}
     \hbox_set:Nn \l__tblr_row_vlines_box
       {
@@ -6412,7 +6448,7 @@
       { \__tblr_build_vline_segment:nn {#1} { \int_eval:n {\c@colcount + 1} } }
     \skip_horizontal:n { - \box_wd:N \l__tblr_row_vlines_box }
     \box_use:N \l__tblr_row_vlines_box
-    \__tblr_hook_use:n { tabularray/row/after }
+    \__tblr_hook_use:n { row / after }
   }
 
 %% Read from table specifications and calculate inner height/depth of the row
@@ -6693,7 +6729,7 @@
   {
     \bool_if:NT \l__tblr_html_variables_bool
       { \__tblr_expose_cell_properties:NN #1 #2 }
-    \__tblr_hook_use:n { tabularray/cell/before }
+    \__tblr_hook_use:n { cell / before }
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_cell_wd_dim }
       {
         \tl_if_eq:NnTF \g__tblr_cell_halign_tl {j}
@@ -6760,7 +6796,7 @@
     \skip_horizontal:n { \l__tblr_x_tl }
     \box_use:N \l__tblr_c_box
     \skip_horizontal:n { \l__tblr_y_tl - \l__tblr_cell_wd_dim + \l__tblr_w_tl }
-    \__tblr_hook_use:n { tabularray/cell/after }
+    \__tblr_hook_use:n { cell / after }
   }
 
 \cs_new_protected:Npn \__tblr_build_cell_background:NN #1 #2
@@ -7458,18 +7494,17 @@
 
 %% Library hook provides some public hooks
 
-\cs_new_protected:Npn \__tblr_hook_use:n #1 {}
-
 \NewTblrLibrary { hook }
   {
     %% We need varwidth to keep \lTblrMeasuringBool correct
     \UseTblrLibrary { varwidth }
     \tl_set:Nn \l__tblr_inner_spec_measure_tl { vstore }
-    \cs_set_eq:NN \__tblr_hook_use:n \hook_use:n
-    \hook_new_pair:nn { tabularray/trial/before } { tabularray/trial/after }
-    \hook_new_pair:nn { tabularray/table/before } { tabularray/table/after }
-    \hook_new_pair:nn { tabularray/row/before } { tabularray/row/after }
-    \hook_new_pair:nn { tabularray/cell/before } { tabularray/cell/after }
+    \cs_set_eq:NN \__tblr_hook_use:n \__tblr_hook_use_true:n
+    %% Be careful lthooks will not remove any spaces in hook paths
+    \__tblr_hook_new_pair:nn { trial / before } { trial / after }
+    \__tblr_hook_new_pair:nn { table / before } { table / after }
+    \__tblr_hook_new_pair:nn {   row / before } {   row / after }
+    \__tblr_hook_new_pair:nn {  cell / before } {  cell / after }
   }
 
 %% Library html provides more public variables
@@ -7550,6 +7585,203 @@
     \__tblr_keys_define:nn { column / inner } { guard .meta:n = { cmd = } }
   }
 
+%% Library tikz to add cell nodes and table nodes with tikz
+
+\tl_new:N \g__tblr_tikz_prefix_tl
+\dim_new:N \l__tblr_cell_inner_wd_dim
+\dim_new:N \l__tblr_cell_inner_dp_dim
+\dim_new:N \l__tblr_cell_hanchor_dim
+\dim_new:N \l__tblr_last_cell_table_ht_dim
+\dim_new:N \l__tblr_last_cell_table_dp_dim
+\dim_new:N \l__tblr_last_vline_wd_dim
+\box_new:N \l__tblr_tikz_node_box
+
+\NewTblrLibrary { tikz }
+  {
+    \__tblr_keys_define:nn { table / inner }
+      {
+        tikz ~ prefix .code:n =
+          {
+            \tl_gset:Nn \g__tblr_tikz_prefix_tl { ##1 - }
+          }
+      }
+
+    \UseTblrLibrary { hook }
+    \RequirePackage { tikz }
+    \tikzset
+      {
+        tblr / cell ~ node / .style =
+          {
+            rectangle ,
+            inner ~ sep = 0pt ,
+            draw = none ,
+            fill = none
+          } ,
+        tblr / cell / .style = { } ,
+        tblr / table ~ node / .style =
+          {
+            rectangle ,
+            inner ~ sep = 0pt ,
+            draw = none ,
+            fill = none
+          } ,
+        tblr / table / .style = { } ,
+        tblr / overlay / .style = { }
+      }
+
+    \NewDocumentEnvironment { tblrtikz } { }
+      {
+        \begin{tikzpicture}
+          [
+            remember ~ picture ,
+            overlay ,
+            name ~ prefix = \g__tblr_tikz_prefix_tl ,
+            tblr / overlay
+          ]
+      }
+      {
+        \end{tikzpicture}
+      }
+
+    \AddToHook { tabularray/cell/after }
+      {
+        \__tblr_get_cell_background_width:NNN
+            \c@rownum \c@colnum \l__tblr_cell_inner_wd_dim
+        \__tblr_get_cell_background_depth:NNN
+            \c@rownum \c@colnum\l__tblr_cell_inner_dp_dim
+        \dim_zero:N \l__tblr_cell_hanchor_dim
+        \tl_set:Ne \l__tblr_c_tl
+          { \__tblr_data_item:neen { cell }
+          { \int_use:N \c@rownum } { \int_use:N \c@colnum } { colspan } }
+        \int_step_inline:nn { \l__tblr_c_tl }
+          {
+            \int_compare:nNnT {##1} > { 1 }
+              {
+                \dim_add:Nn \l__tblr_cell_hanchor_dim
+                  {
+                    \__tblr_data_item:neen { cell }
+                      { \int_use:N \c@rownum } {##1} { @cell-width }
+                    -
+                    \__tblr_data_item:nen { column } {##1} { @col-width }
+                  }
+              }
+          }
+        \hbox_set:Nn \l__tblr_tikz_node_box
+          {
+            \begin{tikzpicture}[remember ~ picture, overlay]
+              \node
+                [
+                  tblr / cell ~ node ,
+                  tblr / cell ,
+                  text ~ width = \l__tblr_cell_inner_wd_dim ,
+                  text ~ height = \l__tblr_row_ht_dim ,
+                  text ~ depth = \l__tblr_cell_inner_dp_dim
+                ]
+                (
+                  \g__tblr_tikz_prefix_tl
+                  tblr -
+                  \int_use:N \c@rownum -
+                  \int_use:N \c@colnum
+                )
+                at ( 0pt , 0pt ) { } ;
+            \end{tikzpicture}
+          }
+        \box_set_trim:Nnnnn \l__tblr_tikz_node_box
+          {
+            0.5 \l__tblr_cell_inner_wd_dim +
+            \l__tblr_cell_hanchor_dim
+          }
+          {
+            -0.5 \l__tblr_row_ht_dim +
+            0.5 \l__tblr_cell_inner_dp_dim
+          }
+          {
+            -0.5 \l__tblr_cell_inner_wd_dim -
+            \l__tblr_cell_hanchor_dim
+          }
+          {
+            0.5 \l__tblr_row_ht_dim -
+            0.5 \l__tblr_cell_inner_dp_dim
+          }
+        \box_use:N \l__tblr_tikz_node_box
+
+        \int_compare:nNnT { \c@rownum } = { \c@rowcount }
+          {
+            \int_compare:nNnT { \c@colnum } = { \c@colcount }
+              {
+                \__tblr_get_table_width:
+                \__tblr_get_table_height:
+                \__tblr_get_table_depth:
+                \dim_set:Nn \l__tblr_last_vline_wd_dim
+                  {
+                    \__tblr_spec_item:nn { vline }
+                      { [ \int_eval:n { \c@colcount + 1 } ] / @vline-width }
+                  }
+                \hbox_set:Nn \l__tblr_tikz_node_box
+                  {
+                    \begin{tikzpicture}[remember ~ picture, overlay]
+                      \node
+                        [
+                          tblr / table ~ node ,
+                          tblr / table ,
+                          text ~ width = \tablewidth ,
+                          text ~ height = \l__tblr_last_cell_table_ht_dim ,
+                          text ~ depth = \l__tblr_last_cell_table_dp_dim
+                        ]
+                        (
+                          \g__tblr_tikz_prefix_tl
+                          tblr
+                        )
+                        at ( 0pt , 0pt ) { } ;
+                    \end{tikzpicture}
+                  }
+                \box_set_trim:Nnnnn \l__tblr_tikz_node_box
+                  {
+                    0.5 \tablewidth +
+                    \l__tblr_last_vline_wd_dim
+                  }
+                  {
+                    -0.5 \l__tblr_last_cell_table_ht_dim +
+                    0.5 \l__tblr_last_cell_table_dp_dim
+                  }
+                  {
+                    -0.5 \tablewidth -
+                    \l__tblr_last_vline_wd_dim
+                  }
+                  {
+                    0.5 \l__tblr_last_cell_table_ht_dim -
+                    0.5 \l__tblr_last_cell_table_dp_dim
+                  }
+                \box_use:N \l__tblr_tikz_node_box
+              }
+          }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_get_table_height:
+  {
+    \dim_zero:N \l__tblr_last_cell_table_ht_dim
+    \int_step_inline:nn { \c@rowcount - 1 }
+      {
+        \dim_add:Nn \l__tblr_last_cell_table_ht_dim
+          { \__tblr_valign_get_hline_total:n {##1} }
+        \dim_add:Nn \l__tblr_last_cell_table_ht_dim
+          { \__tblr_valign_get_row_total:n {##1} }
+      }
+    \dim_add:Nn \l__tblr_last_cell_table_ht_dim
+      { \__tblr_valign_get_hline_total:n { \int_use:N \c@rowcount } }
+    \dim_add:Nn \l__tblr_last_cell_table_ht_dim
+      { \__tblr_valign_get_row_height:n { \int_use:N \c@rowcount } }
+  }
+
+\cs_new_protected:Npn \__tblr_get_table_depth:
+  {
+    \dim_set:Nn \l__tblr_last_cell_table_dp_dim
+      { \__tblr_valign_get_row_depth:n { \int_use:N \c@rowcount } }
+    \dim_add:Nn \l__tblr_last_cell_table_dp_dim
+      { \__tblr_valign_get_hline_total:n { \int_eval:n { \c@rowcount + 1 } } }
+  }
+
 %% Library varwidth and measure option
 
 \NewTblrLibrary { varwidth }
@@ -7573,164 +7805,4 @@
             \exp_args:NV \zlabel \lTblrLabelTl
           }
       }
-  }
-
-%% Library to add tikz coordinates at the corners of each cell as well as of the whole table
-
-\tl_new:N \g__tblr_tikz_prefix_tl
-\dim_new:N \l__tblr_cell_inner_wd_dim
-\dim_new:N \l__tblr_cell_hcenter_dim
-\dim_new:N \l__tblr_cell_vcenter_dim
-\dim_new:N \l__tblr_table_height_dim
-\dim_new:N \l__tblr_table_depth_dim
-\dim_new:N \l__tblr_last_hline_height_dim
-\dim_new:N \l__tblr_last_vline_width_dim
-\box_new:N \l__tblr_tikz_node_box
-
-\NewTblrLibrary { tikz }
-  {
-    \keys_define:nn { tblr }
-    %\__tblr_keys_define:nn { table / inner }
-        { 
-            tikz ~ prefix .code:n = {
-                \tl_gset:Nn \g__tblr_tikz_prefix_tl { ##1 - } 
-            } 
-        }
-        
-    \UseTblrLibrary { hook }
-    \RequirePackage { tikz }
-    \tikzset {
-        tblr / cell ~ node / .style = {
-            rectangle ,
-            inner ~ sep = 0pt ,
-            draw = none ,
-            fill = none 
-        } ,
-        tblr / cell / .style = { } ,
-        tblr / table ~ node / .style = {
-            rectangle ,
-            inner ~ sep = 0pt ,
-            draw = none ,
-            fill = none 
-        } ,
-        tblr / table / .style = { } ,
-        tblr / overlay / .style = { }
-    }
-    
-    \NewDocumentEnvironment { tblrtikz } { } {
-      \begin{tikzpicture}[
-        remember ~ picture , 
-        overlay , 
-        name ~ prefix = \g__tblr_tikz_prefix_tl , 
-        tblr / overlay
-      ]
-    }{
-      \end{tikzpicture}
-    }
-    
-    \AddToHook { tabularray/cell/after } {
-        \dim_set:Nn \l__tblr_cell_inner_wd_dim { 
-            \l__tblr_x_tl + \l__tblr_y_tl + 
-            \l__tblr_cell_wd_dim
-        }
-        \hbox_set:Nn \l__tblr_tikz_node_box { 
-          \begin{tikzpicture}[remember ~ picture, overlay]
-            \node[
-                tblr / cell ~ node , 
-                tblr / cell ,
-                text ~ width = \l__tblr_cell_inner_wd_dim ,
-                text ~ height = \l__tblr_row_ht_dim , 
-                text ~ depth = \l__tblr_row_dp_dim
-            ] (
-                \g__tblr_tikz_prefix_tl 
-                tblr- 
-                \int_use:N \c@rownum - 
-                \int_use:N \c@colnum
-            ) at ( 0pt , 0pt ) { } ; 
-          \end{tikzpicture}
-        }
-        \dim_set:Nn \l__tblr_cell_hcenter_dim { 
-            0.5 \l__tblr_cell_inner_wd_dim 
-        }
-        \dim_set:Nn \l__tblr_cell_vcenter_dim {
-            0.5 \l__tblr_row_ht_dim -
-            0.5 \l__tblr_row_dp_dim 
-        }
-        \box_set_trim:Nnnnn \l__tblr_tikz_node_box  
-            { \l__tblr_cell_hcenter_dim }
-            { -\l__tblr_cell_vcenter_dim }
-            { -\l__tblr_cell_hcenter_dim } 
-            { \l__tblr_cell_vcenter_dim }
-        \box_use:N \l__tblr_tikz_node_box
-
-        \int_compare:nNnT { \c@rownum } = { \c@rowcount } {
-            \int_compare:nNnT { \c@colnum } = { \c@colcount } {
-                \__tblr_get_table_width:
-                \__tblr_get_table_height:
-                \__tblr_get_table_depth:
-                \dim_set:Nn \l__tblr_last_hline_height_dim {
-                    \__tblr_spec_item:nn { hline } { [ \int_eval:n { \c@rowcount + 1 } ] / @hline-height } 
-                }
-                \dim_set:Nn \l__tblr_last_vline_width_dim {
-                    \__tblr_spec_item:nn { vline } { [ \int_eval:n { \c@colcount + 1 } ] / @vline-width } 
-                }
-                \hbox_set:Nn \l__tblr_tikz_node_box { 
-                  \begin{tikzpicture}[remember ~ picture, overlay]
-                    \node[
-                        tblr / table ~ node , 
-                        tblr / table ,
-                        text ~ width = \tablewidth ,
-                        text ~ height = \l__tblr_table_height_dim ,
-                        text ~ depth = \l__tblr_table_depth_dim 
-                    ] (
-                        \g__tblr_tikz_prefix_tl 
-                        tblr
-                    ) at ( 0pt , 0pt ) { } ; 
-                  \end{tikzpicture}
-                }
-                \box_set_trim:Nnnnn \l__tblr_tikz_node_box { 
-                    0.5 \tablewidth +
-                    \l__tblr_last_vline_width_dim 
-                } { 
-                    -0.5 \l__tblr_table_height_dim +
-                    0.5 \l__tblr_table_depth_dim 
-                } { 
-                    -0.5 \tablewidth - 
-                    \l__tblr_last_vline_width_dim 
-                } { 
-                    0.5 \l__tblr_table_height_dim -
-                    0.5 \l__tblr_table_depth_dim  
-                }
-                \box_use:N \l__tblr_tikz_node_box
-            }
-        }
-    }
-  }
-
-\cs_new_protected:Npn \__tblr_get_table_height: 
-  {
-    \int_step_inline:nn { \c@rowcount - 1 } {
-        \dim_add:Nn \l__tblr_table_height_dim { 
-            \__tblr_valign_get_hline_total:n {##1} 
-        }
-        \dim_add:Nn \l__tblr_table_height_dim { 
-            \__tblr_valign_get_row_total:n {##1} 
-        }
-    }
-    \dim_add:Nn \l__tblr_table_height_dim { 
-        \__tblr_valign_get_hline_total:n { \int_use:N \c@rowcount } 
-    }
-    \dim_add:Nn \l__tblr_table_height_dim { 
-        \__tblr_valign_get_row_height:n { \int_use:N \c@rowcount }
-    }
-  }
-
-\cs_new_protected:Npn \__tblr_get_table_depth: 
-  {
-    \dim_set:Nn \l__tblr_table_depth_dim { 
-        \__tblr_valign_get_row_depth:n { \int_use:N \c@rowcount }
-    }
-    \dim_add:Nn \l__tblr_table_depth_dim { 
-        \__tblr_valign_get_hline_total:n { \int_eval:n { \c@rowcount + 1 } } 
-    }
   }

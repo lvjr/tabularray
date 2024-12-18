@@ -52,9 +52,26 @@
 
 \setcounter{tocdepth}{1}
 
-\newcommand*{\K}[1]{\texttt{#1}}
-\newcommand*{\V}[1]{\texttt{#1}}
-\newcommand*{\None}{$\times$}
+\NewDocumentCommand\None{}{{\boldmath$\times$}}
+\NewDocumentCommand\K{m}{\texttt{#1}} % key
+\NewDocumentCommand\V{m}{\texttt{#1}} % value
+\NewDocumentCommand\Q{m}{\texttt{#1}} % column/row type
+
+\NewDocumentCommand\KK{m}{\texttt{\fakeverb{#1}}} % key
+\NewDocumentCommand\VV{m}{\texttt{\fakeverb{#1}}} % value
+\NewDocumentCommand\KV{m}{\texttt{\fakeverb{#1}}} % key and value
+\NewDocumentCommand\CC{m}{\texttt{\fakeverb{#1}}} % command
+\NewDocumentCommand\EE{m}{\texttt{\fakeverb{#1}}} % environment
+\NewDocumentCommand\LL{m}{\texttt{\fakeverb{#1}}} % library
+\NewDocumentCommand\PP{m}{\texttt{\fakeverb{#1}}} % package
+\NewDocumentCommand\FF{m}{\texttt{\fakeverb{#1}}} % file
+\NewDocumentCommand\KP{m}{\texttt{\fakeverb{#1}}} % key path
+\NewDocumentCommand\HP{m}{\texttt{\fakeverb{#1}}} % hook path
+\NewDocumentCommand\CS{m}{\texttt{\fakeverb{#1}}} % child selector
+\NewDocumentCommand\CO{m}{\texttt{\fakeverb{#1}}} % counter
+\NewDocumentCommand\EN{m}{\texttt{\fakeverb{#1}}} % element name
+\NewDocumentCommand\TN{m}{\texttt{\fakeverb{#1}}} % template name
+\NewDocumentCommand\TT{m}{\texttt{\fakeverb{#1}}} % text
 
 \NewTblrEnviron{newtblr}
 \SetTblrOuter[newtblr]{long}
@@ -173,18 +190,18 @@
 
 \chapter{Overview of Features}
 
-Before using \verb!tabularray! package, it is better to know how to typeset simple text and
-math tables with traditional \verb!tabular!, \verb!tabularx! and \verb!array! environments,
-because we will compare \verb!tblr! environment from \verb!tabularray! package with these
+Before using \PP{tabularray} package, it is better to know how to typeset simple text and
+math tables with traditional \EE{tabular}, \EE{tabularx} and \EE{array} environments,
+because we will compare \EE{tblr} environment from \PP{tabularray} package with these
 environments. You may read web pages on LaTeX tables on
 \href{https://www.learnlatex.org/en/lesson-08}{LearnLaTeX} and
 \href{https://www.overleaf.com/learn/latex/Tables}{Overleaf} first.
 
 \section{Vertical Space}
 
-After loading \verb!tabularray! package in the preamble,
-we can use \verb!tblr! environments to typeset tabulars and arrays.
-The name \verb!tblr! is short for \verb!tabularray! or \verb!top-bottom-left-right!.
+After loading \PP{tabularray} package in the preamble,
+we can use \EE{tblr} environments to typeset tabulars and arrays.
+The name \EE{tblr} is short for \PP{tabularray} or \VV{top-bottom-left-right}.
 The following is our first example:
 
 \begin{demo}
@@ -211,9 +228,9 @@ The following is our first example:
 \end{tblr}
 \end{demohigh}
 
-You may notice that there is extra space above and below the table rows with \verb!tblr! environment.
+You may notice that there is extra space above and below the table rows with \EE{tblr} environment.
 This space makes the table look better.
-If you don't like it, you could use \verb!\SetTblrInner! command:
+If you don't like it, you could use \CC{\SetTblrInner} command:
 
 \begin{demohigh}
 \SetTblrInner{rowsep=0pt}
@@ -228,7 +245,7 @@ If you don't like it, you could use \verb!\SetTblrInner! command:
 \end{tblr}
 \end{demohigh}
 
-But in many cases, this \verb!rowsep! is useful:
+But in many cases, this \KK{rowsep} is useful:
 
 \begin{demo}
 $\begin{array}{rrr}
@@ -250,12 +267,12 @@ $\begin{tblr}{rrr}
 \end{tblr}$
 \end{demohigh}
 
-Note that you can use \verb!tblr! in both text and math modes.
+Note that you can use \EE{tblr} in both text and math modes.
 
 \section{Multiline Cells}
 
-It's quite easy to write multiline cells without fixing the column width in \verb!tblr! environments:
-just enclose the cell text with braces and use \verb!\\! to break lines:
+It's quite easy to write multiline cells without fixing the column width in \EE{tblr} environments:
+just enclose the cell text with braces and use \CC{\\\\} to break lines:
 
 \begin{demohigh}
 \begin{tblr}{|l|c|r|}
@@ -271,9 +288,9 @@ just enclose the cell text with braces and use \verb!\\! to break lines:
 
 From time to time,
 you may want to specify the horizontal and vertical alignment of cells at the same time.
-\verb!Tabularray! package provides a \verb!Q! column for this
-(In fact, \verb!Q! column is the only primitive column,
-other columns are defined as \verb!Q! columns with some options):
+\PP{Tabularray} package provides a \Q{Q} column for this
+(In fact, \Q{Q} column is the only primitive column,
+other columns are defined as \Q{Q} columns with some options):
 
 \begin{demohigh}
 \begin{tblr}{|Q[l,t]|Q[c,m]|Q[r,b]|}
@@ -283,10 +300,10 @@ other columns are defined as \verb!Q! columns with some options):
 \end{tblr}
 \end{demohigh}
 
-Note that you can use more meaningful \verb!t! instead of \verb!p! for top baseline alignment.
+Note that you can use more meaningful \K{t} instead of \K{p} for top baseline alignment.
 For some users who are familiar with word processors,
-these \verb!t! and \verb!b! columns are counter-intuitive.
-In \verb!tabularray! package, there are another two column types \verb!h! and \verb!f!,
+these \K{t} and \K{b} columns are counter-intuitive.
+In \PP{tabularray} package, there are another two column types \K{h} and \K{f},
 which will align cell text at the head and the foot, respectively:
 
 \begin{demohigh}
@@ -301,8 +318,8 @@ which will align cell text at the head and the foot, respectively:
 
 \section{Multirow Cells}
 
-The above \verb!h! and \verb!f! alignments are necessary
-when we write multirow cells with \verb!\SetCell! command in \verb!tabularray!.
+The above \K{h} and \K{f} alignments are necessary
+when we write multirow cells with \CC{\SetCell} command in \PP{tabularray}.
 
 \begin{demo}
 \begin{tabular}{|l|l|l|l|}
@@ -328,9 +345,9 @@ when we write multirow cells with \verb!\SetCell! command in \verb!tabularray!.
 \end{tblr}
 \end{demohigh}
 
-Note that you don't need to load \verb!multirow! package first,
-since \verb!tabularray! doesn't depend on it.
-Furthermore, \verb!tabularray! will always typeset decent multirow cells.
+Note that you don't need to load \PP{multirow} package first,
+since \PP{tabularray} doesn't depend on it.
+Furthermore, \PP{tabularray} will always typeset decent multirow cells.
 First, it will set correct vertical middle alignment,
 even though some rows have large height:
 
@@ -380,7 +397,7 @@ therefore it always avoids vertical overflow:
 \end{demohigh}
 
 If you want to distribute extra vertical space evenly to two rows,
-you may use \verb!vspan! option described in Chapter \ref{chap:extra}.
+you may use \K{vspan} option described in Chapter \ref{chap:extra}.
 
 \section{Multi Rows and Columns}
 
@@ -400,9 +417,9 @@ It was a hard job to typeset cells with multiple rows and multiple columns. For 
 \end{tabular}
 \end{demo}
 
-With \verb!tabularray! package, you can set spanned cells with \verb!\SetCell! command:
-within the optional argument of \verb!\SetCell! command,
-option \verb!r! is for rowspan number, and \verb!c! for colspan number;
+With \PP{tabularray} package, you can set spanned cells with \CC{\SetCell} command:
+within the optional argument of \CC{\SetCell} command,
+option \K{r} is for rowspan number, and \K{c} for colspan number;
 within the mandatory argument of it, horizontal and vertical alignment options are accepted.
 Therefore it's much simpler to typeset spanned cells:
 
@@ -420,13 +437,13 @@ Therefore it's much simpler to typeset spanned cells:
 \end{tblr}
 \end{demohigh}
 
-Using \verb!\multicolumn! command, the omitted cells \textcolor{red3}{must} be removed.
+Using \CC{\multicolumn} command, the omitted cells \textcolor{red3}{must} be removed.
 On the contrary,
-using \verb!\multirow! command, the omitted cells \textcolor{red3}{must not} be removed.
-\verb!\SetCell! command behaves the same as \verb!\multirow! command in this aspect.
+using \CC{\multirow} command, the omitted cells \textcolor{red3}{must not} be removed.
+\CC{\SetCell} command behaves the same as \CC{\multirow} command in this aspect.
 
-With \verb!tblr! environment, any \verb!\hline! segments inside a spanned cell will be ignored,
-therefore we're free to use \verb!\hline! in the above example.
+With \EE{tblr} environment, any \CC{\hline} segments inside a spanned cell will be ignored,
+therefore we're free to use \CC{\hline} in the above example.
 Also, any omitted cell will definitely be ignored when typesetting,
 no matter it's empty or not.
 With this feature, we could put row and column numbers into the omitted cells,
@@ -448,9 +465,9 @@ which will help us to locate cells when the tables are rather complex:
 
 \section{Column Types}
 
-\verb!Tabularray! package supports all normal column types, as well as
-the extendable \verb!X! column type,
-which first occurred in \verb!tabularx! package and was largely improved by \verb!tabu! package:
+\PP{Tabularray} package supports all normal column types, as well as
+the extendable \Q{X} column type,
+which first occurred in \PP{tabularx} package and was largely improved by \PP{tabu} package:
 
 \begin{demohigh}
 \begin{tblr}{|X[2,l]|X[3,l]|X[1,r]|X[r]|}
@@ -460,7 +477,7 @@ which first occurred in \verb!tabularx! package and was largely improved by \ver
 \end{tblr}
 \end{demohigh}
 
-Also, \verb!X! columns with negative coefficients are possible:
+Also, \Q{X} columns with negative coefficients are possible:
 
 \begin{demohigh}
 \begin{tblr}{|X[2,l]|X[3,l]|X[-1,r]|X[r]|}
@@ -470,9 +487,9 @@ Also, \verb!X! columns with negative coefficients are possible:
 \end{tblr}
 \end{demohigh}
 
-We need the width to typeset a table with \verb!X! columns.
-If unset, the default is \verb!\linewidth!.
-To change the width, we have to first put all column specifications into \verb!colspec={...}!:
+We need the width to typeset a table with \Q{X} columns.
+If unset, the default is \CC{\linewidth}.
+To change the width, we have to first put all column specifications into \KV{colspec={...}}:
 
 \begin{demohigh}
 \begin{tblr}{width=0.8\linewidth,colspec={|X[2,l]|X[3,l]|X[-1,r]|X[r]|}}
@@ -482,9 +499,9 @@ To change the width, we have to first put all column specifications into \verb!c
 \end{tblr}
 \end{demohigh}
 
-You can define new column types with \verb!\NewColumnType! command.
-For example, in \verb!tabularray! package,
-\verb!b! and \verb!X! columns are defined as special \verb!Q! columns:
+You can define new column types with \CC{\NewColumnType} command.
+For example, in \PP{tabularray} package,
+\Q{b} and \Q{X} columns are defined as special \Q{Q} columns:
 \begin{codehigh}
 \NewColumnType{b}[1]{Q[b,wd=#1]}
 \NewColumnType{X}[1][]{Q[co=1,#1]}
@@ -492,8 +509,8 @@ For example, in \verb!tabularray! package,
 
 \section{Row Types}
 
-Now that we have column types and \verb!colspec! option,
-you may ask for row types and \verb!rowspec! option.
+Now that we have column types and \K{colspec} option,
+you may ask for row types and \K{rowspec} option.
 Yes, they are here:
 
 \begin{demohigh}
@@ -504,13 +521,13 @@ Yes, they are here:
 \end{tblr}
 \end{demohigh}
 
-Same as column types, \verb!Q! is the only primitive row type,
-and other row types are defined as \verb!Q! types with different options.
-It's better to specify horizontal alignment in \verb!colspec!,
-and vertical alignment in \verb!rowspec!, respectively.
+Same as column types, \Q{Q} is the only primitive row type,
+and other row types are defined as \Q{Q} types with different options.
+It's better to specify horizontal alignment in \K{colspec},
+and vertical alignment in \K{rowspec}, respectively.
 
-Inside \verb!rowspec!, \verb!|! is the hline type.
-Therefore we need not to write \verb!\hline! command, which makes table code cleaner.
+Inside \K{rowspec}, \Q{|} is the hline type.
+Therefore we need not to write \CC{\hline} command, which makes table code cleaner.
 
 \section{Hlines and Vlines}
 
@@ -530,10 +547,10 @@ Seven & Eight &  Nine \\
 
 \section{Colorful Tables}
 
-To add colors to your tables, you need to load \verb!xcolor! package first.
-\verb!Tabularray! package will also load
+To add colors to your tables, you need to load \PP{xcolor} package first.
+\PP{Tabularray} package will also load
 \href{https://ctan.org/pkg/ninecolors}{\texttt{ninecolors}} package for proper color contrast.
-First you can specify background option for \verb!Q! rows/columns inside \verb!rowspec!/\verb!colspec!:
+First you can specify background option for \Q{Q} rows/columns inside \K{rowspec}/\K{colspec}:
 
 \begin{demohigh}
 \begin{tblr}{colspec={lcr},rowspec={|Q[cyan7]|Q[azure7]|Q[blue7]|}}
@@ -551,7 +568,7 @@ First you can specify background option for \verb!Q! rows/columns inside \verb!r
 \end{tblr}
 \end{demohigh}
 
-Also you can use \verb!\SetRow! or \verb!\SetColumn! command to specify row or column colors:
+Also you can use \CC{\SetRow} or \CC{\SetColumn} command to specify row or column colors:
 
 \begin{demohigh}
 \begin{tblr}{colspec={lcr},rowspec={|Q|Q|Q|}}
@@ -595,12 +612,12 @@ Hlines and vlines can also have colors:
 
 \section{Old and New Interfaces}
 
-With \verb!tabularray! package, you can change the styles of tables via old interfaces or new interfaces.
+With \PP{tabularray} package, you can change the styles of tables via old interfaces or new interfaces.
 
 The old interfaces consist of some table commands inside the table contents.
-Same as \verb!tabular! and \verb!array! environments,
+Same as \EE{tabular} and \EE{array} environments,
 all table commands \textcolor{red3}{must} be put at the beginning of the cell text.
-Also, new table commands \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
+Also, new table commands \textcolor{red3}{must} be defined with \CC{\NewTableCommand}.
 
 The new interfaces consist of some options inside the mandatory argument,
 hence totally separating the styles and the contents of tables.
@@ -608,20 +625,20 @@ hence totally separating the styles and the contents of tables.
 \begin{newtblr}[
   caption = {Old Interfaces and New Interfaces},
   label = {key:interface},
-]{verb}
-  Old Interfaces                                 & New Interfaces          \\
-  \verb!\SetHlines!                              & \K{hlines}              \\
-  \verb!\SetHline!, \verb!\hline!, \verb!\hborder!, \verb!\cline!
-                                                 & \K{hline}, \K{hborder}, \K{rowspec}  \\
-  \verb!\SetVlines!                              & \K{vlines}              \\
-  \verb!\SetVline!, \verb!\vline!, \verb!\vborder!, \verb!\rline!
-                                                 & \K{vline}, \K{vborder}, \K{colspec}  \\
-  \verb!\SetCells!                               & \K{cells}               \\
-  \verb!\SetCell!                                & \K{cell}                \\
-  \verb!\SetRows!                                & \K{rows}                \\
-  \verb!\SetRow!                                 & \K{row}, \K{rowspec}    \\
-  \verb!\SetColumns!                             & \K{columns}             \\
-  \verb!\SetColumn!                              & \K{column}, \K{colspec} \\
+]{}
+  Old Interfaces                               & New Interfaces          \\
+  \CC{\SetHlines}                              & \K{hlines}              \\
+  \CC{\SetHline}, \CC{\hline}, \CC{\hborder}, \CC{\cline}
+                                               & \K{hline}, \K{hborder}, \K{rowspec}  \\
+  \CC{\SetVlines}                              & \K{vlines}              \\
+  \CC{\SetVline}, \CC{\vline}, \CC{\vborder}, \CC{\rline}
+                                               & \K{vline}, \K{vborder}, \K{colspec}  \\
+  \CC{\SetCells}                               & \K{cells}               \\
+  \CC{\SetCell}                                & \K{cell}                \\
+  \CC{\SetRows}                                & \K{rows}                \\
+  \CC{\SetRow}                                 & \K{row}, \K{rowspec}    \\
+  \CC{\SetColumns}                             & \K{columns}             \\
+  \CC{\SetColumn}                              & \K{column}, \K{colspec} \\
 \end{newtblr}
 
 \section{Hlines and Vlines}\label{sec:hlines-vlines}
@@ -662,7 +679,7 @@ All available keys for hlines and vlines are described in Table \ref{key:hline} 
 
 \subsection{Hlines and Vlines in New Interfaces}
 
-Options \verb!hlines! and \verb!vlines! are for setting all hlines and vlines, respectively.
+Options \K{hlines} and \K{vlines} are for setting all hlines and vlines, respectively.
 With empty value, all hlines/vlines will be solid.
 
 \begin{demohigh}
@@ -700,8 +717,8 @@ Another pair of braces before will select segments in all hlines/vlines.
 \end{tblr}
 \end{demohigh}
 
-The above example can be simplified with \verb!odd! and \verb!even! values.
-(More child selectors can be defined with \verb!\NewChildSelector! command.
+The above example can be simplified with \CS{odd} and \CS{even} values.
+(More child selectors can be defined with \CC{\NewChildSelector} command.
 Advanced users could read the source code for this.)
 
 \begin{demohigh}
@@ -717,7 +734,7 @@ Advanced users could read the source code for this.)
 \end{tblr}
 \end{demohigh}
 
-Another pair of braces before will draw more hlines/vlines (in which \verb!-! stands for all line segments).
+Another pair of braces before will draw more hlines/vlines (in which \V{-} stands for all line segments).
 
 \begin{demohigh}
 \begin{tblr}{
@@ -731,8 +748,8 @@ Another pair of braces before will draw more hlines/vlines (in which \verb!-! st
 
 Note that you \underline{must} use indexes in order: first 1, then 2, etc.
 
-Options \verb!hline{i}! and \verb!vline{j}! are for setting some hlines and vlines, respectively.
-Their values are the same as options \verb!hlines! and \verb!vlines!:
+Options \KK{hline{i}} and \KK{vline{j}} are for setting some hlines and vlines, respectively.
+Their values are the same as options \K{hlines} and \K{vlines}:
 
 \begin{demohigh}
 \begin{tblr}{
@@ -749,7 +766,7 @@ Their values are the same as options \verb!hlines! and \verb!vlines!:
 \end{tblr}
 \end{demohigh}
 
-You can use \verb!U!, \verb!V!, \verb!W!, \verb!X!, \verb!Y!, \verb!Z! to
+You can use \V{U}, \V{V}, \V{W}, \V{X}, \V{Y}, \V{Z} to
 denote the last six children, respectively.
 It is especially useful when you are writing long tables:
 
@@ -768,7 +785,7 @@ It is especially useful when you are writing long tables:
 \end{tblr}
 \end{demohigh}
 
-Now we show the usage of \verb!text! key by the following example%
+Now we show the usage of \K{text} key by the following example%
 \footnote{Code from \url{https://tex.stackexchange.com/questions/603023/tabularray-and-tabularx-column-separator}.}:
 
 \begin{demohigh}
@@ -786,11 +803,11 @@ Now we show the usage of \verb!text! key by the following example%
 \end{tblr}
 \end{demohigh}
 
-You need to load \verb!chemmacros! package for the \verb!\ch! command.
+You need to load \PP{chemmacros} package for the \CC{\ch} command.
 
-The \verb!leftpos! and \verb!rightpos! keys specify crossing or trimming positions for hlines.
-The possible values for them are decimal numbers between \verb!-1! and \verb!1!.
-Their initial values are \verb!1!.
+The \K{leftpos} and \K{rightpos} keys specify crossing or trimming positions for hlines.
+The possible values for them are decimal numbers between \V{-1} and \V{1}.
+Their initial values are \V{1}.
 
 \begin{center}
 \begin{tblr}{width=0.5\textwidth,colspec={rX[l]},hlines}
@@ -800,8 +817,8 @@ Their initial values are \verb!1!.
 \end{tblr}
 \end{center}
 
-The \verb!abovepos! and \verb!belowpos! keys for vlines have similar meanings.
-But their initial values are \verb!0!.
+The \K{abovepos} and \K{belowpos} keys for vlines have similar meanings.
+But their initial values are \V{0}.
 
 \begin{center}
 \begin{tblr}{width=0.5\textwidth,colspec={rX[l]},hlines}
@@ -827,7 +844,7 @@ Here is an example for these four keys:
 \end{tblr}
 \end{demohigh}
 
-There is also an \verb!endpos! option for adjusting \verb!leftpos!/\verb!rightpos!
+There is also an \K{endpos} option for adjusting \K{leftpos}/\K{rightpos}
 for only the leftmost/rightmost column:
 
 \begin{demohigh}
@@ -845,7 +862,7 @@ for only the leftmost/rightmost column:
 
 \subsection{Hlines and Vlines in Old Interfaces}
 
-The \verb!\hline! command has an optional argument which accepts key-value options.
+The \CC{\hline} command has an optional argument which accepts key-value options.
 The available keys are described in Table \ref{key:hline}.
 
 \begin{demohigh}
@@ -860,7 +877,7 @@ The available keys are described in Table \ref{key:hline}.
 \end{tblr}
 \end{demohigh}
 
-The \verb!\cline! command also has an optional argument which is the same as \verb!\hline!.
+The \CC{\cline} command also has an optional argument which is the same as \CC{\hline}.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -874,7 +891,7 @@ The \verb!\cline! command also has an optional argument which is the same as \ve
 \end{tblr}
 \end{demohigh}
 
-You can use child selectors in the mandatory argument of \verb!\cline!.
+You can use child selectors in the mandatory argument of \CC{\cline}.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -888,7 +905,7 @@ You can use child selectors in the mandatory argument of \verb!\cline!.
 \end{tblr}
 \end{demohigh}
 
-Commands \verb!\SetHline! combines the usages of \verb!\hline! and \verb!\cline!:
+Commands \CC{\SetHline} combines the usages of \CC{\hline} and \CC{\cline}:
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -912,21 +929,21 @@ Commands \verb!\SetHline! combines the usages of \verb!\hline! and \verb!\cline!
 \end{tblr}
 \end{demohigh}
 
-In fact, table command \verb!\SetHline[<index>]{<columns>}{<styles>}! at the beginning of row \verb!i!
-is the same as table option \verb!hline{i}={<index>}{<columns>}{<styles>}!.
+In fact, table command \CC{\SetHline[<index>]{<columns>}{<styles>}} at the beginning of row \V{i}
+is the same as table option \KV{hline{i}={<index>}{<columns>}{<styles>}}.
 
-Also, table command \verb!\SetHlines[<index>]{<columns>}{<styles>}! at the beginning of some row
-is the same as table option \verb!hlines={<index>}{<columns>}{<styles>}!.
+Also, table command \CC{\SetHlines[<index>]{<columns>}{<styles>}} at the beginning of some row
+is the same as table option \KV{hlines={<index>}{<columns>}{<styles>}}.
 
-The usages of table commands \verb!\vline!, \verb!\rline!, \verb!\SetVline!, \verb!\SetVlines!
-are similar to those of \verb!\hline!, \verb!\cline!, \verb!\SetHline!, \verb!\SetHlines!, respectively.
+The usages of table commands \CC{\vline}, \CC{\rline}, \CC{\SetVline}, \CC{\SetVlines}
+are similar to those of \CC{\hline}, \CC{\cline}, \CC{\SetHline}, \CC{\SetHlines}, respectively.
 But normally you don't need to use them.
 
 \section{Hborders and Vborders}
 
-Options \verb!hborder{i}! and \verb!vborder{j}! are similar to \verb!hline{i}! and \verb!vline{j}!,
+Options \KK{hborder{i}} and \KK{vborder{j}} are similar to \KK{hline{i}} and \KK{vline{j}},
 respectively, but they hold border specifications not related to one specific hline and vline.
-All available keys for \verb!hborder{i}! and \verb!vborder{j}! are described in
+All available keys for \KK{hborder{i}} and \KK{vborder{j}} are described in
 Table~\ref{key:hborder} and Table~\ref{key:vborder}.
 
 \begin{spectblr}[
@@ -953,10 +970,10 @@ Table~\ref{key:hborder} and Table~\ref{key:vborder}.
   \K{rightspace+} & increase \V{leftsep} of current column  & \None \\
 \end{spectblr}
 
-Furthermore, table command \verb!\hborder{<specs>}! at the beginning of row \verb!i!
-is the same as table option \verb!hborder{i}={<specs>}!,
-and table command \verb!\vborder{<specs>}! at the beginning of column \verb!j!
-is the same as table option \verb!vborder{j}={<specs>}!.
+Furthermore, table command \CC{\hborder{<specs>}} at the beginning of row \V{i}
+is the same as table option \KV{hborder{i}={<specs>}},
+and table command \CC{\vborder{<specs>}} at the beginning of column \V{j}
+is the same as table option \KV{vborder{j}={<specs>}}.
 
 \section{Cells and Spancells}
 
@@ -966,7 +983,7 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
   caption = {Keys for the Content of Cells},
   label = {key:cell},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{verb}
+]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
@@ -980,8 +997,8 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
   \K{fg}    & foreground color name & \None \\
   \K{font}  & font commands & \None \\
   \K{mode}  & set cell mode: \V{math}, \V{imath}, \V{dmath} or \V{text} & \None \\
-  \verb!$!  & same as \V{mode=math} & \None \\
-  \verb!$$! & same as \V{mode=dmath} & \None \\
+  \KK{$}  & same as \V{mode=math} & \None \\
+  \KK{$$} & same as \V{mode=dmath} & \None \\
   \K{cmd}   & execute command for the cell text & \None \\
   \K{preto} & prepend text to the cell & \None \\
   \K{appto} & append text to the cell & \None \\
@@ -998,7 +1015,7 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
 
 \subsection{Cells and Spancells in New Interfaces}
 
-Option \verb!cells! is for setting all cells.
+Option \K{cells} is for setting all cells.
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{hlines={white},cells={c,blue7}}
@@ -1009,8 +1026,8 @@ Option \verb!cells! is for setting all cells.
 \end{tblr}
 \end{demohigh}
 
-Option \verb!cell{i}{j}! is for setting some cells,
-where \verb!i! stands for the row numbers and \verb!j! stands for the column numbers.
+Option \KK{cell{i}{j}} is for setting some cells,
+where \V{i} stands for the row numbers and \V{j} stands for the column numbers.
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -1041,7 +1058,7 @@ where \verb!i! stands for the row numbers and \verb!j! stands for the column num
 
 \subsection{Cells and Spancells in Old Interfaces}
 
-The \verb!\SetCell! command has a mandatory argument for setting the styles of current cell.
+The \CC{\SetCell} command has a mandatory argument for setting the styles of current cell.
 The available keys are described in Table \ref{key:cell}.
 
 \begin{demohigh}
@@ -1056,7 +1073,7 @@ The available keys are described in Table \ref{key:cell}.
 \end{tblr}
 \end{demohigh}
 
-The \verb!\SetCell! command also has an optional argument for setting the multispan of current cell.
+The \CC{\SetCell} command also has an optional argument for setting the multispan of current cell.
 The available keys are described in Table \ref{key:cellspan}.
 
 \begin{demohigh}
@@ -1089,11 +1106,11 @@ The available keys are described in Table \ref{key:cellspan}.
 \end{tblr}
 \end{demohigh}
 
-In fact, table command \verb!\SetCell[<span>]{<styles>}! at the beginning of cell at row \verb!i!
-and column \verb!j! is the same as table option \verb!cell{i}{j}={<span>}{<styles>}!.
+In fact, table command \CC{\SetCell[<span>]{<styles>}} at the beginning of cell at row \V{i}
+and column \V{j} is the same as table option \KV{cell{i}{j}={<span>}{<styles>}}.
 
-Also, table command \verb!\SetCells[<span>]{<styles>}! at the beginning of some cell
-is the same as table option \verb!cells={<span>}{<styles>}!.
+Also, table command \CC{\SetCells[<span>]{<styles>}} at the beginning of some cell
+is the same as table option \KV{cells={<span>}{<styles>}}.
 
 \section{Rows and Columns}
 
@@ -1103,7 +1120,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   caption = {Keys for Rows},
   label = {key:row},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{verb}
+]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
@@ -1117,8 +1134,8 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{fg} & foreground color name & \None \\
   \K{font} & font commands & \None \\
   \K{mode}  & set mode for row cells: \V{math}, \V{imath}, \V{dmath} or \V{text} & \None \\
-  \verb!$!  & same as \V{mode=math} & \None \\
-  \verb!$$! & same as \V{mode=dmath} & \None \\
+  \KK{$}  & same as \V{mode=math} & \None \\
+  \KK{$$} & same as \V{mode=dmath} & \None \\
   \K{cmd}   & execute command for every cell text & \None \\
   \K{abovesep} & set vertical space above the row & \V{2pt} \\
   \K{abovesep+} & increase vertical space above the row & \None \\
@@ -1134,7 +1151,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   caption = {Keys for Columns},
   label = {key:column},
   remark{Note} = {In most cases, you can omit the underlined key names and write only their values.}
-]{verb}
+]{}
   Key & Description and Values & Initial Value \\
   \underline{\K{halign}}
     & horizontal alignment: \V{l} (left), \V{c} (center), \V{r} (right) or \V{j} (justify)
@@ -1149,8 +1166,8 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{fg} & foreground color name & \None \\
   \K{font} & font commands & \None \\
   \K{mode}  & set mode for column cells: \V{math}, \V{imath}, \V{dmath} or \V{text} & \None \\
-  \verb!$!  & same as \V{mode=math} & \None \\
-  \verb!$$! & same as \V{mode=dmath} & \None \\
+  \KK{$}  & same as \V{mode=math} & \None \\
+  \KK{$$} & same as \V{mode=dmath} & \None \\
   \K{cmd}   & execute command for every cell text & \None \\
   \K{leftsep} & set horizontal space to the left of the column & \V{6pt} \\
   \K{leftsep+} & increase horizontal space to the left of the column & \None \\
@@ -1164,7 +1181,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
 
 \subsection{Rows and Columns in New Interfaces}
 
-Options \verb!rows! and \verb!columns! are for setting all rows and columns, respectively.
+Options \K{rows} and \K{columns} are for setting all rows and columns, respectively.
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -1177,7 +1194,7 @@ Options \verb!rows! and \verb!columns! are for setting all rows and columns, res
 \end{tblr}
 \end{demohigh}
 
-Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns, respectively.
+Options \KK{row{i}} and \KK{column{j}} are for setting some rows and columns, respectively.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -1195,7 +1212,7 @@ Options \verb!row{i}! and \verb!column{j}! are for setting some rows and columns
 \end{tblr}
 \end{demohigh}
 
-The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!font! keys:
+The following example demonstrates the usages of \K{bg}, \K{fg} and \K{font} keys:
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -1210,7 +1227,7 @@ The following example demonstrates the usages of \verb!bg!, \verb!fg! and \verb!
 \end{tblr}
 \end{demohigh}
 
-The following example demonstrates the usages of \verb!mode! key:
+The following example demonstrates the usages of \K{mode} key:
 \nopagebreak
 \begin{demohigh}
 $\begin{tblr}{
@@ -1224,11 +1241,11 @@ $\begin{tblr}{
 \hline
 \end{tblr}$
 \end{demohigh}
-Note that you \textcolor{red3}{cannot} write multiline math directly (such as \verb!\alpha \\ \beta!)
+Note that you \textcolor{red3}{cannot} write multiline math directly (such as \TT{\alpha\ \\\\ \beta})
 in any math-mode cell.
 
 The following example demonstrates the usages of
-\verb!abovesep!, \verb!belowsep!, \verb!leftsep!, \verb!rightsep! keys:
+\K{abovesep}, \K{belowsep}, \K{leftsep}, \K{rightsep} keys:
 %\nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -1242,7 +1259,7 @@ The following example demonstrates the usages of
 \end{tblr}
 \end{demohigh}
 
-The following example shows that we can replace \verb!\\[dimen]! with \verb!belowsep+! key.
+The following example shows that we can replace \CC{\\\\[dimen]} with \K{belowsep+} key.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -1256,7 +1273,7 @@ The following example shows that we can replace \verb!\\[dimen]! with \verb!belo
 
 \subsection{Rows and Columns in Old Interfaces}
 
-The \verb!\SetRow! command has a mandatory argument for setting the styles of current row.
+The \CC{\SetRow} command has a mandatory argument for setting the styles of current row.
 The available keys are described in Table \ref{key:row}.
 
 \begin{demohigh}
@@ -1271,25 +1288,25 @@ The available keys are described in Table \ref{key:row}.
 \end{tblr}
 \end{demohigh}
 
-In fact, table command \verb!\SetRow{<styles>}! at the beginning of row \verb!i!
-is the same as table option \verb!row{i}={<styles>}!.
+In fact, table command \CC{\SetRow{<styles>}} at the beginning of row \V{i}
+is the same as table option \KV{row{i}={<styles>}}.
 
-Also, table command \verb!\SetRows{<styles>}! at the beginning of some row
-is the same as table option \verb!rows={<styles>}!.
+Also, table command \CC{\SetRows{<styles>}} at the beginning of some row
+is the same as table option \KV{rows={<styles>}}.
 
-The usages of table commands \verb!\SetColumn! and \verb!\SetColumns!
-are similar to those of \verb!\SetRow! and \verb!\SetRows!, respectively.
+The usages of table commands \CC{\SetColumn} and \CC{\SetColumns}
+are similar to those of \CC{\SetRow} and \CC{\SetRows}, respectively.
 But normally you don't need to use them.
 
 \section{Colspec and Rowspec}
 
-Options \verb!colspec!/\verb!rowspec! are for setting column/row specifications
+Options \K{colspec}/\K{rowspec} are for setting column/row specifications
 with column/row type specifiers.
 
 \subsection{Colspec and Width}
 
-Option \verb!width! is for setting the width of the table with extendable columns.
-The following example demonstrates the usage of \verb!width! option.
+Option \K{width} is for setting the width of the table with extendable columns.
+The following example demonstrates the usage of \K{width} option.
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{width=0.8\textwidth, colspec={|l|X[2]|X[3]|X[-1]|}}
@@ -1299,8 +1316,8 @@ The following example demonstrates the usage of \verb!width! option.
 \end{tblr}
 \end{demohigh}
 
-You can omit \verb!colspec! name if it is the only key you use inside the mandatory argument.
-The following example demonstrates the usages of \verb!$! and \verb!$$! keys:
+You can omit \K{colspec} name if it is the only key you use inside the mandatory argument.
+The following example demonstrates the usages of \KK{$} and \KK{$$} keys:
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{Q[l]Q[r,$]Q[r,$$]}
@@ -1314,8 +1331,8 @@ The following example demonstrates the usages of \verb!$! and \verb!$$! keys:
 
 \subsection{Column Types}
 
-The \verb!tabularray! package has only one type of primitive column: the \verb!Q! column.
-Other types of columns are defined as \verb!Q! columns with some keys.
+The \PP{tabularray} package has only one type of primitive column: the \Q{Q} column.
+Other types of columns are defined as \Q{Q} columns with some keys.
 
 \begin{codehigh}
 \NewColumnType{l}{Q[l]}
@@ -1337,13 +1354,13 @@ Other types of columns are defined as \verb!Q! columns with some keys.
 \end{tblr}
 \end{demohigh}
 
-Any new column type must be defined with \verb!\NewColumnType! command.
+Any new column type must be defined with \CC{\NewColumnType} command.
 It can have an optional argument when it's defined.
 
 \subsection{Row Types}
 
-The \verb!tabularray! package has only one type of primitive row: the \verb!Q! row.
-Other types of rows are defined as \verb!Q! rows with some keys.
+The \PP{tabularray} package has only one type of primitive row: the \Q{Q} row.
+Other types of rows are defined as \Q{Q} rows with some keys.
 
 \begin{codehigh}
 \NewRowType{l}{Q[l]}
@@ -1364,7 +1381,7 @@ Other types of rows are defined as \verb!Q! rows with some keys.
 \end{tblr}
 \end{demohigh}
 
-Any new row type must be defined with \verb!\NewRowType! command.
+Any new row type must be defined with \CC{\NewRowType} command.
 It can have an optional argument when it's defined.
 
 \chapter{Extra Interfaces}
@@ -1379,12 +1396,12 @@ In general, \verb!tblr! environment can accepts both inner and outer specificati
 \end{codehigh}
 
 \textbf{Inner specifications} are all specifications written in the \underline{mandatory} argument
-of \verb!tblr! environment, which include new interfaces described in Chapter \ref{chap:basic}.
+of \EE{tblr} environment, which include new interfaces described in Chapter \ref{chap:basic}.
 
 \textbf{Outer specifications} are all specifications written in the \underline{optional} argument
-of \verb!tblr! environment, most of which are used for long tables (see Chapter \ref{chap:long}).
+of \EE{tblr} environment, most of which are used for long tables (see Chapter \ref{chap:long}).
 
-You can use \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
+You can use \CC{\SetTblrInner} and \CC{\SetTblrOuter} commands
 to set default inner and outer specifications of tables, respectively (see Section \ref{sec:default}).
 
 \section{Inner Specifications}
@@ -1413,7 +1430,7 @@ there are several inner specifications which are described in Table~\ref{key:inn
 
 \subsection{Space between Double Rules}
 
-The following example shows that we can replace \verb!\doublerulesep! parameter with \verb!rulesep! key.
+The following example shows that we can replace \CC{\doublerulesep} parameter with \K{rulesep} key.
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -1427,7 +1444,7 @@ The following example shows that we can replace \verb!\doublerulesep! parameter 
 
 \subsection{Minimal Strut for Cell Text}
 
-The following example shows that we can replace \verb!\arraystretch! parameter with \verb!stretch! key.
+The following example shows that we can replace \CC{\arraystretch} parameter with \K{stretch} key.
 
 \begin{demohigh}
 \begin{tblr}{hlines,stretch=1.5}
@@ -1449,7 +1466,7 @@ By replacing stretch with row heights, we can get perfect vertical centering for
 
 \subsection{Rowseps and Colseps for All}
 
-The following example uses \verb!rowsep! and \verb!colsep! keys to set padding for all rows and columns.
+The following example uses \K{rowsep} and \K{colsep} keys to set padding for all rows and columns.
 \nopagebreak
 \begin{demohigh}
 \SetTblrInner{rowsep=2pt,colsep=2pt}
@@ -1462,10 +1479,10 @@ The following example uses \verb!rowsep! and \verb!colsep! keys to set padding f
 
 \subsection{Hspan and Vspan Algorithms}
 
-With \verb!hspan=default! or \verb!hspan=even!,
-\verb!tabularray! package will compute column widths from span widths.
-But with \verb!hspan=minimal!, it will compute span widths from column widths.
-The following examples show the results from different \verb!hspan! values.
+With \KV{hspan=default} or \KV{hspan=even},
+\PP{tabularray} package will compute column widths from span widths.
+But with \KV{hspan=minimal}, it will compute span widths from column widths.
+The following examples show the results from different \K{hspan} values.
 
 \begin{demohigh}
 \SetTblrInner{hlines, vlines, hspan=default}
@@ -1497,7 +1514,7 @@ The following examples show the results from different \verb!hspan! values.
 \end{tblr}
 \end{demohigh}
 
-The following examples show the results from different \verb!vspan! values.
+The following examples show the results from different \K{vspan} values.
 \nopagebreak
 \begin{demohigh}
 \SetTblrInner{hlines, vlines, vspan=default}
@@ -1527,8 +1544,8 @@ The following examples show the results from different \verb!vspan! values.
 
 \subsection{Set Baseline for the Table}
 
-With \verb!baseline! key, you can set baseline for the table.
-All possible values for \verb!baseline! are as follows:
+With \K{baseline} key, you can set baseline for the table.
+All possible values for \K{baseline} are as follows:
 
 \begin{center}
 \begin{tblr}{width=0.6\textwidth,colspec={cX[l]},hlines}
@@ -1560,9 +1577,9 @@ Baseline\begin{tblr}{hlines,baseline=T}
 \end{tblr}Baseline
 \end{demohigh}
 
-The differences between \verb!b! and \verb!B! are similar to \verb!t! and \verb!T!.
-In fact, these two values \verb!T! and \verb!B! are better replacements
-for currently obsolete \verb!\firsthline! and \verb!\lasthline! commands.
+The differences between \V{b} and \V{B} are similar to \V{t} and \V{T}.
+In fact, these two values \V{T} and \V{B} are better replacements
+for currently obsolete \CC{\firsthline} and \CC{\lasthline} commands.
 
 \section{Outer Specifications}
 
@@ -1585,7 +1602,7 @@ there are several other outer specifications which are described in Table~\ref{k
 
 You may notice that you can write \K{baseline} option as either an inner or an outer specification.
 It is true that either way would do the job. But there is a small difference:
-when \verb!baseline=t/T/m/b/B! is an outer specification,
+when \KV{baseline=t/T/m/b/B} is an outer specification,
 you can omit the key name and write the value only.
 
 \begin{demohigh}
@@ -1612,15 +1629,15 @@ Therefore the following two tables are the same:
 
 \subsection{Expand Macros First}
 
-In contrast to traditional \verb!tabular! environment, \verb!tabularray! environments
-need to see every \verb!&! and \verb!\\! when splitting the table body with \verb!l3regex!.
-And you can not put cell text inside any table command defined with \verb!\NewTableCommand!.
-But you could use outer key \verb!expand! to make \verb!tabularray! expand
+In contrast to traditional \EE{tabular} environment, \PP{tabularray} environments
+need to see every \TT{&} and \TT{\\\\} when splitting the table body with \PP{l3regex}.
+And you can not put cell text inside any table command defined with \CC{\NewTableCommand}.
+But you could use outer key \K{expand} to make \PP{tabularray} expand
 every occurrence of any of the specified macros \underline{once} and \underline{in the given order} before splitting the table body.
-Note that you \underline{can not} expand a command defined with \verb!\NewDocumentCommand!.
-You can also use \verb!expand+! if you still want to keep the macros in the current \verb!expand! setting.
+Note that you \underline{can not} expand a command defined with \CC{\NewDocumentCommand}.
+You can also use \K{expand+} if you still want to keep the macros in the current \K{expand} setting.
 
-To expand a command without optional argument, you can define it with \verb!\newcommand!.
+To expand a command without optional argument, you can define it with \CC{\newcommand}.
 
 \begin{demohigh}
 \newcommand*\tblrrowa{
@@ -1648,8 +1665,8 @@ To expand a command without optional argument, you can define it with \verb!\new
 \end{demohigh}
 
 To expand commands with optional arguments, you \underline{can not} define them
-with \verb!\newcommand!. But you can define them with \verb!\NewExpandableDocumentCommand!,
-and use option \verb!expand=\expanded! to do exhaustive expansions.
+with \CC{\newcommand}. But you can define them with \CC{\NewExpandableDocumentCommand},
+and use option \KV{expand=\expanded} to do exhaustive expansions.
 
 \begin{demohigh}
 \NewExpandableDocumentCommand\yes{O{Yes}m}{\SetCell{bg=green9}#1}
@@ -1661,21 +1678,21 @@ and use option \verb!expand=\expanded! to do exhaustive expansions.
 \end{tblr}
 \end{demohigh}
 
-Note that you need to protect fragile commands (if any) inside them with \verb!\unexpanded! command.
+Note that you need to protect fragile commands (if any) inside them with \CC{\unexpanded} command.
 
 \section{Default Specifications}%
 \label{sec:default}
 
-\verb!Tabularray! package provides \verb!\SetTblrInner! and \verb!\SetTblrOuter! commands
+\PP{Tabularray} package provides \CC{\SetTblrInner} and \CC{\SetTblrOuter} commands
 for you to change the default inner and outer specifications of tables.
 
-In general different \verb!tabularray! environments (\verb!tblr!, \verb!talltblr!,
-\verb!longtblr!, etc) could have different default specifications.
+In general different \PP{tabularray} environments (\EE{tblr}, \EE{talltblr},
+\EE{longtblr}, etc) could have different default specifications.
 You can list the environments in the optional arguments of these two commands,
-and they only apply to \verb!tblr! environment when the optional arguments are omitted.
+and they only apply to \EE{tblr} environment when the optional arguments are omitted.
 
-In the following example, the first line draws all hlines and vlines for all \verb!tblr! tables
-created afterwards, while the second line makes all \verb!tblr! tables created afterwards
+In the following example, the first line draws all hlines and vlines for all \EE{tblr} tables
+created afterwards, while the second line makes all \EE{tblr} tables created afterwards
 vertically align at the last row.
 
 \begin{codehigh}
@@ -1683,7 +1700,7 @@ vertically align at the last row.
 \SetTblrOuter{baseline=B}
 \end{codehigh}
 
-And the following example sets zero \verb!rowsep! for all \verb!tblr! and \verb!longtblr! tables
+And the following example sets zero \K{rowsep} for all \EE{tblr} and \EE{longtblr} tables
 created afterwards.
 
 \begin{codehigh}
@@ -1692,7 +1709,7 @@ created afterwards.
 
 \section{New Tabularray Environments}
 
-You can define new \verb!tabularray! environments using \verb!\NewTblrEnviron! command:
+You can define new \PP{tabularray} environments using \CC{\NewTblrEnviron} command:
 
 \begin{demohigh}
 \NewTblrEnviron{mytblr}
@@ -1707,8 +1724,8 @@ Text \begin{mytblr}{cccc}
 
 \section{New General Environments}
 
-With \verb!+b! argument type of \verb!\NewDocumentEnvironment! command,
-you can also define a new general environment based on \verb!tblr! environment
+With \V{+b} argument type of \CC{\NewDocumentEnvironment} command,
+you can also define a new general environment based on \EE{tblr} environment
 (note that there is an extra pair of curly braces at the end):
 
 \NewDocumentEnvironment{fancytblr}{+b}{
@@ -1737,7 +1754,7 @@ you can also define a new general environment based on \verb!tblr! environment
 
 \section{New Table Commands}
 
-All commands which change the specifications of tables \textcolor{red3}{must} be defined with \verb!\NewTableCommand!.
+All commands which change the specifications of tables \textcolor{red3}{must} be defined with \CC{\NewTableCommand}.
 The following example demonstrates how to define a new table command:
 
 \begin{demohigh}
@@ -1753,7 +1770,7 @@ The following example demonstrates how to define a new table command:
 
 \section{Odd and Even Selectors}
 
-From version 2022A, child selectors \verb!odd! and \verb!even! accept an optional argument,
+From version 2022A, child selectors \CS{odd} and \CS{even} accept an optional argument,
 in which you can specify the start index and the end index of the children.
 
 \begin{demohigh}
@@ -1794,7 +1811,7 @@ in which you can specify the start index and the end index of the children.
 
 \section{Counters and Lengths}
 
-Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be used in cell text:
+Counters \CO{rownum}, \CO{colnum}, \CO{rowcount}, \CO{colcount} can be used in cell text:
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{hlines}
@@ -1809,14 +1826,14 @@ Counters \verb!rownum!, \verb!colnum!, \verb!rowcount!, \verb!colcount! can be u
 \end{tblr}
 \end{demohigh}
 
-Also, lengths \verb!\leftsep!, \verb!\rightsep!, \verb!\abovesep!, \verb!\belowsep! can be used in cell text.
+Also, lengths \CC{\leftsep}, \CC{\rightsep}, \CC{\abovesep}, \CC{\belowsep} can be used in cell text.
 
 \section{Tracing Tabularray}
 
-To trace internal data behind \verb!tblr! environment, you can use \verb!\SetTblrTracing! command.
-For example, \verb!\SetTblrTracing{all}! will turn on all tracings,
-and \verb!\SetTblrTracing{none}! will turn off all tracings.
-\verb!\SetTblrTracing{+row,+column}! will only tracing row and column data.
+To trace internal data behind \EE{tblr} environment, you can use \CC{\SetTblrTracing} command.
+For example, \CC{\SetTblrTracing{all}} will turn on all tracings,
+and \CC{\SetTblrTracing{none}} will turn off all tracings.
+\CC{\SetTblrTracing{+row,+column}} will only tracing row and column data.
 All tracing messages will be written to the log files.
 
 \chapter{Use Long Tables}
@@ -2039,8 +2056,8 @@ Alpha   & Beta  & Gamma   \\
 \hline
 \end{longtblr}
 
-As you can see in the above example, the appearance of long tables of \verb!tabularray! package
-is similar to that of \verb!threeparttablex! packages.
+As you can see in the above example, the appearance of long tables of \PP{tabularray} package
+is similar to that of \PP{threeparttablex} packages.
 It supports table footnotes, but not page footnotes.
 
 \newpage
@@ -2105,12 +2122,12 @@ The source code for the above long table is shown below. It is mainly self-expla
 \end{longtblr}
 \end{codehigh}
 
-As you can see in the above code, we typeset long tables with \verb!longtblr! environment.
-And we can totally separate contents and styles of long tables with \verb!tabularray! package.
+As you can see in the above code, we typeset long tables with \EE{longtblr} environment.
+And we can totally separate contents and styles of long tables with \PP{tabularray} package.
 
 Row head and row foot consist of some lines of the table and should appear in every page.
-Their options are inner specifications and should be put in the mandatory argument of the \verb!longtblr! environment.
-In the above example, We set \verb!rowhead=2! and \verb!rowfoot=1!.
+Their options are inner specifications and should be put in the mandatory argument of the \EE{longtblr} environment.
+In the above example, We set \KV{rowhead=2} and \KV{rowfoot=1}.
 
 \begin{spectblr}[
   caption = {Inner Specifications for Row Heads and Row Foots}
@@ -2121,43 +2138,43 @@ In the above example, We set \verb!rowhead=2! and \verb!rowfoot=1!.
 \end{spectblr}
 
 Table head and table foot consist of the caption, continuation text, footnotes and remarks.
-Their options are outer specifications and should be put in the optional argument of the \verb!longtblr! environment.
+Their options are outer specifications and should be put in the optional argument of the \EE{longtblr} environment.
 
 \begin{spectblr}[
   caption = {Outer Specifications for Table Heads and Table Foots}
-]{verb}
+]{}
   Key Name            & Key Description & Initial Value \\
-  \V{headsep}         & vertical space between table head and table body & \V{6pt} \\
-  \V{footsep}         & vertical space between table foot and table body & \V{6pt} \\
-  \V{presep}          & vertical space between table head and the above text & \verb!1.5\bigskipamount! \\
-  \V{postsep}         & vertical space between table foot and the below text & \verb!1.5\bigskipamount! \\
-  \V{theme}           & table theme (including settings for templates and styles) & \None \\
-  \V{caption}         & table caption & \None \\
-  \V{entry}           & short table caption to be put in List of Tables & \None \\
-  \V{label}           & table label & \None \\
-  \V{note\{<name>\}}   & table note with \V{<name>} as tag & \None \\
-  \V{remark\{<name>\}} & table remark with \V{<name>} as tag & \None \\
+  \K{headsep}         & vertical space between table head and table body & \V{6pt} \\
+  \K{footsep}         & vertical space between table foot and table body & \V{6pt} \\
+  \K{presep}          & vertical space between table head and the above text & \VV{1.5\bigskipamount} \\
+  \K{postsep}         & vertical space between table foot and the below text & \VV{1.5\bigskipamount} \\
+  \K{theme}           & table theme (including settings for templates and styles) & \None \\
+  \K{caption}         & table caption & \None \\
+  \K{entry}           & short table caption to be put in List of Tables & \None \\
+  \K{label}           & table label & \None \\
+  \KK{note{<name>}}   & table note with \V{<name>} as tag & \None \\
+  \KK{remark{<name>}} & table remark with \V{<name>} as tag & \None \\
 \end{spectblr}
 
-If you write \verb!entry=none!, \verb!tabularray! package will not add an entry in List of Tables.
-Therefore \verb!caption=text,entry=none! is similar to \verb!\caption[]{text}! in \verb!longtable!.
+If you write \KV{entry=none}, \PP{tabularray} package will not add an entry in List of Tables.
+Therefore \KV{caption=text,entry=none} is similar to \CC{\caption[]{text}} in \PP{longtable}.
 
-If you write \verb!label=none!, \verb!tabularray! package will not step \verb!table! counter,
-and set the \verb!caption-tag! and \verb!caption-sep! elements (see below) to empty.
-Therefore \verb!caption=text,entry=none,label=none! is similar to \verb!\caption*{text}!
-in \verb!longtable!, except for the counter.
+If you write \KV{label=none}, \PP{tabularray} package will not step \CO{table} counter,
+and set the \EN{caption-tag} and \EN{caption-sep} elements (see below) to empty.
+Therefore \KV{caption=text,entry=none,label=none} is similar to \CC{\caption*{text}}
+in \PP{longtable}, except for the counter.
 
 \section{Customize Templates}
 
 \subsection{Overview of Templates}
 
-The template system for table heads and table foots in \verb!tabularray! is largely inspired
-by \verb!beamer!, \verb!caption! and \verb!longtable! packages. For elements in Table \ref{tblr:element},
-you can use \verb!\DefTblrTemplate!\footnote{From version 2022A,
-\texttt{\string\DefTblrTemplate} has another name \texttt{\string\DeclareTblrTemplate}.}
+The template system for table heads and table foots in \PP{tabularray} is largely inspired
+by \PP{beamer}, \PP{caption} and \PP{longtable} packages. For elements in Table \ref{tblr:element},
+you can use \CC{\DefTblrTemplate}\footnote{From version 2022A,
+\CC{\DefTblrTemplate} has another name \CC{\DeclareTblrTemplate}.}
 to define and modify templates,
-and use \verb!\SetTblrTemplate! to choose default templates. In defining templates,
-you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrTemplate! commands.
+and use \CC{\SetTblrTemplate} to choose default templates. In defining templates,
+you can include other templates with \CC{\UseTblrTemplate} and \CC{\ExpTblrTemplate} commands.
 
 \begin{spectblr}[
   caption = {Elements for Table Heads and Table Foots},
@@ -2191,12 +2208,12 @@ you can include other templates with \verb!\UseTblrTemplate! and \verb!\ExpTblrT
 \end{spectblr}
 
 An element which only includes short text is called a \underline{sub element}.
-Normally there is one \verb!-! in the name of a sub element.
+Normally there is one \TT{-} in the name of a sub element.
 An element which includes one or more paragraphs is called a \underline{main element}.
-Normally there isn't any \verb!-! in the name of a main element.
+Normally there isn't any \TT{-} in the name of a main element.
 
-For each of the above elements, two templates \verb!normal! and \verb!empty! are always defined.
-You can select one of them with \verb!\SetTblrTemplate! command.
+For each of the above elements, two templates \TN{normal} and \TN{empty} are always defined.
+You can select one of them with \CC{\SetTblrTemplate} command.
 
 \subsection{Continuation Templates}
 
@@ -2212,12 +2229,12 @@ respectively. And you may contribute your translations of them to \textbf{babel}
 \SetTblrTemplate{conthead-text}{normal}
 \end{codehigh}
 
-In the above code, command \verb!\DefTblrTemplate! defines the templates with name \verb!normal!,
-and then command \verb!\SetTblrTemplate! sets the templates with name \verb!normal! as default.
-The \verb!normal! template is always defined and set as default for any element in \verb!tabularray!.
+In the above code, command \CC{\DefTblrTemplate} defines the templates with name \TN{normal},
+and then command \CC{\SetTblrTemplate} sets the templates with name \TN{normal} as default.
+The \TN{normal} template is always defined and set as default for any element in \PP{tabularray}.
 Therefore you had better use another name when defining new templates.
 
-If you use \verb!default! as template name in \verb!\DefTblrTemplate!,
+If you use \TN{default} as template name in \CC{\DefTblrTemplate},
 you define and set it as default at the same time.
 Therefore the above code can be written in another way:
 
@@ -2228,8 +2245,8 @@ Therefore the above code can be written in another way:
 
 You may modify the code to customize continuation text to fit your needs.
 
-The templates for \verb!contfoot! and \verb!conthead! normally
-include the templates of their sub elements with \verb!\UseTblrTemplate! commands.
+The templates for \EN{contfoot} and \EN{conthead} normally
+include the templates of their sub elements with \CC{\UseTblrTemplate} commands.
 But you can also handle user settings such as horizontal alignment here.
 
 \begin{codehigh}
@@ -2247,11 +2264,11 @@ Normally a caption consists of three parts, and their templates are defined with
 \DefTblrTemplate{caption-text}{default}{\InsertTblrText{caption}}
 \end{codehigh}
 
-The command \verb!\InsertTblrText{caption}! inserts the value of \verb!caption! key,
-which you could write in the optional argument of \verb!longtblr! environment.
+The command \CC{\InsertTblrText{caption}} inserts the value of \K{caption} key,
+which you could write in the optional argument of \EE{longtblr} environment.
 
-The \verb!caption! template normally includes three sub templates with \verb!\UseTblrTemplate! commands:
-The \verb!caption! template will be used in \verb!firsthead! template.
+The \EN{caption} template normally includes three sub templates with \CC{\UseTblrTemplate} commands:
+The \EN{caption} template will be used in \EN{firsthead} template.
 
 \begin{codehigh}
 \DefTblrTemplate{caption}{default}{
@@ -2261,8 +2278,8 @@ The \verb!caption! template will be used in \verb!firsthead! template.
 }
 \end{codehigh}
 
-Furthermore \verb!capcont! template includes \verb!conthead! template as well.
-The \verb!capcont! template will be used in \verb!middlehead! and \verb!lasthead! templates.
+Furthermore \EN{capcont} template includes \EN{conthead} template as well.
+The \EN{capcont} template will be used in \EN{middlehead} and \EN{lasthead} templates.
 
 \begin{codehigh}
 \DefTblrTemplate{capcont}{default}{
@@ -2294,9 +2311,9 @@ The templates for table notes can be defined like this:
 }
 \end{codehigh}
 
-The \verb!\MapTblrNotes! command loops for all table notes,
-which are written in the optional argument of \verb!longtblr! environment.
-Inside the loop, you can use \verb!\InsertTblrNoteTag! and \verb!\InsertTblrNoteText!
+The \CC{\MapTblrNotes} command loops for all table notes,
+which are written in the optional argument of \EE{longtblr} environment.
+Inside the loop, you can use \CC{\InsertTblrNoteTag} and \CC{\InsertTblrNoteText}
 commands to insert current note tag and note text, respectively.
 
 The definition of remark templates are similar to note templates.
@@ -2338,9 +2355,9 @@ The templates for table heads and foots are defined as including other templates
 }
 \end{codehigh}
 
-Note that you can define the same template for multiple elements in \verb!\DefTblrTemplate! command.
+Note that you can define the same template for multiple elements in \CC{\DefTblrTemplate} command.
 If you only want to show table caption in the first page, you may change the definitions of
-\verb!middlehead! and \verb!lasthead! elements:
+\EN{middlehead} and \EN{lasthead} elements:
 
 \begin{codehigh}
 \DefTblrTemplate{middlehead,lasthead}{default}{
@@ -2368,7 +2385,7 @@ All available keys for template elements are described in Table \ref{key:element
   \K{hang}               & hangindent value & \V{0pt} or \V{0.7em} \\
 \end{spectblr}
 
-You may change the styles of elements with \verb!\SetTblrStyle! command:
+You may change the styles of elements with \CC{\SetTblrStyle} command:
 
 \begin{codehigh}
 \SetTblrStyle{firsthead}{font=\bfseries}
@@ -2377,14 +2394,14 @@ You may change the styles of elements with \verb!\SetTblrStyle! command:
 \SetTblrStyle{caption-tag}{red2}
 \end{codehigh}
 
-When you write \verb!\UseTblrTemplate{element}{default}! in defining a template,
-beside including template code of the \verb!element!, the foreground color and font commands
-of the \verb!element! will be set up automatically.
-In contrast, \verb!\ExpTblrTemplate{element}{default}! will only include template code.
+When you write \CC{\UseTblrTemplate{element}{default}} in defining a template,
+beside including template code of the \EN{element}, the foreground color and font commands
+of the \EN{element} will be set up automatically.
+In contrast, \CC{\ExpTblrTemplate{element}{default}} will only include template code.
 
 \section{Define Themes}
 
-You may define your own themes for table heads and foots with \verb!\NewTblrTheme! command.
+You may define your own themes for table heads and foots with \CC{\NewTblrTheme} command.
 a theme consists of some template and style settings. For example:
 \nopagebreak
 \begin{codehigh}
@@ -2397,19 +2414,19 @@ a theme consists of some template and style settings. For example:
 }
 \end{codehigh}
 
-After defining the theme \verb!fancy!, you can use it
-by writing \verb!theme=fancy! in the optional argument of \verb!longtblr! environment.
+After defining the theme \V{fancy}, you can use it
+by writing \KV{theme=fancy} in the optional argument of \EE{longtblr} environment.
 
 \section{Control Page Breaks}
 
-Just like \verb!longtable! package, inside \verb!longtblr! environment,
-you can use \verb!\\*! or \verb!\nopagebreak! to prohibit a page break,
-and use \verb!\pagebreak! to force a page break.
+Just like \PP{longtable} package, inside \EE{longtblr} environment,
+you can use \CC{\\\\*} or \CC{\nopagebreak} to prohibit a page break,
+and use \CC{\pagebreak} to force a page break.
 
 \section{Floatable Tall Tables}
 
-There is also a \verb!talltblr! environment as an alternative to \verb!threeparttable! environment.
-It can not cross multiple pages, but it can be put inside \verb!table! environment.
+There is also a \EE{talltblr} environment as an alternative to \EE{threeparttable} environment.
+It can not cross multiple pages, but it can be put inside \EE{table} environment.
 
 \begin{demohigh}
 TEXT\begin{talltblr}[
@@ -2429,17 +2446,17 @@ TEXT\begin{talltblr}[
 
 \chapter{Use Some Libraries}
 
-The \verb!tabularray! package emulates or fixes some commands in other packages.
-To avoid potential conflict, you need to enable them with \verb!\UseTblrLibrary! command.
+The \PP{tabularray} package emulates or fixes some commands in other packages.
+To avoid potential conflict, you need to enable them with \CC{\UseTblrLibrary} command.
 
 \section{Library \texttt{amsmath}}
 
-With \verb!\UseTblrLibrary{amsmath}! in the preamble of the document,
-\verb!tabularray! will load \verb!amsmath! package, and define \verb!+array!, \verb!+matrix!,
-\verb!+bmatrix!, \verb!+Bmatrix!, \verb!+pmatrix!, \verb!+vmatrix!, \verb!+Vmatrix! and \verb!+cases!
-environments. Each of the environments is similar to the environment without \verb!+! prefix in its name,
-but has default \verb!rowsep=2pt! just as \verb!tblr! environment. Every environment
-except \verb!+array! accepts an optional argument, where you can write inner specifications.
+With \CC{\UseTblrLibrary{amsmath}} in the preamble of the document,
+\PP{tabularray} will load \PP{amsmath} package, and define \EE{+array}, \EE{+matrix},
+\EE{+bmatrix}, \EE{+Bmatrix}, \EE{+pmatrix}, \EE{+vmatrix}, \EE{+Vmatrix} and \EE{+cases}
+environments. Each of the environments is similar to the environment without \TT{+} prefix in its name,
+but has default \KV{rowsep=2pt} just as \EE{tblr} environment. Every environment
+except \EE{+array} accepts an optional argument, where you can write inner specifications.
 
 \begin{demo}
 $\begin{pmatrix}
@@ -2477,12 +2494,12 @@ $f(x)=\begin{+cases}
 
 \section{Library \texttt{booktabs}}
 
-With \verb!\UseTblrLibrary{booktabs}! in the preamble of the document,
-\verb!tabularray! will load \verb!booktabs! package,
+With \CC{\UseTblrLibrary{booktabs}} in the preamble of the document,
+\PP{tabularray} will load \PP{booktabs} package,
 and define
-  \verb!\toprule!, \verb!\midrule!, \verb!\bottomrule!,
-  \verb!\cmidrule!, \verb!\cmidrulemore!, \verb!\morecmidrules!,
-  \verb!\specialrule!, \verb!\addrowspace!, and \verb!\addlinespace!
+  \CC{\toprule}, \CC{\midrule}, \CC{\bottomrule},
+  \CC{\cmidrule}, \CC{\cmidrulemore}, \CC{\morecmidrules},
+  \CC{\specialrule}, \CC{\addrowspace}, and \CC{\addlinespace}
 as table commands.
 
 \begin{demohigh}
@@ -2499,15 +2516,15 @@ as table commands.
 \end{tblr}
 \end{demohigh}
 
-Just like \verb!\hline! and \verb!\cline! commands,
+Just like \CC{\hline} and \CC{\cline} commands,
 you can also specify rule width and color by using hline keys in the optional
 argument of any of these commands.
 
-Like in \verb!booktabs!, by default
-  width of \verb!\toprule! and \verb!\bottomrule! are determined by \verb!\heavyrulewidth!,
-  width of \verb!\midrule! is determined by \verb!\lightrulewidth!, and
-  width of \verb!\cmidrule! and \verb!\cmidrulemore! are determined by \verb!\cmidrulewidth!, respectively.
-All three \verb!\...rulewidth! are dimensions.
+Like in \PP{booktabs}, by default
+  width of \CC{\toprule} and \CC{\bottomrule} are determined by \CC{\heavyrulewidth},
+  width of \CC{\midrule} is determined by \CC{\lightrulewidth}, and
+  width of \CC{\cmidrule} and \CC{\cmidrulemore} are determined by \CC{\cmidrulewidth}, respectively.
+All three \CC{\...rulewidth} are dimensions.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -2539,10 +2556,10 @@ command, which is simpler than the \verb!booktabs! usage
 \end{demohigh}
 
 From version 2021N (2021-09-01), you can set trimming positions of
-\verb!\cmidrule! and \verb!\cmidrulemore!, using newly introduced trimming
-options (\verb!leftpos!, \verb!rightpos!, \verb!endpos!, \verb!l!, \verb!r!,
-and \verb!lr!) (see Section~\ref{sec:hlines-vlines}).
-Option \verb!endpos! is already applied to these two commands.
+\CC{\cmidrule} and \CC{\cmidrulemore}, using newly introduced trimming
+options (\K{leftpos}, \K{rightpos}, \K{endpos}, \K{l}, \K{r},
+and \K{lr}) (see Section~\ref{sec:hlines-vlines}).
+Option \K{endpos} is already applied to these two commands.
 
 \begin{demohigh}
 \begin{tblr}{llll}
@@ -2556,15 +2573,15 @@ Option \verb!endpos! is already applied to these two commands.
 \end{tblr}
 \end{demohigh}
 
-Since \verb!booktabs! tables usually don't have vlines, the meaningful values
-here are decimal numbers between \verb!-1! and \verb!0!.
-The default value \verb!-0.8! for \verb!l!, \verb!r!, and \verb!lr! is chosen to
-make similar result as \verb!booktabs! package does.
+Since \PP{booktabs} tables usually don't have vlines, the meaningful values
+here are decimal numbers between \V{-1} and \V{0}.
+The default value \V{-0.8} for \V{l}, \V{r}, and \V{lr} is chosen to
+make similar result as \PP{booktabs} package does.
 
-There is also a \verb!booktabs! environment for you. With this environment,
-the default \verb!rowsep=0pt!, but extra vertical space will be added by
-\verb!\toprule!, \verb!\midrule!, \verb!\bottomrule! and \verb!\cmidrule! commands.
-The sizes of vertical space are determined by \verb!\aboverulesep! and \verb!\belowrulesep! dimensions.
+There is also a \EE{booktabs} environment for you. With this environment,
+the default \KV{rowsep=0pt}, but extra vertical space will be added by
+\CC{\toprule}, \CC{\midrule}, \CC{\bottomrule} and \CC{\cmidrule} commands.
+The sizes of vertical space are determined by \CC{\aboverulesep} and \CC{\belowrulesep} dimensions.
 
 \begin{demohigh}
 \begin{booktabs}{
@@ -2584,9 +2601,9 @@ The sizes of vertical space are determined by \verb!\aboverulesep! and \verb!\be
 \end{demohigh}
 % S4     & 8 & 5 & 6 & 7 \\
 
-You can also use \verb!\specialrule! command.
-The second argument sets \verb!belowsep! of previous row,
-and the third argument sets \verb!abovesep! of current row,
+You can also use \CC{\specialrule} command.
+The second argument sets \K{belowsep} of previous row,
+and the third argument sets \K{abovesep} of current row,
 
 \begin{demohigh}
 \begin{booktabs}{row{2}={olive9}}
@@ -2600,13 +2617,13 @@ and the third argument sets \verb!abovesep! of current row,
 \end{booktabs}
 \end{demohigh}
 
-At last, there is also an \verb!\addlinespace! command, with an alternative
-name \verb!\addrowspace!.
+At last, there is also an \CC{\addlinespace} command, with an alternative
+name \CC{\addrowspace}.
 You can specify the size of vertical space to be added in its optional
-argument, and the default size is determinted by \verb!\defaultaddspace!
-dimension, initially \verb!0.5em!.
-This command adds one half of the space to \verb!belowsep! of previous row,
-and the other half to \verb!abovesep! of current row.
+argument, and the default size is determinted by \CC{\defaultaddspace}
+dimension, initially \V{0.5em}.
+This command adds one half of the space to \K{belowsep} of previous row,
+and the other half to \K{abovesep} of current row.
 
 \begin{demohigh}
 \begin{booktabs}{row{2}={olive9}}
@@ -2620,14 +2637,14 @@ and the other half to \verb!abovesep! of current row.
 \end{booktabs}
 \end{demohigh}
 
-From version 2022A (2022-03-01), there is a \verb!longtabs! environment
-for writing long \verb!booktabs! tables,
-and a \verb!talltabs! environment for writing tall \verb!booktabs! tables.
+From version 2022A (2022-03-01), there is a \EE{longtabs} environment
+for writing long \PP{booktabs} tables,
+and a \EE{talltabs} environment for writing tall \PP{booktabs} tables.
 
 \section{Library \texttt{counter}}
 
-You need to load \verb!counter! library with \verb!\UseTblrLibrary{counter}!,
-if you want to modify some LaTeX counters inside \verb!tabularray! tables.
+You need to load \LL{counter} library with \CC{\UseTblrLibrary{counter}},
+if you want to modify some LaTeX counters inside \PP{tabularray} tables.
 
 \begin{demohigh}
 \newcounter{mycnta}
@@ -2641,9 +2658,9 @@ if you want to modify some LaTeX counters inside \verb!tabularray! tables.
 
 \section{Library \texttt{diagbox}}
 
-When writing \verb!\UseTblrLibrary{diagbox}! in the preamble of the document,
-\verb!tabularray! package loads \verb!diagbox! package,
-and you can use \verb!\diagbox! and \verb!\diagboxthree! commands inside \verb!tblr! environment.
+When writing \CC{\UseTblrLibrary{diagbox}} in the preamble of the document,
+\PP{tabularray} package loads \PP{diagbox} package,
+and you can use \CC{\diagbox} and \CC{\diagboxthree} commands inside \EE{tblr} environment.
 
 \begin{demohigh}
 \begin{tblr}{hlines,vlines}
@@ -2661,7 +2678,7 @@ and you can use \verb!\diagbox! and \verb!\diagboxthree! commands inside \verb!t
 \end{tblr}
 \end{demohigh}
 
-You can also use \verb!\diagbox! and \verb!\diagboxthree! commands in math mode.
+You can also use \CC{\diagbox} and \CC{\diagboxthree} commands in math mode.
 \nopagebreak
 \begin{demohigh}
 $\begin{tblr}{|c|cc|}
@@ -2676,15 +2693,15 @@ $\begin{tblr}{|c|cc|}
 
 \section{Library \texttt{functional}}
 
-With \verb!\UseTblrLibrary{functional}! in the preamble of the document,
-\verb!tabularray! will load \href{https://ctan.org/pkg/functional}{\texttt{functional}} package,
-and define outer key \verb!evaluate! and inner key \verb!process!.
-This library brings intuitive functional programming into \verb!tabularray! tables.
+With \CC{\UseTblrLibrary{functional}} in the preamble of the document,
+\PP{tabularray} will load \href{https://ctan.org/pkg/functional}{\PP{functional}} package,
+and define outer key \K{evaluate} and inner key \K{process}.
+This library brings intuitive functional programming into \PP{tabularray} tables.
 
 \subsection{Evaluate inner specifications}
 
-With this library, \verb!tabularray! will evaluate every function
-(defined with \verb!\prgNewFunction!) within inner specifications,
+With this library, \PP{tabularray} will evaluate every function
+(defined with \CC{\prgNewFunction}) within inner specifications,
 replacing it with its return value, before parsing the key-value pairs. Here is an example:
 
 \begin{demohigh}
@@ -2701,13 +2718,13 @@ You may like to define a new function for it if you need to use it several times
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\prgNewFunction \magicColor {mm} {
+\prgNewFunction \colorMagic {mm} {
   \intIfOddTF{\value{page}}{\prgReturn{#1}}{\prgReturn{#2}}
 }
 \IgnoreSpacesOff
 \begin{tblr}{
-  row{1} = {bg=\magicColor{yellow7}{brown7}},
-  row{3} = {bg=\magicColor{green7}{teal7}}
+  row{1} = {bg=\colorMagic{yellow7}{brown7}},
+  row{3} = {bg=\colorMagic{green7}{teal7}}
 }
   Alpha   & Beta  & Gamma  \\
   Epsilon & Zeta  & Eta    \\
@@ -2717,11 +2734,11 @@ You may like to define a new function for it if you need to use it several times
 
 \subsection{Evaluate table body}
 
-With outer key \verb!evaluate!, you can evaluate every occurrence of a specified protected function
-(defined with \verb!\prgNewFunction!) and replace it with the return value before splitting the table body.
+With outer key \K{evaluate}, you can evaluate every occurrence of a specified protected function
+(defined with \CC{\prgNewFunction}) and replace it with the return value before splitting the table body.
 
-The first application of \verb!evaluate! key is for inputting files inside tables.
-Assume you have two files \verb!test1.tmp! and \verb!test2.tmp! with the following contents:
+The first application of \K{evaluate} key is for inputting files inside tables.
+Assume you have two files \FF{test1.tmp} and \FF{test2.tmp} with the following contents:
 
 \begin{filecontents*}[overwrite]{test1.tmp}
 Some & Some \\
@@ -2742,8 +2759,8 @@ Other & Other \\
 \end{filecontents*}
 \end{codehigh}
 
-Then you can input them with outer specification \verb!evaluate=\fileInput!.
-The \verb!\fileInput! function is provided by \verb!functional! package.
+Then you can input them with outer specification \KV{evaluate=\fileInput}.
+The \CC{\fileInput} function is provided by \PP{functional} package.
 
 \begin{demohigh}
 \begin{tblr}[evaluate=\fileInput]{hlines}
@@ -2756,34 +2773,34 @@ The \verb!\fileInput! function is provided by \verb!functional! package.
 \end{demohigh}
 
 In general, you can define your functions which return parts of table contents,
-and use \verb!evaluate! key to evaluate them inside tables.
+and use \K{evaluate} key to evaluate them inside tables.
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\prgNewFunction \someFunc {m} {
+\prgNewFunction \myFunOne {m} {
   \prgReturn {#1 & #1 \\}
 }
 \IgnoreSpacesOff
-\begin{tblr}[evaluate=\someFunc]{hlines}
+\begin{tblr}[evaluate=\myFunOne]{hlines}
   Row1 & 1 \\
-  \someFunc{Text}
+  \myFunOne{Text}
   Row3 & 3 \\
-  \someFunc{Text}
+  \myFunOne{Text}
   Row5 & 5 \\
 \end{tblr}
 \end{demohigh}
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\prgNewFunction \otherFunc {} {
+\prgNewFunction \myFunTwo {} {
   \prgReturn {Other & Other \\}
 }
 \IgnoreSpacesOff
-\begin{tblr}[evaluate=\otherFunc]{hlines}
+\begin{tblr}[evaluate=\myFunTwo]{hlines}
   Row1 & 1 \\
-  \otherFunc
+  \myFunTwo
   Row3 & 3 \\
-  \otherFunc
+  \myFunTwo
   Row5 & 5 \\
 \end{tblr}
 \end{demohigh}
@@ -2808,21 +2825,21 @@ with option \texttt{evaluate=all}.
 
 \subsection{Process table elements}
 
-With inner key \verb!process!, you can modify the contents and styles before the table is built.
-Several public functions defined with \verb!\prgNewFuncton! are provided for you:
+With inner key \K{process}, you can modify the contents and styles before the table is built.
+Several public functions defined with \CC{\prgNewFuncton} are provided for you:
 
 \begin{itemize}
-  \item \verb!\cellGetText{<rownum>}{<colnum>}!
-  \item \verb!\cellSetText{<rownum>}{<colnum>}{<text>}!
-  \item \verb!\cellSetStyle{<rownum>}{<colnum>}{<style>}!
-  \item \verb!\rowSetStyle{<rownum>}{<style>}!
-  \item \verb!\columnSetStyle{<colnum>}{<style>}!
+  \item \CC{\cellGetText{<rownum>}{<colnum>}}
+  \item \CC{\cellSetText{<rownum>}{<colnum>}{<text>}}
+  \item \CC{\cellSetStyle{<rownum>}{<colnum>}{<style>}}
+  \item \CC{\rowSetStyle{<rownum>}{<style>}}
+  \item \CC{\columnSetStyle{<colnum>}{<style>}}
 \end{itemize}
 
 As the first example, let's calculate the sums of cells column by column:
 
 \IgnoreSpacesOn
-\prgNewFunction \funcSum {} {
+\prgNewFunction \calcSum {} {
   \intStepOneInline {1} {\arabic{colcount}} {
     \intZero \lTmpaInt
     \intStepOneInline {1} {\arabic{rowcount}-1} {
@@ -2834,7 +2851,7 @@ As the first example, let's calculate the sums of cells column by column:
 \IgnoreSpacesOff
 \begin{codehigh}
 \IgnoreSpacesOn
-\prgNewFunction \funcSum {} {
+\prgNewFunction \calcSum {} {
   \intStepOneInline {1} {\arabic{colcount}} {
     \intZero \lTmpaInt
     \intStepOneInline {1} {\arabic{rowcount}-1} {
@@ -2847,7 +2864,7 @@ As the first example, let's calculate the sums of cells column by column:
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{colspec={rrr},process=\funcSum}
+\begin{tblr}{colspec={rrr},process=\calcSum}
 \hline
   1 & 2 & 3 \\
   4 & 5 & 6 \\
@@ -2861,7 +2878,7 @@ As the first example, let's calculate the sums of cells column by column:
 Now, let's set background colors of cells depending on their contents:
 
 \IgnoreSpacesOn
-\prgNewFunction \funcColor {} {
+\prgNewFunction \colorBack {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \intStepOneInline {1} {\arabic{colcount}} {
       \intSet \lTmpaInt {\cellGetText {##1} {####1}}
@@ -2874,7 +2891,7 @@ Now, let's set background colors of cells depending on their contents:
 \IgnoreSpacesOff
 \begin{codehigh}
 \IgnoreSpacesOn
-\prgNewFunction \funcColor {} {
+\prgNewFunction \colorBack {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \intStepOneInline {1} {\arabic{colcount}} {
       \intSet \lTmpaInt {\cellGetText {##1} {####1}}
@@ -2888,20 +2905,20 @@ Now, let's set background colors of cells depending on their contents:
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{hlines,vlines,cells={r,$},process=\funcColor}
+\begin{tblr}{hlines,vlines,cells={r,$},process=\colorBack}
   -1 &  2 &  3 \\
    4 &  5 & -6 \\
    7 & -8 &  9 \\
 \end{tblr}
 \end{demohigh}
 
-We can also use color series of \verb!xcolor! package to color table rows:
+We can also use color series of \PP{xcolor} package to color table rows:
 
 \definecolor{lightb}{RGB}{217,224,250}
 \definecolorseries{tblrow}{rgb}{last}{lightb}{white}
 \resetcolorseries[3]{tblrow}
 \IgnoreSpacesOn
-\prgNewFunction \funcSeries {} {
+\prgNewFunction \colorSeries {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \tlSet \lTmpaTl {\intMathMod {##1-1} {3}}
     \rowSetStyle {##1} {\expWhole{bg=tblrow!![\lTmpaTl]}}
@@ -2913,7 +2930,7 @@ We can also use color series of \verb!xcolor! package to color table rows:
 \definecolorseries{tblrow}{rgb}{last}{lightb}{white}
 \resetcolorseries[3]{tblrow}
 \IgnoreSpacesOn
-\prgNewFunction \funcSeries {} {
+\prgNewFunction \colorSeries {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \tlSet \lTmpaTl {\intMathMod {##1-1} {3}}
     \rowSetStyle {##1} {\expWhole{bg=tblrow!![\lTmpaTl]}}
@@ -2923,7 +2940,7 @@ We can also use color series of \verb!xcolor! package to color table rows:
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{hlines,process=\funcSeries}
+\begin{tblr}{hlines,process=\colorSeries}
   Row1 & 1 \\
   Row2 & 2 \\
   Row3 & 3 \\
@@ -2935,24 +2952,24 @@ We can also use color series of \verb!xcolor! package to color table rows:
 
 \section{Library \texttt{hook}}
 
-This library is experimental, please see\\
-\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
+This library is experimental, please see Chapter \ref{chap:exp}.
+%\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
 
 \section{Library \texttt{html}}
 
-This library is experimental, please see\\
-\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
+This library is experimental, please see Chapter \ref{chap:exp}.
+%\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
 
 \section{Library \texttt{nameref}}
 
-From version 2022D, you can load \verb!nameref! library
-to make \verb!\nameref! and \verb!longtblr! work together.
+From version 2022D, you can load \LL{nameref} library
+to make \CC{\nameref} and \EE{longtblr} work together.
 
 \section{Library \texttt{siunitx}}
 
-When writing \verb!\UseTblrLibrary{siunitx}! in the preamble of the document,
-\verb!tabularray! package loads \verb!siunitx! package,
-and defines \verb!S! column as \verb!Q! column with \verb!si! key.
+When writing \CC{\UseTblrLibrary{siunitx}} in the preamble of the document,
+\PP{tabularray} package loads \PP{siunitx} package,
+and defines \Q{S} column as \Q{Q} column with \K{si} key.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -2980,7 +2997,7 @@ and defines \verb!S! column as \verb!Q! column with \verb!si! key.
 
 Note that you need to use \underline{\color{red3}triple} pairs of curly braces to guard non-numeric cells.
 But it is cumbersome to enclose each cell with braces. From version 2022B (2022-06-01)
-a new key \verb!guard! is provided for cells and rows. With \verb!guard! key the previous example
+a new key \K{guard} is provided for cells and rows. With \K{guard} key the previous example
 can be largely simplified.
 
 \begin{demohigh}
@@ -2996,7 +3013,7 @@ can be largely simplified.
 \end{tblr}
 \end{demohigh}
 
-Also you must use \verb!l!, \verb!c! or \verb!r! to set horizontal alignment for non-numeric cells:
+Also you must use \K{l}, \K{c} or \K{r} to set horizontal alignment for non-numeric cells:
 \nopagebreak
 \begin{demohigh}
 \begin{tblr}{
@@ -3015,7 +3032,7 @@ Also you must use \verb!l!, \verb!c! or \verb!r! to set horizontal alignment for
 \end{tblr}
 \end{demohigh}
 
-Both \verb!S! and \verb!s! columns are supported. In fact, These two columns have been defined as follows:
+Both \Q{S} and \Q{s} columns are supported. In fact, These two columns have been defined as follows:
 \begin{codehigh}
 \NewColumnType{S}[1][]{Q[si={#1},c]}
 \NewColumnType{s}[1][]{Q[si={#1},c,cmd=\TblrUnit]}
@@ -3024,14 +3041,14 @@ You don't need to and are not allowed to define them again.
 
 \section{Library \texttt{varwidth}}
 
-To build a nice table, \verb!tabularray! need to measure the widths of cells.
-By default, it uses \verb!\hbox! to measure the sizes.
+To build a nice table, \PP{tabularray} need to measure the widths of cells.
+By default, it uses \CC{\hbox} to measure the sizes.
 This causes an error if a cell contains some vertical material, such as lists or display maths.
 
-With \verb!\UseTblrLibrary{varwidth}! in the preamble of the document,
-\verb!tabularray! will load \verb!varwidth! package,
-and add a new inner specification \verb!measure! for tables.
-After setting \verb!measure=vbox!, it will use \verb!\vbox! to measure cell widths.
+With \CC{\UseTblrLibrary{varwidth}} in the preamble of the document,
+\PP{tabularray} will load \PP{varwidth} package,
+and add a new inner specification \K{measure} for tables.
+After setting \KV{measure=vbox}, it will use \CC{\vbox} to measure cell widths.
 
 \begin{demohigh}
 \begin{tblr}{hlines,measure=vbox}
@@ -3045,8 +3062,8 @@ After setting \verb!measure=vbox!, it will use \verb!\vbox! to measure cell widt
 \end{demohigh}
 
 From version 2022A (2022-03-01), you can remove extra space above and below lists,
-by adding option \verb!stretch=-1!.
-The following example also needs \verb!enumitem! package and its \verb!nosep! option:
+by adding option \KV{stretch=-1}.
+The following example also needs \PP{enumitem} package and its \K{nosep} option:
 
 {\centering\begin{tblr}{
   hlines,vlines,rowspec={Q[l,t]Q[l,b]},
@@ -3081,14 +3098,14 @@ The following example also needs \verb!enumitem! package and its \verb!nosep! op
 \end{codehigh}
 %\end{demohigh}
 
-Note that option \verb!stretch=-1! also removes struts from cells, therefore it may not work well
-in \verb!tabularray! environments with \verb!rowsep=0pt!, such as
-\verb!booktabs!/\verb!longtabs!/\verb!talltabs! environments from \verb!booktabs! library.
+Note that option \KV{stretch=-1} also removes struts from cells, therefore it may not work well
+in \PP{tabularray} environments with \KV{rowsep=0pt}, such as
+\EE{booktabs}/\EE{longtabs}/\EE{talltabs} environments from \LL{booktabs} library.
 
 \section{Library \texttt{zref}}
 
-From version 2022D, you can load \verb!zref! library
-to make \verb!\zref! and \verb!longtblr! work together.
+From version 2022D, you can load \LL{zref} library
+to make \CC{\zref} and \EE{longtblr} work together.
 
 \chapter{Tips and Tricks}
 
@@ -3112,16 +3129,15 @@ their alignment commands.
 \label{sec:fakeverb}
 
 Due to the limitations of TeX,
-we are not able to make \fakeverb{\verb} command behave well inside \texttt{tabularray} tables.
-As a replacement, you may use \fakeverb{\fakeverb} command from \href{https://www.ctan.org/pkg/codehigh}{\texttt{codehigh}} package.
+we are not able to make \CC{\verb} command behave well inside \PP{tabularray} tables.
+As a replacement, you may use \CC{\fakeverb} command from \href{https://www.ctan.org/pkg/codehigh}{\PP{codehigh}} package.
 
-The \verb|\fakeverb| command will remove the backslashes in the following control symbols before
-typesetting its content: \fakeverb{\\\\}, \fakeverb{\\\{}, \fakeverb{\\\}}, \fakeverb{\\\#}, \fakeverb{\\\^} and \texttt{\textbackslash\textvisiblespace}, \fakeverb{\\\%}.
-Also the argument of \verb|\fakeverb| command need to be enclosed with curly braces.
-Therefore it could be safely used inside \verb|tabularray| tables and other LaTeX commands.
+The \CC{\fakeverb} command will remove the backslashes in the following control symbols before
+typesetting its content: \CC{\\\\}, \CC{\\\{}, \CC{\\\}}, \CC{\\\#}, \CC{\\\^} and \texttt{\textbackslash\textvisiblespace}, \CC{\\\%}.
+Also the argument of \CC{\fakeverb} command need to be enclosed with curly braces.
+Therefore it could be safely used inside \PP{tabularray} tables and other LaTeX commands.
 
-Here is an example of using \verb!\fakeverb! commands inside a \verb|tblr| environment
-(you don't need \texttt{verb} option to use \verb!\fakeverb!):
+Here is an example of using \CC{\fakeverb} commands inside a \EE{tblr} environment:
 
 \begin{demohigh}
 \begin{tblr}{hlines}
@@ -3131,46 +3147,121 @@ Here is an example of using \verb!\fakeverb! commands inside a \verb|tblr| envir
 \end{tblr}
 \end{demohigh}
 
-In the above example, balanced curly braces and control words (such as \verb!\bfseries!)
+In the above example, balanced curly braces and control words (such as \CC{\bfseries})
 need not to be escaped---only several special characters need to be escaped.
-Please read the documentation of \texttt{codehigh} package for more details of
-\verb|\fakeverb| commands.%
-\footnote{By the way, \fakeverb{\EscVerb} command from
-\href{https://www.ctan.org/pkg/fvextra}{\texttt{fvextra}} package is similar to
-\fakeverb{\fakeverb} command, but with \fakeverb{\EscVerb} you need to escape every control word.}
+Please read the documentation of \PP{codehigh} package for more details of
+\CC{\fakeverb} commands.%
+\footnote{By the way, \CC{\EscVerb} command from
+\href{https://www.ctan.org/pkg/fvextra}{\PP{fvextra}} package is similar to
+\CC{\fakeverb} command, but with \CC{\EscVerb} you need to escape every control word.}
+
+\chapter{Experimental Interfaces}
+\label{chap:exp}
+
+\mywarning{chapter}
+
+\section{Experimental Public Key Paths}
+
+In version 2025A, all \PP{tabularray} key paths were cleaned up as follows:
+\begin{itemize}[nosep]
+  \item \KP{tabularray/table/inner} (from \KP{tblr})
+  \item \KP{tabularray/table/outer} (from \KP{tblr-outer})
+  \item \KP{tabularray/column/inner} (from \KP{tblr-column})
+  \item \KP{tabularray/row/inner} (from \KP{tblr-row})
+  \item \KP{tabularray/cell/inner} (from \KP{tblr-cell-spec})
+  \item \KP{tabularray/cell/outer} (from \KP{tblr-cell-span})
+  \item \KP{tabularray/hline/inner} (from \KP{tblr-hline})
+  \item \KP{tabularray/vline/inner} (from \KP{tblr-vline})
+  \item \KP{tabularray/hborder/inner} (from \KP{tblr-hborder})
+  \item \KP{tabularray/vborder/inner} (from \KP{tblr-vborder})
+\end{itemize}
+An advanced user or package writer can use \CC{\DeclareKeys} and \CC{\SetKeys} commands
+(provided by LaTeX format) to declare new keys and apply key-value lists, respectively.
+
+\section{Experimental Public Hook Paths}
+
+All experimental public \PP{tabularray} hooks provided by \LL{hook} library are as follows:
+\begin{itemize}[nosep]
+  \item \HP{tabularray/trial/before}
+  \item \HP{tabularray/trial/after}
+  \item \HP{tabularray/table/before}
+  \item \HP{tabularray/table/after}
+  \item \HP{tabularray/row/before}
+  \item \HP{tabularray/row/after}
+  \item \HP{tabularray/cell/before}
+  \item \HP{tabularray/cell/after}
+\end{itemize}
+An advanced user or package writer can use \CC{\AddToHook} and \CC{\AddToHookNext} commands
+(provided by LaTeX format) to inject code to \PP{tabularray} tables.
+
+\section{Experimental Public Variables}
+
+This variable is always available throughout the whole typesetting process of tables:
+\begin{itemize}[nosep]
+  \item \CC{\lTblrMeasuringBool}: if \PP{tabularray} is doing trial typesetting.
+\end{itemize}
+You need to make sure \KV{measure=vstore} to make \CC{\lTblrMeasuringBool} correct.
+
+These variables are updated by default before building every cell:
+\begin{itemize}[nosep]
+  \item \CC{\lTblrCellRowSpanTl}: how many rows are spanned by current cell.
+  \item \CC{\lTblrCellColSpanTl}: how many columns are spanned by current cell.
+  \item \CC{\lTblrCellOmittedBool}: if current cell is spanned by another cell.
+  \item \CC{\lTblrCellBackgroundTl}: background color of current cell.
+\end{itemize}
+
+These variables are updated by \LL{html} library before building every cell:
+%(you need to write \CC{\UseTblrLibrary{html}} first):
+\begin{itemize}[nosep]
+  \item \CC{\lTblrCellAboveBorderStyleTl}
+  \item \CC{\lTblrCellAboveBorderWidthTl}
+  \item \CC{\lTblrCellAboveBorderColorTl}
+  \item \CC{\lTblrCellBelowBorderStyleTl}
+  \item \CC{\lTblrCellBelowBorderWidthTl}
+  \item \CC{\lTblrCellBelowBorderColorTl}
+  \item \CC{\lTblrCellLeftBorderStyleTl}
+  \item \CC{\lTblrCellLeftBorderWidthTl}
+  \item \CC{\lTblrCellLeftBorderColorTl}
+  \item \CC{\lTblrCellRightBorderStyleTl}
+  \item \CC{\lTblrCellRightBorderWidthTl}
+  \item \CC{\lTblrCellRightBorderColorTl}
+\end{itemize}
+In the above, \TT{BorderStyle}, \TT{BorderWidth}, \TT{BorderColor} are similar to
+\K{border-style}, \K{border-width}, \K{border-color} in HTML/CSS, respectively.
+\TT{BorderStyle} and \TT{BorderColor} are empty by default.
 
 \chapter{History and Future}
 
 \section{The Future}
 
-As a policy, \verb!tabularray! can support at most four TeX Live releases with latest updates.
-For example, \verb!tabularray! releases published in \the\year{} could be used in TeX Live
+As a policy, \PP{tabularray} can support at most four TeX Live releases with latest updates.
+For example, \PP{tabularray} releases published in \the\year{} could be used in TeX Live
 \inteval{\year-3}--\the\year{} with latest updates.
 
 To make the upcoming releases more stable, you are very welcome to test the latest package file
-in the repository. To test it, you only need to download the following \verb!tabularray.sty!
+in the repository. To test it, you only need to download the following \FF{tabularray.sty}
 and put it into the folder of your TeX documents:\newline
 \centerline{\url{https://github.com/lvjr/tabularray/raw/main/tabularray.sty}}
 
 \section{The History}
 
-The change log of \verb!tabularray! package will be updated on the wiki page:\newline
+The change log of \PP{tabularray} package will be updated on the wiki page:\newline
 \centerline{\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}}
 
-In version 2023A, inner key \verb!verb! was marked as obsolete,
+In version 2023A, inner key \K{verb} was marked as obsolete,
 and it will be removed in the future. But don't worry too much,
-because you can stick to old version by \verb!\usepackage{tabularray}[=2023-03-01]!.
+because you can stick to old version by \CC{\usepackage{tabularray}[=2023-03-01]}.
 
 In version 2022A, there were several breaking changes:
 
 \begin{itemize}[nosep]
-  \item \verb!\multicolumn! command was removed; it is better to use \verb!\SetCell! command.
-  \item \verb!\multirow! command was removed; it is better to use \verb!\SetCell! command.
-  \item \verb!\firsthline! command was removed; it is better to use \verb!baseline=T! option.
-  \item \verb!\lasthline! command was removed; it is better to use \verb!baseline=B! option.
+  \item \CC{\multicolumn} command was removed; it is better to use \CC{\SetCell} command.
+  \item \CC{\multirow} command was removed; it is better to use \CC{\SetCell} command.
+  \item \CC{\firsthline} command was removed; it is better to use \KV{baseline=T} option.
+  \item \CC{\lasthline} command was removed; it is better to use \KV{baseline=B} option.
 \end{itemize}
 
-For your old documents, you can still rollback to version 2021 by \verb!\usepackage{tabularray}[=v2021]!.
+For your old documents, you can still rollback to version 2021 by \CC{\usepackage{tabularray}[=v2021]}.
 
 \chapter{The Source Code}
 

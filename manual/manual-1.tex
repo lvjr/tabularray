@@ -9,18 +9,18 @@
 
 \chapter{Overview of Features}
 
-Before using \verb!tabularray! package, it is better to know how to typeset simple text and
-math tables with traditional \verb!tabular!, \verb!tabularx! and \verb!array! environments,
-because we will compare \verb!tblr! environment from \verb!tabularray! package with these
+Before using \PP{tabularray} package, it is better to know how to typeset simple text and
+math tables with traditional \EE{tabular}, \EE{tabularx} and \EE{array} environments,
+because we will compare \EE{tblr} environment from \PP{tabularray} package with these
 environments. You may read web pages on LaTeX tables on
 \href{https://www.learnlatex.org/en/lesson-08}{LearnLaTeX} and
 \href{https://www.overleaf.com/learn/latex/Tables}{Overleaf} first.
 
 \section{Vertical Space}
 
-After loading \verb!tabularray! package in the preamble,
-we can use \verb!tblr! environments to typeset tabulars and arrays.
-The name \verb!tblr! is short for \verb!tabularray! or \verb!top-bottom-left-right!.
+After loading \PP{tabularray} package in the preamble,
+we can use \EE{tblr} environments to typeset tabulars and arrays.
+The name \EE{tblr} is short for \PP{tabularray} or \VV{top-bottom-left-right}.
 The following is our first example:
 
 \begin{demo}
@@ -47,9 +47,9 @@ The following is our first example:
 \end{tblr}
 \end{demohigh}
 
-You may notice that there is extra space above and below the table rows with \verb!tblr! environment.
+You may notice that there is extra space above and below the table rows with \EE{tblr} environment.
 This space makes the table look better.
-If you don't like it, you could use \verb!\SetTblrInner! command:
+If you don't like it, you could use \CC{\SetTblrInner} command:
 
 \begin{demohigh}
 \SetTblrInner{rowsep=0pt}
@@ -64,7 +64,7 @@ If you don't like it, you could use \verb!\SetTblrInner! command:
 \end{tblr}
 \end{demohigh}
 
-But in many cases, this \verb!rowsep! is useful:
+But in many cases, this \KK{rowsep} is useful:
 
 \begin{demo}
 $\begin{array}{rrr}
@@ -86,12 +86,12 @@ $\begin{tblr}{rrr}
 \end{tblr}$
 \end{demohigh}
 
-Note that you can use \verb!tblr! in both text and math modes.
+Note that you can use \EE{tblr} in both text and math modes.
 
 \section{Multiline Cells}
 
-It's quite easy to write multiline cells without fixing the column width in \verb!tblr! environments:
-just enclose the cell text with braces and use \verb!\\! to break lines:
+It's quite easy to write multiline cells without fixing the column width in \EE{tblr} environments:
+just enclose the cell text with braces and use \CC{\\\\} to break lines:
 
 \begin{demohigh}
 \begin{tblr}{|l|c|r|}
@@ -107,9 +107,9 @@ just enclose the cell text with braces and use \verb!\\! to break lines:
 
 From time to time,
 you may want to specify the horizontal and vertical alignment of cells at the same time.
-\verb!Tabularray! package provides a \verb!Q! column for this
-(In fact, \verb!Q! column is the only primitive column,
-other columns are defined as \verb!Q! columns with some options):
+\PP{Tabularray} package provides a \Q{Q} column for this
+(In fact, \Q{Q} column is the only primitive column,
+other columns are defined as \Q{Q} columns with some options):
 
 \begin{demohigh}
 \begin{tblr}{|Q[l,t]|Q[c,m]|Q[r,b]|}
@@ -119,10 +119,10 @@ other columns are defined as \verb!Q! columns with some options):
 \end{tblr}
 \end{demohigh}
 
-Note that you can use more meaningful \verb!t! instead of \verb!p! for top baseline alignment.
+Note that you can use more meaningful \K{t} instead of \K{p} for top baseline alignment.
 For some users who are familiar with word processors,
-these \verb!t! and \verb!b! columns are counter-intuitive.
-In \verb!tabularray! package, there are another two column types \verb!h! and \verb!f!,
+these \K{t} and \K{b} columns are counter-intuitive.
+In \PP{tabularray} package, there are another two column types \K{h} and \K{f},
 which will align cell text at the head and the foot, respectively:
 
 \begin{demohigh}
@@ -137,8 +137,8 @@ which will align cell text at the head and the foot, respectively:
 
 \section{Multirow Cells}
 
-The above \verb!h! and \verb!f! alignments are necessary
-when we write multirow cells with \verb!\SetCell! command in \verb!tabularray!.
+The above \K{h} and \K{f} alignments are necessary
+when we write multirow cells with \CC{\SetCell} command in \PP{tabularray}.
 
 \begin{demo}
 \begin{tabular}{|l|l|l|l|}
@@ -164,9 +164,9 @@ when we write multirow cells with \verb!\SetCell! command in \verb!tabularray!.
 \end{tblr}
 \end{demohigh}
 
-Note that you don't need to load \verb!multirow! package first,
-since \verb!tabularray! doesn't depend on it.
-Furthermore, \verb!tabularray! will always typeset decent multirow cells.
+Note that you don't need to load \PP{multirow} package first,
+since \PP{tabularray} doesn't depend on it.
+Furthermore, \PP{tabularray} will always typeset decent multirow cells.
 First, it will set correct vertical middle alignment,
 even though some rows have large height:
 
@@ -216,7 +216,7 @@ therefore it always avoids vertical overflow:
 \end{demohigh}
 
 If you want to distribute extra vertical space evenly to two rows,
-you may use \verb!vspan! option described in Chapter \ref{chap:extra}.
+you may use \K{vspan} option described in Chapter \ref{chap:extra}.
 
 \section{Multi Rows and Columns}
 
@@ -236,9 +236,9 @@ It was a hard job to typeset cells with multiple rows and multiple columns. For 
 \end{tabular}
 \end{demo}
 
-With \verb!tabularray! package, you can set spanned cells with \verb!\SetCell! command:
-within the optional argument of \verb!\SetCell! command,
-option \verb!r! is for rowspan number, and \verb!c! for colspan number;
+With \PP{tabularray} package, you can set spanned cells with \CC{\SetCell} command:
+within the optional argument of \CC{\SetCell} command,
+option \K{r} is for rowspan number, and \K{c} for colspan number;
 within the mandatory argument of it, horizontal and vertical alignment options are accepted.
 Therefore it's much simpler to typeset spanned cells:
 
@@ -256,13 +256,13 @@ Therefore it's much simpler to typeset spanned cells:
 \end{tblr}
 \end{demohigh}
 
-Using \verb!\multicolumn! command, the omitted cells \textcolor{red3}{must} be removed.
+Using \CC{\multicolumn} command, the omitted cells \textcolor{red3}{must} be removed.
 On the contrary,
-using \verb!\multirow! command, the omitted cells \textcolor{red3}{must not} be removed.
-\verb!\SetCell! command behaves the same as \verb!\multirow! command in this aspect.
+using \CC{\multirow} command, the omitted cells \textcolor{red3}{must not} be removed.
+\CC{\SetCell} command behaves the same as \CC{\multirow} command in this aspect.
 
-With \verb!tblr! environment, any \verb!\hline! segments inside a spanned cell will be ignored,
-therefore we're free to use \verb!\hline! in the above example.
+With \EE{tblr} environment, any \CC{\hline} segments inside a spanned cell will be ignored,
+therefore we're free to use \CC{\hline} in the above example.
 Also, any omitted cell will definitely be ignored when typesetting,
 no matter it's empty or not.
 With this feature, we could put row and column numbers into the omitted cells,
@@ -284,9 +284,9 @@ which will help us to locate cells when the tables are rather complex:
 
 \section{Column Types}
 
-\verb!Tabularray! package supports all normal column types, as well as
-the extendable \verb!X! column type,
-which first occurred in \verb!tabularx! package and was largely improved by \verb!tabu! package:
+\PP{Tabularray} package supports all normal column types, as well as
+the extendable \Q{X} column type,
+which first occurred in \PP{tabularx} package and was largely improved by \PP{tabu} package:
 
 \begin{demohigh}
 \begin{tblr}{|X[2,l]|X[3,l]|X[1,r]|X[r]|}
@@ -296,7 +296,7 @@ which first occurred in \verb!tabularx! package and was largely improved by \ver
 \end{tblr}
 \end{demohigh}
 
-Also, \verb!X! columns with negative coefficients are possible:
+Also, \Q{X} columns with negative coefficients are possible:
 
 \begin{demohigh}
 \begin{tblr}{|X[2,l]|X[3,l]|X[-1,r]|X[r]|}
@@ -306,9 +306,9 @@ Also, \verb!X! columns with negative coefficients are possible:
 \end{tblr}
 \end{demohigh}
 
-We need the width to typeset a table with \verb!X! columns.
-If unset, the default is \verb!\linewidth!.
-To change the width, we have to first put all column specifications into \verb!colspec={...}!:
+We need the width to typeset a table with \Q{X} columns.
+If unset, the default is \CC{\linewidth}.
+To change the width, we have to first put all column specifications into \KV{colspec={...}}:
 
 \begin{demohigh}
 \begin{tblr}{width=0.8\linewidth,colspec={|X[2,l]|X[3,l]|X[-1,r]|X[r]|}}
@@ -318,9 +318,9 @@ To change the width, we have to first put all column specifications into \verb!c
 \end{tblr}
 \end{demohigh}
 
-You can define new column types with \verb!\NewColumnType! command.
-For example, in \verb!tabularray! package,
-\verb!b! and \verb!X! columns are defined as special \verb!Q! columns:
+You can define new column types with \CC{\NewColumnType} command.
+For example, in \PP{tabularray} package,
+\Q{b} and \Q{X} columns are defined as special \Q{Q} columns:
 \begin{codehigh}
 \NewColumnType{b}[1]{Q[b,wd=#1]}
 \NewColumnType{X}[1][]{Q[co=1,#1]}
@@ -328,8 +328,8 @@ For example, in \verb!tabularray! package,
 
 \section{Row Types}
 
-Now that we have column types and \verb!colspec! option,
-you may ask for row types and \verb!rowspec! option.
+Now that we have column types and \K{colspec} option,
+you may ask for row types and \K{rowspec} option.
 Yes, they are here:
 
 \begin{demohigh}
@@ -340,13 +340,13 @@ Yes, they are here:
 \end{tblr}
 \end{demohigh}
 
-Same as column types, \verb!Q! is the only primitive row type,
-and other row types are defined as \verb!Q! types with different options.
-It's better to specify horizontal alignment in \verb!colspec!,
-and vertical alignment in \verb!rowspec!, respectively.
+Same as column types, \Q{Q} is the only primitive row type,
+and other row types are defined as \Q{Q} types with different options.
+It's better to specify horizontal alignment in \K{colspec},
+and vertical alignment in \K{rowspec}, respectively.
 
-Inside \verb!rowspec!, \verb!|! is the hline type.
-Therefore we need not to write \verb!\hline! command, which makes table code cleaner.
+Inside \K{rowspec}, \Q{|} is the hline type.
+Therefore we need not to write \CC{\hline} command, which makes table code cleaner.
 
 \section{Hlines and Vlines}
 
@@ -366,10 +366,10 @@ Seven & Eight &  Nine \\
 
 \section{Colorful Tables}
 
-To add colors to your tables, you need to load \verb!xcolor! package first.
-\verb!Tabularray! package will also load
+To add colors to your tables, you need to load \PP{xcolor} package first.
+\PP{Tabularray} package will also load
 \href{https://ctan.org/pkg/ninecolors}{\texttt{ninecolors}} package for proper color contrast.
-First you can specify background option for \verb!Q! rows/columns inside \verb!rowspec!/\verb!colspec!:
+First you can specify background option for \Q{Q} rows/columns inside \K{rowspec}/\K{colspec}:
 
 \begin{demohigh}
 \begin{tblr}{colspec={lcr},rowspec={|Q[cyan7]|Q[azure7]|Q[blue7]|}}
@@ -387,7 +387,7 @@ First you can specify background option for \verb!Q! rows/columns inside \verb!r
 \end{tblr}
 \end{demohigh}
 
-Also you can use \verb!\SetRow! or \verb!\SetColumn! command to specify row or column colors:
+Also you can use \CC{\SetRow} or \CC{\SetColumn} command to specify row or column colors:
 
 \begin{demohigh}
 \begin{tblr}{colspec={lcr},rowspec={|Q|Q|Q|}}
