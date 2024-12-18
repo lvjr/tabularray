@@ -282,13 +282,13 @@ You may like to define a new function for it if you need to use it several times
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\prgNewFunction \magicColor {mm} {
+\prgNewFunction \colorMagic {mm} {
   \intIfOddTF{\value{page}}{\prgReturn{#1}}{\prgReturn{#2}}
 }
 \IgnoreSpacesOff
 \begin{tblr}{
-  row{1} = {bg=\magicColor{yellow7}{brown7}},
-  row{3} = {bg=\magicColor{green7}{teal7}}
+  row{1} = {bg=\colorMagic{yellow7}{brown7}},
+  row{3} = {bg=\colorMagic{green7}{teal7}}
 }
   Alpha   & Beta  & Gamma  \\
   Epsilon & Zeta  & Eta    \\
@@ -341,30 +341,30 @@ and use \K{evaluate} key to evaluate them inside tables.
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\prgNewFunction \someFunc {m} {
+\prgNewFunction \myFunOne {m} {
   \prgReturn {#1 & #1 \\}
 }
 \IgnoreSpacesOff
-\begin{tblr}[evaluate=\someFunc]{hlines}
+\begin{tblr}[evaluate=\myFunOne]{hlines}
   Row1 & 1 \\
-  \someFunc{Text}
+  \myFunOne{Text}
   Row3 & 3 \\
-  \someFunc{Text}
+  \myFunOne{Text}
   Row5 & 5 \\
 \end{tblr}
 \end{demohigh}
 
 \begin{demohigh}
 \IgnoreSpacesOn
-\prgNewFunction \otherFunc {} {
+\prgNewFunction \myFunTwo {} {
   \prgReturn {Other & Other \\}
 }
 \IgnoreSpacesOff
-\begin{tblr}[evaluate=\otherFunc]{hlines}
+\begin{tblr}[evaluate=\myFunTwo]{hlines}
   Row1 & 1 \\
-  \otherFunc
+  \myFunTwo
   Row3 & 3 \\
-  \otherFunc
+  \myFunTwo
   Row5 & 5 \\
 \end{tblr}
 \end{demohigh}
@@ -403,7 +403,7 @@ Several public functions defined with \CC{\prgNewFuncton} are provided for you:
 As the first example, let's calculate the sums of cells column by column:
 
 \IgnoreSpacesOn
-\prgNewFunction \funcSum {} {
+\prgNewFunction \calcSum {} {
   \intStepOneInline {1} {\arabic{colcount}} {
     \intZero \lTmpaInt
     \intStepOneInline {1} {\arabic{rowcount}-1} {
@@ -415,7 +415,7 @@ As the first example, let's calculate the sums of cells column by column:
 \IgnoreSpacesOff
 \begin{codehigh}
 \IgnoreSpacesOn
-\prgNewFunction \funcSum {} {
+\prgNewFunction \calcSum {} {
   \intStepOneInline {1} {\arabic{colcount}} {
     \intZero \lTmpaInt
     \intStepOneInline {1} {\arabic{rowcount}-1} {
@@ -428,7 +428,7 @@ As the first example, let's calculate the sums of cells column by column:
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{colspec={rrr},process=\funcSum}
+\begin{tblr}{colspec={rrr},process=\calcSum}
 \hline
   1 & 2 & 3 \\
   4 & 5 & 6 \\
@@ -442,7 +442,7 @@ As the first example, let's calculate the sums of cells column by column:
 Now, let's set background colors of cells depending on their contents:
 
 \IgnoreSpacesOn
-\prgNewFunction \funcColor {} {
+\prgNewFunction \colorBack {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \intStepOneInline {1} {\arabic{colcount}} {
       \intSet \lTmpaInt {\cellGetText {##1} {####1}}
@@ -455,7 +455,7 @@ Now, let's set background colors of cells depending on their contents:
 \IgnoreSpacesOff
 \begin{codehigh}
 \IgnoreSpacesOn
-\prgNewFunction \funcColor {} {
+\prgNewFunction \colorBack {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \intStepOneInline {1} {\arabic{colcount}} {
       \intSet \lTmpaInt {\cellGetText {##1} {####1}}
@@ -469,7 +469,7 @@ Now, let's set background colors of cells depending on their contents:
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{hlines,vlines,cells={r,$},process=\funcColor}
+\begin{tblr}{hlines,vlines,cells={r,$},process=\colorBack}
   -1 &  2 &  3 \\
    4 &  5 & -6 \\
    7 & -8 &  9 \\
@@ -482,7 +482,7 @@ We can also use color series of \PP{xcolor} package to color table rows:
 \definecolorseries{tblrow}{rgb}{last}{lightb}{white}
 \resetcolorseries[3]{tblrow}
 \IgnoreSpacesOn
-\prgNewFunction \funcSeries {} {
+\prgNewFunction \colorSeries {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \tlSet \lTmpaTl {\intMathMod {##1-1} {3}}
     \rowSetStyle {##1} {\expWhole{bg=tblrow!![\lTmpaTl]}}
@@ -494,7 +494,7 @@ We can also use color series of \PP{xcolor} package to color table rows:
 \definecolorseries{tblrow}{rgb}{last}{lightb}{white}
 \resetcolorseries[3]{tblrow}
 \IgnoreSpacesOn
-\prgNewFunction \funcSeries {} {
+\prgNewFunction \colorSeries {} {
   \intStepOneInline {1} {\arabic{rowcount}} {
     \tlSet \lTmpaTl {\intMathMod {##1-1} {3}}
     \rowSetStyle {##1} {\expWhole{bg=tblrow!![\lTmpaTl]}}
@@ -504,7 +504,7 @@ We can also use color series of \PP{xcolor} package to color table rows:
 \end{codehigh}
 
 \begin{demohigh}
-\begin{tblr}{hlines,process=\funcSeries}
+\begin{tblr}{hlines,process=\colorSeries}
   Row1 & 1 \\
   Row2 & 2 \\
   Row3 & 3 \\
