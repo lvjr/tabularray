@@ -4159,8 +4159,11 @@
     \__tblr_collect_extendable_column_width:
     \dim_compare:nNnTF { \l__tblr_column_target_dim } < { 0pt }
       {
-        \msg_warning:nnx { tabularray } { table-width-too-small }
-          { \dim_abs:n { \l__tblr_column_target_dim } }
+        \tl_if_empty:eF { \__tblr_prop_item:nn { inner } { width } }
+          {
+            \msg_warning:nnx { tabularray } { table-width-too-small }
+              { \dim_abs:n { \l__tblr_column_target_dim } }
+          }
       }
       {
         \prop_if_empty:NF \l__tblr_column_coefficient_prop
