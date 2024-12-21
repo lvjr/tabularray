@@ -7599,7 +7599,6 @@
 %% Library tikz to add cell nodes and table nodes with tikz
 
 \tl_new:N \g__tblr_tikz_before_code_tl
-\str_new:N \g__tblr_name_next_str
 \dim_new:N \l__tblr_cell_inner_wd_dim
 \dim_new:N \l__tblr_cell_inner_dp_dim
 \dim_new:N \l__tblr_cell_hanchor_dim
@@ -7637,15 +7636,13 @@
 
     \NewDocumentEnvironment { tblrtikzbefore } { +b }
       {
-        \str_gset:Nx \g__tblr_name_next_str
-          { tblr \int_eval:n { \c@tblrcount + 1 } }
         \tl_gset:Nn \g__tblr_tikz_before_code_tl
           {
             \begin{tikzpicture}
               [
                 remember ~ picture ,
                 overlay ,
-                name ~ prefix = \g__tblr_name_next_str - ,
+                name ~ prefix = \g__tblr_name_str - ,
                 tblr / overlay
               ]
               ##1
