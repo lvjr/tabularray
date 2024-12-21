@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734753926130,
+  "lastUpdate": 1734763546694,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2023": [
@@ -1386,6 +1386,48 @@ window.BENCHMARK_DATA = {
             "value": 0.75321208774198,
             "unit": "ratio",
             "extra": "current time : previous time = 4.12060546875 : 5.4707107543945"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1fd8986b73e8cddedbbc35f5366147e427895ba2",
+          "message": "Merge pull request #497 from muzimuzhi/fix/width-too-small-msg\n\nSuppress \"table-width-too-small\" warning if table width is not set",
+          "timestamp": "2024-12-21T14:42:57+08:00",
+          "tree_id": "6534df4e80078678ea4488ec46196cf3933a8755",
+          "url": "https://github.com/lvjr/tabularray/commit/1fd8986b73e8cddedbbc35f5366147e427895ba2"
+        },
+        "date": 1734763546178,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.72876003695474,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4694747924805 : 4.7607917785645"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.73171491270533,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4597244262695 : 4.7282409667969"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.75917858383054,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.2199363708496 : 5.5585556030273"
           }
         ]
       }
