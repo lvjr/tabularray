@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734763546694,
+  "lastUpdate": 1734763563263,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2023": [
@@ -1428,6 +1428,48 @@ window.BENCHMARK_DATA = {
             "value": 0.75917858383054,
             "unit": "ratio",
             "extra": "current time : previous time = 4.2199363708496 : 5.5585556030273"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1d2206a60f186934a91b21a1900041737ed3ef66",
+          "message": "Merge pull request #558 from muzimuzhi/ci/ppmcheckpdf\n\nInstall `ppmcheckpdf` for regression test run on Win",
+          "timestamp": "2024-12-21T14:43:12+08:00",
+          "tree_id": "15ae3155dce815788e7ae7671170f4dec8ec4bcb",
+          "url": "https://github.com/lvjr/tabularray/commit/1d2206a60f186934a91b21a1900041737ed3ef66"
+        },
+        "date": 1734763562393,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.72587057057488,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4715156555176 : 4.7825546264648"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.72943700199968,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4426040649414 : 4.7195358276367"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.76115816750788,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.2041282653809 : 5.5233306884766"
           }
         ]
       }
