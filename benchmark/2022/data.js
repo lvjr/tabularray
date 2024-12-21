@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734763539955,
+  "lastUpdate": 1734763559663,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2022": [
@@ -1302,6 +1302,48 @@ window.BENCHMARK_DATA = {
             "value": 0.73571250311954,
             "unit": "ratio",
             "extra": "current time : previous time = 4.2059020996094 : 5.7167739868164"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1d2206a60f186934a91b21a1900041737ed3ef66",
+          "message": "Merge pull request #558 from muzimuzhi/ci/ppmcheckpdf\n\nInstall `ppmcheckpdf` for regression test run on Win",
+          "timestamp": "2024-12-21T14:43:12+08:00",
+          "tree_id": "15ae3155dce815788e7ae7671170f4dec8ec4bcb",
+          "url": "https://github.com/lvjr/tabularray/commit/1d2206a60f186934a91b21a1900041737ed3ef66"
+        },
+        "date": 1734763558791,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.71667292186012,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4600524902344 : 4.827938079834"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.70878748188232,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4081764221191 : 4.8084602355957"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.72988554241282,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.1906356811523 : 5.7414970397949"
           }
         ]
       }
