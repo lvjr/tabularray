@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734753932551,
+  "lastUpdate": 1734763542919,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -1344,6 +1344,48 @@ window.BENCHMARK_DATA = {
             "value": 0.76315061116721,
             "unit": "ratio",
             "extra": "current time : previous time = 4.2493629455566 : 5.5681838989258"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1fd8986b73e8cddedbbc35f5366147e427895ba2",
+          "message": "Merge pull request #497 from muzimuzhi/fix/width-too-small-msg\n\nSuppress \"table-width-too-small\" warning if table width is not set",
+          "timestamp": "2024-12-21T14:42:57+08:00",
+          "tree_id": "6534df4e80078678ea4488ec46196cf3933a8755",
+          "url": "https://github.com/lvjr/tabularray/commit/1fd8986b73e8cddedbbc35f5366147e427895ba2"
+        },
+        "date": 1734763542590,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.72931651320999,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.3555030822754 : 4.600887298584"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.72920132707558,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4376029968262 : 4.7142028808594"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.76606843500492,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.2761039733887 : 5.5818824768066"
           }
         ]
       }
