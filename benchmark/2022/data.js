@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734753927145,
+  "lastUpdate": 1734763539955,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2022": [
@@ -1260,6 +1260,48 @@ window.BENCHMARK_DATA = {
             "value": 0.73137238191316,
             "unit": "ratio",
             "extra": "current time : previous time = 4.2230377197266 : 5.7741279602051"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1fd8986b73e8cddedbbc35f5366147e427895ba2",
+          "message": "Merge pull request #497 from muzimuzhi/fix/width-too-small-msg\n\nSuppress \"table-width-too-small\" warning if table width is not set",
+          "timestamp": "2024-12-21T14:42:57+08:00",
+          "tree_id": "6534df4e80078678ea4488ec46196cf3933a8755",
+          "url": "https://github.com/lvjr/tabularray/commit/1fd8986b73e8cddedbbc35f5366147e427895ba2"
+        },
+        "date": 1734763539686,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.71109530448457,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4360618591309 : 4.8320693969727"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.70958647662946,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4037055969238 : 4.796745300293"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.73571250311954,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.2059020996094 : 5.7167739868164"
           }
         ]
       }
