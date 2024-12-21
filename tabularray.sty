@@ -3251,7 +3251,7 @@
       { \__tblr_parse_colrow_spec:nn { column } {#1} }
     \str_gset:Nx \g__tblr_name_str { \__tblr_prop_item:ne { inner } { name } }
     \str_if_empty:NT \g__tblr_name_str
-      { \str_gset:Nx \g__tblr_name_str { tblr \int_use:N \c@tblrcount } }
+      { \str_gset:Nx \g__tblr_name_str { @ \int_use:N \c@tblrcount } }
   }
 
 \cs_new_protected:Npn \__tblr_keys_gput:nn #1 #2
@@ -7643,7 +7643,7 @@
               [
                 remember ~ picture ,
                 overlay ,
-                name ~ prefix = \g__tblr_name_str - ,
+                name ~ prefix = tblr \g__tblr_name_str - ,
                 tblr / overlay
               ]
               ##1
@@ -7657,7 +7657,7 @@
           [
             remember ~ picture ,
             overlay ,
-            name ~ prefix = \g__tblr_name_str - ,
+            name ~ prefix = tblr \g__tblr_name_str - ,
             tblr / overlay
           ]
       }
@@ -7709,9 +7709,8 @@
                   text ~ depth = \l__tblr_cell_inner_dp_dim
                 ]
                 (
-                  \g__tblr_name_str -
-                  \int_use:N \c@rownum -
-                  \int_use:N \c@colnum
+                  tblr \g__tblr_name_str -
+                  \int_use:N \c@rownum - \int_use:N \c@colnum
                 )
                 at ( 0pt , 0pt ) { } ;
             \end{tikzpicture}
@@ -7759,7 +7758,7 @@
                           text ~ depth = \l__tblr_last_cell_table_dp_dim
                         ]
                         (
-                          \g__tblr_name_str - table
+                          tblr \g__tblr_name_str - table
                         )
                         at ( 0pt , 0pt ) { } ;
                     \end{tikzpicture}
