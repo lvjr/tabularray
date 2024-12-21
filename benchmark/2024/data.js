@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734763542919,
+  "lastUpdate": 1734763556126,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -1386,6 +1386,48 @@ window.BENCHMARK_DATA = {
             "value": 0.76606843500492,
             "unit": "ratio",
             "extra": "current time : previous time = 4.2761039733887 : 5.5818824768066"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1d2206a60f186934a91b21a1900041737ed3ef66",
+          "message": "Merge pull request #558 from muzimuzhi/ci/ppmcheckpdf\n\nInstall `ppmcheckpdf` for regression test run on Win",
+          "timestamp": "2024-12-21T14:43:12+08:00",
+          "tree_id": "15ae3155dce815788e7ae7671170f4dec8ec4bcb",
+          "url": "https://github.com/lvjr/tabularray/commit/1d2206a60f186934a91b21a1900041737ed3ef66"
+        },
+        "date": 1734763555641,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.72840415603808,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.3495826721191 : 4.5985221862793"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.72829642641524,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4099082946777 : 4.6820335388184"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.75749780849871,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.2226867675781 : 5.574520111084"
           }
         ]
       }
