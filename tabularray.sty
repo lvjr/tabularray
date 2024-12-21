@@ -3191,8 +3191,11 @@
     vborder .code:n =
   }
 
+\str_new:N \g__tblr_name_str
+
 \__tblr_keys_define:nn { table / inner }
   {
+    name .code:n = \__tblr_keys_gput:nn { name } {#1},
     colspec .code:n = \__tblr_parse_colrow_spec:nn { column } {#1},
     rowspec .code:n = \__tblr_parse_colrow_spec:nn { row } {#1},
     width .code:n = \__tblr_keys_gput:nx { width } { \dim_eval:n {#1} },
@@ -3246,6 +3249,9 @@
           { \__tblr_parse_colrow_spec:nn { column } {#1} }
       }
       { \__tblr_parse_colrow_spec:nn { column } {#1} }
+    \str_gset:Nx \g__tblr_name_str { \__tblr_prop_item:ne { inner } { name } }
+    \str_if_empty:NT \g__tblr_name_str
+      { \str_gset:Nx \g__tblr_name_str { @ \int_use:N \c@tblrcount } }
   }
 
 \cs_new_protected:Npn \__tblr_keys_gput:nn #1 #2
@@ -4153,8 +4159,11 @@
     \__tblr_collect_extendable_column_width:
     \dim_compare:nNnTF { \l__tblr_column_target_dim } < { 0pt }
       {
-        \msg_warning:nnx { tabularray } { table-width-too-small }
-          { \dim_abs:n { \l__tblr_column_target_dim } }
+        \tl_if_empty:eF { \__tblr_prop_item:nn { inner } { width } }
+          {
+            \msg_warning:nnx { tabularray } { table-width-too-small }
+              { \dim_abs:n { \l__tblr_column_target_dim } }
+          }
       }
       {
         \prop_if_empty:NF \l__tblr_column_coefficient_prop
@@ -5950,6 +5959,7 @@
         \hrule height ~ 0pt
         \box_use:N \l__tblr_table_lastfoot_box
       }
+    \__tblr_hook_use:n { private / output / before }
     \__tblr_valign_whole:Nn \l__tblr_table_box {#1}
   }
 \cs_generate_variant:Nn \__tblr_build_tall_table:n { e }
@@ -5960,6 +5970,7 @@
   {
     \mode_leave_vertical:
     \__tblr_build_one_table:nnNN {1} {\c@rowcount} \c_true_bool \c_true_bool
+    \__tblr_hook_use:n { private / output / before }
     \__tblr_valign_whole:Nn \l__tblr_table_box {#1}
   }
 \cs_generate_variant:Nn \__tblr_build_short_table:n { e }
@@ -7505,6 +7516,7 @@
     \__tblr_hook_new_pair:nn { table / before } { table / after }
     \__tblr_hook_new_pair:nn {   row / before } {   row / after }
     \__tblr_hook_new_pair:nn {  cell / before } {  cell / after }
+    \__tblr_hook_new:n { private / output / before }
   }
 
 %% Library html provides more public variables
@@ -7587,7 +7599,7 @@
 
 %% Library tikz to add cell nodes and table nodes with tikz
 
-\tl_new:N \g__tblr_tikz_prefix_tl
+\tl_new:N \g__tblr_tikz_before_code_tl
 \dim_new:N \l__tblr_cell_inner_wd_dim
 \dim_new:N \l__tblr_cell_inner_dp_dim
 \dim_new:N \l__tblr_cell_hanchor_dim
@@ -7598,14 +7610,6 @@
 
 \NewTblrLibrary { tikz }
   {
-    \__tblr_keys_define:nn { table / inner }
-      {
-        tikz ~ prefix .code:n =
-          {
-            \tl_gset:Nn \g__tblr_tikz_prefix_tl { ##1 - }
-          }
-      }
-
     \UseTblrLibrary { hook }
     \RequirePackage { tikz }
     \tikzset
@@ -7614,6 +7618,7 @@
           {
             rectangle ,
             inner ~ sep = 0pt ,
+            outer ~ sep = 0pt ,
             draw = none ,
             fill = none
           } ,
@@ -7622,6 +7627,7 @@
           {
             rectangle ,
             inner ~ sep = 0pt ,
+            outer ~ sep = 0pt ,
             draw = none ,
             fill = none
           } ,
@@ -7629,13 +7635,29 @@
         tblr / overlay / .style = { }
       }
 
-    \NewDocumentEnvironment { tblrtikz } { }
+    \NewDocumentEnvironment { tblrtikzbefore } { +b }
+      {
+        \tl_gset:Nn \g__tblr_tikz_before_code_tl
+          {
+            \begin{tikzpicture}
+              [
+                remember ~ picture ,
+                overlay ,
+                name ~ prefix = tblr \g__tblr_name_str - ,
+                tblr / overlay
+              ]
+              ##1
+            \end{tikzpicture}
+          }
+      } { }
+
+    \NewDocumentEnvironment { tblrtikzafter } { }
       {
         \begin{tikzpicture}
           [
             remember ~ picture ,
             overlay ,
-            name ~ prefix = \g__tblr_tikz_prefix_tl ,
+            name ~ prefix = tblr \g__tblr_name_str - ,
             tblr / overlay
           ]
       }
@@ -7643,7 +7665,16 @@
         \end{tikzpicture}
       }
 
-    \AddToHook { tabularray/cell/after }
+    \AddToTblrHook { private / output / before }
+      {
+        \tl_if_empty:NF \g__tblr_tikz_before_code_tl
+          {
+            \tl_use:N \g__tblr_tikz_before_code_tl
+            \tl_gclear:N \g__tblr_tikz_before_code_tl
+          }
+      }
+
+    \AddToTblrHook { cell / after }
       {
         \__tblr_get_cell_background_width:NNN
             \c@rownum \c@colnum \l__tblr_cell_inner_wd_dim
@@ -7678,10 +7709,8 @@
                   text ~ depth = \l__tblr_cell_inner_dp_dim
                 ]
                 (
-                  \g__tblr_tikz_prefix_tl
-                  tblr -
-                  \int_use:N \c@rownum -
-                  \int_use:N \c@colnum
+                  tblr \g__tblr_name_str -
+                  \int_use:N \c@rownum - \int_use:N \c@colnum
                 )
                 at ( 0pt , 0pt ) { } ;
             \end{tikzpicture}
@@ -7729,8 +7758,7 @@
                           text ~ depth = \l__tblr_last_cell_table_dp_dim
                         ]
                         (
-                          \g__tblr_tikz_prefix_tl
-                          tblr
+                          tblr \g__tblr_name_str - table
                         )
                         at ( 0pt , 0pt ) { } ;
                     \end{tikzpicture}

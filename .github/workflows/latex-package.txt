@@ -28,6 +28,7 @@ pict2e
 shortvrb
 siunitx
 tabularx
+tikz
 varwidth
 xcolor
 xparse

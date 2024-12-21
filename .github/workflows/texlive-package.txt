@@ -13,6 +13,7 @@ enumitem
 environ
 epstopdf-pkg
 etoolbox
+everyshi
 float
 fp
 functional
@@ -37,6 +38,7 @@ ninecolors
 pdfescape
 pdftex
 pdftexcmds
+pgf
 pict2e
 refcount
 rerunfilecheck

@@ -58,6 +58,8 @@
 | `library-012` | `nameref` library |
 | `library-013` | `zref` library |
 | `library-014` | `amsmath` library and `delimiter` option |
+| `library-015` | load the same library twice |
+| `library-016` | `tikz` library for normal cells |
 
 # Test files for long tables
 
