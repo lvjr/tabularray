@@ -5966,6 +5966,7 @@
   {
     \mode_leave_vertical:
     \__tblr_build_one_table:nnNN {1} {\c@rowcount} \c_true_bool \c_true_bool
+    \__tblr_hook_use:n { tikz / before }
     \__tblr_valign_whole:Nn \l__tblr_table_box {#1}
   }
 \cs_generate_variant:Nn \__tblr_build_short_table:n { e }
@@ -7511,6 +7512,7 @@
     \__tblr_hook_new_pair:nn { table / before } { table / after }
     \__tblr_hook_new_pair:nn {   row / before } {   row / after }
     \__tblr_hook_new_pair:nn {  cell / before } {  cell / after }
+    \__tblr_hook_new:n { tikz / before }
   }
 
 %% Library html provides more public variables
@@ -7593,6 +7595,8 @@
 
 %% Library tikz to add cell nodes and table nodes with tikz
 
+\tl_new:N \g__tblr_tikz_before_code_tl
+\str_new:N \g__tblr_name_next_str
 \dim_new:N \l__tblr_cell_inner_wd_dim
 \dim_new:N \l__tblr_cell_inner_dp_dim
 \dim_new:N \l__tblr_cell_hanchor_dim
@@ -7626,7 +7630,25 @@
         tblr / overlay / .style = { }
       }
 
-    \NewDocumentEnvironment { tblrtikz } { }
+    \NewDocumentEnvironment { tblrtikzbefore } { +b }
+      {
+        \str_gset:Nx \g__tblr_name_next_str
+          { tblr \int_eval:n { \c@tblrcount + 1 } }
+        \tl_gset:Nn \g__tblr_tikz_before_code_tl
+          {
+            \begin{tikzpicture}
+              [
+                remember ~ picture ,
+                overlay ,
+                name ~ prefix = \g__tblr_name_next_str - ,
+                tblr / overlay
+              ]
+              ##1
+            \end{tikzpicture}
+          }
+      } { }
+
+    \NewDocumentEnvironment { tblrtikzafter } { }
       {
         \begin{tikzpicture}
           [
@@ -7640,7 +7662,16 @@
         \end{tikzpicture}
       }
 
-    \AddToHook { tabularray/cell/after }
+    \AddToTblrHook { tikz / before }
+      {
+        \tl_if_empty:NF \g__tblr_tikz_before_code_tl
+          {
+            \tl_use:N \g__tblr_tikz_before_code_tl
+            \tl_gclear:N \g__tblr_tikz_before_code_tl
+          }
+      }
+
+    \AddToTblrHook { cell / after }
       {
         \__tblr_get_cell_background_width:NNN
             \c@rownum \c@colnum \l__tblr_cell_inner_wd_dim
