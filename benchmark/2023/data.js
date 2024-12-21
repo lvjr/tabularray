@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734763563263,
+  "lastUpdate": 1734763582833,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2023": [
@@ -1470,6 +1470,48 @@ window.BENCHMARK_DATA = {
             "value": 0.76115816750788,
             "unit": "ratio",
             "extra": "current time : previous time = 4.2041282653809 : 5.5233306884766"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e64b9c8f1d765c96e0521bd24abd84f39b04ec30",
+          "message": "Merge pull request #559 from muzimuzhi/fix/size-of-tikz-node\n\nFix sizes of tikz table and cell nodes",
+          "timestamp": "2024-12-21T14:43:32+08:00",
+          "tree_id": "c82860df381f44770539879f115a0bbc10eee39c",
+          "url": "https://github.com/lvjr/tabularray/commit/e64b9c8f1d765c96e0521bd24abd84f39b04ec30"
+        },
+        "date": 1734763580730,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.71541627296919,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.460205078125 : 4.8366317749023"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.72766347988648,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4388694763184 : 4.7259063720703"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.75683183909157,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.1798629760742 : 5.5228424072266"
           }
         ]
       }
