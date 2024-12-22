@@ -95,6 +95,7 @@
 \cs_generate_variant:Nn \tl_log:n { e }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
 \cs_generate_variant:Nn \tl_put_left:Nn { Nv }
+
 \prg_generate_conditional_variant:Nnn \clist_if_in:Nn { Ne } { TF }
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
 \prg_generate_conditional_variant:Nnn \regex_match:Nn { NV } { TF }
@@ -102,6 +103,16 @@
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T, TF }
 \prg_generate_conditional_variant:Nnn \tl_if_head_eq_catcode:nN { VN } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_head_eq_meaning:nN { VN } { T, TF }
+
+%% Missing function variants for texlive 2022, so they can be removed in 2026
+\cs_generate_variant:Nn \clist_gput_right:Nn { ce }
+\cs_generate_variant:Nn \prop_put:Nnn { Nne }
+\cs_generate_variant:Nn \tl_gput_right:Nn { Ne }
+\cs_generate_variant:Nn \tl_gset:Nn { Ne, ce }
+\cs_generate_variant:Nn \tl_put_left:Nn { Ne }
+\cs_generate_variant:Nn \tl_put_right:Nn { Ne }
+\cs_generate_variant:Nn \tl_set:Nn { Ne, ce }
+\cs_generate_variant:Nn \tl_set_rescan:Nnn { Nne }
 
 \tl_new:N  \l__tblr_a_tl
 \tl_new:N  \l__tblr_b_tl
