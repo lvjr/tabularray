@@ -267,7 +267,18 @@ This library brings intuitive functional programming into \PP{tabularray} tables
 With this library, \PP{tabularray} will evaluate every function
 (defined with \CC{\prgNewFunction}) within inner specifications,
 replacing it with its return value, before parsing the key-value pairs. Here is an example:
-
+\begin{demohigh}
+\begin{tblr}{
+  hlines,
+  row{2} = {bg=\funColor{RGB}{180,180,255}}
+}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda
+\end{tblr}
+\end{demohigh}
+The \CC{\funColor} function is provided by \PP{functional} package.
+And now let's see another example:
 \begin{demohigh}
 \begin{tblr}{
   row{2} = {bg=\intIfOddTF{\value{page}}{\prgReturn{red7}}{\prgReturn{blue7}}}
