@@ -1,58 +1,63 @@
-# Changelog of `tabularray` package
-
-All notable changes to this project will be documented in this file.
+All notable changes to this package will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com).
 
-## [Unreleased]
+# [Unreleased]
 
-### Added
+## Added
 
 - evaluate inner specifications with `functional` library ([#270])
 - load `tabularray` libraries in external files ([#532])
+- add `tikz` library for drawing on short or tall tables ([#552])
+- add cell nodes and table nodes with `tikz` library ([#552])
+- add `tblrtikzbefore` and `tblrtikzafter` environments ([#29])
 
-### Changed
+## Changed
 
-### Deprecated
+## Deprecated
 
-### Fixed
+## Fixed
 
-### Removed
+## Removed
 
 - remove deprecated inner key `verb` ([#530])
+- drop support for TeX Live 2020 and 2021
 
-## [v2024A] - 2024-02-16
+# [v2024A] - 2024-02-16
 
-## [v2023A] - 2023-03-01
+# [v2023A] - 2023-03-01
 
-## [v2022D] - 2022-11-01
+# [v2022D] - 2022-11-01
 
-## [v2022C] - 2022-07-01
+# [v2022C] - 2022-07-01
 
-## [v2022B] - 2022-06-01
+# [v2022B] - 2022-06-01
 
-## [v2022A] - 2022-03-01
+# [v2022A] - 2022-03-01
 
-## [v2021Q] - 2021-12-01
+# [v2021Q] - 2021-12-01
 
-## [v2021P] - 2021-10-01
+# [v2021P] - 2021-10-01
 
-## [v2021N] - 2021-09-01
+# [v2021N] - 2021-09-01
 
-## [v2021M] - 2021-08-01
+# [v2021M] - 2021-08-01
 
-## [v2021L] - 2021-07-01
+# [v2021L] - 2021-07-01
 
-## [v2021K] - 2021-06-05
+# [v2021K] - 2021-06-05
 
-## [v2021J] - 2021-05-25
+# [v2021J] - 2021-05-25
 
-## v2021H - 2021-05-13
+# [v2021H] - 2021-05-13
 
+[#29]: https://github.com/lvjr/tabularray/issues/29
 [#270]: https://github.com/lvjr/tabularray/issues/270
 [#530]: https://github.com/lvjr/tabularray/issues/530
 [#532]: https://github.com/lvjr/tabularray/issues/532
+[#552]: https://github.com/lvjr/tabularray/issues/552
 
 [Unreleased]: https://github.com/lvjr/tabularray/compare/2024A...HEAD
+[v2025A]: https://github.com/lvjr/tabularray/compare/2024A...2025A
 [v2024A]: https://github.com/lvjr/tabularray/compare/2023A...2024A
 [v2023A]: https://github.com/lvjr/tabularray/compare/2022D...2023A
 [v2022D]: https://github.com/lvjr/tabularray/compare/2022C...2022D
@@ -66,3 +71,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [v2021L]: https://github.com/lvjr/tabularray/compare/2021K...2021L
 [v2021K]: https://github.com/lvjr/tabularray/compare/2021J...2021K
 [v2021J]: https://github.com/lvjr/tabularray/compare/2021H...2021J
+[v2021H]: https://github.com/lvjr/tabularray/compare/2021G...2021H
