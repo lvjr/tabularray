@@ -97,6 +97,7 @@
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nne, Nen, Nee, NeV }
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
+\cs_generate_variant:Nn \str_gset:Nn { Ne }
 \cs_generate_variant:Nn \tl_const:Nn { ce }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Ne }
 \cs_generate_variant:Nn \tl_gset:Nn { Ne, ce }
@@ -309,7 +310,7 @@
   {
     \prop_if_in:cnTF { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop }
   }
-\prg_generate_conditional_variant:Nnn \__tblr_prop_if_in:nn { nx } { T, F, TF }
+\prg_generate_conditional_variant:Nnn \__tblr_prop_if_in:nn { ne } { T, F, TF }
 
 \cs_new_protected:Npn \__tblr_prop_log:n #1
   {
@@ -3257,9 +3258,9 @@
           { \__tblr_parse_colrow_spec:nn { column } {#1} }
       }
       { \__tblr_parse_colrow_spec:nn { column } {#1} }
-    \str_gset:Nx \g__tblr_name_str { \__tblr_prop_item:ne { inner } { name } }
+    \str_gset:Ne \g__tblr_name_str { \__tblr_prop_item:ne { inner } { name } }
     \str_if_empty:NT \g__tblr_name_str
-      { \str_gset:Nx \g__tblr_name_str { @ \int_use:N \c@tblrcount } }
+      { \str_gset:Ne \g__tblr_name_str { @ \int_use:N \c@tblrcount } }
   }
 
 \cs_new_protected:Npn \__tblr_keys_gput:nn #1 #2
@@ -3867,7 +3868,8 @@
         \box_gset_to_last:N \g__tblr_last_box
       }
     \box_set_eq:NN \l__tblr_measured_cell_box \g__tblr_last_box
-    \tl_set:Nx \l__tblr_w_tl { \dim_eval:n { \box_wd:N \l__tblr_measured_cell_box } }
+    \tl_set:Ne \l__tblr_w_tl
+      { \dim_eval:n { \box_wd:N \l__tblr_measured_cell_box } }
   }
 
 %% Measure cell width only and build it later when hook library is not loaded
