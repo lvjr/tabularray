@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734786440658,
+  "lastUpdate": 1734827333782,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2022": [
@@ -1638,6 +1638,48 @@ window.BENCHMARK_DATA = {
             "value": 0.73723091550974,
             "unit": "ratio",
             "extra": "current time : previous time = 4.2355651855469 : 5.7452354431152"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "60df7532349aa76da8ce55a9e71db07b4b267254",
+          "message": "Merge pull request #564 from jasperhabicht/main\n\ntikz library: fix for multispan cells",
+          "timestamp": "2024-12-22T08:26:10+08:00",
+          "tree_id": "5dd7e481bd410dfc736f6bf80adcc772d0b89da3",
+          "url": "https://github.com/lvjr/tabularray/commit/60df7532349aa76da8ce55a9e71db07b4b267254"
+        },
+        "date": 1734827333469,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.71367443611878,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4414405822754 : 4.8221435546875"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.7172397449875,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.4406051635742 : 4.7970085144043"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.73052935113494,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.1826667785645 : 5.725528717041"
           }
         ]
       }
