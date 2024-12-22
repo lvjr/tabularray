@@ -7703,13 +7703,17 @@
               {
                 \dim_add:Nn \l__tblr_cell_hanchor_dim
                   {
-                    \__tblr_spec_item:nn { vline } { [ \int_eval:n { \c@colnum + ##1 } ] / @vline-width }
+                    \__tblr_spec_item:nn { vline }
+                      { [ \int_eval:n { \c@colnum + ##1 } ] / @vline-width }
                     +
-                    \__tblr_data_item:nen { column } { \int_eval:n { \c@colnum + ##1 } } { @col-width }
+                    \__tblr_data_item:nen { column }
+                      { \int_eval:n { \c@colnum + ##1 } } { @col-width }
                     +
-                    \__tblr_data_item:nen { column } { \int_eval:n { \c@colnum + ##1 } } { leftsep }
+                    \__tblr_data_item:nen { column }
+                      { \int_eval:n { \c@colnum + ##1 } } { leftsep }
                     +
-                    \__tblr_data_item:nen { column } { \int_eval:n { \c@colnum + ##1 } } { rightsep }
+                    \__tblr_data_item:nen { column }
+                      { \int_eval:n { \c@colnum + ##1 } } { rightsep }
                   }
               }
           }
