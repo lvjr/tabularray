@@ -18,7 +18,6 @@
 \DeclareRelease{v2021}{2021-01-01}{tabularray-2021.sty}
 \DeclareCurrentRelease{}{2022-01-01}
 
-\RequirePackage{expl3}
 \ProvidesExplPackage{tabularray}{2024-02-16}{2024A}
   {Typeset tabulars and arrays with LaTeX3}
 
@@ -27,12 +26,10 @@
 \msg_new:nnn { tabularray } { latex-too-old }
   {
     Your ~ LaTeX ~ release ~ is ~ too ~ old. \\
-    Please ~ update ~ it ~ to ~ 2020-10-01 ~ first.
+    Please ~ update ~ it ~ to ~ 2022-11-01 ~ first.
   }
-\@ifl@t@r\fmtversion{2020-10-01}{}{
-  %% Support TeX Live 2020 on Overleaf
-  \msg_warning:nn { tabularray } { latex-too-old }
-  \usepackage{xparse}
+\@ifl@t@r\fmtversion{2022-11-01}{}{
+  \msg_error:nn { tabularray } { latex-too-old }
 }
 
 \AtBeginDocument{
