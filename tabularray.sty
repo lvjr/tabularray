@@ -3021,7 +3021,7 @@
   {
     \tl_clear:N \l__tblr_saved_table_commands_before_cell_text_tl
     \tl_clear:N \l__tblr_saved_cell_text_after_table_commands_tl
-    \exp_last_unbraced:NV \__tblr_extract_table_commands_next:n #1 \q_stop
+    \exp_last_unbraced:NV \__tblr_extract_table_commands_next: #1 \q_stop
     \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
       {
         \__tblr_prop_gput:neV { command }
@@ -3031,8 +3031,24 @@
     \tl_set_eq:NN #1 \l__tblr_saved_cell_text_after_table_commands_tl
   }
 
+\cs_new_protected:Npn \__tblr_extract_table_commands_next:
+  {
+    \peek_after:Nw \__tblr_extract_table_commands_next_peek:
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_commands_next_peek:
+  {
+    \token_if_group_begin:NTF \l_peek_token
+      {
+        \__tblr_save_real_cell_text:
+      }
+      {
+        \__tblr_extract_table_commands_next_real:n
+      }
+  }
+
 %% #1 maybe a single token or multiple tokens from a pair of braces
-\cs_new_protected:Npn \__tblr_extract_table_commands_next:n #1
+\cs_new_protected:Npn \__tblr_extract_table_commands_next_real:n #1
   {
     \tl_if_single_token:nTF {#1}
       {
@@ -3040,10 +3056,10 @@
           { \__tblr_extract_one_table_command:N #1 }
           {
             \token_if_eq_meaning:NNF #1 \q_stop
-              { \__tblr_save_real_cell_text:w #1 }
+              { \__tblr_save_real_cell_text: #1 }
           }
       }
-      { \__tblr_save_real_cell_text:w {#1} }
+      { \__tblr_save_real_cell_text: {#1} }
   }
 
 \cs_new_protected:Npn \__tblr_extract_one_table_command:N #1
@@ -3080,13 +3096,18 @@
         \int_decr:N \l__tblr_a_int
         \__tblr_extract_table_command_arg_m:n
       }
-      { \__tblr_extract_table_commands_next:n }
+      { \__tblr_extract_table_commands_next: }
   }
 
-%% The outermost set of braces of cell text #1 will be removed
-\cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \q_stop
+%% We prepend \prg_do_nothing: to avoid losing outermost braces.
+\cs_new_protected:Npn \__tblr_save_real_cell_text:
   {
-    \tl_set:Nn \l__tblr_saved_cell_text_after_table_commands_tl {#1}
+    \__tblr_save_real_cell_text_aux:w \prg_do_nothing:
+  }
+
+\cs_new_protected:Npn \__tblr_save_real_cell_text_aux:w #1 \q_stop
+  {
+    \tl_set:No \l__tblr_saved_cell_text_after_table_commands_tl {#1}
   }
 
 %%% --------------------------------------------------------
