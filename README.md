@@ -1,13 +1,13 @@
 # The LaTeX3 package `tabularray`
 
 ```
-Package: Typeset tabulars and arrays with LaTeX3
-Copyright: 2021-2024 (c) Jianrui Lyu <tolvjr@163.com>
-Copyright: 2023-2024 (c) Yukai Chou <muzimuzhi@gmail.com>
-CTAN: https://ctan.org/pkg/tabularray
-Repository: https://github.com/lvjr/tabularray
-Repository: https://bitbucket.org/lvjr/tabularray
-License: The LaTeX Project Public License 1.3c
+Caption     : Typeset tabulars and arrays with LaTeX3
+Author      : Jianrui Lyu <tolvjr@163.com>
+Collaborator: Yukai Chou <muzimuzhi@gmail.com>
+CTAN Page   : https://ctan.org/pkg/tabularray
+Repository  : https://github.com/lvjr/tabularray
+Repository  : https://bitbucket.org/lvjr/tabularray
+License     : The LaTeX Project Public License 1.3c
 ```
 
 ## 1\. Introduction
