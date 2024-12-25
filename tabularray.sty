@@ -902,9 +902,59 @@
       }
   }
 
+\bool_new:N \g__tblr_use_linked_prop_bool
+
+\cs_new_protected:Npn \__tblr_map_data_to_prop:
+  {
+    \cs_set_protected:Npn \__tblr_data_gput:nnnn ##1 ##2 ##3 ##4
+      {
+        \__tblr_prop_gput:nnn {##1} { [##2] / ##3 } {##4}
+      }
+    \cs_set_protected:Npn \__tblr_data_gput:nnnnn ##1 ##2 ##3 ##4 ##5
+      {
+        \__tblr_prop_gput:nnn {##1} { [##2][##3] / ##4 } {##5}
+      }
+    \cs_set:Npn \__tblr_data_item:nnn ##1 ##2 ##3
+      {
+        % Be careful not to add \tl_log in an expandable function
+        \__tblr_prop_item:nn {##1} { [##2] / ##3 }
+      }
+    \cs_set:Npn \__tblr_data_item:nnnn ##1 ##2 ##3 ##4
+      {
+        % Be careful not to add \tl_log in an expandable function
+        \__tblr_prop_item:nn {##1} { [##2][##3] / ##4 }
+      }
+    \cs_set_protected:Npn \__tblr_data_log:n ##1
+      {
+        \__tblr_prop_log:n {##1}
+      }
+    \cs_set_protected:Npn \__tblr_data_gput_if_larger:nnnn ##1 ##2 ##3 ##4
+      {
+        \__tblr_prop_gput_if_larger:nnn {##1} { [##2] / ##3 } {##4}
+      }
+    \cs_set_protected:Npn \__tblr_data_gput_if_larger:nnnnn ##1 ##2 ##3 ##4 ##5
+      {
+        \__tblr_prop_gput_if_larger:nnn {##1} { [##2][##3] / ##4 } {##5}
+      }
+    \cs_set_protected:Npn \__tblr_data_gadd_dimen_value:nnnn ##1 ##2 ##3 ##4
+      {
+        \__tblr_prop_gadd_dimen_value:nnn {##1} { [##2] / ##3 } {##4}
+      }
+    \cs_set_protected:Npn \__tblr_data_gadd_dimen_value:nnnnn ##1 ##2 ##3 ##4 ##5
+      {
+        \__tblr_prop_gadd_dimen_value:nnn {##1} { [##2][##3] / ##4 } {##5}
+      }
+  }
+
+%% We can't use \IfExplAtLeastTF since it was added in LaTeX release 2023-11-01.
+%\@ifl@t@r \ExplLoaderFileDate { 2024-12-09 }
+%  { \bool_gset_true:N \g__tblr_use_linked_prop_bool } { }
+
 \AtBeginDocument
   {
-    \bool_if:NF \g__tblr_use_intarray_bool { \__tblr_map_data_to_spec: }
+    \bool_if:NTF \g__tblr_use_linked_prop_bool
+      { \__tblr_map_data_to_prop: }
+      { \bool_if:NF \g__tblr_use_intarray_bool { \__tblr_map_data_to_spec: } }
   }
 
 %%% --------------------------------------------------------
@@ -3725,8 +3775,14 @@
         \int_incr:N \c@rownum
         \int_zero:N \c@colnum
         \__tblr_update_rowsep_registers:
+        %% Note that \__tblr_data_item always returns nonempty value,
+        %% but \__tblr_prop_item may return empty value.
+        %% To make \__tblr_map_data_to_prop: work, we need to add + 0pt.
         \tl_set:Ne \l__tblr_h_tl
-          { \__tblr_data_item:nen { row } { \int_use:N \c@rownum } { height } }
+          {
+            \__tblr_data_item:nen { row } { \int_use:N \c@rownum } { height }
+            + 0pt
+          }
         %% We didn't initialize row heights with -1pt
         \dim_compare:nNnF { \l__tblr_h_tl } = { 0pt }
           {
