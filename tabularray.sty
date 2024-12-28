@@ -7819,10 +7819,18 @@
         \hbox_set:Nn \l__tblr_tikz_node_box
           {
             \begin{tikzpicture}[remember ~ picture, overlay]
+              \coordinate
+                (
+                  tblr \g__tblr_name_str -
+                  \int_use:N \c@rownum - \int_use:N \c@colnum -
+                  single
+                )
+                at ( 0pt , -\l__tblr_row_dp_dim ) { } ;
               \node
                 [
                   tblr / cell ~ node ,
                   tblr / cell ,
+                  anchor = center ,
                   text ~ width = \l__tblr_cell_inner_wd_dim ,
                   text ~ height = \l__tblr_row_ht_dim ,
                   text ~ depth = \l__tblr_cell_inner_dp_dim
@@ -7831,26 +7839,19 @@
                   tblr \g__tblr_name_str -
                   \int_use:N \c@rownum - \int_use:N \c@colnum
                 )
-                at ( 0pt , 0pt ) { } ;
+                at
+                (
+                  \l__tblr_cell_hanchor_dim - 0.5 \l__tblr_cell_inner_wd_dim
+                  ,
+                  0.5 \l__tblr_row_ht_dim - 0.5 \l__tblr_cell_inner_dp_dim
+                ) { } ;
             \end{tikzpicture}
           }
         \box_set_trim:Nnnnn \l__tblr_tikz_node_box
-          {
-            0.5 \l__tblr_cell_inner_wd_dim +
-            \l__tblr_cell_hanchor_dim
-          }
-          {
-            -0.5 \l__tblr_row_ht_dim +
-            0.5 \l__tblr_cell_inner_dp_dim
-          }
-          {
-            -0.5 \l__tblr_cell_inner_wd_dim -
-            \l__tblr_cell_hanchor_dim
-          }
-          {
-            0.5 \l__tblr_row_ht_dim -
-            0.5 \l__tblr_cell_inner_dp_dim
-          }
+          { 0pt }
+          { 0pt }
+          { 0pt }
+          { 0pt }
         \box_use:N \l__tblr_tikz_node_box
 
         \int_compare:nNnT { \c@rownum } = { \c@rowcount }
@@ -7872,6 +7873,7 @@
                         [
                           tblr / table ~ node ,
                           tblr / table ,
+                          anchor = center ,
                           text ~ width = \tablewidth ,
                           text ~ height = \l__tblr_last_cell_table_ht_dim ,
                           text ~ depth = \l__tblr_last_cell_table_dp_dim
@@ -7879,26 +7881,19 @@
                         (
                           tblr \g__tblr_name_str - table
                         )
-                        at ( 0pt , 0pt ) { } ;
+                        at 
+                        ( 
+                          \l__tblr_last_vline_wd_dim - 0.5 \tablewidth
+                          , 
+                          0.5 \l__tblr_last_cell_table_ht_dim - 0.5 \l__tblr_last_cell_table_dp_dim 
+                        ) { } ;
                     \end{tikzpicture}
                   }
                 \box_set_trim:Nnnnn \l__tblr_tikz_node_box
-                  {
-                    0.5 \tablewidth +
-                    \l__tblr_last_vline_wd_dim
-                  }
-                  {
-                    -0.5 \l__tblr_last_cell_table_ht_dim +
-                    0.5 \l__tblr_last_cell_table_dp_dim
-                  }
-                  {
-                    -0.5 \tablewidth -
-                    \l__tblr_last_vline_wd_dim
-                  }
-                  {
-                    0.5 \l__tblr_last_cell_table_ht_dim -
-                    0.5 \l__tblr_last_cell_table_dp_dim
-                  }
+                  { 0pt }
+                  { 0pt }
+                  { 0pt }
+                  { 0pt }
                 \box_use:N \l__tblr_tikz_node_box
               }
           }
