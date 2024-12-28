@@ -6377,22 +6377,22 @@
 
 \cs_new_nopar:Npn \__tblr_valign_get_row_total:n #1
   {
-    \__tblr_data_item:nnn { row } {#1} { abovesep }
+    \__tblr_data_item:nen { row } {#1} { abovesep }
     +
-    \__tblr_data_item:nnn { row } {#1} { @row-height }
+    \__tblr_data_item:nen { row } {#1} { @row-height }
     +
-    \__tblr_data_item:nnn { row } {#1} { belowsep }
+    \__tblr_data_item:nen { row } {#1} { belowsep }
   }
 
 \cs_new_nopar:Npn \__tblr_valign_get_row_height:n #1
   {
-    \__tblr_data_item:nnn { row } {#1} { abovesep }
+    \__tblr_data_item:nen { row } {#1} { abovesep }
     +
-    ( \__tblr_data_item:nnn { row } {#1} { @row-height }
+    ( \__tblr_data_item:nen { row } {#1} { @row-height }
       +
-      \__tblr_data_item:nnn { row } {#1} { @row-upper }
+      \__tblr_data_item:nen { row } {#1} { @row-upper }
       -
-      \__tblr_data_item:nnn { row } {#1} { @row-lower }
+      \__tblr_data_item:nen { row } {#1} { @row-lower }
     ) / 2
   }
 
@@ -6405,7 +6405,7 @@
       \__tblr_data_item:nen { row } {#1} { @row-lower }
     ) / 2
     +
-    \__tblr_data_item:nnn { row } {#1} { belowsep }
+    \__tblr_data_item:nen { row } {#1} { belowsep }
   }
 
 %%% --------------------------------------------------------
