@@ -270,17 +270,28 @@
 
 \cs_new_protected:Npn \__tblr_clear_prop_lists:
   {
-    \prop_gclear_new:c { g__tblr_text_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_command_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_inner_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_note_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_remark_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_more_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_row_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_column_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_cell_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_hline_ \int_use:N \g_tblr_level_int _prop }
-    \prop_gclear_new:c { g__tblr_vline_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_text_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_command_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_inner_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_note_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_remark_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_more_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_row_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_column_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_cell_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_hline_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
+      { g__tblr_vline_ \int_use:N \g_tblr_level_int _prop }
   }
 
 \cs_new_protected:Npn \__tblr_prop_gput:nnn #1 #2 #3
@@ -859,6 +870,10 @@
 %%> \section{Switch between Different Data Structures}
 %%% --------------------------------------------------------
 
+\cs_set_eq:NN \__tblr_prop_new:N \prop_new:N
+\cs_set_eq:NN \__tblr_prop_gclear_new:N \prop_gclear_new:N
+\cs_generate_variant:Nn \__tblr_prop_gclear_new:N { c }
+
 \bool_new:N \g__tblr_use_intarray_bool
 \bool_gset_true:N \g__tblr_use_intarray_bool
 
@@ -953,7 +968,11 @@
 \AtBeginDocument
   {
     \bool_if:NTF \g__tblr_use_linked_prop_bool
-      { \__tblr_map_data_to_prop: }
+      {
+        \__tblr_map_data_to_prop:
+        \cs_set_eq:NN \__tblr_prop_new:N \prop_new_linked:N
+        \cs_set_eq:NN \__tblr_prop_gclear_new:N \prop_gclear_new_linked:N
+      }
       { \bool_if:NF \g__tblr_use_intarray_bool { \__tblr_map_data_to_spec: } }
   }
 
