@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735361278365,
+  "lastUpdate": 1735372093588,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2023": [
@@ -2562,6 +2562,48 @@ window.BENCHMARK_DATA = {
             "value": 0.78591548510168,
             "unit": "ratio",
             "extra": "current time : previous time = 4.2999420166016 : 5.4712524414062"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "43776b42d870a9195abd9770ae78a7b1661fbdc1",
+          "message": "tikz: add corner nodes h<i> and v<j> (#29)",
+          "timestamp": "2024-12-28T15:45:12+08:00",
+          "tree_id": "a4e6592188ab60875fbf019e10f3b2ffc191cda3",
+          "url": "https://github.com/lvjr/tabularray/commit/43776b42d870a9195abd9770ae78a7b1661fbdc1"
+        },
+        "date": 1735372092592,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.76352754415967,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.6089859008789 : 4.7267265319824"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.75745853854009,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.5765228271484 : 4.7217407226562"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.78351574017865,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.3080902099609 : 5.4984092712402"
           }
         ]
       }
