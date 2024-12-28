@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735131927611,
+  "lastUpdate": 1735359052023,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2022": [
@@ -2352,6 +2352,48 @@ window.BENCHMARK_DATA = {
             "value": 0.76496656374156,
             "unit": "ratio",
             "extra": "current time : previous time = 4.390754699707 : 5.7397994995117"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6b089be0f44842276d0c031cf9d4abae7cf76e3f",
+          "message": "Merge pull request #566 from jasperhabicht/main\n\nOptimized coordinate and node positioning",
+          "timestamp": "2024-12-28T12:08:04+08:00",
+          "tree_id": "2a6bae7b43bf1d1c42c3e97ffe1454e5b6aa93c9",
+          "url": "https://github.com/lvjr/tabularray/commit/6b089be0f44842276d0c031cf9d4abae7cf76e3f"
+        },
+        "date": 1735359051533,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.75734447843536,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.6698722839355 : 4.8457107543945"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.75585542452774,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.6194496154785 : 4.7885475158691"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.76902431689836,
+            "unit": "ratio",
+            "extra": "current time : previous time = 4.4191703796387 : 5.7464637756348"
           }
         ]
       }
