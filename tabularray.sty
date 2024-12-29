@@ -1178,7 +1178,7 @@
 %%% --------------------------------------------------------
 
 %% We need some commands to modify table/row/column/cell specifications.
-%% These commands must be defined with \NewTableCommand command,
+%% These commands must be defined with \NewTblrTableCommand command,
 %% so that we could extract them, execute them once, then disable them.
 
 \clist_new:N \g__tblr_table_commands_clist
@@ -1186,7 +1186,7 @@
 \msg_new:nnn { tabularray } { defined-table-command }
   { Table ~ command ~ #1 already ~ defined! }
 
-\NewDocumentCommand \NewTableCommand { m O{0} o m }
+\NewDocumentCommand \NewTblrTableCommand { m O{0} o m }
   {
     \clist_if_in:NnTF \g__tblr_table_commands_clist { #1 }
       {
@@ -1217,6 +1217,7 @@
         \clist_gput_right:Nn \g__tblr_table_commands_clist { #1 }
       }
   }
+\cs_set_eq:NN \NewTableCommand \NewTblrTableCommand
 
 \cs_new_protected:Npn \__tblr_enable_table_commands:
   {
@@ -1247,7 +1248,7 @@
   }
 
 %% Add \empty as a table command so that users can write \\\empty\hline (see #328)
-\NewTableCommand\empty{}
+\NewTblrTableCommand\empty{}
 
 %% Table commands are defined only inside tblr environments,
 %% but some packages such as csvsimple need to use them outside tblr environments,
@@ -1268,7 +1269,7 @@
 %%% --------------------------------------------------------
 
 %% We need to emulate or fix some commands such as \diagbox in other packages
-%% These commands must be defined with \NewContentCommand command
+%% These commands must be defined with \NewTblrContentCommand command
 %% We only enable them inside tblr environment to avoid potential conflict
 
 \clist_new:N \g__tblr_content_commands_clist
@@ -1276,7 +1277,7 @@
 \msg_new:nnn { tabularray } { defined-content-command }
   { Content ~ command ~ #1 already ~ defined! }
 
-\NewDocumentCommand \NewContentCommand { m O{0} o m }
+\NewDocumentCommand \NewTblrContentCommand { m O{0} o m }
   {
     \clist_if_in:NnTF \g__tblr_content_commands_clist { #1 }
       {
@@ -1290,6 +1291,7 @@
         \clist_gput_right:Nn \g__tblr_content_commands_clist { #1 }
       }
   }
+\cs_set_eq:NN \NewContentCommand \NewTblrContentCommand
 
 \cs_new_protected:Npn \__tblr_enable_content_commands:
   {
@@ -1380,7 +1382,7 @@
 \regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
 
 %% \SetHlines command for setting every hline in the table
-\NewTableCommand \SetHlines [3] [+]
+\NewTblrTableCommand \SetHlines [3] [+]
   {
     \tblr_set_every_hline:nnn {#1} {#2} {#3}
   }
@@ -1422,14 +1424,14 @@
 \tl_new:N \l__tblr_hline_rightpos_tl % right position
 \bool_new:N \l__tblr_hline_endpos_bool % whether set positions only for both ends
 
-\NewTableCommand \cline [2] [] { \SetHline [=] {#2} {#1} }
+\NewTblrTableCommand \cline [2] [] { \SetHline [=] {#2} {#1} }
 
-\NewTableCommand \hline [1] [] { \SetHline [+] {-} {#1} }
+\NewTblrTableCommand \hline [1] [] { \SetHline [+] {-} {#1} }
 
 %% #1: the index of the hline (may be + or =)
 %% #2: which columns of the hline, separate by commas
 %% #3: key=value pairs
-\NewTableCommand \SetHline [3] [+]
+\NewTblrTableCommand \SetHline [3] [+]
   {
     \tblr_set_hline:nnn {#1} {#2} {#3}
   }
@@ -1615,18 +1617,18 @@
 \msg_new:nnn { tabularray } { obsolete-lasthline }
   { \lasthline ~ is ~ obsolete; ~ use ~ 'baseline=B' ~ instead. }
 
-\NewTableCommand \firsthline [1] []
+\NewTblrTableCommand \firsthline [1] []
   {
     \msg_error:nn { tabularray } { obsolete-firsthline }
   }
 
-\NewTableCommand \lasthline [1] []
+\NewTblrTableCommand \lasthline [1] []
   {
     \msg_error:nn { tabularray } { obsolete-lasthline }
   }
 
 %% \SetVlines command for setting every vline in the table
-\NewTableCommand \SetVlines [3] [+]
+\NewTblrTableCommand \SetVlines [3] [+]
   {
     \tblr_set_every_vline:nnn {#1} {#2} {#3}
   }
@@ -1667,14 +1669,14 @@
 \tl_new:N \l__tblr_vline_abovepos_tl % above position
 \tl_new:N \l__tblr_vline_belowpos_tl % below position
 
-\NewTableCommand \rline [2] [] { \SetVline [=] {#2} {#1} }
+\NewTblrTableCommand \rline [2] [] { \SetVline [=] {#2} {#1} }
 
-\NewTableCommand \vline [1] [] { \SetVline [+] {-} {#1} }
+\NewTblrTableCommand \vline [1] [] { \SetVline [+] {-} {#1} }
 
 %% #1: the index of the vline (may be + or =)
 %% #2: which rows of the vline, separate by commas
 %% #3: key=value pairs
-\NewTableCommand \SetVline [3] [+]
+\NewTblrTableCommand \SetVline [3] [+]
   {
     \tblr_set_vline:nnn {#1} {#2} {#3}
   }
@@ -1828,7 +1830,7 @@
 %%% --------------------------------------------------------
 
 %% Hborder holds keys not related to a specified hline
-\NewTableCommand \hborder [1] { \tblr_set_hborder:n {#1} }
+\NewTblrTableCommand \hborder [1] { \tblr_set_hborder:n {#1} }
 
 \cs_new_protected:Npn \tblr_set_hborder:n #1
   {
@@ -1885,7 +1887,7 @@
   }
 
 %% Vborder holds keys not related to a specified vline
-\NewTableCommand \vborder [1] { \tblr_set_vborder:n {#1} }
+\NewTblrTableCommand \vborder [1] { \tblr_set_vborder:n {#1} }
 
 \cs_new_protected:Npn \tblr_set_vborder:n #1
   {
@@ -1928,7 +1930,7 @@
 %%% --------------------------------------------------------
 
 %% \SetCells command for setting every cell in the table
-\NewTableCommand \SetCells [2] []
+\NewTblrTableCommand \SetCells [2] []
   {
     \tblr_set_every_cell:nn {#1} {#2}
   }
@@ -1960,7 +1962,7 @@
 
 %% \SetCell command for multirow and/or multicolumn cells
 
-\NewTableCommand \SetCell [2] []
+\NewTblrTableCommand \SetCell [2] []
   {
     \tblr_set_cell:nn { #1 } { #2 }
   }
@@ -2169,12 +2171,12 @@
 \msg_new:nnn { tabularray } { obsolete-multirow }
   { \multirow ~ is ~ obsolete; ~ use ~ \SetCell ~ instead. }
 
-\NewTableCommand \multicolumn [2]
+\NewTblrTableCommand \multicolumn [2]
   {
     \msg_error:nn { tabularray } { obsolete-multicolumn }
   }
 
-\NewTableCommand \multirow [3] [m]
+\NewTblrTableCommand \multirow [3] [m]
   {
     \msg_error:nn { tabularray } { obsolete-multirow }
   }
@@ -2184,7 +2186,7 @@
 %%% --------------------------------------------------------
 
 %% \SetColumns command for setting every column in the table
-\NewTableCommand \SetColumns [2] []
+\NewTblrTableCommand \SetColumns [2] []
   {
     \tblr_set_every_column:nn {#1} {#2}
   }
@@ -2212,7 +2214,7 @@
 
 %% \SetColumn command for current column or each cells in the column
 
-\NewTableCommand \SetColumn [2] []
+\NewTblrTableCommand \SetColumn [2] []
   {
     \tblr_set_column:nn {#1} {#2}
   }
@@ -2352,7 +2354,7 @@
 \cs_generate_variant:Nn \__tblr_column_unknown_key:n { V }
 
 %% \SetRows command for setting every row in the table
-\NewTableCommand \SetRows [2] []
+\NewTblrTableCommand \SetRows [2] []
   {
     \tblr_set_every_row:nn {#1} {#2}
   }
@@ -2380,7 +2382,7 @@
 
 %% \SetRow command for current row or each cells in the row
 
-\NewTableCommand \SetRow [2] []
+\NewTblrTableCommand \SetRow [2] []
   {
     \tblr_set_row:nn {#1} {#2}
   }
@@ -2519,12 +2521,12 @@
   }
 \cs_generate_variant:Nn \__tblr_row_unknown_key:n { V }
 
-\NewTableCommand \pagebreak [1] [4]
+\NewTblrTableCommand \pagebreak [1] [4]
   {
     \hborder { pagebreak = yes }
   }
 
-\NewTableCommand \nopagebreak [1] [4]
+\NewTblrTableCommand \nopagebreak [1] [4]
   {
     \hborder { pagebreak = no }
   }
@@ -3057,7 +3059,7 @@
   }
 
 %% Treat \\[dimen] command
-\NewTableCommand \RowBefore@AddBelowSep [1] []
+\NewTblrTableCommand \RowBefore@AddBelowSep [1] []
   {
     \IfValueT { #1 }
       {
@@ -3123,7 +3125,7 @@
 %%> \section{Extract Table Commands from Cell Text}
 %%% --------------------------------------------------------
 
-%% Extract table commands defined with \NewTableCommand from cell text
+%% Extract table commands defined with \NewTblrTableCommand from cell text
 
 \tl_new:N \l__tblr_saved_table_commands_before_cell_text_tl
 \tl_new:N \l__tblr_saved_cell_text_after_table_commands_tl
@@ -7447,23 +7449,23 @@
       \SetHline [+] {##2} {##1}
       \hborder { abovespace = \aboverulesep, belowspace = \belowrulesep }
     }
-    \NewTableCommand \toprule [1] [] {
+    \NewTblrTableCommand \toprule [1] [] {
       \tblr@booktabs@hline [wd=\heavyrulewidth, ##1]
     }
-    \NewTableCommand \midrule [1] [] {
+    \NewTblrTableCommand \midrule [1] [] {
       \tblr@booktabs@hline [wd=\lightrulewidth, ##1]
     }
-    \NewTableCommand \bottomrule [1] [] {
+    \NewTblrTableCommand \bottomrule [1] [] {
       \tblr@booktabs@hline [wd=\heavyrulewidth, ##1]
     }
-    \NewTableCommand \cmidrule [2] [] {
+    \NewTblrTableCommand \cmidrule [2] [] {
       \tblr@booktabs@cline [wd=\cmidrulewidth, endpos, ##1] {##2}
     }
-    \NewTableCommand \cmidrulemore [2] [] {
+    \NewTblrTableCommand \cmidrulemore [2] [] {
       \tblr@booktabs@cline@more [wd=\cmidrulewidth, endpos, ##1] {##2}
     }
     \newcommand \tblr@booktabs@change@more [1] { \cmidrulemore }
-    \NewTableCommand \morecmidrules {
+    \NewTblrTableCommand \morecmidrules {
       \peek_meaning:NTF \cmidrule { \tblr@booktabs@change@more } { \relax }
     }
     \NewTblrEnviron { booktabs }
@@ -7484,11 +7486,11 @@
     \AtBeginEnvironment { booktabs } { \tblr@booktabs@begin@hook }
     \AtBeginEnvironment { longtabs } { \tblr@booktabs@begin@hook }
     \AtBeginEnvironment { talltabs } { \tblr@booktabs@begin@hook }
-    \NewTableCommand \specialrule [3]
+    \NewTblrTableCommand \specialrule [3]
       { \hline [##1] \hborder { abovespace = ##2, belowspace = ##3 } }
-    \NewTableCommand \addrowspace [1] [\defaultaddspace]
+    \NewTblrTableCommand \addrowspace [1] [\defaultaddspace]
       { \hborder { abovespace+ = (##1) / 2, belowspace+ = (##1) / 2 } }
-    \NewTableCommand \addlinespace [1] [\defaultaddspace]
+    \NewTblrTableCommand \addlinespace [1] [\defaultaddspace]
       { \hborder { abovespace+ = (##1) / 2, belowspace+ = (##1) / 2 } }
   }
 
@@ -7524,7 +7526,7 @@
   {
     \RequirePackage{ diagbox }
     \cs_set_eq:NN \__tblr_lib_saved_diagbox:w \diagbox
-    \NewContentCommand \diagbox [3] []
+    \NewTblrContentCommand \diagbox [3] []
       {
         \__tblr_lib_diagbox_fix:n
           {
@@ -7534,7 +7536,7 @@
               { \__tblr_lib_diagbox_math_or_text:n {##3} }
           }
       }
-    \NewContentCommand \diagboxthree [4] []
+    \NewTblrContentCommand \diagboxthree [4] []
       {
         \__tblr_lib_diagbox_fix:n
           {

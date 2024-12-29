@@ -255,7 +255,7 @@ Therefore the following two tables are the same:
 
 In contrast to traditional \EE{tabular} environment, \PP{tabularray} environments
 need to see every \TT{&} and \TT{\\\\} when splitting the table body with \PP{l3regex}.
-And you can not put cell text inside any table command defined with \CC{\NewTableCommand}.
+And you can not put cell text inside any table command defined with \CC{\NewTblrTableCommand}.
 But you could use outer key \K{expand} to make \PP{tabularray} expand
 every occurrence of any of the specified macros \underline{once} and \underline{in the given order} before splitting the table body.
 Note that you \underline{can not} expand a command defined with \CC{\NewDocumentCommand}.
@@ -378,11 +378,11 @@ you can also define a new general environment based on \EE{tblr} environment
 
 \section{New Table Commands}
 
-All commands which change the specifications of tables \textcolor{red3}{must} be defined with \CC{\NewTableCommand}.
+All commands which change the specifications of tables \textcolor{red3}{must} be defined with \CC{\NewTblrTableCommand}.
 The following example demonstrates how to define a new table command:
 
 \begin{demohigh}
-\NewTableCommand\myhline{\hline[0.1em,red5]}
+\NewTblrTableCommand\myhline{\hline[0.1em,red5]}
 \begin{tblr}{llll}
 \myhline
  Alpha   & Beta  & Gamma   & Delta \\
