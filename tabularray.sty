@@ -1018,7 +1018,7 @@
 %%> \section{Child Selectors}
 %%% --------------------------------------------------------
 
-\clist_new:N \g_tblr_used_child_selectors_clist
+\clist_new:N \gTblrUsedChildSelectorsClist
 
 \tl_new:N \l__tblr_childs_arg_spec_tl
 
@@ -1032,16 +1032,16 @@
 
 \cs_new_protected:Npn \__tblr_new_child_selector_aux:nnnn #1 #2 #3 #4
   {
-    \clist_if_in:NnTF \g_tblr_used_child_selectors_clist { #1 }
+    \clist_if_in:NnTF \gTblrUsedChildSelectorsClist { #1 }
       {
         \msg_error:nnn { tabularray } { used-child-selector } { #1 }
-        \clist_log:N \g_tblr_used_child_selectors_clist
+        \clist_log:N \gTblrUsedChildSelectorsClist
       }
       {
         \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_childs_arg_spec_tl
         \exp_args:NcV \NewDocumentCommand
           { __tblr_child_selector_ #1 :w } \l__tblr_childs_arg_spec_tl { #4 }
-        \clist_gput_right:Nn \g_tblr_used_child_selectors_clist { #1 }
+        \clist_gput_right:Nn \gTblrUsedChildSelectorsClist { #1 }
       }
   }
 \cs_generate_variant:Nn \__tblr_new_child_selector_aux:nnnn { ennn }
