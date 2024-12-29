@@ -1059,7 +1059,7 @@
       }
   }
 
-\clist_new:N \l_tblr_childs_clist
+\clist_new:N \lTblrChildClist
 \tl_new:N \l_tblr_childs_total_tl
 
 \NewChildSelector { odd } [1] []
@@ -1067,7 +1067,7 @@
     \tl_if_blank:nTF {#1}
       {
         \int_step_inline:nnnn {1} {2} { \l_tblr_childs_total_tl }
-          { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
+          { \clist_put_right:Nn \lTblrChildClist {##1} }
       }
       { \__tblr_child_selector_odd_or_even:nn { odd } {#1} }
   }
@@ -1077,7 +1077,7 @@
     \tl_if_blank:nTF {#1}
       {
         \int_step_inline:nnnn {2} {2} { \l_tblr_childs_total_tl }
-          { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
+          { \clist_put_right:Nn \lTblrChildClist {##1} }
       }
       { \__tblr_child_selector_odd_or_even:nn { even } {#1} }
   }
@@ -1099,7 +1099,7 @@
           { \int_eval:n { \l__tblr_child_from_tl + 1 } }
       }
     \int_step_inline:nnnn { \l__tblr_child_from_tl } {2} { \l__tblr_child_to_tl }
-      { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
+      { \clist_put_right:Nn \lTblrChildClist {##1} }
   }
 
 \regex_const:Nn \c__tblr_split_selector_name_regex { ^ ( [A-Za-z] {2,} ) ( . * ) }
@@ -1108,10 +1108,10 @@
 \tl_new:N \l__tblr_childs_selector_tl
 
 %% #1, child specifications; #2, total number.
-%% The result will be put into \l_tblr_childs_clist
+%% The result will be put into \lTblrChildClist
 \cs_new_protected:Npn \__tblr_get_childs:nn #1 #2
   {
-    \clist_clear:N \l_tblr_childs_clist
+    \clist_clear:N \lTblrChildClist
     \tl_set:Ne \l_tblr_childs_total_tl {#2}
     \regex_extract_once:NnNTF \c__tblr_split_selector_name_regex {#1}
       \l__tblr_childs_regex_seq
@@ -1130,7 +1130,7 @@
           { \__tblr_get_childs_normal:nn {1-#2} {#2} }
           { \__tblr_get_childs_normal:nn {#1} {#2} }
       }
-    %\clist_log:N \l_tblr_childs_clist
+    %\clist_log:N \lTblrChildClist
   }
 \cs_generate_variant:Nn \__tblr_get_childs:nn { ne }
 
@@ -1150,7 +1150,7 @@
     \__tblr_child_name_to_index:nN {#1} \l__tblr_child_from_tl
     \__tblr_child_name_to_index:nN {#2} \l__tblr_child_to_tl
     \int_step_inline:nnn { \l__tblr_child_from_tl } { \l__tblr_child_to_tl }
-      { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
+      { \clist_put_right:Nn \lTblrChildClist {##1} }
   }
 
 \regex_const:Nn \c__tblr_child_name_regex { ^ [U-Z] $ }
@@ -1469,7 +1469,7 @@
   {
     \group_begin:
     \__tblr_get_childs:ne {#1} { \int_eval:n { \c@rowcount + 1 } }
-    \clist_map_inline:Nn \l_tblr_childs_clist
+    \clist_map_inline:Nn \lTblrChildClist
       {
         \int_set:Nn \c@rownum {##1}
         \tblr_set_hline:nnn {#2} {#3} {#4}
@@ -1566,7 +1566,7 @@
 \cs_new_protected_nopar:Npn \__tblr_set_hline_cmd:n #1
   {
     \__tblr_get_childs:ne {#1} { \int_use:N \c@colcount }
-    \clist_map_inline:Nn \l_tblr_childs_clist
+    \clist_map_inline:Nn \lTblrChildClist
       {
         % prevent expansion of vline text (see issue #303)
         \__tblr_set_hline_option:nnn { ##1 } { @dash } 
@@ -1585,12 +1585,12 @@
         \bool_if:NTF \l__tblr_hline_endpos_bool
           {
             \__tblr_set_hline_option:nnn
-              { \clist_item:Nn \l_tblr_childs_clist {1} }
+              { \clist_item:Nn \lTblrChildClist {1} }
               { leftpos }
               { \l__tblr_hline_leftpos_tl }
           }
           {
-            \clist_map_inline:Nn \l_tblr_childs_clist
+            \clist_map_inline:Nn \lTblrChildClist
               {
                 \__tblr_set_hline_option:nnn
                   { ##1 } { leftpos } { \l__tblr_hline_leftpos_tl }
@@ -1602,12 +1602,12 @@
         \bool_if:NTF \l__tblr_hline_endpos_bool
           {
             \__tblr_set_hline_option:nnn
-              { \clist_item:Nn \l_tblr_childs_clist {-1} }
+              { \clist_item:Nn \lTblrChildClist {-1} }
               { rightpos }
               { \l__tblr_hline_rightpos_tl }
           }
           {
-            \clist_map_inline:Nn \l_tblr_childs_clist
+            \clist_map_inline:Nn \lTblrChildClist
               {
                 \__tblr_set_hline_option:nnn
                   { ##1 } { rightpos } { \l__tblr_hline_rightpos_tl }
@@ -1714,7 +1714,7 @@
   {
     \group_begin:
     \__tblr_get_childs:ne {#1} { \int_eval:n { \c@colcount + 1} }
-    \clist_map_inline:Nn \l_tblr_childs_clist
+    \clist_map_inline:Nn \lTblrChildClist
       {
         \int_set:Nn \c@colnum {##1}
         \tblr_set_vline:nnn {#2} {#3} {#4}
@@ -1804,7 +1804,7 @@
 \cs_new_protected_nopar:Npn \__tblr_set_vline_cmd:n #1
   {
     \__tblr_get_childs:ne {#1} { \int_use:N \c@rowcount }
-    \clist_map_inline:Nn \l_tblr_childs_clist
+    \clist_map_inline:Nn \lTblrChildClist
       {
         \__tblr_spec_gput:nee { vline }
           { [##1][\int_use:N \c@colnum](\l__tblr_vline_num_tl) / @dash }
@@ -1853,7 +1853,7 @@
   {
     \group_begin:
     \__tblr_get_childs:ne {#1} { \int_eval:n { \c@rowcount + 1 } }
-    \clist_map_inline:Nn \l_tblr_childs_clist
+    \clist_map_inline:Nn \lTblrChildClist
       {
         \int_set:Nn \c@rownum {##1}
         \tblr_set_hborder:n {#2}
@@ -1910,7 +1910,7 @@
   {
     \group_begin:
     \__tblr_get_childs:ne {#1} { \int_eval:n { \c@colcount + 1 } }
-    \clist_map_inline:Nn \l_tblr_childs_clist
+    \clist_map_inline:Nn \lTblrChildClist
       {
         \int_set:Nn \c@colnum {##1}
         \tblr_set_vborder:n {#2}
@@ -1996,9 +1996,9 @@
   {
     \group_begin:
     \__tblr_get_childs:ne {#1} { \int_use:N \c@rowcount }
-    \clist_set_eq:NN \l_tmpa_clist \l_tblr_childs_clist
+    \clist_set_eq:NN \l_tmpa_clist \lTblrChildClist
     \__tblr_get_childs:ne {#2} { \int_use:N \c@colcount }
-    \clist_set_eq:NN \l_tmpb_clist \l_tblr_childs_clist
+    \clist_set_eq:NN \l_tmpb_clist \lTblrChildClist
     \clist_map_inline:Nn \l_tmpa_clist
       {
         \int_set:Nn \c@rownum {##1}
@@ -2240,7 +2240,7 @@
   {
     \group_begin:
     \__tblr_get_childs:ne {#1} { \int_use:N \c@colcount }
-    \clist_map_inline:Nn \l_tblr_childs_clist
+    \clist_map_inline:Nn \lTblrChildClist
       {
         \int_set:Nn \c@colnum {##1}
         \tblr_set_column:nn {#2} {#3}
@@ -2408,7 +2408,7 @@
   {
     \group_begin:
     \__tblr_get_childs:ne {#1} { \int_use:N \c@rowcount }
-    \clist_map_inline:Nn \l_tblr_childs_clist
+    \clist_map_inline:Nn \lTblrChildClist
       {
         \int_set:Nn \c@rownum {##1}
         \tblr_set_row:nn {#2} {#3}
