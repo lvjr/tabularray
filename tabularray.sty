@@ -6860,16 +6860,16 @@
 
 %% These public variables are updated by html library before building a cell
 \tl_new:N \lTblrCellAboveBorderStyleTl
-\tl_new:N \lTblrCellAboveBorderWidthTl
+\dim_new:N \lTblrCellAboveBorderWidthDim
 \tl_new:N \lTblrCellAboveBorderColorTl
 \tl_new:N \lTblrCellBelowBorderStyleTl
-\tl_new:N \lTblrCellBelowBorderWidthTl
+\dim_new:N \lTblrCellBelowBorderWidthDim
 \tl_new:N \lTblrCellBelowBorderColorTl
 \tl_new:N \lTblrCellLeftBorderStyleTl
-\tl_new:N \lTblrCellLeftBorderWidthTl
+\dim_new:N \lTblrCellLeftBorderWidthDim
 \tl_new:N \lTblrCellLeftBorderColorTl
 \tl_new:N \lTblrCellRightBorderStyleTl
-\tl_new:N \lTblrCellRightBorderWidthTl
+\dim_new:N \lTblrCellRightBorderWidthDim
 \tl_new:N \lTblrCellRightBorderColorTl
 
 %% #1: row number in tl; #2: column number in tl
@@ -6904,15 +6904,18 @@
         \tl_set:Ne \l__tblr_width_value_tl
           { \__tblr_spec_item:ne { #3 } { [#1][#2](1) / wd } }
         \tl_if_empty:NTF \l__tblr_width_value_tl
-          { \tl_set:cn { lTblrCell #4 BorderWidthTl } { 0.4pt } }
-          { \tl_set_eq:cN { lTblrCell #4 BorderWidthTl } \l__tblr_width_value_tl }
+          { \dim_set:cn { lTblrCell #4 BorderWidthDim } { 0.4pt } }
+          {
+            \dim_set:cn { lTblrCell #4 BorderWidthDim }
+              { \l__tblr_width_value_tl }
+          }
         %% get border color
         \tl_set:ce { lTblrCell #4 BorderColorTl }
           { \__tblr_spec_item:ne { #3 } { [#1][#2](1) / fg } }
       }
       {
         \tl_clear:c { lTblrCell #4 BorderStyleTl }
-        \tl_set:cn { lTblrCell #4 BorderWidthTl } { 0pt }
+        \dim_set:cn { lTblrCell #4 BorderWidthDim } { 0pt }
         \tl_clear:c { lTblrCell #4 BorderColorTl }
       }
   }
