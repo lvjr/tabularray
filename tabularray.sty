@@ -2973,7 +2973,7 @@
 \cs_new_protected:Npn \__tblr_split_table:n #1
   {
     \tl_set:Nn \l__tblr_body_tl {#1}
-    \tblr_modify_table_body:
+    \__tblr_modify_table_body:
     \int_zero:N \c@rowcount
     \int_zero:N \c@colcount
     \__tblr_split_table_to_lines:NN \l__tblr_body_tl \l__tblr_lines_seq
@@ -2984,7 +2984,7 @@
 
 \cs_set_eq:NN \__tblr_hook_split_before: \prg_do_nothing:
 
-\cs_new_protected:Npn \tblr_modify_table_body:
+\cs_new_protected:Npn \__tblr_modify_table_body:
   {
     \__tblr_hook_split_before:
     \tl_set:Ne \l__tblr_expand_tl { \__tblr_spec_item:nn { outer } { expand } }
