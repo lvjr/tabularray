@@ -3215,8 +3215,8 @@ You need to make sure \KV{measure=vstore} to make \CC{\lTblrMeasuringBool} corre
 
 These variables are updated by default before building every cell:
 \begin{itemize}[nosep]
-  \item \CC{\lTblrCellRowSpanTl}: how many rows are spanned by current cell.
-  \item \CC{\lTblrCellColSpanTl}: how many columns are spanned by current cell.
+  \item \CC{\lTblrCellRowSpanInt}: how many rows are spanned by current cell.
+  \item \CC{\lTblrCellColSpanInt}: how many columns are spanned by current cell.
   \item \CC{\lTblrCellOmittedBool}: if current cell is spanned by another cell.
   \item \CC{\lTblrCellBackgroundTl}: background color of current cell.
 \end{itemize}
@@ -3225,16 +3225,16 @@ These variables are updated by \LL{html} library before building every cell:
 %(you need to write \CC{\UseTblrLibrary{html}} first):
 \begin{itemize}[nosep]
   \item \CC{\lTblrCellAboveBorderStyleTl}
-  \item \CC{\lTblrCellAboveBorderWidthTl}
+  \item \CC{\lTblrCellAboveBorderWidthDim}
   \item \CC{\lTblrCellAboveBorderColorTl}
   \item \CC{\lTblrCellBelowBorderStyleTl}
-  \item \CC{\lTblrCellBelowBorderWidthTl}
+  \item \CC{\lTblrCellBelowBorderWidthDim}
   \item \CC{\lTblrCellBelowBorderColorTl}
   \item \CC{\lTblrCellLeftBorderStyleTl}
-  \item \CC{\lTblrCellLeftBorderWidthTl}
+  \item \CC{\lTblrCellLeftBorderWidthDim}
   \item \CC{\lTblrCellLeftBorderColorTl}
   \item \CC{\lTblrCellRightBorderStyleTl}
-  \item \CC{\lTblrCellRightBorderWidthTl}
+  \item \CC{\lTblrCellRightBorderWidthDim}
   \item \CC{\lTblrCellRightBorderColorTl}
 \end{itemize}
 In the above, \TT{BorderStyle}, \TT{BorderWidth}, \TT{BorderColor} are similar to
