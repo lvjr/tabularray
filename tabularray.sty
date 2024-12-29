@@ -976,14 +976,20 @@
       \__tblr_prop_gadd_dimen_value:nnn
   }
 
-%% Workaround for https://github.com/latex3/latex3/issues/1630
-\cs_new_protected:Npn \__tblr_workaround_for_prop_bug:
+%% Backport fix for https://github.com/latex3/latex3/issues/1630
+\cs_new_protected:Npn \__tblr_backport_prop_item_fix:
   {
-    \cs_set_protected:Npn \__tblr_prop_gput:nnn ##1 ##2 ##3
+    \cs_set:Npn \prop_item:Nn ##1 ##2
       {
-        \prop_gput:cnn
-          { g__tblr_##1_ \int_use:N \g_tblr_level_int _prop }
-          { ##2 } { \exp_not:n { ##3 } }
+        \__prop_if_flat:NTF ##1
+          {
+            \exp_args:NNo \prop_map_tokens:Nn ##1
+              {
+                \exp_after:wN \__prop_item:nnn
+                \exp_after:wN { \tl_to_str:n {##2} }
+              }
+          }
+          { \exp_after:wN \__prop_get_linked:w ##1 {##2} \exp_not:n { } { } }
       }
   }
 
@@ -1000,7 +1006,7 @@
         \cs_set_eq:NN \__tblr_prop_new:N \prop_new_linked:N
         \cs_set_eq:NN \__tblr_prop_gclear_new:N \prop_gclear_new_linked:N
         \@ifl@t@r \ExplLoaderFileDate { 2024-12-09 }
-          { } { \__tblr_workaround_for_prop_bug: }
+          { } { \__tblr_backport_prop_item_fix: }
       }
       { \bool_if:NF \g__tblr_use_intarray_bool { \__tblr_map_data_to_spec: } }
   }
