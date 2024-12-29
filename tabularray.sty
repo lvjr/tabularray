@@ -2552,53 +2552,53 @@
 \str_const:Nn \cTblrPrimitiveColrowTypesStr { Q | < > }
 \tl_new:N \g__tblr_expanded_colrow_spec_tl
 
-\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ Q } { O{} }
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_Column_type_ Q } { O{} }
   {
     \__tblr_keys_set:nn { column / inner } { #1 }
     \int_incr:N \c@colnum
     \__tblr_execute_colrow_spec_next:N
   }
-\exp_args:Nc \NewDocumentCommand { tblr_column_type_ Q } { O{} }
+\exp_args:Nc \NewDocumentCommand { tblr_Column_type_ Q } { O{} }
   {
     \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { Q[#1] }
     \__tblr_expand_colrow_spec_next:N
   }
 
-\exp_args:Nc \NewDocumentCommand { tblr_primitive_row_type_ Q } { O{} }
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_Row_type_ Q } { O{} }
   {
     \__tblr_keys_set:nn { row / inner } { #1 }
     \int_incr:N \c@rownum
     \__tblr_execute_colrow_spec_next:N
   }
-\exp_args:Nc \NewDocumentCommand { tblr_row_type_ Q } { O{} }
+\exp_args:Nc \NewDocumentCommand { tblr_Row_type_ Q } { O{} }
   {
     \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { Q[#1] }
     \__tblr_expand_colrow_spec_next:N
   }
 
-\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ | } { O{} }
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_Column_type_ | } { O{} }
   {
     \vline [#1]
     \__tblr_execute_colrow_spec_next:N
   }
-\exp_args:Nc \NewDocumentCommand { tblr_column_type_ | } { O{} }
+\exp_args:Nc \NewDocumentCommand { tblr_Column_type_ | } { O{} }
   {
     \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { |[#1] }
     \__tblr_expand_colrow_spec_next:N
   }
 
-\exp_args:Nc \NewDocumentCommand { tblr_primitive_row_type_ | } { O{} }
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_Row_type_ | } { O{} }
   {
     \hline [#1]
     \__tblr_execute_colrow_spec_next:N
   }
-\exp_args:Nc \NewDocumentCommand { tblr_row_type_ | } { O{} }
+\exp_args:Nc \NewDocumentCommand { tblr_Row_type_ | } { O{} }
   {
     \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { |[#1] }
     \__tblr_expand_colrow_spec_next:N
   }
 
-\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ > } { O{} m }
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_Column_type_ > } { O{} m }
   {
     \tl_if_blank:nF {#1}
       {
@@ -2613,13 +2613,13 @@
       }
     \__tblr_execute_colrow_spec_next:N
   }
-\exp_args:Nc \NewDocumentCommand { tblr_column_type_ > } { O{} m }
+\exp_args:Nc \NewDocumentCommand { tblr_Column_type_ > } { O{} m }
   {
     \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { >[#1]{#2} }
     \__tblr_expand_colrow_spec_next:N
   }
 
-\exp_args:Nc \NewDocumentCommand { tblr_primitive_row_type_ > } { O{} m }
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_Row_type_ > } { O{} m }
   {
     \tl_if_blank:nF {#1}
       {
@@ -2632,13 +2632,13 @@
       }
     \__tblr_execute_colrow_spec_next:N
   }
-\exp_args:Nc \NewDocumentCommand { tblr_row_type_ > } { O{} m }
+\exp_args:Nc \NewDocumentCommand { tblr_Row_type_ > } { O{} m }
   {
     \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { >[#1]{#2} }
     \__tblr_expand_colrow_spec_next:N
   }
 
-\exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ < } { O{} m }
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_Column_type_ < } { O{} m }
   {
     \tl_if_blank:nF {#1}
       {
@@ -2654,13 +2654,13 @@
       }
     \__tblr_execute_colrow_spec_next:N
   }
-\exp_args:Nc \NewDocumentCommand { tblr_column_type_ < } { O{} m }
+\exp_args:Nc \NewDocumentCommand { tblr_Column_type_ < } { O{} m }
   {
     \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { <[#1]{#2} }
     \__tblr_expand_colrow_spec_next:N
   }
 
-\exp_args:Nc \NewDocumentCommand { tblr_primitive_row_type_ < } { O{} m }
+\exp_args:Nc \NewDocumentCommand { tblr_primitive_Row_type_ < } { O{} m }
   {
     \tl_if_blank:nF {#1}
       {
@@ -2676,7 +2676,7 @@
       }
     \__tblr_execute_colrow_spec_next:N
   }
-\exp_args:Nc \NewDocumentCommand { tblr_row_type_ < } { O{} m }
+\exp_args:Nc \NewDocumentCommand { tblr_Row_type_ < } { O{} m }
   {
     \tl_gput_right:Nn \g__tblr_expanded_colrow_spec_tl { <[#1]{#2} }
     \__tblr_expand_colrow_spec_next:N
