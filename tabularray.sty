@@ -277,6 +277,8 @@
     \__tblr_prop_gclear_new:c
       { g__tblr_inner_ \int_use:N \g_tblr_level_int _prop }
     \__tblr_prop_gclear_new:c
+      { g__tblr_outer_ \int_use:N \g_tblr_level_int _prop }
+    \__tblr_prop_gclear_new:c
       { g__tblr_note_ \int_use:N \g_tblr_level_int _prop }
     \__tblr_prop_gclear_new:c
       { g__tblr_remark_ \int_use:N \g_tblr_level_int _prop }
@@ -961,6 +963,19 @@
       }
   }
 
+\cs_new_protected:Npn \__tblr_map_spec_to_prop:
+  {
+    \cs_set_eq:NN \__tblr_spec_gput:nnn \__tblr_prop_gput:nnn
+    \cs_set_eq:NN \__tblr_spec_item:nn \__tblr_prop_item:nn
+    \cs_set_eq:NN \__tblr_spec_log:n \__tblr_prop_log:n
+    \cs_set_eq:NN
+      \__tblr_spec_gput_if_larger:nnn
+      \__tblr_prop_gput_if_larger:nnn
+    \cs_set_eq:NN
+      \__tblr_spec_gadd_dimen_value:nnn
+      \__tblr_prop_gadd_dimen_value:nnn
+  }
+
 %% We can't use \IfExplAtLeastTF since it was added in LaTeX release 2023-11-01.
 \@ifl@t@r \ExplLoaderFileDate { 2024-12-09 }
   { \bool_gset_true:N \g__tblr_use_linked_prop_bool } { }
@@ -969,6 +984,7 @@
   {
     \bool_if:NTF \g__tblr_use_linked_prop_bool
       {
+        \__tblr_map_spec_to_prop:
         \__tblr_map_data_to_prop:
         \cs_set_eq:NN \__tblr_prop_new:N \prop_new_linked:N
         \cs_set_eq:NN \__tblr_prop_gclear_new:N \prop_gclear_new_linked:N
