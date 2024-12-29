@@ -976,8 +976,19 @@
       \__tblr_prop_gadd_dimen_value:nnn
   }
 
+%% Workaround for https://github.com/latex3/latex3/issues/1630
+\cs_new_protected:Npn \__tblr_workaround_for_prop_bug:
+  {
+    \cs_set_protected:Npn \__tblr_prop_gput:nnn ##1 ##2 ##3
+      {
+        \prop_gput:cnn
+          { g__tblr_##1_ \int_use:N \g_tblr_level_int _prop }
+          { ##2 } { \exp_not:n { ##3 } }
+      }
+  }
+
 %% We can't use \IfExplAtLeastTF since it was added in LaTeX release 2023-11-01.
-\@ifl@t@r \ExplLoaderFileDate { 2024-12-09 }
+\@ifl@t@r \ExplLoaderFileDate { 2024-02-18 }
   { \bool_gset_true:N \g__tblr_use_linked_prop_bool } { }
 
 \AtBeginDocument
@@ -988,6 +999,8 @@
         \__tblr_map_data_to_prop:
         \cs_set_eq:NN \__tblr_prop_new:N \prop_new_linked:N
         \cs_set_eq:NN \__tblr_prop_gclear_new:N \prop_gclear_new_linked:N
+        \@ifl@t@r \ExplLoaderFileDate { 2024-12-09 }
+          { } { \__tblr_workaround_for_prop_bug: }
       }
       { \bool_if:NF \g__tblr_use_intarray_bool { \__tblr_map_data_to_spec: } }
   }
