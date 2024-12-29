@@ -2549,7 +2549,7 @@
 
 %% Some primitive column/row types
 
-\str_const:Nn \c_tblr_primitive_colrow_types_str { Q | < > }
+\str_const:Nn \cTblrPrimitiveColrowTypesStr { Q | < > }
 \tl_new:N \g__tblr_expanded_colrow_spec_tl
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_column_type_ Q } { O{} }
@@ -2685,10 +2685,10 @@
 %% \NewColumnType/\NewRowType command and predefined column/row types
 
 \str_new:N \g_tblr_used_column_types_str
-\str_gset_eq:NN \g_tblr_used_column_types_str \c_tblr_primitive_colrow_types_str
+\str_gset_eq:NN \g_tblr_used_column_types_str \cTblrPrimitiveColrowTypesStr
 
 \str_new:N \g_tblr_used_row_types_str
-\str_gset_eq:NN \g_tblr_used_row_types_str \c_tblr_primitive_colrow_types_str
+\str_gset_eq:NN \g_tblr_used_row_types_str \cTblrPrimitiveColrowTypesStr
 
 \bool_new:N \g__tblr_colrow_spec_expand_stop_bool
 \tl_new:N \g__tblr_column_or_row_tl
