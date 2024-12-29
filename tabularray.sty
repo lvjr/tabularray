@@ -1060,13 +1060,13 @@
   }
 
 \clist_new:N \lTblrChildClist
-\tl_new:N \l_tblr_childs_total_tl
+\int_new:N \lTblrChildTotalInt
 
 \NewChildSelector { odd } [1] []
   {
     \tl_if_blank:nTF {#1}
       {
-        \int_step_inline:nnnn {1} {2} { \l_tblr_childs_total_tl }
+        \int_step_inline:nnnn {1} {2} { \lTblrChildTotalInt }
           { \clist_put_right:Nn \lTblrChildClist {##1} }
       }
       { \__tblr_child_selector_odd_or_even:nn { odd } {#1} }
@@ -1076,7 +1076,7 @@
   {
     \tl_if_blank:nTF {#1}
       {
-        \int_step_inline:nnnn {2} {2} { \l_tblr_childs_total_tl }
+        \int_step_inline:nnnn {2} {2} { \lTblrChildTotalInt }
           { \clist_put_right:Nn \lTblrChildClist {##1} }
       }
       { \__tblr_child_selector_odd_or_even:nn { even } {#1} }
@@ -1112,7 +1112,7 @@
 \cs_new_protected:Npn \__tblr_get_childs:nn #1 #2
   {
     \clist_clear:N \lTblrChildClist
-    \tl_set:Ne \l_tblr_childs_total_tl {#2}
+    \int_set:Nn \lTblrChildTotalInt {#2}
     \regex_extract_once:NnNTF \c__tblr_split_selector_name_regex {#1}
       \l__tblr_childs_regex_seq
       {
@@ -1164,11 +1164,11 @@
     \regex_match:NnTF \c__tblr_child_name_regex {#1}
       {
         \tl_set:Ne #2
-          { \int_eval:n { \l_tblr_childs_total_tl + \int_from_alph:n {#1} - 26 } }
+          { \int_eval:n { \lTblrChildTotalInt + \int_from_alph:n {#1} - 26 } }
         \int_compare:nNnT #2 < 1
           {
             \msg_error:nnnVV { tabularray } { named-index-out-of-bound }
-              {#1} {#2} {\l_tblr_childs_total_tl}
+              {#1} #2 \lTblrChildTotalInt
             \tl_set:Nn #2 {1}
           }
       }
