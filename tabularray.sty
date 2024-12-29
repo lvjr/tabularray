@@ -5689,14 +5689,15 @@
       }
   }
 
-\dim_new:N \tablewidth
+\dim_new:N \lTblrTableWidthDim
+\cs_set_eq:NN \tablewidth \lTblrTableWidthDim
 
 \cs_new_protected:Npn \__tblr_get_table_width:
   {
-    \dim_zero:N \tablewidth
+    \dim_zero:N \lTblrTableWidthDim
     \int_step_inline:nn { \c@colcount }
       {
-        \dim_add:Nn \tablewidth
+        \dim_add:Nn \lTblrTableWidthDim
           {
             \__tblr_spec_item:nn { vline } { [##1] / @vline-width }
             +
@@ -5707,7 +5708,7 @@
             \__tblr_data_item:nnn { column } {##1} { rightsep }
           }
       }
-    \dim_add:Nn \tablewidth
+    \dim_add:Nn \lTblrTableWidthDim
       {
         \__tblr_spec_item:ne { vline }
           { [\int_eval:n { \c@colcount + 1 }] / @vline-width }
@@ -5822,7 +5823,7 @@
   {
     \vbox_set:Nn #1
       {
-        \hsize = \tablewidth
+        \hsize = \lTblrTableWidthDim
         \TblrParboxRestore % it will set \linewidth = \hsize
         \vbox_set:Nn \l_tmpa_box {#2}
         \box_use:N \l_tmpa_box
@@ -5836,7 +5837,7 @@
   {
     \vbox_set:Nn #1
       {
-        \hsize = \tablewidth
+        \hsize = \lTblrTableWidthDim
         \TblrParboxRestore % it will set \linewidth = \hsize
         \vbox_set:Nn \l_tmpb_box {#2}
         \dim_compare:nNnT
@@ -7933,7 +7934,7 @@
                 [
                   tblr / table ~ node ,
                   tblr / table ,
-                  text ~ width = \tablewidth ,
+                  text ~ width = \lTblrTableWidthDim ,
                   text ~ height = \l__tblr_last_cell_table_ht_dim ,
                   text ~ depth = \l__tblr_last_cell_table_dp_dim
                 ]
@@ -7945,14 +7946,14 @@
           }
         \box_set_trim:Nnnnn \l__tblr_tikz_node_box
           {
-            0.5 \tablewidth + \l__tblr_last_vline_wd_dim
+            0.5 \lTblrTableWidthDim + \l__tblr_last_vline_wd_dim
           }
           {
             -0.5 \l__tblr_last_cell_table_ht_dim +
             0.5 \l__tblr_last_cell_table_dp_dim
           }
           {
-            -0.5 \tablewidth - \l__tblr_last_vline_wd_dim
+            -0.5 \lTblrTableWidthDim - \l__tblr_last_vline_wd_dim
           }
           {
             0.5 \l__tblr_last_cell_table_ht_dim -
@@ -7969,7 +7970,7 @@
                   tblr / table ~ node ,
                   tblr / table ,
                   anchor = center ,
-                  text ~ width = \tablewidth ,
+                  text ~ width = \lTblrTableWidthDim ,
                   text ~ height = \l__tblr_last_cell_table_ht_dim ,
                   text ~ depth = \l__tblr_last_cell_table_dp_dim
                 ]
@@ -7978,7 +7979,7 @@
                 )
                 at
                 (
-                  \l__tblr_last_vline_wd_dim - 0.5 \tablewidth
+                  \l__tblr_last_vline_wd_dim - 0.5 \lTblrTableWidthDim
                   ,
                   0.5 \l__tblr_last_cell_table_ht_dim
                   - 0.5 \l__tblr_last_cell_table_dp_dim
