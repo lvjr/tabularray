@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735461129978,
+  "lastUpdate": 1735461731609,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -3024,6 +3024,48 @@ window.BENCHMARK_DATA = {
             "value": 0.64425539146542,
             "unit": "ratio",
             "extra": "current time : previous time = 3.6153717041016 : 5.6117057800293"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "3399f46c76f0c47342ee2c0f4f16109f2a882443",
+          "message": "fix primitive column/row types (#527)",
+          "timestamp": "2024-12-29T16:39:08+08:00",
+          "tree_id": "f33a6cdd14105a8e07887bbf9a9e597a579a29e2",
+          "url": "https://github.com/lvjr/tabularray/commit/3399f46c76f0c47342ee2c0f4f16109f2a882443"
+        },
+        "date": 1735461731101,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.61439027024333,
+            "unit": "ratio",
+            "extra": "current time : previous time = 2.8211975097656 : 4.5918655395508"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.6053896652838,
+            "unit": "ratio",
+            "extra": "current time : previous time = 2.8328704833984 : 4.6794166564941"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.65853901926904,
+            "unit": "ratio",
+            "extra": "current time : previous time = 3.675422668457 : 5.5811767578125"
           }
         ]
       }
