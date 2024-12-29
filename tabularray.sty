@@ -266,84 +266,87 @@
 %%> \section{Data Structures Based on Property Lists}
 %%% --------------------------------------------------------
 
-\int_new:N \g_tblr_level_int % store table nesting level
+\int_new:N \gTblrLevelInt % store table nesting level
+
+%% \g_tblr_level_int is deprecated and will be removed later
+\cs_set_eq:NN \g_tblr_level_int \gTblrLevelInt
 
 \cs_new_protected:Npn \__tblr_clear_prop_lists:
   {
     \__tblr_prop_gclear_new:c
-      { g__tblr_text_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_text_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_command_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_command_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_inner_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_inner_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_outer_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_outer_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_note_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_note_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_remark_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_remark_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_more_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_more_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_row_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_row_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_column_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_column_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_cell_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_cell_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_hline_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_hline_ \int_use:N \gTblrLevelInt _prop }
     \__tblr_prop_gclear_new:c
-      { g__tblr_vline_ \int_use:N \g_tblr_level_int _prop }
+      { g__tblr_vline_ \int_use:N \gTblrLevelInt _prop }
   }
 
 \cs_new_protected:Npn \__tblr_prop_gput:nnn #1 #2 #3
   {
     \prop_gput:cnn
-      { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
+      { g__tblr_#1_ \int_use:N \gTblrLevelInt _prop } { #2 } { #3 }
   }
 \cs_generate_variant:Nn \__tblr_prop_gput:nnn { nne, nnV, nen, nee, neV }
 
 \cs_new:Npn \__tblr_prop_item:nn #1 #2
   {
-    \prop_item:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 }
+    \prop_item:cn { g__tblr_#1_ \int_use:N \gTblrLevelInt _prop } { #2 }
   }
 \cs_generate_variant:Nn \__tblr_prop_item:nn { ne }
 
 \cs_new_protected:Npn \__tblr_prop_if_in:nnT #1
   {
-    \prop_if_in:cnT { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+    \prop_if_in:cnT { g__tblr_#1_ \int_use:N \gTblrLevelInt _prop }
   }
 \cs_new_protected:Npn \__tblr_prop_if_in:nnF #1
   {
-    \prop_if_in:cnF { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+    \prop_if_in:cnF { g__tblr_#1_ \int_use:N \gTblrLevelInt _prop }
   }
 \cs_new_protected:Npn \__tblr_prop_if_in:nnTF #1
   {
-    \prop_if_in:cnTF { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+    \prop_if_in:cnTF { g__tblr_#1_ \int_use:N \gTblrLevelInt _prop }
   }
 \prg_generate_conditional_variant:Nnn \__tblr_prop_if_in:nn { ne } { T, F, TF }
 
 \cs_new_protected:Npn \__tblr_prop_log:n #1
   {
-    \prop_log:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop }
+    \prop_log:c { g__tblr_#1_ \int_use:N \gTblrLevelInt _prop }
   }
 
 \cs_new_protected:Npn \__tblr_prop_map_inline:nn #1 #2
   {
-    \prop_map_inline:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } {#2}
+    \prop_map_inline:cn { g__tblr_#1_ \int_use:N \gTblrLevelInt _prop } {#2}
   }
 
 \cs_new_protected:Npn \__tblr_prop_gput_if_larger:nnn #1 #2 #3
   {
     \__tblr_gput_if_larger:cnn
-      { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
+      { g__tblr_#1_ \int_use:N \gTblrLevelInt _prop } { #2 } { #3 }
   }
 \cs_generate_variant:Nn \__tblr_prop_gput_if_larger:nnn { nnx, nnV, nxn, nxx, nxV }
 
 \cs_new_protected:Npn \__tblr_prop_gadd_dimen_value:nnn #1 #2 #3
   {
     \__tblr_gadd_dimen_value:cnn
-      { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
+      { g__tblr_#1_ \int_use:N \gTblrLevelInt _prop } { #2 } { #3 }
   }
 \cs_generate_variant:Nn \__tblr_prop_gadd_dimen_value:nnn { nnx, nnV, nxn, nxx }
 
@@ -403,32 +406,32 @@
 
 \cs_new_protected:Npn \__tblr_clear_one_spec_lists:n #1
   {
-    \clist_if_exist:cTF { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
+    \clist_if_exist:cTF { g__tblr_#1_ \int_use:N \gTblrLevelInt _clist }
       {
-        \clist_map_inline:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
+        \clist_map_inline:cn { g__tblr_#1_ \int_use:N \gTblrLevelInt _clist }
           {
-            \tl_gclear_new:c { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_##1_tl }
+            \tl_gclear_new:c { g__tblr_spec_ \int_use:N \gTblrLevelInt _#1_##1_tl }
           }
       }
-      { \clist_new:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } }
+      { \clist_new:c { g__tblr_#1_ \int_use:N \gTblrLevelInt _clist } }
   }
 
 \cs_new_protected:Npn \__tblr_spec_gput:nnn #1 #2 #3
   {
-    \tl_if_exist:cF { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl }
-      { \tl_new:c { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl } }
+    \tl_if_exist:cF { g__tblr_spec_ \int_use:N \gTblrLevelInt _#1_#2_tl }
+      { \tl_new:c { g__tblr_spec_ \int_use:N \gTblrLevelInt _#1_#2_tl } }
     \tl_gset:cn
-      { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl } {#3}
-    \clist_gput_right:ce { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } {#2}
+      { g__tblr_spec_ \int_use:N \gTblrLevelInt _#1_#2_tl } {#3}
+    \clist_gput_right:ce { g__tblr_#1_ \int_use:N \gTblrLevelInt _clist } {#2}
   }
 \cs_generate_variant:Nn \__tblr_spec_gput:nnn { nne, nnV, nen, nee, neV }
 
 \cs_new:Npn \__tblr_spec_item:nn #1 #2
   {
-    \tl_if_exist:cT { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl }
+    \tl_if_exist:cT { g__tblr_spec_ \int_use:N \gTblrLevelInt _#1_#2_tl }
       {
         \exp_args:Nv \exp_not:n
-          { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl }
+          { g__tblr_spec_ \int_use:N \gTblrLevelInt _#1_#2_tl }
       }
   }
 \cs_generate_variant:Nn \__tblr_spec_item:nn { ne }
@@ -453,13 +456,13 @@
 \cs_new_protected:Npn \__tblr_spec_log:n #1
   {
     \clist_gremove_duplicates:c
-      { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
+      { g__tblr_#1_ \int_use:N \gTblrLevelInt _clist }
     \tl_log:e
       {
-        The ~ spec ~ list ~ #1 _ \int_use:N \g_tblr_level_int
+        The ~ spec ~ list ~ #1 _ \int_use:N \gTblrLevelInt
               \space contains ~ the ~ pairs:
       }
-    \clist_map_inline:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
+    \clist_map_inline:cn { g__tblr_#1_ \int_use:N \gTblrLevelInt _clist }
       {
         \tl_log:e
           {
@@ -559,9 +562,9 @@
         \int_use:c { g__tblr_data_#1_key_count_int }
           * \tl_use:c { c__tblr_data_#1_count_tl }
       }
-    \cs_set_eq:cc { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+    \cs_set_eq:cc { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
       { g__tblr_#1_ \int_use:N \g__tblr_array_int _intarray }
-    %\intarray_log:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+    %\intarray_log:c { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
   }
 
 %% #1: data name; #2: data index; #3: key name
@@ -732,7 +735,7 @@
   {
     \__tblr_data_int_from_value:nnn {#1} {#3} {#4}
     \__tblr_intarray_gset:cnn
-      { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+      { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
       { \__tblr_data_key_to_int:nnn {#1} {#2} {#3} }
       { \g__tblr_data_int_from_value_tl }
   }
@@ -744,7 +747,7 @@
   {
     \__tblr_data_int_from_value:nnn {#1} {#4} {#5}
     \__tblr_intarray_gset:cnn
-      { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+      { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
       { \__tblr_data_key_to_int:nnnn {#1} {#2} {#3} {#4} }
       { \g__tblr_data_int_from_value_tl }
   }
@@ -756,7 +759,7 @@
   {
     \__tblr_data_int_to_value:nne {#1} {#3}
       {
-        \intarray_item:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+        \intarray_item:cn { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
           { \__tblr_data_key_to_int:nnn {#1} {#2} {#3} }
       }
   }
@@ -767,7 +770,7 @@
   {
     \__tblr_data_int_to_value:nne {#1} {#4}
       {
-        \intarray_item:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+        \intarray_item:cn { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
           { \__tblr_data_key_to_int:nnnn {#1} {#2} {#3} {#4} }
       }
   }
@@ -785,8 +788,8 @@
 
 \cs_new_protected:cpn { __tblr_data_log_1:n } #1
   {
-    %\intarray_log:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
-    \tl_set:Ne \l_tmpa_tl { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+    %\intarray_log:c { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
+    \tl_set:Ne \l_tmpa_tl { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
     \tl_log:n { ----------~----------~----------~----------~---------- }
     \int_step_inline:nn
       { \intarray_count:c { \l_tmpa_tl } }
@@ -808,8 +811,8 @@
 
 \cs_new_protected:cpn { __tblr_data_log_2:n } #1
   {
-    %\intarray_log:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
-    \tl_set:Ne \l_tmpa_tl { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+    %\intarray_log:c { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
+    \tl_set:Ne \l_tmpa_tl { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
     \tl_log:n { ----------~----------~----------~----------~---------- }
     \int_step_inline:nn
       { \intarray_count:c { \l_tmpa_tl } }
@@ -837,7 +840,7 @@
   {
     \__tblr_data_int_from_value:nnn {#1} {#3} {#4}
     \__tblr_array_gput_if_larger:cnn
-      { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+      { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
       { \__tblr_data_key_to_int:nnn {#1} {#2} {#3} }
       { \g__tblr_data_int_from_value_tl }
   }
@@ -855,7 +858,7 @@
   {
     \__tblr_data_int_from_value:nnn {#1} {#3} {#4}
     \__tblr_array_gadd_value:cnn
-      { g__tblr_#1_ \int_use:N \g_tblr_level_int _intarray }
+      { g__tblr_#1_ \int_use:N \gTblrLevelInt _intarray }
       { \__tblr_data_key_to_int:nnn {#1} {#2} {#3} }
       { \g__tblr_data_int_from_value_tl }
   }
@@ -2894,7 +2897,7 @@
 %% Read, split and build the table
 \cs_new_protected:Npn \__tblr_builder:nnn #1 #2 #3
   {
-    \int_gincr:N \g_tblr_level_int
+    \int_gincr:N \gTblrLevelInt
     \__tblr_hook_use:n { trial / before }
     \bool_set_true:N \lTblrMeasuringBool
     \__tblr_clear_prop_lists:
@@ -2928,7 +2931,7 @@
     \__tblr_hook_use:n { trial / after }
     \LogTblrTracing { step = build ~ the ~ whole ~ table}
     \__tblr_build_whole:
-    \int_gdecr:N \g_tblr_level_int
+    \int_gdecr:N \gTblrLevelInt
   }
 
 %%% --------------------------------------------------------
