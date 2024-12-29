@@ -6815,8 +6815,8 @@
   }
 
 %% These public variables are updated by default before building a cell
-\tl_new:N \lTblrCellRowSpanTl
-\tl_new:N \lTblrCellColSpanTl
+\int_new:N \lTblrCellRowSpanInt
+\int_new:N \lTblrCellColSpanInt
 \tl_new:N \lTblrCellBackgroundTl
 \bool_new:N \lTblrCellOmittedBool
 
@@ -6836,17 +6836,17 @@
       { \__tblr_data_item:nen { column } {#2} { leftsep} }
     \tl_set:Ne \l__tblr_y_tl
       { \__tblr_data_item:nen { column } {#2} { rightsep } }
-    \tl_set:Ne \lTblrCellColSpanTl
+    \int_set:Nn \lTblrCellColSpanInt
       { \__tblr_data_item:neen { cell } {#1} {#2} { colspan } }
-    \int_compare:nNnTF { \lTblrCellColSpanTl } < {2}
+    \int_compare:nNnTF { \lTblrCellColSpanInt } < {2}
       { \dim_set:Nn \l__tblr_cell_wd_dim { \l__tblr_w_tl } }
       {
         \__tblr_get_span_horizontal_sizes:NNNNN #1 #2
           \l__tblr_o_dim \l__tblr_cell_wd_dim \l__tblr_q_dim
       }
-    \tl_set:Ne \lTblrCellRowSpanTl
+    \int_set:Nn \lTblrCellRowSpanInt
       { \__tblr_data_item:neen { cell } {#1} {#2} { rowspan } }
-    \int_compare:nNnTF { \lTblrCellRowSpanTl } < {2}
+    \int_compare:nNnTF { \lTblrCellRowSpanInt } < {2}
       { \dim_set:Nn \l__tblr_cell_ht_dim { \l__tblr_h_tl } }
       {
         \__tblr_get_span_vertical_sizes:NNNNN #1 #2
@@ -6878,10 +6878,10 @@
 \cs_new_protected:Npn \__tblr_expose_cell_properties:NN #1 #2
   {
     \__tblr_expose_cell_border:NNnn #1 #2 { hline } { Above }
-    \tl_set:Ne \l_tmpa_tl { \int_eval:n { #1 + \lTblrCellRowSpanTl } }
+    \tl_set:Ne \l_tmpa_tl { \int_eval:n { #1 + \lTblrCellRowSpanInt } }
     \__tblr_expose_cell_border:NNnn \l_tmpa_tl #2 { hline } { Below }
     \__tblr_expose_cell_border:NNnn #1 #2 { vline } { Left }
-    \tl_set:Ne \l_tmpb_tl { \int_eval:n { #2 + \lTblrCellColSpanTl } }
+    \tl_set:Ne \l_tmpb_tl { \int_eval:n { #2 + \lTblrCellColSpanInt } }
     \__tblr_expose_cell_border:NNnn #1 \l_tmpb_tl { vline } { Right }
   }
 
@@ -6940,7 +6940,7 @@
             \c__tblr_valign_m_tl
               {
                 \vfil
-                \int_compare:nNnT { \lTblrCellRowSpanTl } < {2}
+                \int_compare:nNnT { \lTblrCellRowSpanInt } < {2}
                   {
                     \box_set_ht:Nn \l__tblr_a_box
                       { \__tblr_data_item:nen { row } {#1} { @row-upper } }
@@ -6960,7 +6960,7 @@
             \c__tblr_valign_f_tl
               {
                 \vfil
-                \int_compare:nNnTF { \lTblrCellRowSpanTl } < {2}
+                \int_compare:nNnTF { \lTblrCellRowSpanInt } < {2}
                   {
                     \box_set_dp:Nn \l__tblr_a_box
                       { \__tblr_data_item:nen { row } {#1} { @row-foot } }
@@ -6970,7 +6970,7 @@
                       {
                         \__tblr_data_item:nen
                           { row }
-                          { \int_eval:n { #1 + \lTblrCellRowSpanTl - 1 } }
+                          { \int_eval:n { #1 + \lTblrCellRowSpanInt - 1 } }
                           { @row-foot }
                       }
                   }
@@ -7020,7 +7020,7 @@
 %% #1: row number; #2: column number; #3 resulting dimension
 \cs_new_protected:Npn \__tblr_get_cell_background_width:NNN #1 #2 #3
   {
-    \int_compare:nNnTF { \lTblrCellColSpanTl } < {2}
+    \int_compare:nNnTF { \lTblrCellColSpanInt } < {2}
       { \dim_set:Nn #3 { \l__tblr_x_tl + \l__tblr_w_tl + \l__tblr_y_tl } }
       {
         \dim_set:Nn #3 { \l__tblr_o_dim + \l__tblr_cell_wd_dim + \l__tblr_q_dim }
@@ -7030,7 +7030,7 @@
 %% #1: row number; #2: column number; #3 resulting dimension
 \cs_new_protected:Npn \__tblr_get_cell_background_depth:NNN #1 #2 #3
   {
-    \int_compare:nNnTF { \lTblrCellRowSpanTl } < {2}
+    \int_compare:nNnTF { \lTblrCellRowSpanInt } < {2}
       { \dim_set_eq:NN #3 \l__tblr_row_dp_dim }
       {
         \dim_set:Nn #3
@@ -7066,7 +7066,7 @@
     \dim_zero:N #4
     \dim_add:Nn #4
       { \prop_item:Ne \l__tblr_row_item_skip_size_prop { item[#1] } }
-    \int_step_inline:nnn { #1 + 1 } { #1 + \lTblrCellRowSpanTl - 1 }
+    \int_step_inline:nnn { #1 + 1 } { #1 + \lTblrCellRowSpanInt - 1 }
       {
         \dim_add:Nn #4
           {
@@ -7078,7 +7078,7 @@
     \dim_set:Nn #5
       {
         \__tblr_data_item:nen { row }
-          { \int_eval:n { #1 + \lTblrCellRowSpanTl - 1 } } { belowsep }
+          { \int_eval:n { #1 + \lTblrCellRowSpanInt - 1 } } { belowsep }
       }
     %\tl_log:e { cell[#1][#2] ~:~ \dim_use:N #3, \dim_use:N #4, \dim_use:N #5 }
   }
@@ -7095,7 +7095,7 @@
     \dim_zero:N #4
     \dim_add:Nn #4
       { \prop_item:Ne \l__tblr_col_item_skip_size_prop { item[#2] } }
-    \int_step_inline:nnn { #2 + 1 } { #2 + \lTblrCellColSpanTl - 1 }
+    \int_step_inline:nnn { #2 + 1 } { #2 + \lTblrCellColSpanInt - 1 }
       {
         \dim_add:Nn #4
           {
@@ -7107,7 +7107,7 @@
     \dim_set:Nn #5
       {
         \__tblr_data_item:nen { column }
-          { \int_eval:n {#2 + \lTblrCellColSpanTl - 1} } { rightsep }
+          { \int_eval:n {#2 + \lTblrCellColSpanInt - 1} } { rightsep }
       }
     %\tl_log:e { cell[#1][#2] ~:~ \dim_use:N #3, \dim_use:N #4, \dim_use:N #5 }
   }
