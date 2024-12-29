@@ -1308,16 +1308,17 @@
 
 %% \NewDashStyle commands
 
-\dim_zero_new:N \rulewidth
-\dim_set:Nn \rulewidth {0.4pt}
+\dim_new:N \lTblrRuleWidthDim
+\dim_set:Nn \lTblrRuleWidthDim {0.4pt}
+\cs_set_eq:NN \rulewidth \lTblrRuleWidthDim
 
 \prop_new:N \g__tblr_defined_hdash_styles_prop
 \prop_new:N \g__tblr_defined_vdash_styles_prop
 
 \prop_gset_from_keyval:Nn \g__tblr_defined_hdash_styles_prop
-  { solid = \hrule height \rulewidth }
+  { solid = \hrule height \lTblrRuleWidthDim }
 \prop_gset_from_keyval:Nn \g__tblr_defined_vdash_styles_prop
-  { solid = \vrule width \rulewidth }
+  { solid = \vrule width \lTblrRuleWidthDim }
 
 \NewDocumentCommand \NewDashStyle { m m }
   {
@@ -1343,7 +1344,11 @@
     \tl_put_right:Ne \l__tblr_h_tl { { \dim_use:N \l_tmpa_dim } }
     \tl_put_right:Nn \l__tblr_h_tl
       {
-        { \hss \vbox:n { \hbox_to_wd:nn {#2} {} \hrule height \rulewidth } \hss }
+        {
+          \hss
+          \vbox:n { \hbox_to_wd:nn {#2} {} \hrule height \lTblrRuleWidthDim }
+          \hss
+        }
       }
     \prop_gput:NnV \g__tblr_defined_hdash_styles_prop {#1} \l__tblr_h_tl
     %\prop_log:N \g__tblr_defined_hdash_styles_prop
@@ -1351,7 +1356,11 @@
     \tl_put_right:Ne \l__tblr_v_tl { { \dim_use:N \l_tmpa_dim } }
     \tl_put_right:Nn \l__tblr_v_tl
       {
-        { \vss \hbox:n { \vbox_to_ht:nn {#2} {} \vrule width \rulewidth } \vss }
+        {
+          \vss
+          \hbox:n { \vbox_to_ht:nn {#2} {} \vrule width \lTblrRuleWidthDim }
+          \vss
+        }
       }
     \prop_gput:NnV \g__tblr_defined_vdash_styles_prop {#1} \l__tblr_v_tl
     %\prop_log:N \g__tblr_defined_vdash_styles_prop
@@ -3683,7 +3692,8 @@
     \group_begin:
     \tl_set:Ne \l__tblr_w_tl
       { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / wd } }
-    \tl_if_empty:NF \l__tblr_w_tl { \dim_set:Nn \rulewidth { \l__tblr_w_tl } }
+    \tl_if_empty:NF \l__tblr_w_tl
+      { \dim_set:Nn \lTblrRuleWidthDim { \l__tblr_w_tl } }
     \tl_set:Ne \l__tblr_d_tl
       { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / @dash } }
     \tl_set:Ne \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
@@ -3750,7 +3760,8 @@
     \group_begin:
     \tl_set:Ne \l__tblr_w_tl
       { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / wd } }
-    \tl_if_empty:NF \l__tblr_w_tl { \dim_set:Nn \rulewidth { \l__tblr_w_tl } }
+    \tl_if_empty:NF \l__tblr_w_tl
+      { \dim_set:Nn \lTblrRuleWidthDim { \l__tblr_w_tl } }
     \tl_set:Ne \l__tblr_d_tl
       { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / @dash } }
     \tl_set:Ne \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
