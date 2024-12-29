@@ -5769,7 +5769,7 @@
 \bool_new:N \l__tblr_table_no_title_bool
 \bool_new:N \l__tblr_table_no_entry_bool
 \bool_new:N \l__tblr_table_no_label_bool
-\tl_const:Nn \c_tblr_none_tl { none }
+\tl_const:Nn \cTblrNoneTl { none }
 
 \cs_new_protected:Npn \__tblr_set_table_label_entry:
   {
@@ -5779,9 +5779,9 @@
     \bool_set:Nn \l__tblr_table_no_title_bool
       { \tl_if_empty_p:N \lTblrCaptionTl }
     \bool_set:Nn \l__tblr_table_no_entry_bool
-      { \tl_if_eq_p:NN \lTblrEntryTl \c_tblr_none_tl }
+      { \tl_if_eq_p:NN \lTblrEntryTl \cTblrNoneTl }
     \bool_set:Nn \l__tblr_table_no_label_bool
-      { \tl_if_eq_p:NN \lTblrLabelTl \c_tblr_none_tl }
+      { \tl_if_eq_p:NN \lTblrLabelTl \cTblrNoneTl }
     \bool_if:NT \l__tblr_table_no_title_bool
       {
         \SetTblrTemplate { conthead-pre } { empty }
