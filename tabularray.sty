@@ -88,13 +88,14 @@
 \prg_generate_conditional_variant:Nnn \clist_if_in:Nn { Ne } { TF }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { en } { TF }
 
-%% Missing function variants for texlive 2022, so they can be removed in 2026
+%% Add missing function variants for texlive 2022. They can be removed in 2026.
 \cs_generate_variant:Nn \clist_gput_right:Nn { ce }
 \cs_generate_variant:Nn \keyval_parse:NNn { NNV }
 \cs_generate_variant:Nn \msg_error:nnnn { nnVn }
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nne, Nen, Nee, NeV }
 \cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
+\cs_generate_variant:Nn \seq_put_right:Nn { Ne }
 \cs_generate_variant:Nn \str_gset:Nn { Ne }
 \cs_generate_variant:Nn \tl_const:Nn { ce }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Ne }
@@ -2947,36 +2948,6 @@
 %%> \section{Split Table Contents}
 %%% --------------------------------------------------------
 
-%% Insert and remove braces for nesting environments inside cells
-%% These make line split and cell split workable
-%% We need to replace N times for N level nestings
-\regex_const:Nn \c__tblr_insert_braces_regex
-  {
-    \c{begin} \cB\{ (\c[^BE].*) \cE\} (.*?) \c{end} \cB\{ (\c[^BE].*) \cE\}
-  }
-\tl_const:Nn \c__tblr_insert_braces_tl
-  {
-    \c{begin} \cB\{ \cB\{ \1 \cE\} \2 \c{end} \cE\} \cB\{ \3 \cE\}
-  }
-\regex_const:Nn \c__tblr_remove_braces_regex
-  {
-    \c{begin} \cB\{ \cB\{ (.*?) \c{end} \cE\}
-  }
-\tl_const:Nn \c__tblr_remove_braces_tl
-  {
-    \c{begin} \cB\{ \1 \c{end}
-  }
-\cs_new_protected:Npn \__tblr_insert_braces:N #1
-  {
-    \regex_replace_all:NVN \c__tblr_insert_braces_regex \c__tblr_insert_braces_tl #1
-    \regex_replace_all:NVN \c__tblr_insert_braces_regex \c__tblr_insert_braces_tl #1
-  }
-\cs_new_protected:Npn \__tblr_remove_braces:N #1
-  {
-    \regex_replace_all:NVN \c__tblr_remove_braces_regex \c__tblr_remove_braces_tl #1
-    \regex_replace_all:NVN \c__tblr_remove_braces_regex \c__tblr_remove_braces_tl #1
-  }
-
 \tl_new:N \l__tblr_body_tl
 \seq_new:N \l__tblr_lines_seq
 
@@ -3040,12 +3011,58 @@
   }
 \cs_generate_variant:Nn \__tblr_seq_set_split:Nnn { NnV }
 
+%% Split tl #3 into items separated by tl #2, and store the result in seq #1.
+%% Spaces on both side of items and outer braces around items are kept.
+%% And we prevent splitting inside the body of an environment.
+\cs_new_protected:Npn \__tblr_seq_set_split_keep_braces_envs:Nnn #1 #2 #3
+  {
+    \__tblr_seq_set_split_keep_envs_aux:NnnN
+      #1 { #2 }  { #3 } \__tblr_seq_set_split:Nnn
+  }
+\cs_generate_variant:Nn \__tblr_seq_set_split_keep_braces_envs:Nnn { NnV }
+
+%% Split tl #3 into items separated by tl #2, and store the result in seq #1.
+%% Spaces on both side of items and outer braces around items are removed.
+%% And we prevent splitting inside the body of an environment.
+\cs_new_protected:Npn \__tblr_seq_set_split_keep_envs:Nnn #1 #2 #3
+  {
+    \__tblr_seq_set_split_keep_envs_aux:NnnN
+      #1 { #2 }  { #3 } \seq_set_split:Nnn
+  }
+\cs_generate_variant:Nn \__tblr_seq_set_split_keep_envs:Nnn { NnV }
+
+\seq_new:N \l__tblr_split_raw_seq
+\seq_new:N \l__tblr_split_temp_seq
+\seq_new:N \l__tblr_split_item_seq
+\int_new:N \l__tblr_split_balance_int
+
+\cs_new_protected:Npn \__tblr_seq_set_split_keep_envs_aux:NnnN #1 #2 #3 #4
+  {
+    #4 \l__tblr_split_raw_seq { #2 }  { #3 }
+    \seq_clear:N #1
+    \seq_clear:N \l__tblr_split_item_seq
+    \seq_map_inline:Nn \l__tblr_split_raw_seq
+      {
+        \seq_put_right:Nn \l__tblr_split_item_seq { ##1 }
+        \seq_set_split:Nnn \l__tblr_split_temp_seq { \begin } { ##1 }
+        \int_add:Nn \l__tblr_split_balance_int
+          { \seq_count:N \l__tblr_split_temp_seq }
+        \seq_set_split:Nnn \l__tblr_split_temp_seq { \end } { ##1 }
+        \int_sub:Nn \l__tblr_split_balance_int
+          { \seq_count:N \l__tblr_split_temp_seq }
+        \int_compare:nNnT { \l__tblr_split_balance_int } = { 0 }
+          {
+            \seq_put_right:Ne #1 { \seq_use:Nn \l__tblr_split_item_seq { #2 } }
+            \seq_clear:N \l__tblr_split_item_seq
+          }
+      }
+  }
+
 %% Split table content to a sequence of lines
 %% #1: tl with table contents, #2: resulting sequence of lines
 \cs_new_protected:Npn \__tblr_split_table_to_lines:NN #1 #2
   {
-    \__tblr_insert_braces:N #1
-    \__tblr_seq_set_split:NnV \l_tmpa_seq { \\ } #1
+    \__tblr_seq_set_split_keep_braces_envs:NnV \l_tmpa_seq { \\ } #1
     \seq_clear:N #2
     \seq_map_inline:Nn \l_tmpa_seq
       {
@@ -3092,13 +3109,12 @@
 %% #1: row number, #2 the line text
 \cs_new_protected:Npn \__tblr_split_one_line:nn #1 #2
   {
-    \__tblr_seq_set_split:Nnn \l_tmpa_seq { & } { #2 }
+    \__tblr_seq_set_split_keep_braces_envs:Nnn \l_tmpa_seq { & } { #2 }
     \int_set:Nn \c@rownum {#1}
     \int_zero:N \c@colnum
     \seq_map_inline:Nn \l_tmpa_seq
       {
         \tl_set:Nn \l_tmpa_tl { ##1 }
-        \__tblr_remove_braces:N \l_tmpa_tl
         \__tblr_trim_par_space_tokens:N \l_tmpa_tl
         \int_incr:N \c@colnum
         \__tblr_extract_table_commands:N \l_tmpa_tl
@@ -4079,12 +4095,10 @@
 \cs_new_protected:Npn \__tblr_get_cell_size_with_hbox:
   {
     \tl_set_eq:NN \l_tmpb_tl \l__tblr_c_tl
-    \__tblr_insert_braces:N \l_tmpb_tl
-    \seq_set_split:NnV \l_tmpa_seq { \\ } \l_tmpb_tl
+    \__tblr_seq_set_split_keep_envs:NnV \l_tmpa_seq { \\ } \l_tmpb_tl
     \tl_set:Nn \l__tblr_w_tl { 0pt }
     \seq_map_variable:NNn \l_tmpa_seq \l_tmpa_tl
       {
-        \__tblr_remove_braces:N \l_tmpa_tl
         \hbox_set:Nn \l_tmpa_box
           {
             \l__tblr_f_tl
