@@ -84,6 +84,8 @@
 
 \cs_generate_variant:Nn \msg_error:nnnnn { nnnVV }
 \cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
+\cs_generate_variant:Nn \seq_set_split_keep_spaces:Nnn { Ne }
+\cs_generate_variant:Nn \seq_use:Nn { Ne }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
 \prg_generate_conditional_variant:Nnn \clist_if_in:Nn { Ne } { TF }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { en } { TF }
@@ -91,11 +93,12 @@
 %% Add missing function variants for texlive 2022. They can be removed in 2026.
 \cs_generate_variant:Nn \clist_gput_right:Nn { ce }
 \cs_generate_variant:Nn \keyval_parse:NNn { NNV }
-\cs_generate_variant:Nn \msg_error:nnnn { nnVn }
+\cs_generate_variant:Nn \msg_error:nnn { nnV }
+\cs_generate_variant:Nn \msg_error:nnnn { nnV }
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nne, Nen, Nee, NeV }
-\cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
 \cs_generate_variant:Nn \seq_put_right:Nn { Ne }
+\cs_generate_variant:Nn \seq_set_split:Nnn { Nne }
 \cs_generate_variant:Nn \str_gset:Nn { Ne }
 \cs_generate_variant:Nn \tl_const:Nn { ce }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Ne }
@@ -228,7 +231,48 @@
     \keys_if_exist:nnTF { tabularray / #1 } { #2 }
       { \prg_return_true: } { \prg_return_false: }
   }
-\prg_generate_conditional_variant:Nnn \__tblr_keys_if_exist:nn { ne } { TF }
+\prg_generate_conditional_variant:Nnn \__tblr_keys_if_exist:nn { nV } { TF }
+
+%% A special key such as cell{i}{j} or note{a} consists of name and args.
+%% These functions extracts two components of a special key as string #1.
+
+\seq_new:N \l__tblr_key_split_seq
+\str_new:N \l__tblr_key_split_name_str
+\tl_new:N \l__tblr_key_split_args_tl
+
+\cs_new_protected:Npn \__tblr_key_split_name:n #1
+  {
+    \seq_set_split_keep_spaces:Nen \l__tblr_key_split_seq \c_left_brace_str {#1}
+    \seq_pop_left:NN \l__tblr_key_split_seq \l__tblr_key_split_name_str
+    %\str_log:N \l__tblr_key_split_name_str
+  }
+\cs_generate_variant:Nn \__tblr_key_split_name:n { e }
+
+\cs_new_protected:Npn \__tblr_key_split_name_args:n #1
+  {
+    \__tblr_key_split_name:n {#1}
+    \seq_if_empty:NTF \l__tblr_key_split_seq
+      { \tl_clear:N \l__tblr_key_split_args_tl }
+      {
+        \tl_set_rescan:Nne \l__tblr_key_split_args_tl {}
+          {
+            \c_left_brace_str
+            \seq_use:Ne \l__tblr_key_split_seq { \c_left_brace_str }
+          }
+      }
+  }
+
+%% To distinguish between modern table specs and traditional column specs,
+%% we need to extract first key name from tl #1 which is an argument of tblr.
+
+\cs_new_protected:Npn \__tblr_keyval_extract_first_name:n #1
+  {
+    \seq_set_split:Nnn \l__tblr_key_split_seq {,} {#1}
+    \seq_set_split:Nne \l__tblr_key_split_seq {=}
+      { \seq_item:Nn \l__tblr_key_split_seq {1} }
+    \__tblr_key_split_name:e
+      { \tl_to_str:e { \seq_item:Nn \l__tblr_key_split_seq {1} } }
+  }
 
 %%% --------------------------------------------------------
 %%> \section{Create and Use tabularray Hooks}
@@ -3407,33 +3451,32 @@
     unknown .code:n = \__tblr_table_special_key:Vn \l_keys_key_str {#1},
   }
 
-\regex_const:Nn \c__tblr_split_key_name_regex { ^ ( [a-z] + ) ( . * ) }
+\msg_new:nnn { tabularray } { unknown-inner-key }
+  { Unknown ~ inner ~ key ~ name ~ '#1'. }
 
 \cs_new_protected:Npn \__tblr_table_special_key:nn #1 #2
   {
-    \regex_extract_once:NnNT \c__tblr_split_key_name_regex {#1} \l_tmpa_seq
+    \__tblr_key_split_name_args:n {#1}
+    \__tblr_keys_if_exist:nVTF { table / inner } \l__tblr_key_split_name_str
       {
-        \tl_set:Ne \l__tblr_a_tl { \seq_item:Nn \l_tmpa_seq {2} }
-        \tl_set_rescan:Nne \l__tblr_b_tl {} { \seq_item:Nn \l_tmpa_seq {3} }
-        \cs:w __tblr_set_ \l__tblr_a_tl _aux:Vn \cs_end: \l__tblr_b_tl {#2}
+        \use:c { __tblr_set_ \l__tblr_key_split_name_str _aux:Vn }
+          \l__tblr_key_split_args_tl {#2}
+      }
+      {
+        \msg_error:nnV { tabularray } { unknown-inner-key }
+          \l__tblr_key_split_name_str
       }
   }
 \cs_generate_variant:Nn \__tblr_table_special_key:nn { Vn }
 
-%% If the first key name is known, treat #1 is the table spec;
+%% If the first key name is known, treat #1 as table spec;
 %% otherwise, treat #1 as colspec.
-
-\regex_const:Nn \c__tblr_first_key_name_regex { ^ \s * ( [A-Za-z\-] + ) }
 
 \cs_new_protected:Npn \__tblr_parse_table_spec:n #1
   {
-    \regex_extract_once:NnNTF \c__tblr_first_key_name_regex {#1} \l_tmpa_seq
-      {
-        \__tblr_keys_if_exist:neTF { table / inner }
-          { \seq_item:Nn \l_tmpa_seq {2} }
-          { \__tblr_keys_set:nn { table / inner } {#1} }
-          { \__tblr_parse_colrow_spec:nn { Column } {#1} }
-      }
+    \__tblr_keyval_extract_first_name:n {#1}
+    \__tblr_keys_if_exist:nVTF { table / inner } \l__tblr_key_split_name_str
+      { \__tblr_keys_set:nn { table / inner } {#1} }
       { \__tblr_parse_colrow_spec:nn { Column } {#1} }
     \str_gset:Ne \g__tblr_name_str { \__tblr_prop_item:ne { inner } { name } }
     \str_if_empty:NT \g__tblr_name_str
@@ -3492,6 +3535,14 @@
     \__tblr_keys_set:nn { table / outer } {#1}
   }
 
+%% We must define these keys to make \__tblr_keys_if_exist work
+\__tblr_keys_define:nn { table / outer }
+  {
+    note   .code:n = ,
+    remark .code:n = ,
+    more   .code:n =
+  }
+
 \__tblr_keys_define:nn { table / outer }
   {
     long    .code:n = \__tblr_outer_gput_spec:nn { long } { true },
@@ -3529,26 +3580,27 @@
 
 \cs_new_protected:Npn \__tblr_outer_gconcat_spec:nn #1 #2
   {
-    \__tblr_outer_gput_spec:ne {#1} { \__tblr_spec_item:nn { outer } { #1 } \exp_not:n { #2 } }
+    \__tblr_outer_gput_spec:ne
+      {#1} { \__tblr_spec_item:nn { outer } { #1 } \exp_not:n { #2 } }
   }
 
-\regex_const:Nn \c__tblr_option_key_name_regex { ^ [A-Za-z\-] + $ }
-
 \msg_new:nnn { tabularray } { unknown-outer-key }
-  { Unknown ~ outer ~ key ~ name ~ #1! }
+  { Unknown ~ outer ~ key ~ name ~ '#1'. }
 
 \cs_new_protected:Npn \__tblr_table_option_key:nn #1 #2
   {
-    \regex_match:NnTF \c__tblr_option_key_name_regex {#1}
-      { \msg_error:nnn { tabularray } { unknown-outer-key } {#1} }
+    \__tblr_key_split_name_args:n {#1}
+    \__tblr_keys_if_exist:nVTF { table / outer } \l__tblr_key_split_name_str
       {
-        \regex_extract_once:NnNT \c__tblr_split_key_name_regex {#1} \l_tmpa_seq
-          {
-            \tl_set:Ne \l__tblr_a_tl { \seq_item:Nn \l_tmpa_seq {2} }
-            \tl_set_rescan:Nne \l__tblr_b_tl {} { \seq_item:Nn \l_tmpa_seq {3} }
-            \tl_set:Ne \l__tblr_c_tl { \tl_head:N \l__tblr_b_tl }
-            \use:c { __tblr_outer_gput_ \l__tblr_a_tl :Vn } \l__tblr_c_tl {#2}
-          }
+        % remove a pair of outer braces
+        \tl_set:Ne \l__tblr_key_split_args_tl
+          { \tl_head:N \l__tblr_key_split_args_tl }
+        \use:c { __tblr_outer_gput_ \l__tblr_key_split_name_str :Vn }
+          \l__tblr_key_split_args_tl {#2}
+      }
+      {
+        \msg_error:nnV { tabularray } { unknown-outer-key }
+          \l__tblr_key_split_name_str
       }
   }
 \cs_generate_variant:Nn \__tblr_table_option_key:nn { Vn }
