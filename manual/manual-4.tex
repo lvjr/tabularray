@@ -342,9 +342,7 @@ in \PP{longtable}, except for the counter.
 
 The template system for table heads and table foots in \PP{tabularray} is largely inspired
 by \PP{beamer}, \PP{caption} and \PP{longtable} packages. For elements in Table \ref{tblr:element},
-you can use \CC{\DefTblrTemplate}\footnote{From version 2022A,
-\CC{\DefTblrTemplate} has another name \CC{\DeclareTblrTemplate}.}
-to define and modify templates,
+you can use \CC{\DeclareTblrTemplate} to define and modify templates,
 and use \CC{\SetTblrTemplate} to choose default templates. In defining templates,
 you can include other templates with \CC{\UseTblrTemplate} and \CC{\ExpTblrTemplate} commands.
 
@@ -395,24 +393,24 @@ are actually stored in commands \texttt{\string\tblrcontheadname} and \texttt{\s
 respectively. And you may contribute your translations of them to \textbf{babel} package.}
 
 \begin{codehigh}
-\DefTblrTemplate{contfoot-text}{normal}{Continued on next page}
+\DeclareTblrTemplate{contfoot-text}{normal}{Continued on next page}
 \SetTblrTemplate{contfoot-text}{normal}
-\DefTblrTemplate{conthead-text}{normal}{(Continued)}
+\DeclareTblrTemplate{conthead-text}{normal}{(Continued)}
 \SetTblrTemplate{conthead-text}{normal}
 \end{codehigh}
 
-In the above code, command \CC{\DefTblrTemplate} defines the templates with name \TN{normal},
+In the above code, command \CC{\DeclareTblrTemplate} defines the templates with name \TN{normal},
 and then command \CC{\SetTblrTemplate} sets the templates with name \TN{normal} as default.
 The \TN{normal} template is always defined and set as default for any element in \PP{tabularray}.
 Therefore you had better use another name when defining new templates.
 
-If you use \TN{default} as template name in \CC{\DefTblrTemplate},
+If you use \TN{default} as template name in \CC{\DeclareTblrTemplate},
 you define and set it as default at the same time.
 Therefore the above code can be written in another way:
 
 \begin{codehigh}
-\DefTblrTemplate{contfoot-text}{default}{Continued on next page}
-\DefTblrTemplate{conthead-text}{default}{(Continued)}
+\DeclareTblrTemplate{contfoot-text}{default}{Continued on next page}
+\DeclareTblrTemplate{conthead-text}{default}{(Continued)}
 \end{codehigh}
 
 You may modify the code to customize continuation text to fit your needs.
@@ -422,8 +420,8 @@ include the templates of their sub elements with \CC{\UseTblrTemplate} commands.
 But you can also handle user settings such as horizontal alignment here.
 
 \begin{codehigh}
-\DefTblrTemplate{contfoot}{default}{\UseTblrTemplate{contfoot-text}{default}}
-\DefTblrTemplate{conthead}{default}{\UseTblrTemplate{conthead-text}{default}}
+\DeclareTblrTemplate{contfoot}{default}{\UseTblrTemplate{contfoot-text}{default}}
+\DeclareTblrTemplate{conthead}{default}{\UseTblrTemplate{conthead-text}{default}}
 \end{codehigh}
 
 \subsection{Caption Templates}
@@ -431,9 +429,9 @@ But you can also handle user settings such as horizontal alignment here.
 Normally a caption consists of three parts, and their templates are defined with the follow code:
 
 \begin{codehigh}
-\DefTblrTemplate{caption-tag}{default}{Table\hspace{0.25em}\thetable}
-\DefTblrTemplate{caption-sep}{default}{:\enskip}
-\DefTblrTemplate{caption-text}{default}{\InsertTblrText{caption}}
+\DeclareTblrTemplate{caption-tag}{default}{Table\hspace{0.25em}\thetable}
+\DeclareTblrTemplate{caption-sep}{default}{:\enskip}
+\DeclareTblrTemplate{caption-text}{default}{\InsertTblrText{caption}}
 \end{codehigh}
 
 The command \CC{\InsertTblrText{caption}} inserts the value of \K{caption} key,
@@ -443,7 +441,7 @@ The \EN{caption} template normally includes three sub templates with \CC{\UseTbl
 The \EN{caption} template will be used in \EN{firsthead} template.
 
 \begin{codehigh}
-\DefTblrTemplate{caption}{default}{
+\DeclareTblrTemplate{caption}{default}{
   \UseTblrTemplate{caption-tag}{default}
   \UseTblrTemplate{caption-sep}{default}
   \UseTblrTemplate{caption-text}{default}
@@ -454,7 +452,7 @@ Furthermore \EN{capcont} template includes \EN{conthead} template as well.
 The \EN{capcont} template will be used in \EN{middlehead} and \EN{lasthead} templates.
 
 \begin{codehigh}
-\DefTblrTemplate{capcont}{default}{
+\DeclareTblrTemplate{capcont}{default}{
   \UseTblrTemplate{caption-tag}{default}
   \UseTblrTemplate{caption-sep}{default}
   \UseTblrTemplate{caption-text}{default}
@@ -467,12 +465,12 @@ The \EN{capcont} template will be used in \EN{middlehead} and \EN{lasthead} temp
 The templates for table notes can be defined like this:
 
 \begin{codehigh}
-\DefTblrTemplate{note-tag}{default}{\textsuperscript{\InsertTblrNoteTag}}
-\DefTblrTemplate{note-sep}{default}{\space}
-\DefTblrTemplate{note-text}{default}{\InsertTblrNoteText}
+\DeclareTblrTemplate{note-tag}{default}{\textsuperscript{\InsertTblrNoteTag}}
+\DeclareTblrTemplate{note-sep}{default}{\space}
+\DeclareTblrTemplate{note-text}{default}{\InsertTblrNoteText}
 \end{codehigh}
 \begin{codehigh}
-\DefTblrTemplate{note}{default}{
+\DeclareTblrTemplate{note}{default}{
   \MapTblrNotes{
     \noindent
     \UseTblrTemplate{note-tag}{default}
@@ -491,12 +489,12 @@ commands to insert current note tag and note text, respectively.
 The definition of remark templates are similar to note templates.
 \nopagebreak
 \begin{codehigh}
-\DefTblrTemplate{remark-tag}{default}{\InsertTblrRemarkTag}
-\DefTblrTemplate{remark-sep}{default}{:\space}
-\DefTblrTemplate{remark-text}{default}{\InsertTblrRemarkText}
+\DeclareTblrTemplate{remark-tag}{default}{\InsertTblrRemarkTag}
+\DeclareTblrTemplate{remark-sep}{default}{:\space}
+\DeclareTblrTemplate{remark-text}{default}{\InsertTblrRemarkText}
 \end{codehigh}
 \begin{codehigh}
-\DefTblrTemplate{remark}{default}{
+\DeclareTblrTemplate{remark}{default}{
   \MapTblrRemarks{
     \noindent
     \UseTblrTemplate{remark-tag}{default}
@@ -512,27 +510,27 @@ The definition of remark templates are similar to note templates.
 The templates for table heads and foots are defined as including other templates:
 
 \begin{codehigh}
-\DefTblrTemplate{firsthead}{default}{
+\DeclareTblrTemplate{firsthead}{default}{
   \UseTblrTemplate{caption}{default}
 }
-\DefTblrTemplate{middlehead,lasthead}{default}{
+\DeclareTblrTemplate{middlehead,lasthead}{default}{
   \UseTblrTemplate{capcont}{default}
 }
-\DefTblrTemplate{firstfoot,middlefoot}{default}{
+\DeclareTblrTemplate{firstfoot,middlefoot}{default}{
   \UseTblrTemplate{contfoot}{default}
 }
-\DefTblrTemplate{lastfoot}{default}{
+\DeclareTblrTemplate{lastfoot}{default}{
   \UseTblrTemplate{note}{default}
   \UseTblrTemplate{remark}{default}
 }
 \end{codehigh}
 
-Note that you can define the same template for multiple elements in \CC{\DefTblrTemplate} command.
+Note that you can define the same template for multiple elements in \CC{\DeclareTblrTemplate} command.
 If you only want to show table caption in the first page, you may change the definitions of
 \EN{middlehead} and \EN{lasthead} elements:
 
 \begin{codehigh}
-\DefTblrTemplate{middlehead,lasthead}{default}{
+\DeclareTblrTemplate{middlehead,lasthead}{default}{
   \UseTblrTemplate{conthead}{default}
 }
 \end{codehigh}
@@ -578,7 +576,7 @@ a theme consists of some template and style settings. For example:
 \nopagebreak
 \begin{codehigh}
 \NewTblrTheme{fancy}{
-  \DefTblrTemplate{conthead}{default}{[Continued]}
+  \DeclareTblrTemplate{conthead}{default}{[Continued]}
   \SetTblrStyle{firsthead}{font=\bfseries}
   \SetTblrStyle{firstfoot}{fg=blue2}
   \SetTblrStyle{middlefoot}{\itshape}
