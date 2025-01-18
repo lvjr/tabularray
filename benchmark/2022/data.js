@@ -3334,48 +3334,6 @@ window.BENCHMARK_DATA = {
             "username": "lvjr"
           },
           "distinct": true,
-          "id": "047c3fcbd059320b6f5bcfcf416d3d449b271b4e",
-          "message": "child selector: avoid l3regex and parse entire child list (#553, #577)\n)",
-          "timestamp": "2025-01-18T08:56:01+08:00",
-          "tree_id": "60121533bac23477ef0f4f1f0737e07f37836d57",
-          "url": "https://github.com/lvjr/tabularray/commit/047c3fcbd059320b6f5bcfcf416d3d449b271b4e"
-        },
-        "date": 1737161920303,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "compile tabularray with pdflatex",
-            "value": 0.50838465875182,
-            "unit": "ratio",
-            "extra": "current time : previous time = 2.4664192199707 : 4.8514823913574"
-          },
-          {
-            "name": "compile tabularray with xelatex",
-            "value": 0.50650471022523,
-            "unit": "ratio",
-            "extra": "current time : previous time = 2.432315826416 : 4.8021583557129"
-          },
-          {
-            "name": "compile tabularray with lualatex",
-            "value": 0.54337100902546,
-            "unit": "ratio",
-            "extra": "current time : previous time = 3.1275215148926 : 5.7557754516602"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "tolvjr@163.com",
-            "name": "lvjr",
-            "username": "lvjr"
-          },
-          "committer": {
-            "email": "tolvjr@163.com",
-            "name": "lvjr",
-            "username": "lvjr"
-          },
-          "distinct": true,
           "id": "eefbcd7f620f617b8ad9e8dd50eefbc0f2a25873",
           "message": "child selector: avoid l3regex and parse entire child list (#553, #577)",
           "timestamp": "2025-01-18T08:56:45+08:00",
