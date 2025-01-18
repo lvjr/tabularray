@@ -3164,6 +3164,43 @@ Please read the documentation of \PP{codehigh} package for more details of
 \href{https://www.ctan.org/pkg/fvextra}{\PP{fvextra}} package is similar to
 \CC{\fakeverb} command, but with \CC{\EscVerb} you need to escape every control word.}
 
+\section{Blank Lines around Cells}
+
+In \PP{tabularray} tables, there could be a blank line before a cell, after a cell,
+or between table commands and cell text. Here is an example:
+
+\begin{demohigh}
+\begin{tblr}{rl}
+
+\hline
+
+  One
+
+  &
+
+  Two
+
+  \\
+
+\hline
+
+  Three
+
+  &
+
+  Four
+
+  \\
+
+\hline
+
+\end{tblr}
+\end{demohigh}
+
+But more blank lines are not supported.
+Therefore putting more than one blank line at any of these positions may cause wrong result.
+
+
 \chapter{Experimental Interfaces}
 \label{chap:exp}
 
