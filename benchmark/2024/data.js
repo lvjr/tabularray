@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737207905501,
+  "lastUpdate": 1737209511066,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -3822,6 +3822,48 @@ window.BENCHMARK_DATA = {
             "value": 0.27560545517423,
             "unit": "ratio",
             "extra": "current time : previous time = 1.5352516174316 : 5.5704689025879"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "6648264dc91e745760a3845954e5d4b6864320ab",
+          "message": "double blank lines around cells are not supported (#282)",
+          "timestamp": "2025-01-18T22:09:36+08:00",
+          "tree_id": "a6025728d0d6a98d110b5cda290afdcda8b84d7f",
+          "url": "https://github.com/lvjr/tabularray/commit/6648264dc91e745760a3845954e5d4b6864320ab"
+        },
+        "date": 1737209510671,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.21514145330943,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.0015258789062 : 4.6551971435547"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.21553517694103,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.0235404968262 : 4.7488327026367"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.27529757312362,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.5653495788574 : 5.6860275268555"
           }
         ]
       }
