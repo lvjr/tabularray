@@ -9,13 +9,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Evaluate inner specifications with `functional` library ([#270])
 - Document how to use color models with `functional` library ([#106])
 - Add `tikz` library for drawing on short or tall tables ([#29], [#552])
-  - Create cell nodes `i-j` and table node `table` for each table
+  - Create table node `table` for each table
+  - Create cell nodes `<i>-<j>` for each cell
+  - Create corner nodes `h<i>` for each hborder
+  - Create corner nodes `v<j>` for each vborder
   - Create `tblrtikzbefore` and `tblrtikzafter` environments
+- Add support for huge tables ([#305])
 - Add `measure=vstore` option to `varwidth` library ([#549])
 - Add `\AddToTblrHook` and `\AddToTblrHookNext` commands ([#197])
 - Add `\DeclareTblrKeys` and `\SetTblrKeys` commands ([#547])
 - Allow `U`/`V`/`W`/`X`/`Y`/`Z` in from-part of `odd`/`even` selector ([#385])
 - Ensure the converted index of `U`/`V`/`W`/`X`/`Y`/`Z` is positive ([#385])
+- Always parse entire child index list ([#577])
 - Add benchmark tests and publish results to `gh-pages` branch ([#480])
 - Add new chapter "Experimental Interfaces" in the manual
 - Document math cells cannot include multiline math ([#491], [#492])
@@ -23,6 +28,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 ## Changed
 
 - Support old TeX Live releases published in previous three years
+- Use linked property lists to make `tabularray` run much faster ([#541])
+- Avoid using `l3regex` to make `tabularray` run much faster ([#553])
+- Recognize spaces between `\\` and `*` or `[<length>]` ([#526])
+- Keep braces when splitting table body to cells ([#501])
+- Keep braces when extracting table commands from cells ([#501])
+- Optimize internal structure of child index lists ([#575])
 - Make `measure` setting apply to subtables in `varwidth` library
 - Set `measure=vbox` as default in `varwidth` library ([#540])
 - Make `hook` library depend on `varwidth` library ([#179])
@@ -30,6 +41,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Rename all key paths and add `tabularray` prefix to them ([#547])
 - Raise an error for using an undefined template in `\SetTblrTemplate` ([#517])
 - Replace `x`-type expansions with `e`-type expansions ([#560])
+- Rename `\NewTableCommand` as `\NewTblrTableCommand` ([#421])
+- Rename `\NewContentCommand` as `\NewTblrContentCommand` ([#421])
+- Rename `\g_tblr_level_int` as `\gTblrLevelInt` ([#527])
+- Rename `\tablewidth` as `\lTblrTableWidthDim` ([#527])
+- Rename `\rulewidth` as `\lTblrRuleWidthDim` ([#102], [#527])
+- Rename `\l_tblr_childs_clist` as `\lTblrChildClist` ([#249], [#527])
+- Rename `\l_tblr_childs_total_tl` as `\lTblrChildTotalInt` ([#249], [#527])
+- Rename `\lTblrCellRowSpanTl` as `\lTblrCellRowSpanInt` ([#527])
+- Rename `\lTblrCellColSpanTl` as `\lTblrCellColSpanInt` ([#527])
+- Rename `\lTblrCellAboveBorderWidthTl` as `\lTblrCellAboveBorderWidthDim` ([#527])
+- Rename `\lTblrCellBelowBorderWidthTl` as `\lTblrCellBelowBorderWidthDim` ([#527])
+- Rename `\lTblrCellLeftBorderWidthTl` as `\lTblrCellLeftBorderWidthDim` ([#527])
+- Rename `\lTblrCellRightBorderWidthTl` as `\lTblrCellRightBorderWidthDim` ([#527])
 - Replace `\verb` commands with meaningful commands in the manual
 - Improve documentation for `booktabs` library ([#443])
 
@@ -43,6 +67,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Fix `X`-column errors from `\hfuzz=\maxdimen` setting ([#445])
 - Fix misspelled variable name of `\lTblrCellRightBorderColorTl` ([#476])
 - Fix missing `tblr` prefixes in some variable names ([#469])
+- Throw an error for an unknown inner key name ([#574])
 - Suppress "table-width-too-small" warning if table width is not set ([#497])
 
 ## Removed
@@ -318,12 +343,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 
 [#22]: https://github.com/lvjr/tabularray/issues/22
 [#29]: https://github.com/lvjr/tabularray/issues/29
+[#102]: https://github.com/lvjr/tabularray/issues/102
 [#106]: https://github.com/lvjr/tabularray/issues/106
 [#179]: https://github.com/lvjr/tabularray/issues/179
 [#197]: https://github.com/lvjr/tabularray/issues/197
+[#249]: https://github.com/lvjr/tabularray/issues/249
 [#270]: https://github.com/lvjr/tabularray/issues/270
 [#303]: https://github.com/lvjr/tabularray/issues/303
+[#305]: https://github.com/lvjr/tabularray/issues/305
 [#385]: https://github.com/lvjr/tabularray/pull/385
+[#421]: https://github.com/lvjr/tabularray/issues/421
 [#443]: https://github.com/lvjr/tabularray/pull/443
 [#445]: https://github.com/lvjr/tabularray/issues/445
 [#469]: https://github.com/lvjr/tabularray/issues/469
@@ -332,14 +361,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#491]: https://github.com/lvjr/tabularray/issues/491
 [#492]: https://github.com/lvjr/tabularray/issues/492
 [#497]: https://github.com/lvjr/tabularray/pull/497
+[#501]: https://github.com/lvjr/tabularray/issues/501
 [#517]: https://github.com/lvjr/tabularray/pull/517
+[#526]: https://github.com/lvjr/tabularray/issues/526
+[#527]: https://github.com/lvjr/tabularray/issues/527
 [#530]: https://github.com/lvjr/tabularray/issues/530
 [#532]: https://github.com/lvjr/tabularray/issues/532
 [#540]: https://github.com/lvjr/tabularray/issues/540
+[#541]: https://github.com/lvjr/tabularray/issues/541
 [#547]: https://github.com/lvjr/tabularray/issues/547
 [#549]: https://github.com/lvjr/tabularray/issues/549
 [#552]: https://github.com/lvjr/tabularray/issues/552
+[#553]: https://github.com/lvjr/tabularray/issues/553
 [#560]: https://github.com/lvjr/tabularray/issues/560
+[#574]: https://github.com/lvjr/tabularray/issues/574
+[#575]: https://github.com/lvjr/tabularray/issues/575
+[#577]: https://github.com/lvjr/tabularray/issues/577
 
 [Unreleased]: https://github.com/lvjr/tabularray/compare/2024A...HEAD
 [v2025A]: https://github.com/lvjr/tabularray/compare/2024A...2025A
