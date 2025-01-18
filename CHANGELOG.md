@@ -41,11 +41,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Rename all key paths and add `tabularray` prefix to them ([#547])
 - Raise an error for using an undefined template in `\SetTblrTemplate` ([#517])
 - Replace `x`-type expansions with `e`-type expansions ([#560])
-- Rename `\NewTableCommand` as `\NewTblrTableCommand` ([#421])
-- Rename `\NewContentCommand` as `\NewTblrContentCommand` ([#421])
-- Rename `\g_tblr_level_int` as `\gTblrLevelInt` ([#527])
-- Rename `\tablewidth` as `\lTblrTableWidthDim` ([#527])
-- Rename `\rulewidth` as `\lTblrRuleWidthDim` ([#102], [#527])
 - Rename `\l_tblr_childs_clist` as `\lTblrChildClist` ([#249], [#527])
 - Rename `\l_tblr_childs_total_tl` as `\lTblrChildTotalInt` ([#249], [#527])
 - Rename `\lTblrCellRowSpanTl` as `\lTblrCellRowSpanInt` ([#527])
@@ -58,6 +53,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Improve documentation for `booktabs` library ([#443])
 
 ## Deprecated
+
+- Deprecate `\NewTableCommand` in favor of `\NewTblrTableCommand` ([#421])
+- Deprecate `\NewContentCommand` in favor of `\NewTblrContentCommand` ([#421])
+- Deprecate `\g_tblr_level_int` in favor of `\gTblrLevelInt` ([#527])
+- Deprecate `\tablewidth` in favor of `\lTblrTableWidthDim` ([#527])
+- Deprecate `\rulewidth` in favor of `\lTblrRuleWidthDim` ([#102], [#527])
 
 ## Fixed
 
