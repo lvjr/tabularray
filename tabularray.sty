@@ -113,8 +113,8 @@
 \cs_generate_variant:Nn \tl_set_rescan:Nnn { Nne, NnV }
 \cs_generate_variant:Nn \tl_to_str:n { e }
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
-\prg_generate_conditional_variant:Nnn \regex_match:Nn { NV } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T, TF }
+\prg_generate_conditional_variant:Nnn \tl_if_in:Nn { Ne } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_head_eq_catcode:nN { VN } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_head_eq_meaning:nN { VN } { T, TF }
 
@@ -271,6 +271,24 @@
     \bool_if:NTF \l__tblr_if_number_bool
       { \prg_return_true: } { \prg_return_false: }
   }
+
+\tl_const:Nn \c__tblr_digit_tl { 0123456789 }
+
+%% It is enough to check only the first item
+\prg_new_protected_conditional:Npnn \__tblr_if_positive_value:n #1 { T, F, TF }
+  {
+    \tl_if_in:NeTF \c__tblr_digit_tl { \tl_head:n { #1 } }
+      { \prg_return_true: } { \prg_return_false: }
+  }
+\prg_generate_conditional_variant:Nnn \__tblr_if_positive_value:n { V } { TF }
+
+%% It is enough to check only the first item
+\prg_new_protected_conditional:Npnn \__tblr_if_negative_value:n #1 { T, F, TF }
+  {
+    \tl_if_eq:enTF { \tl_head:n { #1 } } { - }
+      { \prg_return_true: } { \prg_return_false: }
+  }
+\prg_generate_conditional_variant:Nnn \__tblr_if_negative_value:n { V } { TF }
 
 %%% --------------------------------------------------------
 %%> \section{Declare and Set tabularray Keys}
@@ -6448,9 +6466,6 @@
 \tl_const:Nn \c__tblr_vbox_b_tl {b}
 \tl_const:Nn \c__tblr_vbox_B_tl {B}
 
-\regex_const:Nn \c__tblr_is_positive_integer_regex { ^ \d+ $ }
-\regex_const:Nn \c__tblr_is_negative_integer_regex { ^ - \d+ $ }
-
 \tl_new:N \l__tblr_delim_left_tl
 \tl_new:N \l__tblr_delim_right_tl
 
@@ -6487,11 +6502,10 @@
           }
       }
       {
-        \regex_match:NVTF \c__tblr_is_positive_integer_regex \l__tblr_vbox_align_tl
+        \__tblr_if_positive_value:VTF \l__tblr_vbox_align_tl
           { \__tblr_valign_whole_at_row:N #1 }
           {
-            \regex_match:NVTF
-              \c__tblr_is_negative_integer_regex \l__tblr_vbox_align_tl
+            \__tblr_if_negative_value:VTF \l__tblr_vbox_align_tl
               { \__tblr_valign_whole_at_border:N #1 }
               { \__tblr_valign_whole_middle:N #1 }
           }
