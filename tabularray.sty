@@ -3293,7 +3293,7 @@
     \seq_map_inline:Nn \l_tmpa_seq
       {
         \tl_set:Nn \l_tmpa_tl { ##1 }
-        \__tblr_trim_par_space_tokens:N \l_tmpa_tl
+        \__tblr_trim_par_space_tokens_left:N \l_tmpa_tl
         \int_incr:N \c@colnum
         \__tblr_extract_table_commands:N \l_tmpa_tl
         \__tblr_trim_par_space_tokens:N \l_tmpa_tl
@@ -3318,13 +3318,30 @@
       }
   }
 
-\regex_const:Nn \c__tblr_trim_left_par_space_regex { ^ \s * \c{par} ? \s * }
-\regex_const:Nn \c__tblr_trim_right_space_par_regex { \s * \c{par} ? $ }
+\cs_new_protected:Npn \__tblr_trim_par_space_tokens_left:N #1
+  {
+    \tl_trim_spaces:N #1
+    \__tblr_remove_head_par:N #1
+    \tl_trim_spaces:N #1
+  }
+
+\tl_new:N \l__tblr_trim_temp_tl
 
 \cs_new_protected:Npn \__tblr_trim_par_space_tokens:N #1
   {
-    \regex_replace_once:NnN \c__tblr_trim_left_par_space_regex {} #1
-    \regex_replace_once:NnN \c__tblr_trim_right_space_par_regex {} #1
+    \tl_trim_spaces:N #1
+    \__tblr_remove_head_par:N #1
+    \tl_set_eq:NN \l__tblr_trim_temp_tl #1
+    \tl_reverse:N \l__tblr_trim_temp_tl
+    \__tblr_remove_head_par:N \l__tblr_trim_temp_tl
+    \tl_reverse:N \l__tblr_trim_temp_tl
+    \tl_set_eq:NN #1 \l__tblr_trim_temp_tl
+    \tl_trim_spaces:N #1
+  }
+
+\cs_new_protected:Npn \__tblr_remove_head_par:N #1
+  {
+    \tl_if_head_eq_meaning:VNT #1 \par { \tl_set:Ne #1 { \tl_tail:N #1 } }
   }
 
 %%% --------------------------------------------------------
