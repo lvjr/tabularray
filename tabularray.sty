@@ -90,6 +90,7 @@
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
 \prg_generate_conditional_variant:Nnn \clist_if_in:Nn { Ne } { TF }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { en } { TF }
+\prg_generate_conditional_variant:Nnn \str_if_in:Nn { Ne } { TF }
 
 %% Add missing function variants for texlive 2022. They can be removed in 2026.
 \cs_generate_variant:Nn \clist_gput_right:Nn { ce }
@@ -239,6 +240,37 @@
     \__tblr_split_before_auxa:ww #4 #3 \q_stop
   }
 \cs_generate_variant:Nn \__tblr_split_before:NNnn { NNV }
+
+%% When the key name is omitted, we need to detect the name from its value.
+
+\str_const:Nn \c__tblr_letter_str
+  { ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz }
+
+%% It is enough to check only the first item
+\prg_new_protected_conditional:Npnn \__tblr_if_color_value:n #1 { T, F, TF }
+  {
+    \str_if_in:NeTF \c__tblr_letter_str { \tl_head:n { #1 } }
+      { \prg_return_true: } { \prg_return_false: }
+  }
+
+\str_const:Nn \c__tblr_number_str { 0123456789+-.~ }
+\bool_new:N \l__tblr_if_number_bool
+
+%% The number value could be '25.6 - 3.14'.
+\prg_new_protected_conditional:Npnn \__tblr_if_number_value:n #1 { T, F, TF }
+  {
+    \bool_set_true:N \l__tblr_if_number_bool
+    \tl_map_inline:nn { #1 }
+      {
+        \str_if_in:NnF \c__tblr_number_str { ##1 }
+          {
+            \bool_set_false:N \l__tblr_if_number_bool
+            \tl_map_break:
+          }
+      }
+    \bool_if:NTF \l__tblr_if_number_bool
+      { \prg_return_true: } { \prg_return_false: }
+  }
 
 %%% --------------------------------------------------------
 %%> \section{Declare and Set tabularray Keys}
@@ -1546,8 +1578,6 @@
 \quark_new:N \q__tblr_dash
 \quark_new:N \q__tblr_text
 
-\regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
-
 %% \SetHlines command for setting every hline in the table
 \NewTblrTableCommand \SetHlines [3] [+]
   {
@@ -1708,7 +1738,7 @@
     \prop_if_in:NnTF \g__tblr_defined_hdash_styles_prop {#1}
       { \tl_set:Nn \l__tblr_hline_dash_tl { \q__tblr_dash #1 } }
       {
-        \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+        \__tblr_if_color_value:nTF {#1}
           { \tl_set:Nn \l__tblr_hline_fg_tl {#1} }
           {
             \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
@@ -1944,7 +1974,7 @@
     \prop_if_in:NnTF \g__tblr_defined_vdash_styles_prop {#1}
       { \tl_set:Nn \l__tblr_vline_dash_tl { \q__tblr_dash #1 } }
       {
-        \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+        \__tblr_if_color_value:nTF {#1}
           { \tl_set:Nn \l__tblr_vline_fg_tl {#1} }
           {
             \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
@@ -2252,7 +2282,7 @@
 
 \cs_new_protected:Npn \__tblr_cell_unknown_key:n #1
   {
-    \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+    \__tblr_if_color_value:nTF {#1}
       {
         \__tblr_data_gput:neene { cell }
           { \int_use:N \c@rownum } { \int_use:N \c@colnum } { background } {#1}
@@ -2499,14 +2529,12 @@
       }
   }
 
-\regex_const:Nn \c__tblr_is_number_key_regex { ^[\+\-]? (\d+|\d*\.\d+)$ }
-
 \cs_new_protected:Npn \__tblr_column_unknown_key:n #1
   {
-    \regex_match:NnTF \c__tblr_is_number_key_regex {#1}
+    \__tblr_if_number_value:nTF {#1}
       { \__tblr_column_gput:ne { coefficient } {#1} }
       {
-        \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+        \__tblr_if_color_value:nTF {#1}
           { \__tblr_column_gput_cell:nn { background } {#1} }
           {
             \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
@@ -2668,13 +2696,13 @@
 
 \cs_new_protected:Npn \__tblr_row_unknown_key:n #1
   {
-    \regex_match:NnTF \c__tblr_is_number_key_regex {#1}
+    \__tblr_if_number_value:nTF {#1}
       {
         \__tblr_data_gput:nene { row } { \int_use:N \c@rownum }
           { coefficient } {#1}
       }
       {
-        \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+        \__tblr_if_color_value:nTF {#1}
           { \__tblr_row_gput_cell:nn { background } {#1} }
           {
             \tl_set_rescan:Nnn \l__tblr_v_tl {} {#1}
@@ -5166,7 +5194,7 @@
 
 \cs_new_protected:Npn \__tblr_element_unknown_key:nn #1 #2
   {
-    \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
+    \__tblr_if_color_value:nTF {#1}
       { \__tblr_style_put:en { \l__tblr_element_name_tl / fg } {#1} }
       {
         %% unknown key name has been changed to string in \l_keys_key_str
