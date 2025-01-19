@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Add `measure=vstore` option to `varwidth` library ([#549])
 - Add `\AddToTblrHook` and `\AddToTblrHookNext` commands ([#197])
 - Add `\DeclareTblrKeys` and `\SetTblrKeys` commands ([#547])
+- Add `\lTblrDefaultHruleWidthDim` and `\lTblrDefaultVruleWidthDim` ([#102], [#527])
+- Add `\lTblrDefaultHruleColorTl` and `\lTblrDefaultVruleColorTl` ([#172])
 - Allow `U`/`V`/`W`/`X`/`Y`/`Z` in from-part of `odd`/`even` selector ([#385])
 - Ensure the converted index of `U`/`V`/`W`/`X`/`Y`/`Z` is positive ([#385])
 - Always parse entire child index list ([#577])
@@ -59,7 +61,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Deprecate `\NewContentCommand` in favor of `\NewTblrContentCommand` ([#421])
 - Deprecate `\g_tblr_level_int` in favor of `\gTblrLevelInt` ([#527])
 - Deprecate `\tablewidth` in favor of `\lTblrTableWidthDim` ([#527])
-- Deprecate `\rulewidth` in favor of `\lTblrDefaultRuleWidthDim` ([#102], [#527])
 
 ## Fixed
 
@@ -77,6 +78,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 
 - Drop support for TeX Live 2020 and 2021
 - Remove deprecated inner key `verb` ([#530])
+- Remove undocumented `\rulewidth` ([#102], [#527])
 
 # [v2024A] - 2024-02-16
 
@@ -348,6 +350,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#29]: https://github.com/lvjr/tabularray/issues/29
 [#102]: https://github.com/lvjr/tabularray/issues/102
 [#106]: https://github.com/lvjr/tabularray/issues/106
+[#172]: https://github.com/lvjr/tabularray/issues/172
 [#179]: https://github.com/lvjr/tabularray/issues/179
 [#197]: https://github.com/lvjr/tabularray/issues/197
 [#249]: https://github.com/lvjr/tabularray/issues/249
