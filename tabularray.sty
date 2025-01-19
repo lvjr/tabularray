@@ -6730,6 +6730,8 @@
     \skip_horizontal:n { \l__tblr_col_o_wd_dim - \l__tblr_col_b_wd_dim }
   }
 
+\tl_new:N \lTblrDefaultHruleColorTl
+
 %% #1: row number, #2: column number
 \cs_new_protected:Npn \__tblr_build_hline_segment_real:nn #1 #2
   {
@@ -6750,7 +6752,12 @@
                 \skip_horizontal:N \l__tblr_hline_leftskip_dim
                 \tl_set:Ne \l__tblr_f_tl
                   { \__tblr_spec_item:ne { hline } { [#1][#2](##1) / fg } }
-                \tl_if_empty:NF \l__tblr_f_tl { \color{\l__tblr_f_tl} }
+                \tl_if_empty:NTF \l__tblr_f_tl
+                  {
+                    \tl_if_empty:NF \lTblrDefaultHruleColorTl
+                      { \color { \lTblrDefaultHruleColorTl } }
+                  }
+                  { \color { \l__tblr_f_tl } }
                 \__tblr_get_hline_segment_child:nnn {#1} {#2} {##1}
                 \skip_horizontal:N \l__tblr_hline_rightskip_dim
               }
@@ -6950,6 +6957,8 @@
     \skip_horizontal:N \l__tblr_w_tl
   }
 
+\tl_new:N \lTblrDefaultVruleColorTl
+
 %% #1: row number, #2: column number
 %% We make every vline segment intersect with first hline below
 %% to remove gaps in vlines around multirow cells
@@ -6968,7 +6977,12 @@
               {
                 \tl_set:Ne \l__tblr_f_tl
                   { \__tblr_spec_item:ne { vline } { [#1][#2](##1) / fg } }
-                \tl_if_empty:NF \l__tblr_f_tl { \color{\l__tblr_f_tl} }
+                \tl_if_empty:NTF \l__tblr_f_tl
+                  {
+                    \tl_if_empty:NF \lTblrDefaultVruleColorTl
+                      { \color { \lTblrDefaultVruleColorTl } }
+                  }
+                  { \color { \l__tblr_f_tl } }
                 \__tblr_get_vline_above_below_skips:nnn {#1} {#2} {##1}
                 \skip_vertical:N \l__tblr_vline_aboveskip_dim
                 \__tblr_get_vline_segment_child:nnnee {#1} {#2} {##1}
