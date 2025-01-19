@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737271094415,
+  "lastUpdate": 1737272410042,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2023": [
@@ -4200,6 +4200,48 @@ window.BENCHMARK_DATA = {
             "value": 0.28276623350672,
             "unit": "ratio",
             "extra": "current time : previous time = 1.5654411315918 : 5.5361671447754"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "8f5525cce7bc62d71d4fb293658ad54b93d57d44",
+          "message": "tikz: remove superfluous braces in coordinate nodes (#29)",
+          "timestamp": "2025-01-19T15:37:57+08:00",
+          "tree_id": "88de73b6d93e3d586d14507a2c174f7d93f2891c",
+          "url": "https://github.com/lvjr/tabularray/commit/8f5525cce7bc62d71d4fb293658ad54b93d57d44"
+        },
+        "date": 1737272409017,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.21312874069037,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.013916015625 : 4.7572937011719"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.21436441022888,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.0146141052246 : 4.7331275939941"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.27533751888218,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.513011932373 : 5.4951171875"
           }
         ]
       }
