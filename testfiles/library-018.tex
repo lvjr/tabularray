@@ -1,0 +1,56 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\UseTblrLibrary{tikz}
+\usetikzlibrary{patterns}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{tikz corner nodes: normal cells in a short table}
+\begin{tblr}{hlines={wd=4pt},vlines={wd=3pt}}
+  1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
+  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
+  3-1 & 3-2 & 3-3 & 3-4 & 3-5
+\end{tblr}%
+\begin{tblrtikzafter}
+  \draw[color=white,thick]
+       (h1-|v1) -- (h1-|v2) -- (h2-|v2)
+    -- (h2-|v3) -- (h3-|v3) -- (h3-|v4)
+    -- (h4-|v4) -- (h4-|v5) -- (h2-|v5)
+    -- (h2-|v6) -- (h1-|v6);
+\end{tblrtikzafter}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{tikz corner nodes: multispan cells in a tall table}
+\begin{talltblr}[
+  caption={I am tall}
+]{
+  hlines, vlines,
+  colspec={ l l l l },
+  hline{1} = {2pt},
+  vline{1} = {1}{2pt},
+  vline{2} = {2}{-}{1pt},
+  hline{Z} = {2pt},
+  cell{1}{1} = {r=2}{c},
+  cell{1}{3} = {c=3}{c},
+  cell{2}{2} = {r=2, c=2}{c}
+}
+  1 & 2       & 3 &   &   \\
+    & foo bar &   & 4 & 5 \\
+  6 &         &   & 7 & 8 %\\
+\end{talltblr}%
+\begin{tblrtikzafter}
+  \draw[color=purple3]
+    (h1-|v1) -- (h1-|v2) -- (h2-|v2) -- (h2-|v3) -- (h3-|v3) -- (h3-|v4)
+             -- (h4-|v4) -- (h4-|v5) -- (h2-|v5) -- (h2-|v6) -- (h1-|v6);
+\end{tblrtikzafter}
+\ENDTEST
+
+\end{document}

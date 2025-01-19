@@ -1,0 +1,29 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\setlength{\parindent}{0pt}
+
+\begin{filecontents*}[overwrite]{tblrlibfoo.sty}
+\NewTblrTableCommand\FooBar{\SetCell{cmd=\fbox}}
+\end{filecontents*}
+\UseTblrLibrary{siunitx}
+\UseTblrLibrary{foo}
+\UseTblrLibrary{siunitx}
+\UseTblrLibrary{foo}
+\UseTblrLibrary{siunitx}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{load libraries in external files}
+\begin{tblr}{lll}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & \FooBar Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\ENDTEST
+
+\end{document}

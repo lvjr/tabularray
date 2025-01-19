@@ -1,0 +1,32 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{throw an error for an unknown inner key name} % issue #574
+\begin{tblr}{hlines, vlinex}
+  1 & 2 & 3 \\
+  4 & 5 & 6 \\
+  7 & 8 & 9
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{throw an error for an unknown outer key name}
+\begin{talltblr}[
+  caption = {Hello},
+  morekey = {???}
+]{hlines}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda
+\end{talltblr}
+\ENDTEST
+
+\end{document}

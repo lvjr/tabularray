@@ -1,0 +1,67 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\usepackage{ninecolors}
+\UseTblrLibrary{functional}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{functional: evaluate inner specifications}
+\begin{tblr}{
+  hlines,
+  row{2} = {bg=\intIfOddTF{\value{page}}{\prgReturn{red7}}{\prgReturn{blue7}}},
+}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\begin{tblr}[evaluate=all]{hlines}
+  Alpha   & Beta  & Gamma  \\
+  \SetRow{bg=\intIfOddTF{\value{page}}{\prgReturn{red7}}{\prgReturn{blue7}}}
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{functional: use \funColor function}
+\begin{tblr}{
+  hlines,
+  row{2} = {bg=\funColor{rgb}{0,1,1}},
+}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\begin{tblr}{
+  hlines,
+  row{2} = {bg=\funColor{RGB}{100,255,100}},
+}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}\newline
+\begin{tblr}{
+  hlines,
+  row{2} = {bg=\funColor{HTML}{FF0077}},
+}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\begin{tblr}[evaluate=all]{hlines}
+  Alpha   & Beta  & Gamma  \\
+  \SetRow{bg=\funColor{cmyk}{0,0.5,1,0}}
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\ENDTEST
+
+\end{document}

@@ -1,0 +1,20 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\begin{document}
+
+\hrule\bigskip
+\START
+
+\BEGINTEST{X-column errors from \hfuzz=\maxdimen setting} % issue #445
+\hfuzz=\maxdimen
+\noindent
+\begin{tblr}{lX[-1]X}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\ENDTEST
+
+\end{document}

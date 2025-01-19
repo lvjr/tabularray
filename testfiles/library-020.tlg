@@ -1,0 +1,13 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+TEST 1: functional: evaluate inner specifications
+============================================================
+============================================================
+============================================================
+TEST 2: functional: use \funColor function
+============================================================
+\g__fun_argtype_index_6_int=\count...
+============================================================
+[1
+] (library-020.aux)

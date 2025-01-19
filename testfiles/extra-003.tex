@@ -1,0 +1,35 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\setlength{\parindent}{0pt}
+
+\ExplSyntaxOn
+\NewChildSelector{two}[2][1]{\clist_set:Nn \lTblrChildClist {#1,#2}}
+\NewChildSelector{three}[3][1]{\clist_set:Nn \lTblrChildClist {#1,#2,#3}}
+\ExplSyntaxOff
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{child selector: mixing with child indexes} % issue #577
+\begin{tblr}{
+  hlines, hline{three[7]{3}{5},8} = {wd=2pt},
+  row{1,two[2]{4},9} = {ht=2em}
+}
+  1 & 2 & 3 \\
+  4 & 5 & 6 \\
+  7 & 8 & 9 \\
+  1 & 2 & 3 \\
+  4 & 5 & 6 \\
+  7 & 8 & 9 \\
+  1 & 2 & 3 \\
+  4 & 5 & 6 \\
+  7 & 8 & 9 \\
+\end{tblr}
+\ENDTEST
+
+\end{document}
