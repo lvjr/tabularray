@@ -1512,17 +1512,18 @@
 
 %% \NewDashStyle commands
 
-\dim_new:N \lTblrDefaultRuleWidthDim
-\dim_set:Nn \lTblrDefaultRuleWidthDim {0.4pt}
-\cs_set_eq:NN \rulewidth \lTblrDefaultRuleWidthDim
+\dim_new:N \lTblrDefaultHruleWidthDim
+\dim_new:N \lTblrDefaultVruleWidthDim
+\dim_set:Nn \lTblrDefaultHruleWidthDim {0.4pt}
+\dim_set:Nn \lTblrDefaultVruleWidthDim {0.4pt}
 
 \prop_new:N \g__tblr_defined_hdash_styles_prop
 \prop_new:N \g__tblr_defined_vdash_styles_prop
 
 \prop_gset_from_keyval:Nn \g__tblr_defined_hdash_styles_prop
-  { solid = \hrule height \lTblrDefaultRuleWidthDim }
+  { solid = \hrule height \lTblrDefaultHruleWidthDim }
 \prop_gset_from_keyval:Nn \g__tblr_defined_vdash_styles_prop
-  { solid = \vrule width \lTblrDefaultRuleWidthDim }
+  { solid = \vrule width \lTblrDefaultVruleWidthDim }
 
 \NewDocumentCommand \NewDashStyle { m m }
   {
@@ -1551,7 +1552,7 @@
         {
           \hss
           \vbox:n
-            { \hbox_to_wd:nn {#2} {} \hrule height \lTblrDefaultRuleWidthDim }
+            { \hbox_to_wd:nn {#2} {} \hrule height \lTblrDefaultHruleWidthDim }
           \hss
         }
       }
@@ -1564,7 +1565,7 @@
         {
           \vss
           \hbox:n
-            { \vbox_to_ht:nn {#2} {} \vrule width \lTblrDefaultRuleWidthDim }
+            { \vbox_to_ht:nn {#2} {} \vrule width \lTblrDefaultVruleWidthDim }
           \vss
         }
       }
@@ -3931,7 +3932,7 @@
     \tl_set:Ne \l__tblr_w_tl
       { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / wd } }
     \tl_if_empty:NF \l__tblr_w_tl
-      { \dim_set:Nn \lTblrDefaultRuleWidthDim { \l__tblr_w_tl } }
+      { \dim_set:Nn \lTblrDefaultVruleWidthDim { \l__tblr_w_tl } }
     \tl_set:Ne \l__tblr_d_tl
       { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / @dash } }
     \tl_set:Ne \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
@@ -3999,7 +4000,7 @@
     \tl_set:Ne \l__tblr_w_tl
       { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / wd } }
     \tl_if_empty:NF \l__tblr_w_tl
-      { \dim_set:Nn \lTblrDefaultRuleWidthDim { \l__tblr_w_tl } }
+      { \dim_set:Nn \lTblrDefaultHruleWidthDim { \l__tblr_w_tl } }
     \tl_set:Ne \l__tblr_d_tl
       { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / @dash } }
     \tl_set:Ne \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
