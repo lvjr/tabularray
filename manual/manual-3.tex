@@ -254,7 +254,7 @@ Therefore the following two tables are the same:
 \subsection{Expand Macros First}
 
 In contrast to traditional \EE{tabular} environment, \PP{tabularray} environments
-need to see every \TT{&} and \TT{\\\\} when splitting the table body with \PP{l3regex}.
+need to see every \TT{&} and \TT{\\\\} when splitting the table body.
 And you can not put cell text inside any table command defined with \CC{\NewTblrTableCommand}.
 But you could use outer key \K{expand} to make \PP{tabularray} expand
 every occurrence of any of the specified macros \underline{once} and \underline{in the given order} before splitting the table body.

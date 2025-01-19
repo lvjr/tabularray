@@ -31,9 +31,17 @@ In version 2025A, all \PP{tabularray} key paths were cleaned up as follows:
 An advanced user or package writer can use \CC{\DeclareKeys} and \CC{\SetKeys} commands
 (provided by LaTeX format) to declare new keys and apply key-value lists, respectively.
 
-\section{Experimental Public Hook Paths}
+The key paths are quite long, therefore \PP{tabularray} provides two shortcut commands
+\CC{\DeclareTblrKeys} and \CC{\SetTblrKeys}:
 
-All experimental public \PP{tabularray} hooks provided by \LL{hook} library are as follows:
+\begin{codehigh}
+\DeclareTblrKeys{<path>}{<keyvals>} = \DeclareKeys[tabularray/<path>]{<keyvals>}
+\SetTblrKeys{<path>}{<keyvals>} = \SetKeys[tabularray/<path>]{<keyvals>}
+\end{codehigh}
+
+\section{Experimental Public Hook Names}
+
+All experimental public \PP{tabularray} hook names provided by \LL{hook} library are as follows:
 \begin{itemize}[nosep]
   \item \HP{tabularray/trial/before}
   \item \HP{tabularray/trial/after}
@@ -46,6 +54,18 @@ All experimental public \PP{tabularray} hooks provided by \LL{hook} library are 
 \end{itemize}
 An advanced user or package writer can use \CC{\AddToHook} and \CC{\AddToHookNext} commands
 (provided by LaTeX format) to inject code to \PP{tabularray} tables.
+
+The hook names are quite long, therefore \PP{tabularray} provides two shortcut commands
+\CC{\AddToTblrHook} and \CC{\AddToTblrHookNext}:
+
+%\begin{codehigh}
+%\AddToTblrHook{<name>}[<label>]{<code>}=\AddToHook{tabularray/<name>}[<label>]{<code>}
+%\AddToTblrHookNext{<name>}{<code>}=\AddToHookNext{tabularray/<name>}{<code>}
+%\end{codehigh}
+\begin{codehigh}
+\AddToTblrHook{<name>}{<code>} = \AddToHook{tabularray/<name>}{<code>}
+\AddToTblrHookNext{<name>}{<code>} = \AddToHookNext{tabularray/<name>}{<code>}
+\end{codehigh}
 
 \section{Experimental Public Variables}
 

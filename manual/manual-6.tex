@@ -10,6 +10,28 @@
 
 \chapter{Tips and Tricks}
 
+\section{Default Rule Width and Color}
+
+From version 2025A, default hrule and vrule widths are stored in variables
+\CC{\lTblrDefaultHruleWidthDim} and \CC{\lTblrDefaultVruleWidthDim} respectively,
+and default hrule and vrule colors are stored in variables \CC{\lTblrDefaultHruleColorTl}
+and \CC{\lTblrDefaultVruleColorTl} respectively. Here is an example:
+
+\begin{demohigh}
+\setlength\lTblrDefaultHruleWidthDim{3pt}%
+\setlength\lTblrDefaultVruleWidthDim{2pt}%
+\renewcommand\lTblrDefaultHruleColorTl{blue3}%
+\renewcommand\lTblrDefaultVruleColorTl{red3}%
+\begin{tblr}{
+  hlines, hline{2} = {wd=1pt, fg=cyan3},
+  vlines, vline{2} = {wd=1pt, fg=green3}
+}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
+
 \section{Control Horizontal Alignment}
 
 You can control horizontal alignment of cells in \texttt{tabularray} with

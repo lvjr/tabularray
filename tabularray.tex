@@ -34,8 +34,9 @@
 \backgroundsetup{contents={}}
 
 \UseTblrLibrary{
-  amsmath,booktabs,counter,diagbox,functional,siunitx,varwidth
+  amsmath,booktabs,counter,diagbox,functional,siunitx,tikz,varwidth
 }
+\usetikzlibrary{patterns}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -65,6 +66,7 @@
 \NewDocumentCommand\LL{m}{\texttt{\fakeverb{#1}}} % library
 \NewDocumentCommand\PP{m}{\texttt{\fakeverb{#1}}} % package
 \NewDocumentCommand\FF{m}{\texttt{\fakeverb{#1}}} % file
+\NewDocumentCommand\NN{m}{\texttt{\fakeverb{#1}}} % tikz node
 \NewDocumentCommand\KP{m}{\texttt{\fakeverb{#1}}} % key path
 \NewDocumentCommand\HP{m}{\texttt{\fakeverb{#1}}} % hook path
 \NewDocumentCommand\CS{m}{\texttt{\fakeverb{#1}}} % child selector
@@ -1630,7 +1632,7 @@ Therefore the following two tables are the same:
 \subsection{Expand Macros First}
 
 In contrast to traditional \EE{tabular} environment, \PP{tabularray} environments
-need to see every \TT{&} and \TT{\\\\} when splitting the table body with \PP{l3regex}.
+need to see every \TT{&} and \TT{\\\\} when splitting the table body.
 And you can not put cell text inside any table command defined with \CC{\NewTblrTableCommand}.
 But you could use outer key \K{expand} to make \PP{tabularray} expand
 every occurrence of any of the specified macros \underline{once} and \underline{in the given order} before splitting the table body.
@@ -2444,8 +2446,9 @@ TEXT\begin{talltblr}[
 
 \chapter{Use Some Libraries}
 
-The \PP{tabularray} package emulates or fixes some commands in other packages.
-To avoid potential conflict, you need to enable them with \CC{\UseTblrLibrary} command.
+A \PP{tabularray} library could be loaded by \CC{\UseTblrLibrary} command.
+From version 2025A, an external library \fakeverb{foo} could also be loaded
+if its filename is \FF{tblrlibfoo.sty}.
 
 \section{Library \texttt{amsmath}}
 
@@ -2961,13 +2964,14 @@ We can also use color series of \PP{xcolor} package to color table rows:
 
 \section{Library \texttt{hook}}
 
-This library is experimental, please see Chapter \ref{chap:exp}.
-%\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
+This library is \textcolor{red3}{experimental}.
+It will also load \LL{varwidth} library and set \KV{measure=vstore} as default.
+See Chapter \ref{chap:exp} for more details of the library.
 
 \section{Library \texttt{html}}
 
-This library is experimental, please see Chapter \ref{chap:exp}.
-%\url{https://github.com/lvjr/tabularray/wiki/HooksAndVariables}.
+This library is \textcolor{red3}{experimental}.
+See Chapter \ref{chap:exp} for more details of the library.
 
 \section{Library \texttt{nameref}}
 
@@ -2985,10 +2989,10 @@ and defines \Q{S} column as \Q{Q} column with \K{si} key.
   hlines, vlines,
   colspec={S[table-format=3.2]S[table-format=3.2]}
 }
- {{{Head}}} & {{{Head}}} \\
-   111      &   111      \\
-     2.1    &     2.2    \\
-    33.11   &    33.22   \\
+   {Head}  & {Head} \\
+  111      & 111    \\
+    2.1    &   2.2  \\
+   33.11   &  33.22 \\
 \end{tblr}
 \end{demohigh}
 
@@ -2997,14 +3001,15 @@ and defines \Q{S} column as \Q{Q} column with \K{si} key.
   hlines, vlines,
   colspec={Q[si={table-format=3.2},c]Q[si={table-format=3.2},c]}
 }
- {{{Head}}} & {{{Head}}} \\
-   111      &   111      \\
-     2.1    &     2.2    \\
-    33.11   &    33.22   \\
+   {Head}  & {Head} \\
+  111      & 111    \\
+    2.1    &   2.2  \\
+   33.11   &  33.22 \\
 \end{tblr}
 \end{demohigh}
 
-Note that you need to use \underline{\color{red3}triple} pairs of curly braces to guard non-numeric cells.
+Note that you need to use one pairs of curly braces to guard non-numeric cells%
+\footnote{Before version 2025A, three pairs of braces are needed.}.
 But it is cumbersome to enclose each cell with braces. From version 2022B (2022-06-01)
 a new key \K{guard} is provided for cells and rows. With \K{guard} key the previous example
 can be largely simplified.
@@ -3048,16 +3053,79 @@ Both \Q{S} and \Q{s} columns are supported. In fact, These two columns have been
 \end{codehigh}
 You don't need to and are not allowed to define them again.
 
+\section{Library \texttt{tikz}}
+
+With this \textcolor{red3}{experimental} \LL{tikz} library,
+you can draw \PP{tikz} pictures below or above \PP{tabularray} (short or tall) tables.
+You need two compilations to get desired result.
+
+To draw below/above a \PP{tabularray} table,
+write some \PP{tikz} code inside \EE{tblrtikzbefore}/\EE{tblrtikzafter} environment,
+which should normally be put before/after the table.
+
+Inside \EE{tblrtikzbefore}/\EE{tblrtikzafter} environment, you can use these predefined nodes:
+
+\begin{spectblr}[
+  caption = {Nodes created by \PP{tikz} library}
+]{}
+  Node Name &  Node Description \\
+  table node \NN{table}  & rectangle node for the whole table \\
+  cell node \NN{<i>-<j>} & rectangle node for \KK{cell{<i>}{<j>}} \\
+  corner node \NN{h<i>}  & coordinate node at the instersection point
+                           of \KK{hborder{<i>}} and \KK{vborder{1}} \\
+  corner node \NN{v<j>}  & coordinate node at the instersection point
+                           of \KK{vborder{<j>}} and \KK{hborder{1}}
+\end{spectblr}
+
+The first example below demonstrates the table node and cell nodes:
+
+\begin{demohigh}
+\begin{tblrtikzbefore}
+  \path[pattern color=lightgray,pattern=checkerboard,
+        draw=blue3, ultra thick, rounded corners]
+    (table.north west) rectangle (table.south east);
+\end{tblrtikzbefore}%
+\begin{tblr}{hline{2-4},vline{2-4}}
+  1-1 & 1-2 & 1-3 & 1-4 \\
+  2-1 & 2-2 & 2-3 & 2-4 \\
+  3-1 & 3-2 & 3-3 & 3-4
+\end{tblr}%
+\begin{tblrtikzafter}
+  \draw[red3, thick]
+    (2-2.north west) -- (2-3.south east)
+    (2-2.south west) -- (2-3.north east);
+\end{tblrtikzafter}
+\end{demohigh}
+
+The second example below demonstrates corner nodes:
+
+\begin{demohigh}
+\begin{tblr}{hlines={wd=4pt},vlines={wd=3pt}}
+  1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
+  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
+  3-1 & 3-2 & 3-3 & 3-4 & 3-5
+\end{tblr}%
+\begin{tblrtikzafter}
+  \draw[color=white,thick]
+       (h1-|v1) -- (h1-|v2) -- (h2-|v2)
+    -- (h2-|v3) -- (h3-|v3) -- (h3-|v4)
+    -- (h4-|v4) -- (h4-|v5) -- (h2-|v5)
+    -- (h2-|v6) -- (h1-|v6);
+\end{tblrtikzafter}
+\end{demohigh}
+
+By \PP{tikz} intersection syntax, \fakeverb{h<i>-|v<j>} is
+the instersection point of \KK{horder{<i>}} and \KK{vborder{<j>}}.
+
 \section{Library \texttt{varwidth}}
 
 To build a nice table, \PP{tabularray} need to measure the widths of cells.
 By default, it uses \CC{\hbox} to measure the sizes.
 This causes an error if a cell contains some vertical material, such as lists or display maths.
 
-With \CC{\UseTblrLibrary{varwidth}} in the preamble of the document,
-\PP{tabularray} will load \PP{varwidth} package,
-and add a new inner specification \K{measure} for tables.
-After setting \KV{measure=vbox}, it will use \CC{\vbox} to measure cell widths.
+With \PP{varwidth} library, \PP{tabularray} will load \PP{varwidth} package,
+add a new inner specification \K{measure}, and set \KV{measure=vbox}
+so that it will use \CC{\vbox} to measure cell widths.
 
 \begin{demohigh}
 \begin{tblr}{hlines,measure=vbox}
@@ -3111,12 +3179,41 @@ Note that option \KV{stretch=-1} also removes struts from cells, therefore it ma
 in \PP{tabularray} environments with \KV{rowsep=0pt}, such as
 \EE{booktabs}/\EE{longtabs}/\EE{talltabs} environments from \LL{booktabs} library.
 
+From version 2025A, \KK{measure} key also accepts an experimental \VV{vstore} value.
+With \KV{measure=vstore}, \PP{tabularray} also measures cells with \CC{\vbox},
+but it will store the boxes for later use,
+which is necessary to make \CC{\lTblrMeasuringBool} status correct.
+
+From version 2025A, the setting of \KK{measure} key also applies to subtables.
+
 \section{Library \texttt{zref}}
 
 From version 2022D, you can load \LL{zref} library
 to make \CC{\zref} and \EE{longtblr} work together.
 
 \chapter{Tips and Tricks}
+
+\section{Default Rule Width and Color}
+
+From version 2025A, default hrule and vrule widths are stored in variables
+\CC{\lTblrDefaultHruleWidthDim} and \CC{\lTblrDefaultVruleWidthDim} respectively,
+and default hrule and vrule colors are stored in variables \CC{\lTblrDefaultHruleColorTl}
+and \CC{\lTblrDefaultVruleColorTl} respectively. Here is an example:
+
+\begin{demohigh}
+\setlength\lTblrDefaultHruleWidthDim{3pt}%
+\setlength\lTblrDefaultVruleWidthDim{2pt}%
+\renewcommand\lTblrDefaultHruleColorTl{blue3}%
+\renewcommand\lTblrDefaultVruleColorTl{red3}%
+\begin{tblr}{
+  hlines, hline{2} = {wd=1pt, fg=cyan3},
+  vlines, vline{2} = {wd=1pt, fg=green3}
+}
+  Alpha   & Beta  & Gamma  \\
+  Epsilon & Zeta  & Eta    \\
+  Iota    & Kappa & Lambda \\
+\end{tblr}
+\end{demohigh}
 
 \section{Control Horizontal Alignment}
 
@@ -3224,9 +3321,17 @@ In version 2025A, all \PP{tabularray} key paths were cleaned up as follows:
 An advanced user or package writer can use \CC{\DeclareKeys} and \CC{\SetKeys} commands
 (provided by LaTeX format) to declare new keys and apply key-value lists, respectively.
 
-\section{Experimental Public Hook Paths}
+The key paths are quite long, therefore \PP{tabularray} provides two shortcut commands
+\CC{\DeclareTblrKeys} and \CC{\SetTblrKeys}:
 
-All experimental public \PP{tabularray} hooks provided by \LL{hook} library are as follows:
+\begin{codehigh}
+\DeclareTblrKeys{<path>}{<keyvals>} = \DeclareKeys[tabularray/<path>]{<keyvals>}
+\SetTblrKeys{<path>}{<keyvals>} = \SetKeys[tabularray/<path>]{<keyvals>}
+\end{codehigh}
+
+\section{Experimental Public Hook Names}
+
+All experimental public \PP{tabularray} hook names provided by \LL{hook} library are as follows:
 \begin{itemize}[nosep]
   \item \HP{tabularray/trial/before}
   \item \HP{tabularray/trial/after}
@@ -3239,6 +3344,18 @@ All experimental public \PP{tabularray} hooks provided by \LL{hook} library are 
 \end{itemize}
 An advanced user or package writer can use \CC{\AddToHook} and \CC{\AddToHookNext} commands
 (provided by LaTeX format) to inject code to \PP{tabularray} tables.
+
+The hook names are quite long, therefore \PP{tabularray} provides two shortcut commands
+\CC{\AddToTblrHook} and \CC{\AddToTblrHookNext}:
+
+%\begin{codehigh}
+%\AddToTblrHook{<name>}[<label>]{<code>}=\AddToHook{tabularray/<name>}[<label>]{<code>}
+%\AddToTblrHookNext{<name>}{<code>}=\AddToHookNext{tabularray/<name>}{<code>}
+%\end{codehigh}
+\begin{codehigh}
+\AddToTblrHook{<name>}{<code>} = \AddToHook{tabularray/<name>}{<code>}
+\AddToTblrHookNext{<name>}{<code>} = \AddToHookNext{tabularray/<name>}{<code>}
+\end{codehigh}
 
 \section{Experimental Public Variables}
 
@@ -3294,11 +3411,31 @@ and put it into the folder of your TeX documents:\newline
 The change log of \PP{tabularray} package will be updated on the wiki page:\newline
 \centerline{\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}}
 
-In version 2025A, \CC{\DefTblrTemplate} was deprecated in favor of \CC{\DeclareTblrTemplate}.
+When \PP{tabularray} makes breaking changes in a new release,
+you will be able to roll back to previous release to make your existing documents unaffected.
 
-In version 2023A, inner key \K{verb} was marked as obsolete,
-and it will be removed in the future. But don't worry too much,
-because you can stick to old version by \CC{\usepackage{tabularray}[=2023-03-01]}.
+Normally you don't know when there will be a new breaking release.
+To keep your old documents as they are, you may add the date of current release
+to the last optional argument of \CC{\usepackage} in loading \PP{tabularray},
+such as \CC{\usepackage{tabularray}[=2024-02-16]}.
+
+\subsection{Important changes in version 2025A}
+
+In version 2025A, there were several important changes:
+
+\begin{itemize}[nosep]
+  \item Inner key \KK{verb} (deprecated before) was removed;
+        it is better to use \CC{\fakeverb} command.
+  \item \CC{\DefTblrTemplate} was deprecated in favor of \CC{\DeclareTblrTemplate}.
+  \item \CC{\NewTableCommand} was deprecated in favor of \CC{\NewTblrTableCommand}.
+ %\item \CC{\NewContentCommand} was deprecated in favor of \CC{\NewTblrContentCommand}.
+  \item \CC{\tablewidth} was deprecated in favor of \CC{\lTblrTableWidthDim}.
+ %\item \CC{\g_tblr_level_int} was deprecated in favor of \CC{\gTblrLevelInt}.
+\end{itemize}
+
+For your old documents, you can still rollback to version 2024 by \CC{\usepackage{tabularray}[=v2024]}.
+
+\subsection{Important changes in version 2022A}
 
 In version 2022A, there were several breaking changes:
 

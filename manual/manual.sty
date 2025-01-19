@@ -34,8 +34,9 @@
 \backgroundsetup{contents={}}
 
 \UseTblrLibrary{
-  amsmath,booktabs,counter,diagbox,functional,siunitx,varwidth
+  amsmath,booktabs,counter,diagbox,functional,siunitx,tikz,varwidth
 }
+\usetikzlibrary{patterns}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -65,6 +66,7 @@
 \NewDocumentCommand\LL{m}{\texttt{\fakeverb{#1}}} % library
 \NewDocumentCommand\PP{m}{\texttt{\fakeverb{#1}}} % package
 \NewDocumentCommand\FF{m}{\texttt{\fakeverb{#1}}} % file
+\NewDocumentCommand\NN{m}{\texttt{\fakeverb{#1}}} % tikz node
 \NewDocumentCommand\KP{m}{\texttt{\fakeverb{#1}}} % key path
 \NewDocumentCommand\HP{m}{\texttt{\fakeverb{#1}}} % hook path
 \NewDocumentCommand\CS{m}{\texttt{\fakeverb{#1}}} % child selector
