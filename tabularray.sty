@@ -2745,7 +2745,7 @@
 
 %% Some primitive column/row types
 
-\str_const:Nn \cTblrPrimitiveColrowTypesStr { Q | < > }
+\str_const:Nn \cTblrPrimitiveColrowTypeStr { Q | < > }
 \tl_new:N \g__tblr_expanded_colrow_spec_tl
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_Column_type_ Q } { O{} }
@@ -2880,11 +2880,11 @@
 
 %% \NewColumnType/\NewRowType command and predefined column/row types
 
-\str_new:N \gTblrUsedColumnTypesStr
-\str_gset_eq:NN \gTblrUsedColumnTypesStr \cTblrPrimitiveColrowTypesStr
+\str_new:N \gTblrUsedColumnTypeStr
+\str_gset_eq:NN \gTblrUsedColumnTypeStr \cTblrPrimitiveColrowTypeStr
 
-\str_new:N \gTblrUsedRowTypesStr
-\str_gset_eq:NN \gTblrUsedRowTypesStr \cTblrPrimitiveColrowTypesStr
+\str_new:N \gTblrUsedRowTypeStr
+\str_gset_eq:NN \gTblrUsedRowTypeStr \cTblrPrimitiveColrowTypeStr
 
 \bool_new:N \g__tblr_colrow_spec_expand_stop_bool
 \tl_new:N \g__tblr_column_or_row_tl
@@ -2914,12 +2914,12 @@
 
 \cs_new_protected:Npn \__tblr_new_column_or_row_type:nnnn #1 #2 #3 #4
   {
-    \str_if_in:cnTF { gTblrUsed \g__tblr_column_or_row_tl TypesStr } {#1}
+    \str_if_in:cnTF { gTblrUsed \g__tblr_column_or_row_tl TypeStr } {#1}
       {
         \tl_if_eq:NnTF \g__tblr_column_or_row_tl { Row }
           { \msg_error:nnnn { tabularray } { used-colrow-type } { Row } {#1} }
           { \msg_error:nnnn { tabularray } { used-colrow-type } { Column } {#1} }
-        \str_log:c { gTblrUsed \g__tblr_column_or_row_tl TypesStr }
+        \str_log:c { gTblrUsed \g__tblr_column_or_row_tl TypeStr }
       }
       {
         \__tblr_make_xparse_arg_spec:nnN {#2} {#3} \l__tblr_a_tl
@@ -2931,7 +2931,7 @@
             \__tblr_expand_colrow_spec_next:N
           }
         \str_gput_right:cn
-          { gTblrUsed \g__tblr_column_or_row_tl TypesStr } {#1}
+          { gTblrUsed \g__tblr_column_or_row_tl TypeStr } {#1}
       }
   }
 
@@ -3000,7 +3000,7 @@
           }
       }
       {
-        \str_if_in:cnTF { gTblrUsed \g__tblr_column_or_row_tl TypesStr } {#1}
+        \str_if_in:cnTF { gTblrUsed \g__tblr_column_or_row_tl TypeStr } {#1}
           {
             %% Note that #1 may be an active character (see issue #58)
             \cs:w tblr_ \g__tblr_column_or_row_tl _type_ \token_to_str:N #1 \cs_end:
@@ -3008,7 +3008,7 @@
           {
             \msg_error:nnVn { tabularray } { unknown-colrow-type }
               \g__tblr_column_or_row_tl {#1}
-            \str_log:c { gTblrUsed \g__tblr_column_or_row_tl TypesStr }
+            \str_log:c { gTblrUsed \g__tblr_column_or_row_tl TypeStr }
           }
       }
   }
