@@ -8066,7 +8066,6 @@
         tblr / table / .style = { } ,
         tblr / overlay / .style = { }
       }
-
     \NewDocumentEnvironment { tblrtikzbefore } { +b }
       {
         \tl_gset:Nn \g__tblr_tikz_before_code_tl
@@ -8082,7 +8081,6 @@
             \end{tikzpicture}
           }
       } { }
-
     \NewDocumentEnvironment { tblrtikzafter } { }
       {
         \begin{tikzpicture}
@@ -8096,7 +8094,6 @@
       {
         \end{tikzpicture}
       }
-
     \AddToTblrHook { private / output / before }
       {
         \tl_if_empty:NF \g__tblr_tikz_before_code_tl
@@ -8105,52 +8102,7 @@
             \tl_gclear:N \g__tblr_tikz_before_code_tl
           }
       }
-
-    \bool_new:N \l__tblr_tikz_old_node_bool
-    \bool_set_true:N \l__tblr_tikz_old_node_bool
-
-    \cs_new_protected:Npn \__tblr_tikz_make_cell_node_old:
-      {
-        \hbox_set:Nn \l__tblr_tikz_node_box
-          {
-            \begin{tikzpicture}[remember ~ picture, overlay]
-              \coordinate
-                (
-                  tblr \g__tblr_name_str -
-                  \int_use:N \c@rownum - \int_use:N \c@colnum -
-                  single
-                )
-                at ( 0pt , -\l__tblr_row_dp_dim ) { } ;
-              \node
-                [
-                  tblr / cell ~ node ,
-                  tblr / cell ,
-                  text ~ width = \l__tblr_cell_inner_wd_dim ,
-                  text ~ height = \l__tblr_row_ht_dim ,
-                  text ~ depth = \l__tblr_cell_inner_dp_dim
-                ]
-                (
-                  tblr \g__tblr_name_str -
-                  \int_use:N \c@rownum - \int_use:N \c@colnum
-                )
-                at ( 0pt , 0pt ) { } ;
-            \end{tikzpicture}
-          }
-        \box_set_trim:Nnnnn \l__tblr_tikz_node_box
-          {
-            0.5 \l__tblr_cell_inner_wd_dim + \l__tblr_cell_hanchor_dim
-          }
-          {
-            -0.5 \l__tblr_row_ht_dim + 0.5 \l__tblr_cell_inner_dp_dim
-          }
-          {
-            -0.5 \l__tblr_cell_inner_wd_dim - \l__tblr_cell_hanchor_dim
-          }
-          {
-            0.5 \l__tblr_row_ht_dim - 0.5 \l__tblr_cell_inner_dp_dim
-          }
-      }
-    \cs_new_protected:Npn \__tblr_tikz_make_cell_node_new:
+    \cs_new_protected:Npn \__tblr_tikz_make_cell_node:
       {
         \hbox_set:Nn \l__tblr_tikz_node_box
           {
@@ -8186,42 +8138,7 @@
         \box_set_trim:Nnnnn \l__tblr_tikz_node_box
           { 0pt } { 0pt } { 0pt } { 0pt }
       }
-    \cs_new_protected:Npn \__tblr_tikz_make_table_node_old:
-      {
-        \hbox_set:Nn \l__tblr_tikz_node_box
-          {
-            \begin{tikzpicture}[remember ~ picture, overlay]
-              \node
-                [
-                  tblr / table ~ node ,
-                  tblr / table ,
-                  text ~ width = \lTblrTableWidthDim ,
-                  text ~ height = \l__tblr_last_cell_table_ht_dim ,
-                  text ~ depth = \l__tblr_last_cell_table_dp_dim
-                ]
-                (
-                  tblr \g__tblr_name_str - table
-                )
-                at ( 0pt , 0pt ) { } ;
-            \end{tikzpicture}
-          }
-        \box_set_trim:Nnnnn \l__tblr_tikz_node_box
-          {
-            0.5 \lTblrTableWidthDim + \l__tblr_last_vline_wd_dim
-          }
-          {
-            -0.5 \l__tblr_last_cell_table_ht_dim +
-            0.5 \l__tblr_last_cell_table_dp_dim
-          }
-          {
-            -0.5 \lTblrTableWidthDim - \l__tblr_last_vline_wd_dim
-          }
-          {
-            0.5 \l__tblr_last_cell_table_ht_dim -
-            0.5 \l__tblr_last_cell_table_dp_dim
-          }
-      }
-    \cs_new_protected:Npn \__tblr_tikz_make_table_node_new:
+    \cs_new_protected:Npn \__tblr_tikz_make_table_node:
       {
         \hbox_set:Nn \l__tblr_tikz_node_box
           {
@@ -8250,7 +8167,6 @@
         \box_set_trim:Nnnnn \l__tblr_tikz_node_box
           { 0pt } { 0pt } { 0pt } { 0pt }
       }
-
     \AddToTblrHook { cell / after }
       {
         \__tblr_get_cell_background_width:NNN
@@ -8283,9 +8199,7 @@
                   }
               }
           }
-        \bool_if:NTF \l__tblr_tikz_old_node_bool
-          { \__tblr_tikz_make_cell_node_old: }
-          { \__tblr_tikz_make_cell_node_new: }
+        \__tblr_tikz_make_cell_node:
         \box_use:N \l__tblr_tikz_node_box
 
         \int_compare:nNnT { \c@rownum } = { \c@rowcount }
@@ -8300,14 +8214,11 @@
                     \__tblr_spec_item:ne { vline }
                       { [ \int_eval:n { \c@colcount + 1 } ] / @vline-width }
                   }
-                \bool_if:NTF \l__tblr_tikz_old_node_bool
-                  { \__tblr_tikz_make_table_node_old: }
-                  { \__tblr_tikz_make_table_node_new: }
+                \__tblr_tikz_make_table_node:
                 \box_use:N \l__tblr_tikz_node_box
               }
           }
       }
-
     \tl_new:N \l__tblr_tikz_corner_node_code_tl
     \cs_new_protected:Npn \__tblr_tikz_make_corner_nodes:
       {
