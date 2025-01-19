@@ -1,7 +1,7 @@
 # Test files for cells
 
-| Test file  | What it tests |
-| :---       | :---          |
+| Test file  | What it tests | Issues or pull requests |
+| :---       | :---          | :--                     |
 | `cell-001` | vertical alignment of single-line cells, with or without `stretch` |
 | `cell-002` | horizontal and vertical alignment of multi-line cells |
 | `cell-003` | break lines in parbox cells |
@@ -16,8 +16,8 @@
 
 # Test files for colors
 
-| Test file   | What it tests |
-| :---        | :---          |
+| Test file   | What it tests | Issues or pull requests |
+| :---        | :---          | :--                     |
 | `color-001` | `bg`, `fg`, `font` and `measure` options for cells |
 | `color-002` | `bg` options for rows and columns |
 | `color-003` | `bg` and `hspan` options for multicolumn cells |
@@ -26,24 +26,26 @@
 
 # Test files for extra interfaces
 
-| Test file   | What it tests |
-| :---        | :---          |
+| Test file   | What it tests | Issues or pull requests |
+| :---        | :---          | :--                     |
 | `extra-001` | `expand` outer option |
 | `extra-002` | `odd`/`even` selectors and `U-Z` indexes |
+| `extra-003` | mix child selectors with child indexes | #577 |
 
 # Test files for hlines and vlines
 
-| Test file    | What it tests |
-| :---         | :---          |
+| Test file    | What it tests | Issues or pull requests |
+| :---         | :---          | :--                     |
 | `hvline-001` | hlines and vlines with different styles and widths, `\hline` command |
 | `hvline-002` | hlines and vlines in large tables |
 | `hvline-003` | `leftpos`, `rightpos`, `abovepos`, `belowpos`, `\hline` and `\cline` |
 | `hvline-004` | `text` |
+| `hvline-005` | default rule widths and colors | #102, #172, #527 |
 
 # Test files for libraries
 
-| Test file     | What it tests |
-| :---          | :---          |
+| Test file     | What it tests | Issues or pull requests |
+| :---          | :---          | :--                     |
 | `library-001` | `booktabs` library and `\toprule`, `\midrule`, `\bottomrule` |
 | `library-002` | `diagbox` library |
 | `library-003` | `siunitx` library and table format |
@@ -59,13 +61,16 @@
 | `library-013` | `zref` library |
 | `library-014` | `amsmath` library and `delimiter` option |
 | `library-015` | load the same library twice |
-| `library-016` | `tikz` library for normal cells |
-| `library-017` | `tikz` library for multispan cells |
+| `library-016` | `tikz` library for normal cells | #29 |
+| `library-017` | `tikz` library for multispan cells | #29 |
+| `library-018` | `tikz` library for corner nodes | #29 |
+| `library-019` | load libraries in external files | #532 |
+| `library-020` | `functional` library: evaluate inner specs | #106, #270 |
 
 # Test files for long tables
 
-| Test file  | What it tests |
-| :---       | :---          |
+| Test file  | What it tests | Issues or pull requests |
+| :---       | :---          | :--                     |
 | `long-001` | long tables with `\NewTblrTheme`, `\SetTblrStyle`, `\TblrNote` |
 | `long-002` | long tables with single row pages |
 | `long-003` | long tables with `\pagebreak`, `\nopagebreak` |
@@ -79,17 +84,18 @@
 
 # Test files for rows and columns
 
-| Test file    | What it tests |
-| :---         | :---          |
+| Test file    | What it tests | Issues or pull requests |
+| :---         | :---          | :--                     |
 | `rowcol-001` | row and column types `@`, `!`, `>`, `<` |
 | `rowcol-002` | `rowsep` and `colsep` options |
 | `rowcol-003` | `\\*[dimen]`, `\\\relax`, `\hline\relax` |
 | `rowcol-004` | `X` columns with positive and negative coefficients |
+| `rowcol-005` | `X` column errors from `\hfuzz=\maxdimen` setting | #445 |
 
 # Test files for tables
 
-| Test file   | What it tests |
-| :---        | :---          |
+| Test file   | What it tests | Issues or pull requests |
+| :---        | :---          | :--                     |
 | `table-001` | start `tabularray` in vertical mode |
 | `table-002` | vertical alignment of tables |
 | `table-003` | `baseline` outer option |
@@ -103,3 +109,5 @@
 | `table-011` | lists and `\color` with `measure=vbox` |
 | `table-012` | `tabularray` in `align` environment |
 | `table-013` | `\SetTblrInner` and `\SetTblrOuter` commands |
+| `table-014` | throw errors for unknown inner/outer key names | #574 |
+
