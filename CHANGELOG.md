@@ -7,14 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 
 - Load `tabularray` libraries in external files ([#532])
 - Evaluate inner specifications with `functional` library ([#270])
-- Document how to use color models with `functional` library ([#106])
 - Add `tikz` library for drawing on short or tall tables ([#29], [#552])
   - Create table node `table` for each table
   - Create cell nodes `<i>-<j>` for each cell
   - Create corner nodes `h<i>` for each hborder
   - Create corner nodes `v<j>` for each vborder
   - Create `tblrtikzbefore` and `tblrtikzafter` environments
-- Add support for huge tables ([#305])
 - Add `measure=vstore` option to `varwidth` library ([#549])
 - Add `\AddToTblrHook` and `\AddToTblrHookNext` commands ([#197])
 - Add `\DeclareTblrKeys` and `\SetTblrKeys` commands ([#547])
@@ -23,7 +21,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Always parse entire child index list ([#577])
 - Add benchmark tests and publish results to `gh-pages` branch ([#480])
 - Add new chapter "Experimental Interfaces" in the manual
-- Document math cells cannot include multiline math ([#491], [#492])
+- Document how to use color models with `functional` library ([#106])
+- Document that double blank lines around cells are not supported ([#282])
+- Document that math cells cannot include multiline math ([#491], [#492])
 
 ## Changed
 
@@ -54,14 +54,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 
 ## Deprecated
 
+- Deprecate `\DefTblrTemplate` in favor of `\DeclareTblrTemplate` ([#563])
 - Deprecate `\NewTableCommand` in favor of `\NewTblrTableCommand` ([#421])
 - Deprecate `\NewContentCommand` in favor of `\NewTblrContentCommand` ([#421])
 - Deprecate `\g_tblr_level_int` in favor of `\gTblrLevelInt` ([#527])
 - Deprecate `\tablewidth` in favor of `\lTblrTableWidthDim` ([#527])
-- Deprecate `\rulewidth` in favor of `\lTblrRuleWidthDim` ([#102], [#527])
+- Deprecate `\rulewidth` in favor of `\lTblrDefaultRuleWidthDim` ([#102], [#527])
 
 ## Fixed
 
+- Fix `bad register code` errors from huge tables ([#305])
 - Fix measuring phase of `\lTblrMeasuringBool` ([#179])
 - Fix expansion errors with border text ([#303])
 - Fix undeclared variables and inconsistent assignments ([#22])
@@ -350,6 +352,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#197]: https://github.com/lvjr/tabularray/issues/197
 [#249]: https://github.com/lvjr/tabularray/issues/249
 [#270]: https://github.com/lvjr/tabularray/issues/270
+[#282]: https://github.com/lvjr/tabularray/issues/282
 [#303]: https://github.com/lvjr/tabularray/issues/303
 [#305]: https://github.com/lvjr/tabularray/issues/305
 [#385]: https://github.com/lvjr/tabularray/pull/385
@@ -375,6 +378,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#552]: https://github.com/lvjr/tabularray/issues/552
 [#553]: https://github.com/lvjr/tabularray/issues/553
 [#560]: https://github.com/lvjr/tabularray/issues/560
+[#563]: https://github.com/lvjr/tabularray/issues/563
 [#574]: https://github.com/lvjr/tabularray/issues/574
 [#575]: https://github.com/lvjr/tabularray/issues/575
 [#577]: https://github.com/lvjr/tabularray/issues/577
