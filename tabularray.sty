@@ -8029,7 +8029,7 @@
     \__tblr_keys_define:nn { column / inner } { guard .meta:n = { cmd = } }
   }
 
-%% Library tikz to add cell nodes and table nodes with tikz
+%% Library tikz to add table nodes, cell nodes and corner nodes with tikz
 
 \tl_new:N \g__tblr_tikz_before_code_tl
 \dim_new:N \l__tblr_cell_inner_wd_dim
@@ -8136,8 +8136,6 @@
                 ) { } ;
             \end{tikzpicture}
           }
-        \box_set_trim:Nnnnn \l__tblr_tikz_node_box
-          { 0pt } { 0pt } { 0pt } { 0pt }
       }
     \cs_new_protected:Npn \__tblr_tikz_make_table_node:
       {
@@ -8165,8 +8163,6 @@
                 ) { } ;
             \end{tikzpicture}
           }
-        \box_set_trim:Nnnnn \l__tblr_tikz_node_box
-          { 0pt } { 0pt } { 0pt } { 0pt }
       }
     \AddToTblrHook { cell / after }
       {
