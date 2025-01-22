@@ -34,14 +34,11 @@
   \msg_error:nn { tabularray } { latex-too-old }
 }
 
-\AtBeginDocument{
-  \@ifpackageloaded{xcolor}{\RequirePackage{ninecolors}}{}
-  \@ifpackageloaded{hyperref}{
-    \newenvironment{tblrNoHyper}{\NoHyper}{\endNoHyper}
-  }{
-    \newenvironment{tblrNoHyper}{}{}
-  }
-}
+\AddToHook {package/xcolor/after} [tabularray] { \RequirePackage{ninecolors} }
+
+\newenvironment{tblrNoHyper}{}{}
+\AddToHook {package/hyperref/after} [tabularray]
+  { \renewenvironment{tblrNoHyper}{\NoHyper}{\endNoHyper} }
 
 \NewDocumentCommand \TblrParboxRestore { } { \@parboxrestore }
 
