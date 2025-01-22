@@ -8164,7 +8164,7 @@
             \end{tikzpicture}
           }
       }
-    \AddToTblrHook { cell / after }
+    \AddToTblrHook { cell / after } [ tblrlibtikz ]
       {
         \__tblr_get_cell_background_width:NNN
             \c@rownum \c@colnum \l__tblr_cell_inner_wd_dim
@@ -8260,7 +8260,7 @@
               (v1-|{$(1-\int_use:N\c@colcount-single)!0.5!(table.south~east)$});
           }
       }
-    \AddToTblrHook { table / after }
+    \AddToTblrHook { table / after } [ tblrlibtikz ]
       {
         \__tblr_tikz_make_corner_nodes:
         \begin{tikzpicture}
