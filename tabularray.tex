@@ -3055,13 +3055,17 @@ You don't need to and are not allowed to define them again.
 
 \section{Library \texttt{tikz}}
 
-With this \textcolor{red3}{experimental} \LL{tikz} library,
+With this \textcolor{red3}{experimental} \LL{tikz} library%
+\footnote{The author thanks \href{https://github.com/jasperhabicht}{Jasper Habicht}
+for his contributions to this library.},
 you can draw \PP{tikz} pictures below or above \PP{tabularray} (short or tall) tables.
-You need two compilations to get desired result.
+(Support for long tables is rather complicated hence not available at this time.)
+Note that this library depends on and loads \PP{hook} library.
 
 To draw below/above a \PP{tabularray} table,
 write some \PP{tikz} code inside \EE{tblrtikzbefore}/\EE{tblrtikzafter} environment,
 which should normally be put before/after the table.
+You need two compilations to get desired result.
 
 Inside \EE{tblrtikzbefore}/\EE{tblrtikzafter} environment, you can use these predefined nodes:
 
@@ -3085,7 +3089,7 @@ The first example below demonstrates the table node and cell nodes:
         draw=blue3, ultra thick, rounded corners]
     (table.north west) rectangle (table.south east);
 \end{tblrtikzbefore}%
-\begin{tblr}{hline{2-4},vline{2-4}}
+\begin{tblr}{hline{2-3},vline{2-4}}
   1-1 & 1-2 & 1-3 & 1-4 \\
   2-1 & 2-2 & 2-3 & 2-4 \\
   3-1 & 3-2 & 3-3 & 3-4
