@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737517865047,
+  "lastUpdate": 1737629025030,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -4578,6 +4578,48 @@ window.BENCHMARK_DATA = {
             "value": 0.272507761297,
             "unit": "ratio",
             "extra": "current time : previous time = 1.5309143066406 : 5.6178741455078"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "57310d8a129cef99258fcf2c4b932d96cfe7318e",
+          "message": "add \\NewTblrChildIndexer and rename \\NewChildSelector as \\NewTblrChildSelector (#578, #579)",
+          "timestamp": "2025-01-23T18:40:53+08:00",
+          "tree_id": "c30da75d31c263d6f3158e9ab56dd7ce88669cec",
+          "url": "https://github.com/lvjr/tabularray/commit/57310d8a129cef99258fcf2c4b932d96cfe7318e"
+        },
+        "date": 1737629023949,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.2083467058186,
+            "unit": "ratio",
+            "extra": "current time : previous time = 0.97818374633789 : 4.6949806213379"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.21443902976775,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.0091781616211 : 4.7061309814453"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.2759583121193,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.544506072998 : 5.5968818664551"
           }
         ]
       }
