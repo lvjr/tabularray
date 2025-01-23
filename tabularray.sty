@@ -239,6 +239,24 @@
   }
 \cs_generate_variant:Nn \__tblr_split_before:NNnn { NNV }
 
+%% The name of a child index must start with uppercase letter.
+%% The name of a child selector must start with lowercase letter.
+
+\tl_const:Nn \c__tblr_upper_letter_tl { ABCDEFGHIJKLMNOPQRSTUVWXYZ }
+\tl_const:Nn \c__tblr_lower_letter_tl { abcdefghijklmnopqrstuvwxyz }
+
+\prg_new_protected_conditional:Npnn \__tblr_if_head_upper:n #1 { TF }
+  {
+    \tl_if_in:NeTF \c__tblr_upper_letter_tl { \tl_head:n { #1 } }
+      { \prg_return_true: } { \prg_return_false: }
+  }
+
+\prg_new_protected_conditional:Npnn \__tblr_if_head_lower:n #1 { TF }
+  {
+    \tl_if_in:NeTF \c__tblr_lower_letter_tl { \tl_head:n { #1 } }
+      { \prg_return_true: } { \prg_return_false: }
+  }
+
 %% When the key name is omitted, we need to detect the name from its value.
 
 \str_const:Nn \c__tblr_letter_str
@@ -1146,30 +1164,61 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Child Selectors}
+%%> \section{Child Indexers and Child Selectors}
 %%% --------------------------------------------------------
 
+\clist_new:N \gTblrUsedChildIndexerClist
 \clist_new:N \gTblrUsedChildSelectorClist
 
-\tl_new:N \l__tblr_childs_arg_spec_tl
+\msg_new:nnn { tabularray } { invalid-child-indexer }
+  { Child ~ indexer ~ name ~ '#1' ~ must ~ start ~ with ~ uppercase ~ letter. }
 
 \msg_new:nnn { tabularray } { invalid-child-selector }
-  { Could ~ not ~ define ~ single-letter ~ selector ~ '#1'. }
+  { Child ~ selector ~ name ~ '#1' ~ must ~ start ~ with ~ lowercase ~ letter. }
+
+\msg_new:nnn { tabularray } { used-child-indexer }
+  { Child ~ indexer ~ name ~ '#1' ~ has ~ been ~ used. }
 
 \msg_new:nnn { tabularray } { used-child-selector }
   { Child ~ selector ~ name ~ '#1' ~ has ~ been ~ used. }
 
-\NewDocumentCommand \NewChildSelector { m O{0} o m }
+\tl_new:N \l__tblr_child_arg_spec_tl
+
+\NewDocumentCommand \NewTblrChildIndexer { m O{0} o m }
+  {
+    \__tblr_new_child_indexer_aux:ennn { \tl_trim_spaces:n {#1} } {#2} {#3} {#4}
+  }
+
+\cs_new_protected:Npn \__tblr_new_child_indexer_aux:nnnn #1 #2 #3 #4
+  {
+    \__tblr_if_head_upper:nTF { #1 }
+      {
+        \clist_if_in:NnTF \gTblrUsedChildIndexerClist { #1 }
+          {
+            \msg_error:nnn { tabularray } { used-child-indexer } { #1 }
+            \clist_log:N \gTblrUsedChildIndexerClist
+          }
+          {
+            \__tblr_make_xparse_arg_spec:nnN
+              { #2 } { #3 } \l__tblr_child_arg_spec_tl
+            \exp_args:NcV \NewDocumentCommand
+              { __tblr_child_indexer_ #1 :w } \l__tblr_child_arg_spec_tl { #4 }
+            \clist_gput_right:Nn \gTblrUsedChildIndexerClist { #1 }
+          }
+      }
+      { \msg_error:nnn { tabularray } { invalid-child-indexer } { #1 } }
+  }
+\cs_generate_variant:Nn \__tblr_new_child_indexer_aux:nnnn { ennn }
+
+\NewDocumentCommand \NewTblrChildSelector { m O{0} o m }
   {
     \__tblr_new_child_selector_aux:ennn { \tl_trim_spaces:n {#1} } {#2} {#3} {#4}
   }
+\cs_set_eq:NN \NewChildSelector \NewTblrChildSelector
 
 \cs_new_protected:Npn \__tblr_new_child_selector_aux:nnnn #1 #2 #3 #4
   {
-    \int_compare:nNnTF { \tl_count:n {#1} } < { 2 }
-      {
-        \msg_error:nnn { tabularray } { invalid-child-selector } { #1 }
-      }
+    \__tblr_if_head_lower:nTF { #1 }
       {
         \clist_if_in:NnTF \gTblrUsedChildSelectorClist { #1 }
           {
@@ -1177,12 +1226,14 @@
             \clist_log:N \gTblrUsedChildSelectorClist
           }
           {
-            \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_childs_arg_spec_tl
+            \__tblr_make_xparse_arg_spec:nnN
+              { #2 } { #3 } \l__tblr_child_arg_spec_tl
             \exp_args:NcV \NewDocumentCommand
-              { __tblr_child_selector_ #1 :w } \l__tblr_childs_arg_spec_tl { #4 }
+              { __tblr_child_selector_ #1 :w } \l__tblr_child_arg_spec_tl { #4 }
             \clist_gput_right:Nn \gTblrUsedChildSelectorClist { #1 }
           }
       }
+      { \msg_error:nnn { tabularray } { invalid-child-selector } { #1 } }
   }
 \cs_generate_variant:Nn \__tblr_new_child_selector_aux:nnnn { ennn }
 
@@ -1199,8 +1250,24 @@
       }
   }
 
-\clist_new:N \lTblrChildClist
 \int_new:N \lTblrChildTotalInt
+\int_new:N \lTblrChildIndexInt
+\clist_new:N \lTblrChildClist
+
+\NewTblrChildIndexer {U}
+  { \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount - 5 } }
+\NewTblrChildIndexer {V}
+  { \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount - 4 } }
+\NewTblrChildIndexer {W}
+  { \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount - 3 } }
+\NewTblrChildIndexer {X}
+  { \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount - 2 } }
+\NewTblrChildIndexer {Y}
+  { \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount - 1 } }
+\NewTblrChildIndexer {Z} [1] [1]
+  {
+    \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount + 1 - #1 }
+  }
 
 \NewChildSelector { odd } [1] []
   {
@@ -1315,7 +1382,7 @@
 %% Convert U/V/W/X/Y/Z to the indexes of the last six children, respectively.
 \cs_new_protected_nopar:Npn \__tblr_child_name_to_index:nN #1 #2
   {
-    \clist_if_in:NnTF \c__tblr_child_name_clist {#1}
+    \clist_if_in:NnTF \gTblrUsedChildIndexerClist {#1}
       {
         \tl_set:Ne #2
           { \int_eval:n { \lTblrChildTotalInt + \int_from_alph:n {#1} - 26 } }
