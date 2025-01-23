@@ -86,6 +86,7 @@
 \cs_generate_variant:Nn \seq_set_split_keep_spaces:Nnn { Ne }
 \cs_generate_variant:Nn \seq_use:Nn { Ne }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
+\cs_generate_variant:Nn \tl_rescan:nn { ne }
 \prg_generate_conditional_variant:Nnn \clist_if_in:Nn { Ne } { TF }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { en } { TF }
 \prg_generate_conditional_variant:Nnn \str_if_in:Nn { Ne } { TF }
@@ -99,7 +100,7 @@
 \cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
 \cs_generate_variant:Nn \prop_put:Nnn { Nne, Nen, Nee, NeV }
 \cs_generate_variant:Nn \seq_put_right:Nn { Ne }
-\cs_generate_variant:Nn \seq_set_split:Nnn { Nne }
+\cs_generate_variant:Nn \seq_set_split:Nnn { Nne, NVn }
 \cs_generate_variant:Nn \str_gset:Nn { Ne }
 \cs_generate_variant:Nn \tl_const:Nn { ce }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Ne }
@@ -112,6 +113,7 @@
 \cs_generate_variant:Nn \tl_to_str:n { e }
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T, TF }
+\prg_generate_conditional_variant:Nnn \tl_if_in:nn { nV } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_in:Nn { Ne } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_head_eq_catcode:nN { VN } { TF }
 \prg_generate_conditional_variant:Nnn \tl_if_head_eq_meaning:nN { VN } { T, TF }
@@ -208,6 +210,7 @@
 %%% --------------------------------------------------------
 
 \str_const:Nn \c__tblr_comma_str { , }
+\str_const:Nn \c__tblr_dash_str { - }
 \str_const:Nn \c__tblr_left_bracket_str { [ }
 
 \cs_new_protected:Npn \__tblr_split_before_brace:NNn #1 #2 #3
@@ -244,6 +247,9 @@
 
 \tl_const:Nn \c__tblr_upper_letter_tl { ABCDEFGHIJKLMNOPQRSTUVWXYZ }
 \tl_const:Nn \c__tblr_lower_letter_tl { abcdefghijklmnopqrstuvwxyz }
+\str_const:Nn \c__tblr_upper_letter_str { ABCDEFGHIJKLMNOPQRSTUVWXYZ }
+\str_const:Nn \c__tblr_lower_letter_str { abcdefghijklmnopqrstuvwxyz }
+\str_const:Nn \c__tblr_digit_str { 0123456789 }
 
 \prg_new_protected_conditional:Npnn \__tblr_if_head_upper:n #1 { TF }
   {
@@ -256,6 +262,27 @@
     \tl_if_in:NeTF \c__tblr_lower_letter_tl { \tl_head:n { #1 } }
       { \prg_return_true: } { \prg_return_false: }
   }
+
+\prg_new_protected_conditional:Npnn \__tblr_str_if_upper:n #1 { TF }
+  {
+    \tl_if_in:NnTF \c__tblr_upper_letter_str { #1 }
+      { \prg_return_true: } { \prg_return_false: }
+  }
+\prg_generate_conditional_variant:Nnn \__tblr_str_if_upper:n { V } { TF }
+
+\prg_new_protected_conditional:Npnn \__tblr_str_if_lower:n #1 { TF }
+  {
+    \tl_if_in:NnTF \c__tblr_lower_letter_str { #1 }
+      { \prg_return_true: } { \prg_return_false: }
+  }
+\prg_generate_conditional_variant:Nnn \__tblr_str_if_lower:n { V } { TF }
+
+\prg_new_protected_conditional:Npnn \__tblr_str_if_digit:n #1 { TF }
+  {
+    \tl_if_in:NnTF \c__tblr_digit_str { #1 }
+      { \prg_return_true: } { \prg_return_false: }
+  }
+\prg_generate_conditional_variant:Nnn \__tblr_str_if_digit:n { e, V } { TF }
 
 %% When the key name is omitted, we need to detect the name from its value.
 
@@ -1202,7 +1229,7 @@
             \__tblr_make_xparse_arg_spec:nnN
               { #2 } { #3 } \l__tblr_child_arg_spec_tl
             \exp_args:NcV \NewDocumentCommand
-              { __tblr_child_indexer_ #1 :w } \l__tblr_child_arg_spec_tl { #4 }
+              { __tblr_child_indexer_ #1 } \l__tblr_child_arg_spec_tl { #4 }
             \clist_gput_right:Nn \gTblrUsedChildIndexerClist { #1 }
           }
       }
@@ -1229,7 +1256,7 @@
             \__tblr_make_xparse_arg_spec:nnN
               { #2 } { #3 } \l__tblr_child_arg_spec_tl
             \exp_args:NcV \NewDocumentCommand
-              { __tblr_child_selector_ #1 :w } \l__tblr_child_arg_spec_tl { #4 }
+              { __tblr_child_selector_ #1 } \l__tblr_child_arg_spec_tl { #4 }
             \clist_gput_right:Nn \gTblrUsedChildSelectorClist { #1 }
           }
       }
@@ -1255,18 +1282,34 @@
 \clist_new:N \lTblrChildClist
 
 \NewTblrChildIndexer {U}
-  { \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount - 5 } }
+  {
+    \int_set:Nn \lTblrChildIndexInt
+     { \int_max:nn { \lTblrChildTotalInt - 5 } { 1 } }
+  }
 \NewTblrChildIndexer {V}
-  { \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount - 4 } }
+  {
+    \int_set:Nn \lTblrChildIndexInt
+     { \int_max:nn { \lTblrChildTotalInt - 4 } { 1 } }
+  }
 \NewTblrChildIndexer {W}
-  { \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount - 3 } }
+  {
+    \int_set:Nn \lTblrChildIndexInt
+     { \int_max:nn { \lTblrChildTotalInt - 3 } { 1 } }
+  }
 \NewTblrChildIndexer {X}
-  { \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount - 2 } }
+  {
+    \int_set:Nn \lTblrChildIndexInt
+     { \int_max:nn { \lTblrChildTotalInt - 2 } { 1 } }
+  }
 \NewTblrChildIndexer {Y}
-  { \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount - 1 } }
+  {
+    \int_set:Nn \lTblrChildIndexInt
+     { \int_max:nn { \lTblrChildTotalInt - 1 } { 1 } }
+  }
 \NewTblrChildIndexer {Z} [1] [1]
   {
-    \int_set:Nn \lTblrChildIndexInt { \lTblrChildCount + 1 - #1 }
+    \int_set:Nn \lTblrChildIndexInt
+    { \int_max:nn { \lTblrChildTotalInt + 1 - #1 } { 1 } }
   }
 
 \NewChildSelector { odd } [1] []
@@ -1311,12 +1354,9 @@
 
 \clist_new:N \l__tblr_child_whole_clist
 \seq_new:N \l__child_spec_seq
-\tl_new:N \l__tblr_selector_name_tl
-\tl_new:N \l__tblr_selector_oarg_tl
-\tl_new:N \l__tblr_selector_marg_tl
-\tl_new:N \l__tblr_selector_args_tl
+\str_new:N \l__tblr_child_item_head_str
 
-%% #1, child specifications; #2, total number.
+%% #1, str of child specifications; #2, total number of children.
 %% The result will be put into \l__tblr_child_whole_clist
 \cs_new_protected:Npn \__tblr_child_parse:nn #1 #2
   {
@@ -1325,25 +1365,36 @@
       \c__tblr_comma_str { \tl_to_str:n {#1} }
     \seq_map_inline:Nn \l__child_spec_seq
       {
-        \__tblr_split_before_brace:NNn
-          \l_tmpa_tl \l__tblr_selector_marg_tl {##1}
-        \__tblr_split_before_bracket:NNV
-          \l__tblr_selector_name_tl \l__tblr_selector_oarg_tl \l_tmpa_tl
-        \tl_set_rescan:NnV \l__tblr_selector_name_tl {} \l__tblr_selector_name_tl
         \clist_clear:N \lTblrChildClist
         \int_set:Nn \lTblrChildTotalInt {#2}
-        \clist_if_in:NVTF \gTblrUsedChildSelectorClist \l__tblr_selector_name_tl
+        \tl_set:Ne \l__tblr_child_item_head_str { \tl_head:n {##1} }
+        \str_if_eq:VVTF \l__tblr_child_item_head_str \c__tblr_dash_str
+          { \clist_set:Ne \lTblrChildClist { {1} {1} {#2} } }
           {
-            \tl_set_rescan:Nne \l__tblr_selector_args_tl {}
+            \__tblr_str_if_lower:VTF \l__tblr_child_item_head_str
               {
-                \exp_not:V \l__tblr_selector_oarg_tl
-                \exp_not:V \l__tblr_selector_marg_tl
+                \__tblr_child_run_selector:n {##1}
               }
-            \exp_last_unbraced:Nno
-              \use:c { __tblr_child_selector_ \l__tblr_selector_name_tl :w }
-              { \l__tblr_selector_args_tl }
+              {
+                \__tblr_str_if_upper:VTF \l__tblr_child_item_head_str
+                  {
+                    \__tblr_child_split_item:n {##1}
+                    \__tblr_child_run_indexer_from:
+                    \__tblr_child_parse_indexer_to:
+                  }
+                  {
+                    \__tblr_str_if_digit:VTF \l__tblr_child_item_head_str
+                      {
+                        \__tblr_child_split_item:n {##1}
+                        \__tblr_child_set_index_from:
+                        \__tblr_child_parse_indexer_to:
+                      }
+                      {
+                        % error
+                      }
+                  }
+              }
           }
-          { \l__tblr_child_parse_normal:Vn \l__tblr_selector_name_tl {#2} }
         \clist_concat:NNN \l__tblr_child_whole_clist
           \l__tblr_child_whole_clist \lTblrChildClist
       }
@@ -1351,27 +1402,78 @@
   }
 \cs_generate_variant:Nn \__tblr_child_parse:nn { ne }
 
-\cs_new_protected:Npn \l__tblr_child_parse_normal:nn #1 #2
+\cs_new_protected:Npn \__tblr_child_run_selector:n #1
   {
-    \tl_if_eq:nnTF {#1} {-}
-      { \clist_set:Ne \lTblrChildClist { {1} {1} {#2} } }
+    \tl_rescan:ne { \cctab_select:N \c_code_cctab }
+      { \c_backslash_str __tblr_child_selector_ #1 }
+    \scan_stop: % for selectors with only optional arguments
+  }
+
+\cs_new_protected:Npn \__tblr_child_run_indexer:n #1
+  {
+    \tl_rescan:ne { \cctab_select:N \c_code_cctab }
+      { \c_backslash_str __tblr_child_indexer_ #1 }
+    \scan_stop: % for indexers with only optional arguments
+  }
+\cs_generate_variant:Nn \__tblr_child_run_indexer:n { V }
+
+\seq_new:N \l__tblr_child_item_seq
+\str_new:N \l__tblr_child_from_str
+\str_new:N \l__tblr_child_to_str
+
+\cs_new_protected:Npn \__tblr_child_split_item:n #1
+  {
+    \seq_set_split:NVn  \l__tblr_child_item_seq \c__tblr_dash_str {#1}
+    \tl_set:Ne \l__tblr_child_from_str
+      { \seq_item:Nn \l__tblr_child_item_seq {1} }
+    \tl_set:Ne \l__tblr_child_to_str
+      { \seq_item:Nn \l__tblr_child_item_seq {2} }
+  }
+
+\cs_new_protected:Npn \__tblr_child_parse_indexer_to:
+  {
+    \str_if_empty:NTF \l__tblr_child_to_str
+      { \clist_set:Ne \lTblrChildClist { \int_use:N \l__tblr_child_from_int } }
       {
-        \tl_if_in:nnTF {#1} {-}
-          { \__tblr_child_parse_normal_aux:w #1 \scan_stop }
-          {
-            \__tblr_child_name_to_index:nN {#1} \l__tblr_child_from_tl
-            \clist_set:Ne \lTblrChildClist { \l__tblr_child_from_tl }
-          }
+        \__tblr_str_if_digit:eTF { \tl_head:N \l__tblr_child_to_str }
+          { \__tblr_child_set_index_to: } { \__tblr_child_run_indexer_to: }
+        \__tblr_child_set_clist:
       }
   }
-\cs_generate_variant:Nn \l__tblr_child_parse_normal:nn { Vn }
 
-\cs_new_protected_nopar:Npn \__tblr_child_parse_normal_aux:w #1 - #2 \scan_stop
+\int_new:N \l__tblr_child_from_int
+\int_new:N \l__tblr_child_to_int
+
+\cs_new_protected:Npn \__tblr_child_run_indexer_from:
   {
-    \__tblr_child_name_to_index:nN {#1} \l__tblr_child_from_tl
-    \__tblr_child_name_to_index:nN {#2} \l__tblr_child_to_tl
+    \__tblr_child_run_indexer:V \l__tblr_child_from_str
+    \int_set_eq:NN \l__tblr_child_from_int \lTblrChildIndexInt
+  }
+
+\cs_new_protected:Npn \__tblr_child_run_indexer_to:
+  {
+    \__tblr_child_run_indexer:V \l__tblr_child_to_str
+    \int_set_eq:NN \l__tblr_child_to_int \lTblrChildIndexInt
+  }
+
+\cs_new_protected:Npn \__tblr_child_set_index_from:
+  {
+    \int_set:Nn \l__tblr_child_from_int { \l__tblr_child_from_str }
+  }
+
+\cs_new_protected:Npn \__tblr_child_set_index_to:
+  {
+    \int_set:Nn \l__tblr_child_to_int { \l__tblr_child_to_str }
+  }
+
+\cs_new_protected:Npn \__tblr_child_set_clist:
+  {
     \clist_set:Ne \lTblrChildClist
-      { { \l__tblr_child_from_tl } {1} { \l__tblr_child_to_tl } }
+      {
+        { \int_use:N \l__tblr_child_from_int }
+        { 1 }
+        { \int_use:N \l__tblr_child_to_int }
+      }
   }
 
 \msg_new:nnn { tabularray } { named-index-out-of-bound }
