@@ -29,8 +29,9 @@
 | Test file   | What it tests |
 | :---        | :---          |
 | `extra-001` | `expand` outer option |
-| `extra-002` | `odd`/`even` selectors and `U-Z` indexes |
+| `extra-002` | `odd`/`even`/`every` selectors and `U-Z` indexes (#576) |
 | `extra-003` | mix child selectors with child indexes (#577) |
+| `extra-004` | indexers and selectors for child tuples (#381) |
 
 # Test files for hlines and vlines
 

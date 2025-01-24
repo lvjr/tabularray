@@ -1465,7 +1465,7 @@
 
 %% #1, str of child tuple specifications; #2 and #3, total numbers of children.
 %% The result will be put into \l__tblr_child_tuple_whole_clist
-\cs_new_protected:Npn \__tblr_child_tuple_parse:nnn #1 #2 #3
+\cs_new_protected:Npn \__tblr_child_parse_tuple:nnn #1 #2 #3
   {
     \clist_clear:N \l__tblr_child_tuple_whole_clist
     \tl_set_rescan:Nnn \l__child_spec_tl {} {#1}
@@ -1500,6 +1500,7 @@
       }
     %\clist_log:N \l__tblr_child_tuple_whole_clist
   }
+\cs_generate_variant:Nn \__tblr_child_parse_tuple:nnn { nee }
 
 \int_new:N \l__child_diff_h_int
 \int_new:N \l__child_diff_v_int
@@ -2429,14 +2430,37 @@
     \group_end:
   }
 
-%% Check the number of arguments and call \tblr_set_cell in different ways
-%% Note that #1 is always of the type {<i>}{<j>}
-%% This function is called when parsing table specifications
+\cs_new_protected:Npn \__tblr_set_cell_tuple:nnn #1 #2 #3
+  {
+    \group_begin:
+    \__tblr_child_parse_tuple:nee {#1}
+      { \int_use:N \c@rowcount } { \int_use:N \c@colcount }
+    \clist_map_inline:Nn \l__tblr_child_tuple_whole_clist
+      {
+        \int_set:Nn \c@rownum { \use_i:nn ##1 }
+        \int_set:Nn \c@colnum { \use_ii:nn ##1 }
+        \tblr_set_cell:nn {#2} {#3}
+      }
+    \group_end:
+  }
+
+%% Check the number of arguments and call \tblr_set_cell in different ways.
+%% #1 consists of either two tl items {h_1,h_2,...,h_m}{v_1,v_2,...,v_n},
+%% or one tl item {{h_1}{v_1},{h_2}{v_2},...,{h_k}{v_k}}.
+%% This function is called when parsing table specifications.
 \cs_new_protected:Npn \__tblr_set_cell_aux:nn #1 #2
   {
-    \tl_if_head_is_group:nTF {#2}
-      { \tblr_set_cell:nnnn #1 #2 }
-      { \tblr_set_cell:nnnn #1 {} {#2} }
+    \tl_if_single:nTF {#1}
+      {
+        \tl_if_head_is_group:nTF {#2}
+          { \__tblr_set_cell_tuple:nnn #1 #2 }
+          { \__tblr_set_cell_tuple:nnn #1 {} {#2} }
+      }
+      {
+        \tl_if_head_is_group:nTF {#2}
+          { \tblr_set_cell:nnnn #1 #2 }
+          { \tblr_set_cell:nnnn #1 {} {#2} }
+      }
   }
 \cs_generate_variant:Nn \__tblr_set_cell_aux:nn { Vn }
 
