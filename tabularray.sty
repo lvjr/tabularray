@@ -1274,6 +1274,8 @@
   }
 
 \int_new:N \lTblrChildTotalInt
+\int_new:N \lTblrChildTotalHInt
+\int_new:N \lTblrChildTotalVInt
 \tl_new:N \lTblrChildIndexTl % may be <i> or {<i>}{<j>}
 \clist_new:N \lTblrChildClist
 
@@ -1380,13 +1382,13 @@
                   {
                     \__tblr_child_split_item:n {##1}
                     \__tblr_child_run_indexer_from:
-                    \__tblr_child_parse_indexer_to:
+                    \__tblr_child_parse_indexer_to:N \__tblr_child_set_clist:
                   }
                   {
                     \__tblr_tl_if_digit:VTF \l__tblr_child_item_head_tl
                       {
                         \__tblr_child_split_item:n {##1}
-                        \__tblr_child_parse_indexer_to:
+                        \__tblr_child_parse_indexer_to:N \__tblr_child_set_clist:
                       }
                       {
                         % error
@@ -1428,14 +1430,14 @@
       { \seq_item:Nn \l__tblr_child_item_seq {2} }
   }
 
-\cs_new_protected:Npn \__tblr_child_parse_indexer_to:
+\cs_new_protected:Npn \__tblr_child_parse_indexer_to:N #1
   {
     \str_if_empty:NTF \l__tblr_child_to_tl
       { \clist_set:NV \lTblrChildClist \l__tblr_child_from_tl }
       {
         \__tblr_tl_if_digit:eF { \tl_head:N \l__tblr_child_to_tl }
           { \__tblr_child_run_indexer_to: }
-        \__tblr_child_set_clist:
+        #1
       }
   }
 
@@ -1456,6 +1458,94 @@
     \clist_set:Ne \lTblrChildClist
       {
         { \l__tblr_child_from_tl } { 1 } { \l__tblr_child_to_tl }
+      }
+  }
+
+\clist_new:N \l__tblr_child_tuple_whole_clist
+
+%% #1, str of child tuple specifications; #2 and #3, total numbers of children.
+%% The result will be put into \l__tblr_child_tuple_whole_clist
+\cs_new_protected:Npn \__tblr_child_tuple_parse:nnn #1 #2 #3
+  {
+    \clist_clear:N \l__tblr_child_tuple_whole_clist
+    \tl_set_rescan:Nnn \l__child_spec_tl {} {#1}
+    \seq_set_split:NnV \l__child_spec_seq {,} \l__child_spec_tl
+    \seq_map_inline:Nn \l__child_spec_seq
+      {
+        \clist_clear:N \lTblrChildClist
+        \int_set:Nn \lTblrChildTotalHInt {#2}
+        \int_set:Nn \lTblrChildTotalVInt {#3}
+        \tl_if_head_is_group:nTF {##1}
+          {
+            \__tblr_child_split_item:n {##1}
+            \__tblr_child_parse_indexer_to:N \__tblr_child_set_clist_tuple:
+          }
+          {
+            \tl_set:Ne \l__tblr_child_item_head_tl { \tl_head:n {##1} }
+            \__tblr_tl_if_upper:VTF \l__tblr_child_item_head_tl
+              {
+                \__tblr_child_split_item:n {##1}
+                \__tblr_child_run_indexer_from:
+                \__tblr_child_parse_indexer_to:N \__tblr_child_set_clist_tuple:
+              }
+              {
+                \__tblr_tl_if_lower:VTF \l__tblr_child_item_head_tl
+                  { \__tblr_child_run_selector:n {##1} }
+                  {
+                    % error
+                  }
+              }
+          }
+        \clist_put_right:NV \l__tblr_child_tuple_whole_clist \lTblrChildClist
+      }
+    %\clist_log:N \l__tblr_child_tuple_whole_clist
+  }
+
+\int_new:N \l__child_diff_h_int
+\int_new:N \l__child_diff_v_int
+\int_new:N \l__child_sign_h_int
+\int_new:N \l__child_sign_v_int
+\int_new:N \l__child_step_int
+
+\cs_new_protected:Npn \__tblr_child_set_clist_tuple:
+  {
+    \int_set:Nn \l__child_diff_h_int
+      {
+          \exp_after:wN \use_i:nn \l__tblr_child_to_tl
+        - \exp_after:wN \use_i:nn \l__tblr_child_from_tl
+      }
+    \int_set:Nn \l__child_diff_v_int
+      {
+          \exp_after:wN \use_ii:nn \l__tblr_child_to_tl
+        - \exp_after:wN \use_ii:nn \l__tblr_child_from_tl
+      }
+    \int_set:Nn \l__child_sign_h_int { \int_sign:n { \l__child_diff_h_int } }
+    \int_set:Nn \l__child_sign_v_int { \int_sign:n { \l__child_diff_v_int } }
+    \int_set:Nn \l__child_step_int
+      {
+        \int_min:nn
+          { \int_abs:n { \l__child_diff_h_int } }
+          { \int_abs:n { \l__child_diff_v_int } }
+      }
+    \int_step_inline:nnn { 0 } { \l__child_step_int }
+      {
+        \clist_put_right:Ne \lTblrChildClist
+          {
+            {
+              \int_eval:n
+                {
+                  \exp_after:wN \use_i:nn \l__tblr_child_from_tl
+                  + ##1 * \l__child_sign_h_int
+                }
+            }
+            {
+              \int_eval:n
+                {
+                  \exp_after:wN \use_ii:nn \l__tblr_child_from_tl
+                  + ##1 * \l__child_sign_v_int
+                }
+            }
+          }
       }
   }
 
