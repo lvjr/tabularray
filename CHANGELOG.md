@@ -18,8 +18,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Add `\DeclareTblrKeys` and `\SetTblrKeys` commands ([#547])
 - Add `\lTblrDefaultHruleWidthDim` and `\lTblrDefaultVruleWidthDim` ([#102], [#527])
 - Add `\lTblrDefaultHruleColorTl` and `\lTblrDefaultVruleColorTl` ([#172])
-- Allow `U`/`V`/`W`/`X`/`Y`/`Z` in from-part of `odd`/`even` selector ([#385])
-- Ensure the converted index of `U`/`V`/`W`/`X`/`Y`/`Z` is positive ([#385])
 - Always parse entire child index list ([#577])
 - Add benchmark tests and publish results to `gh-pages` branch ([#480])
 - Add new chapter "Experimental Interfaces" in the manual
@@ -43,6 +41,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Rename all key paths and add `tabularray` prefix to them ([#547])
 - Raise an error for using an undefined template in `\SetTblrTemplate` ([#517])
 - Replace `x`-type expansions with `e`-type expansions ([#560])
+- Make `odd`/`even` selector accept only start index ([#580])
+- Ensure the converted index of `U`/`V`/`W`/`X`/`Y`/`Z` is positive ([#385, #578])
 - Rename `\l_tblr_childs_clist` as `\lTblrChildClist` ([#249], [#527])
 - Rename `\l_tblr_childs_total_tl` as `\lTblrChildTotalInt` ([#249], [#527])
 - Rename `\lTblrCellRowSpanTl` as `\lTblrCellRowSpanInt` ([#527])
@@ -385,6 +385,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#574]: https://github.com/lvjr/tabularray/issues/574
 [#575]: https://github.com/lvjr/tabularray/issues/575
 [#577]: https://github.com/lvjr/tabularray/issues/577
+[#578]: https://github.com/lvjr/tabularray/issues/578
+[#580]: https://github.com/lvjr/tabularray/issues/580
 
 [Unreleased]: https://github.com/lvjr/tabularray/compare/2024A...HEAD
 [v2025A]: https://github.com/lvjr/tabularray/compare/2024A...2025A
