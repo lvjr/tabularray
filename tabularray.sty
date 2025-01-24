@@ -1190,8 +1190,8 @@
 %%> \section{Child Indexers and Child Selectors}
 %%% --------------------------------------------------------
 
-\clist_new:N \gTblrUsedChildIndexerClist
-\clist_new:N \gTblrUsedChildSelectorClist
+\clist_new:N \lTblrUsedChildIndexerClist
+\clist_new:N \lTblrUsedChildSelectorClist
 
 \msg_new:nnn { tabularray } { invalid-child-indexer }
   { Child ~ indexer ~ name ~ '#1' ~ must ~ start ~ with ~ uppercase ~ letter. }
@@ -1216,17 +1216,17 @@
   {
     \__tblr_if_head_upper:nTF { #1 }
       {
-        \clist_if_in:NnTF \gTblrUsedChildIndexerClist { #1 }
+        \clist_if_in:NnTF \lTblrUsedChildIndexerClist { #1 }
           {
             \msg_error:nnn { tabularray } { used-child-indexer } { #1 }
-            \clist_log:N \gTblrUsedChildIndexerClist
+            \clist_log:N \lTblrUsedChildIndexerClist
           }
           {
             \__tblr_make_xparse_arg_spec:nnN
               { #2 } { #3 } \l__tblr_child_arg_spec_tl
             \exp_args:NcV \NewDocumentCommand
               { __tblr_child_indexer_ #1 } \l__tblr_child_arg_spec_tl { #4 }
-            \clist_gput_right:Nn \gTblrUsedChildIndexerClist { #1 }
+            \clist_put_right:Nn \lTblrUsedChildIndexerClist { #1 }
           }
       }
       { \msg_error:nnn { tabularray } { invalid-child-indexer } { #1 } }
@@ -1243,17 +1243,17 @@
   {
     \__tblr_if_head_lower:nTF { #1 }
       {
-        \clist_if_in:NnTF \gTblrUsedChildSelectorClist { #1 }
+        \clist_if_in:NnTF \lTblrUsedChildSelectorClist { #1 }
           {
             \msg_error:nnn { tabularray } { used-child-selector } { #1 }
-            \clist_log:N \gTblrUsedChildSelectorClist
+            \clist_log:N \lTblrUsedChildSelectorClist
           }
           {
             \__tblr_make_xparse_arg_spec:nnN
               { #2 } { #3 } \l__tblr_child_arg_spec_tl
             \exp_args:NcV \NewDocumentCommand
               { __tblr_child_selector_ #1 } \l__tblr_child_arg_spec_tl { #4 }
-            \clist_gput_right:Nn \gTblrUsedChildSelectorClist { #1 }
+            \clist_put_right:Nn \lTblrUsedChildSelectorClist { #1 }
           }
       }
       { \msg_error:nnn { tabularray } { invalid-child-selector } { #1 } }
