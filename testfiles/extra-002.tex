@@ -10,12 +10,12 @@
 
 \START
 
-\BEGINTEST{even and odd selectors with options}
+\BEGINTEST{even, odd and every selectors with options}
 \begin{tblr}{
   row{1} = {gray9},
   cell{odd}{1} = {red9},
   cell{odd[4]}{2} = {green9},
-  cell{odd[3-X]}{3} = {blue9},
+  cell{every[2]{3}{-3}}{3} = {blue9},
 }
   Head  &Head   &Head  \\
   Talk A&Place A&Date A\\
@@ -42,7 +42,7 @@
   row{1} = {gray9},
   cell{even}{1} = {yellow9},
   cell{even[4]}{2} = {cyan9},
-  cell{even[3-X]}{3} = {purple9},
+  cell{every[2]{4}{-3}}{3} = {purple9},
 }
   Head  &Head   &Head  \\
   Talk A&Place A&Date A\\
@@ -87,10 +87,10 @@
 
 \bigskip\hrule\bigskip
 
-\BEGINTEST{named indexes U-Z in child from}
+\BEGINTEST{every selector with negative start and end indexes}
 \begin{tblr}{
   hlines, vlines,
-  cell{-}{even[X-Z]}={preto=x}
+  cell{-}{every{-3}{-1}}={preto=x}
 }
   & & & \\
 \end{tblr}

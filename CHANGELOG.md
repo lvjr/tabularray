@@ -18,7 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Add `\DeclareTblrKeys` and `\SetTblrKeys` commands ([#547])
 - Add `\lTblrDefaultHruleWidthDim` and `\lTblrDefaultVruleWidthDim` ([#102], [#527])
 - Add `\lTblrDefaultHruleColorTl` and `\lTblrDefaultVruleColorTl` ([#172])
-- Always parse entire child index list ([#577])
+- Allow mixing child selectors and child indexes ([#577])
+- Add child selector `every` ([#576])
 - Add benchmark tests and publish results to `gh-pages` branch ([#480])
 - Add new chapter "Experimental Interfaces" in the manual
 - Document how to use color models with `functional` library ([#106])
@@ -384,6 +385,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#563]: https://github.com/lvjr/tabularray/issues/563
 [#574]: https://github.com/lvjr/tabularray/issues/574
 [#575]: https://github.com/lvjr/tabularray/issues/575
+[#576]: https://github.com/lvjr/tabularray/issues/576
 [#577]: https://github.com/lvjr/tabularray/issues/577
 [#578]: https://github.com/lvjr/tabularray/issues/578
 [#580]: https://github.com/lvjr/tabularray/issues/580
