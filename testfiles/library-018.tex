@@ -12,23 +12,28 @@
 \hrule\bigskip
 
 \BEGINTEST{tikz corner nodes: normal cells in a short table}
-\begin{tblr}{hlines={wd=4pt},vlines={wd=3pt}}
-  1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
-  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
-  3-1 & 3-2 & 3-3 & 3-4 & 3-5
-\end{tblr}%
-\begin{tblrtikzafter}
+\begin{tblrtikzabove}
   \draw[color=white,thick]
        (h1-|v1) -- (h1-|v2) -- (h2-|v2)
     -- (h2-|v3) -- (h3-|v3) -- (h3-|v4)
     -- (h4-|v4) -- (h4-|v5) -- (h2-|v5)
     -- (h2-|v6) -- (h1-|v6);
-\end{tblrtikzafter}
+\end{tblrtikzabove}%
+\begin{tblr}{hlines={wd=4pt},vlines={wd=3pt}}
+  1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
+  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
+  3-1 & 3-2 & 3-3 & 3-4 & 3-5
+\end{tblr}
 \ENDTEST
 
 \bigskip\hrule\bigskip
 
 \BEGINTEST{tikz corner nodes: multispan cells in a tall table}
+\begin{tblrtikzabove}
+  \draw[color=purple3]
+    (h1-|v1) -- (h1-|v2) -- (h2-|v2) -- (h2-|v3) -- (h3-|v3) -- (h3-|v4)
+             -- (h4-|v4) -- (h4-|v5) -- (h2-|v5) -- (h2-|v6) -- (h1-|v6);
+\end{tblrtikzabove}%
 \begin{talltblr}[
   caption={I am tall}
 ]{
@@ -45,12 +50,7 @@
   1 & 2       & 3 &   &   \\
     & foo bar &   & 4 & 5 \\
   6 &         &   & 7 & 8 %\\
-\end{talltblr}%
-\begin{tblrtikzafter}
-  \draw[color=purple3]
-    (h1-|v1) -- (h1-|v2) -- (h2-|v2) -- (h2-|v3) -- (h3-|v3) -- (h3-|v4)
-             -- (h4-|v4) -- (h4-|v5) -- (h2-|v5) -- (h2-|v6) -- (h1-|v6);
-\end{tblrtikzafter}
+\end{talltblr}
 \ENDTEST
 
 \end{document}

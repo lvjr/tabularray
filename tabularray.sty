@@ -8420,8 +8420,8 @@
 
 %% Library tikz to add table nodes, cell nodes and corner nodes with tikz
 
-\tl_new:N \g__tblr_tikz_before_code_tl
-\tl_new:N \g__tblr_tikz_after_code_tl
+\tl_new:N \g__tblr_tikz_below_code_tl
+\tl_new:N \g__tblr_tikz_above_code_tl
 \dim_new:N \l__tblr_cell_inner_wd_dim
 \dim_new:N \l__tblr_cell_inner_dp_dim
 \dim_new:N \l__tblr_cell_hanchor_dim
@@ -8457,9 +8457,9 @@
         tblr / table / .style = { } ,
         tblr / overlay / .style = { }
       }
-    \NewDocumentEnvironment { tblrtikzbefore } { +b }
+    \NewDocumentEnvironment { tblrtikzbelow } { +b }
       {
-        \tl_gset:Nn \g__tblr_tikz_before_code_tl
+        \tl_gset:Nn \g__tblr_tikz_below_code_tl
           {
             \begin{tikzpicture}
               [
@@ -8472,9 +8472,9 @@
             \end{tikzpicture}
           }
       } { }
-    \NewDocumentEnvironment { tblrtikzafter } { +b }
+    \NewDocumentEnvironment { tblrtikzabove } { +b }
       {
-        \tl_gset:Nn \g__tblr_tikz_after_code_tl
+        \tl_gset:Nn \g__tblr_tikz_above_code_tl
           {
             \begin{tikzpicture}
               [
@@ -8654,18 +8654,18 @@
           ]
           \tl_use:N \l__tblr_tikz_corner_node_code_tl
         \end{tikzpicture}
-        \tl_if_empty:NF \g__tblr_tikz_before_code_tl
+        \tl_if_empty:NF \g__tblr_tikz_below_code_tl
           {
-            \tl_use:N \g__tblr_tikz_before_code_tl
-            \tl_gclear:N \g__tblr_tikz_before_code_tl
+            \tl_use:N \g__tblr_tikz_below_code_tl
+            \tl_gclear:N \g__tblr_tikz_below_code_tl
           }
       }
     \AddToTblrHook { private/output/after } [ tblrlibtikz ]
       {
-        \tl_if_empty:NF \g__tblr_tikz_after_code_tl
+        \tl_if_empty:NF \g__tblr_tikz_above_code_tl
           {
-            \tl_use:N \g__tblr_tikz_after_code_tl
-            \tl_gclear:N \g__tblr_tikz_after_code_tl
+            \tl_use:N \g__tblr_tikz_above_code_tl
+            \tl_gclear:N \g__tblr_tikz_above_code_tl
           }
       }
   }

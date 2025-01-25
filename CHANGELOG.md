@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
   - Create cell nodes `<i>-<j>` for each cell
   - Create corner nodes `h<i>` for each hborder
   - Create corner nodes `v<j>` for each vborder
-  - Create `tblrtikzbefore` and `tblrtikzafter` environments
+  - Create `tblrtikzbelow` and `tblrtikzabove` environments
 - Add `measure=vstore` option to `varwidth` library ([#549])
 - Add `\AddToTblrHook` and `\AddToTblrHookNext` commands ([#197])
 - Add `\DeclareTblrKeys` and `\SetTblrKeys` commands ([#547])

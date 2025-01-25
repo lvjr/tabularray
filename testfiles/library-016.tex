@@ -12,20 +12,11 @@
 \hrule\bigskip
 
 \BEGINTEST{tikz: normal cells in a short table without a name}
-\begin{tblrtikzbefore}
+\begin{tblrtikzbelow}
   \fill[pattern color=lightgray,pattern=bricks]
     (table.north east) rectangle (table.south west);
-\end{tblrtikzbefore}%
-\begin{tblr}{|c|c|c|[2pt]|c|c|}
-\hline
-  1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
-\hline
-  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
-\hline\hline[1pt]
-  3-1 & 3-2 & 3-3 & 3-4 & 3-5 \\
-\cline[2pt]{1-2}\cline[1pt]{3}\cline[3pt]{4-5}
-\end{tblr}%
-\begin{tblrtikzafter}
+\end{tblrtikzbelow}%
+\begin{tblrtikzabove}
   \fill[yellow7] (1-1.north west) rectangle (1-1.south east);
   \fill[red7] (1-3.north west) rectangle (1-3.south east);
   \fill[blue7] (1-5.north west) rectangle (1-5.south east);
@@ -34,16 +25,34 @@
   \fill[purple7] (3-1.north west) rectangle (3-1.south east);
   \fill[green7] (3-3.north west) rectangle (3-3.south east);
   \fill[azure7] (3-5.north west) rectangle (3-5.south east);
-\end{tblrtikzafter}
+\end{tblrtikzabove}%
+\begin{tblr}{|c|c|c|[2pt]|c|c|}
+\hline
+  1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
+\hline
+  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
+\hline\hline[1pt]
+  3-1 & 3-2 & 3-3 & 3-4 & 3-5 \\
+\cline[2pt]{1-2}\cline[1pt]{3}\cline[3pt]{4-5}
+\end{tblr}
 \ENDTEST
 
 \bigskip\hrule\bigskip
 
 \BEGINTEST{tikz: normal cells in a tall table without a name}
-\begin{tblrtikzbefore}
+\begin{tblrtikzbelow}
   \fill[pattern color=lightgray,pattern=dots]
     (table.north east) rectangle (table.south west);
-\end{tblrtikzbefore}%
+\end{tblrtikzbelow}%
+\begin{tblrtikzabove}
+  \fill[yellow7] (1-2.north west) rectangle (1-2.south east);
+  \fill[red7] (1-4.north west) rectangle (1-4.south east);
+  \fill[cyan7] (2-1.north west) rectangle (2-1.south east);
+  \fill[teal7] (2-3.north west) rectangle (2-3.south east);
+  \fill[purple7] (2-5.north west) rectangle (2-5.south east);
+  \fill[green7] (3-2.north west) rectangle (3-2.south east);
+  \fill[azure7] (3-4.north west) rectangle (3-4.south east);
+\end{tblrtikzabove}%
 \begin{talltblr}[caption={I am tall}]{|c|c|c|[2pt]|c|c|}
 \hline
   1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
@@ -52,8 +61,17 @@
 \hline\hline[1pt]
   3-1 & 3-2 & 3-3 & 3-4 & 3-5 \\
 \cline[2pt]{1-2}\cline[1pt]{3}\cline[3pt]{4-5}
-\end{talltblr}%
-\begin{tblrtikzafter}
+\end{talltblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{tikz: normal cells in a short table with a name}
+\begin{tblrtikzbelow}
+  \fill[pattern color=lightgray,pattern=crosshatch]
+    (table.north east) rectangle (table.south west);
+\end{tblrtikzbelow}%
+\begin{tblrtikzabove}
   \fill[yellow7] (1-2.north west) rectangle (1-2.south east);
   \fill[red7] (1-4.north west) rectangle (1-4.south east);
   \fill[cyan7] (2-1.north west) rectangle (2-1.south east);
@@ -61,16 +79,7 @@
   \fill[purple7] (2-5.north west) rectangle (2-5.south east);
   \fill[green7] (3-2.north west) rectangle (3-2.south east);
   \fill[azure7] (3-4.north west) rectangle (3-4.south east);
-\end{tblrtikzafter}
-\ENDTEST
-
-\bigskip\hrule\bigskip
-
-\BEGINTEST{tikz: normal cells in a short table with a name}
-\begin{tblrtikzbefore}
-  \fill[pattern color=lightgray,pattern=crosshatch]
-    (table.north east) rectangle (table.south west);
-\end{tblrtikzbefore}%
+\end{tblrtikzabove}%
 \begin{tblr}{colspec={|c|c|c|[2pt]|c|c|},name=foobar}
 \hline
   1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
@@ -79,25 +88,26 @@
 \hline\hline[1pt]
   3-1 & 3-2 & 3-3 & 3-4 & 3-5 \\
 \cline[2pt]{1-2}\cline[1pt]{3}\cline[3pt]{4-5}
-\end{tblr}%
-\begin{tblrtikzafter}
-  \fill[yellow7] (1-2.north west) rectangle (1-2.south east);
-  \fill[red7] (1-4.north west) rectangle (1-4.south east);
-  \fill[cyan7] (2-1.north west) rectangle (2-1.south east);
-  \fill[teal7] (2-3.north west) rectangle (2-3.south east);
-  \fill[purple7] (2-5.north west) rectangle (2-5.south east);
-  \fill[green7] (3-2.north west) rectangle (3-2.south east);
-  \fill[azure7] (3-4.north west) rectangle (3-4.south east);
-\end{tblrtikzafter}
+\end{tblr}
 \ENDTEST
 
 \bigskip\hrule\bigskip
 
 \BEGINTEST{tikz: normal cells in a tall table with a name}
-\begin{tblrtikzbefore}
+\begin{tblrtikzbelow}
   \fill[pattern color=lightgray,pattern=checkerboard]
     (table.north east) rectangle (table.south west);
-\end{tblrtikzbefore}%
+\end{tblrtikzbelow}%
+\begin{tblrtikzabove}
+  \fill[yellow7] (1-1.north west) rectangle (1-1.south east);
+  \fill[red7] (1-3.north west) rectangle (1-3.south east);
+  \fill[blue7] (1-5.north west) rectangle (1-5.south east);
+  \fill[cyan7] (2-2.north west) rectangle (2-2.south east);
+  \fill[teal7] (2-4.north west) rectangle (2-4.south east);
+  \fill[purple7] (3-1.north west) rectangle (3-1.south east);
+  \fill[green7] (3-3.north west) rectangle (3-3.south east);
+  \fill[azure7] (3-5.north west) rectangle (3-5.south east);
+\end{tblrtikzabove}%
 \begin{talltblr}[
   caption={I am tall}
 ]{
@@ -110,17 +120,7 @@
 \hline\hline[1pt]
   3-1 & 3-2 & 3-3 & 3-4 & 3-5 \\
 \cline[2pt]{1-2}\cline[1pt]{3}\cline[3pt]{4-5}
-\end{talltblr}%
-\begin{tblrtikzafter}
-  \fill[yellow7] (1-1.north west) rectangle (1-1.south east);
-  \fill[red7] (1-3.north west) rectangle (1-3.south east);
-  \fill[blue7] (1-5.north west) rectangle (1-5.south east);
-  \fill[cyan7] (2-2.north west) rectangle (2-2.south east);
-  \fill[teal7] (2-4.north west) rectangle (2-4.south east);
-  \fill[purple7] (3-1.north west) rectangle (3-1.south east);
-  \fill[green7] (3-3.north west) rectangle (3-3.south east);
-  \fill[azure7] (3-5.north west) rectangle (3-5.south east);
-\end{tblrtikzafter}
+\end{talltblr}
 \ENDTEST
 
 \end{document}

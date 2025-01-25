@@ -627,11 +627,10 @@ you can draw \PP{tikz} pictures below or above \PP{tabularray} (short or tall) t
 Note that this library depends on and loads \PP{hook} library.
 
 To draw below/above a \PP{tabularray} table,
-write some \PP{tikz} code inside \EE{tblrtikzbefore}/\EE{tblrtikzafter} environment,
-which should normally be put before/after the table.
-You need two compilations to get desired result.
+write some \PP{tikz} code inside \EE{tblrtikzbelow}/\EE{tblrtikzabove} environment.
+Both of them should be put before the table, and two compilations are needed to get desired result.
 
-Inside \EE{tblrtikzbefore}/\EE{tblrtikzafter} environment, you can use these predefined nodes:
+Inside \EE{tblrtikzbelow}/\EE{tblrtikzabove} environment, you can use these predefined nodes:
 
 \begin{spectblr}[
   caption = {Nodes created by \PP{tikz} library}
@@ -648,38 +647,38 @@ Inside \EE{tblrtikzbefore}/\EE{tblrtikzafter} environment, you can use these pre
 The first example below demonstrates the table node and cell nodes:
 
 \begin{demohigh}
-\begin{tblrtikzbefore}
+\begin{tblrtikzbelow}
   \path[pattern color=lightgray,pattern=checkerboard,
         draw=blue3, ultra thick, rounded corners]
     (table.north west) rectangle (table.south east);
-\end{tblrtikzbefore}%
+\end{tblrtikzbelow}%
+\begin{tblrtikzabove}
+  \draw[red3, thick]
+    (2-2.north west) -- (2-3.south east)
+    (2-2.south west) -- (2-3.north east);
+\end{tblrtikzabove}%
 \begin{tblr}{hline{2-3},vline{2-4}}
   1-1 & 1-2 & 1-3 & 1-4 \\
   2-1 & 2-2 & 2-3 & 2-4 \\
   3-1 & 3-2 & 3-3 & 3-4
-\end{tblr}%
-\begin{tblrtikzafter}
-  \draw[red3, thick]
-    (2-2.north west) -- (2-3.south east)
-    (2-2.south west) -- (2-3.north east);
-\end{tblrtikzafter}
+\end{tblr}
 \end{demohigh}
 
 The second example below demonstrates corner nodes:
 
 \begin{demohigh}
-\begin{tblr}{hlines={wd=4pt},vlines={wd=3pt}}
-  1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
-  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
-  3-1 & 3-2 & 3-3 & 3-4 & 3-5
-\end{tblr}%
-\begin{tblrtikzafter}
+\begin{tblrtikzabove}
   \draw[color=white,thick]
        (h1-|v1) -- (h1-|v2) -- (h2-|v2)
     -- (h2-|v3) -- (h3-|v3) -- (h3-|v4)
     -- (h4-|v4) -- (h4-|v5) -- (h2-|v5)
     -- (h2-|v6) -- (h1-|v6);
-\end{tblrtikzafter}
+\end{tblrtikzabove}%
+\begin{tblr}{hlines={wd=4pt},vlines={wd=3pt}}
+  1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
+  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
+  3-1 & 3-2 & 3-3 & 3-4 & 3-5
+\end{tblr}
 \end{demohigh}
 
 By \PP{tikz} intersection syntax, \fakeverb{h<i>-|v<j>} is
