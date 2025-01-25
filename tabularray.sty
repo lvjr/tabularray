@@ -408,31 +408,31 @@
 
 \cs_new_protected:Npn \__tblr_hook_new:n #1
   {
-    \hook_new:n { tabularray / #1 }
+    \hook_new:n { tabularray/#1 }
   }
 
 \cs_new_protected:Npn \__tblr_hook_new_pair:nn #1 #2
   {
-    \hook_new_pair:nn { tabularray / #1 } { tabularray / #2 }
+    \hook_new_pair:nn { tabularray/#1 } { tabularray/#2 }
   }
 
 \cs_new_protected:Npn \__tblr_hook_use_false:n #1 {}
 
 \cs_new_protected:Npn \__tblr_hook_use_true:n #1
   {
-    \hook_use:n { tabularray / #1 }
+    \hook_use:n { tabularray/#1 }
   }
 
 \cs_set_eq:NN \__tblr_hook_use:n \__tblr_hook_use_false:n
 
 \NewDocumentCommand \AddToTblrHook { m o +m }
   {
-    \hook_gput_code:nnn  { tabularray / #1 } { #2 } { #3 }
+    \hook_gput_code:nnn  { tabularray/#1 } { #2 } { #3 }
   }
 
 \NewDocumentCommand \AddToTblrHookNext { m +m }
   {
-    \hook_gput_next_code:nn  { tabularray / #1 } { #2 }
+    \hook_gput_next_code:nn  { tabularray/#1 } { #2 }
   }
 
 %%% --------------------------------------------------------
@@ -3489,7 +3489,7 @@
 \cs_new_protected:Npn \__tblr_builder:nnn #1 #2 #3
   {
     \int_gincr:N \gTblrLevelInt
-    \__tblr_hook_use:n { trial / before }
+    \__tblr_hook_use:n { trial/before }
     \bool_set_true:N \lTblrMeasuringBool
     \__tblr_clear_prop_lists:
     \__tblr_clear_spec_lists:
@@ -3519,7 +3519,7 @@
     \__tblr_enable_content_commands:
     \__tblr_calc_cell_and_line_sizes:
     \bool_set_false:N \lTblrMeasuringBool
-    \__tblr_hook_use:n { trial / after }
+    \__tblr_hook_use:n { trial/after }
     \LogTblrTracing { step = build ~ the ~ whole ~ table}
     \__tblr_build_whole:
     \int_gdecr:N \gTblrLevelInt
@@ -6485,7 +6485,7 @@
 
 \cs_new_protected:Npn \__tblr_build_whole:
   {
-    \__tblr_hook_use:n { table / before }
+    \__tblr_hook_use:n { table/before }
     \tl_if_eq:enTF { \__tblr_spec_item:nn { outer } { long } } { true }
       { \__tblr_build_long_table:e { \__tblr_spec_item:nn { outer } { halign } } }
       {
@@ -6499,7 +6499,7 @@
               { \__tblr_spec_item:nn { outer } { baseline } }
           }
       }
-    \__tblr_hook_use:n { table / after }
+    \__tblr_hook_use:n { table/after }
   }
 
 \dim_new:N \l__tblr_remain_height_dim
@@ -6765,8 +6765,9 @@
         \hrule height ~ 0pt
         \box_use:N \l__tblr_table_lastfoot_box
       }
-    \__tblr_hook_use:n { private / output / before }
+    \__tblr_hook_use:n { private/output/before }
     \__tblr_valign_whole:Nn \l__tblr_table_box {#1}
+    \__tblr_hook_use:n { private/output/after }
   }
 \cs_generate_variant:Nn \__tblr_build_tall_table:n { e }
 
@@ -6776,8 +6777,9 @@
   {
     \mode_leave_vertical:
     \__tblr_build_one_table:nnNN {1} {\c@rowcount} \c_true_bool \c_true_bool
-    \__tblr_hook_use:n { private / output / before }
+    \__tblr_hook_use:n { private/output/before }
     \__tblr_valign_whole:Nn \l__tblr_table_box {#1}
+    \__tblr_hook_use:n { private/output/after }
   }
 \cs_generate_variant:Nn \__tblr_build_short_table:n { e }
 
@@ -7252,7 +7254,7 @@
     \__tblr_get_row_inner_height_depth:VNNNN #1
       \l__tblr_row_ht_dim \l__tblr_row_dp_dim
       \l__tblr_row_abovesep_dim \l__tblr_row_belowsep_dim
-    \__tblr_hook_use:n { row / before }
+    \__tblr_hook_use:n { row/before }
     \tblr_vrule_wd_ht_dp:nnn {0pt} {\l__tblr_row_ht_dim} {\l__tblr_row_dp_dim}
     \hbox_set:Nn \l__tblr_row_vlines_box
       {
@@ -7268,7 +7270,7 @@
       { \__tblr_build_vline_segment:nn {#1} { \int_eval:n {\c@colcount + 1} } }
     \skip_horizontal:n { - \box_wd:N \l__tblr_row_vlines_box }
     \box_use:N \l__tblr_row_vlines_box
-    \__tblr_hook_use:n { row / after }
+    \__tblr_hook_use:n { row/after }
   }
 
 %% Read from table specifications and calculate inner height/depth of the row
@@ -7559,7 +7561,7 @@
   {
     \bool_if:NT \l__tblr_html_variables_bool
       { \__tblr_expose_cell_properties:NN #1 #2 }
-    \__tblr_hook_use:n { cell / before }
+    \__tblr_hook_use:n { cell/before }
     \hbox_set_to_wd:Nnn \l__tblr_a_box { \l__tblr_cell_wd_dim }
       {
         \tl_if_eq:NnTF \g__tblr_cell_halign_tl {j}
@@ -7626,7 +7628,7 @@
     \skip_horizontal:n { \l__tblr_x_tl }
     \box_use:N \l__tblr_c_box
     \skip_horizontal:n { \l__tblr_y_tl - \l__tblr_cell_wd_dim + \l__tblr_w_tl }
-    \__tblr_hook_use:n { cell / after }
+    \__tblr_hook_use:n { cell/after }
   }
 
 \cs_new_protected:Npn \__tblr_build_cell_background:NN #1 #2
@@ -8331,11 +8333,11 @@
     \tl_set:Nn \l__tblr_inner_spec_measure_tl { vstore }
     \cs_set_eq:NN \__tblr_hook_use:n \__tblr_hook_use_true:n
     %% Be careful lthooks will not remove any spaces in hook paths
-    \__tblr_hook_new_pair:nn { trial / before } { trial / after }
-    \__tblr_hook_new_pair:nn { table / before } { table / after }
-    \__tblr_hook_new_pair:nn {   row / before } {   row / after }
-    \__tblr_hook_new_pair:nn {  cell / before } {  cell / after }
-    \__tblr_hook_new:n { private / output / before }
+    \__tblr_hook_new_pair:nn { trial/before } { trial/after }
+    \__tblr_hook_new_pair:nn { table/before } { table/after }
+    \__tblr_hook_new_pair:nn {   row/before } {   row/after }
+    \__tblr_hook_new_pair:nn {  cell/before } {  cell/after }
+    \__tblr_hook_new_pair:nn { private/output/before } { private/output/after }
   }
 
 %% Library html provides more public variables
@@ -8419,6 +8421,7 @@
 %% Library tikz to add table nodes, cell nodes and corner nodes with tikz
 
 \tl_new:N \g__tblr_tikz_before_code_tl
+\tl_new:N \g__tblr_tikz_after_code_tl
 \dim_new:N \l__tblr_cell_inner_wd_dim
 \dim_new:N \l__tblr_cell_inner_dp_dim
 \dim_new:N \l__tblr_cell_hanchor_dim
@@ -8469,27 +8472,21 @@
             \end{tikzpicture}
           }
       } { }
-    \NewDocumentEnvironment { tblrtikzafter } { }
+    \NewDocumentEnvironment { tblrtikzafter } { +b }
       {
-        \begin{tikzpicture}
-          [
-            remember ~ picture ,
-            overlay ,
-            name ~ prefix = tblr \g__tblr_name_str - ,
-            tblr / overlay
-          ]
-      }
-      {
-        \end{tikzpicture}
-      }
-    \AddToTblrHook { private / output / before }
-      {
-        \tl_if_empty:NF \g__tblr_tikz_before_code_tl
+        \tl_gset:Nn \g__tblr_tikz_after_code_tl
           {
-            \tl_use:N \g__tblr_tikz_before_code_tl
-            \tl_gclear:N \g__tblr_tikz_before_code_tl
+            \begin{tikzpicture}
+              [
+                remember ~ picture ,
+                overlay ,
+                name ~ prefix = tblr \g__tblr_name_str - ,
+                tblr / overlay
+              ]
+              ##1
+            \end{tikzpicture}
           }
-      }
+      } { }
     \cs_new_protected:Npn \__tblr_tikz_make_cell_node:
       {
         \hbox_set:Nn \l__tblr_tikz_node_box
@@ -8551,7 +8548,7 @@
             \end{tikzpicture}
           }
       }
-    \AddToTblrHook { cell / after } [ tblrlibtikz ]
+    \AddToTblrHook { cell/after } [ tblrlibtikz ]
       {
         \__tblr_get_cell_background_width:NNN
             \c@rownum \c@colnum \l__tblr_cell_inner_wd_dim
@@ -8647,7 +8644,7 @@
               (v1-|{$(1-\int_use:N\c@colcount-single)!0.5!(table.south~east)$});
           }
       }
-    \AddToTblrHook { table / after } [ tblrlibtikz ]
+    \AddToTblrHook { private/output/before } [ tblrlibtikz ]
       {
         \__tblr_tikz_make_corner_nodes:
         \begin{tikzpicture}
@@ -8657,6 +8654,19 @@
           ]
           \tl_use:N \l__tblr_tikz_corner_node_code_tl
         \end{tikzpicture}
+        \tl_if_empty:NF \g__tblr_tikz_before_code_tl
+          {
+            \tl_use:N \g__tblr_tikz_before_code_tl
+            \tl_gclear:N \g__tblr_tikz_before_code_tl
+          }
+      }
+    \AddToTblrHook { private/output/after } [ tblrlibtikz ]
+      {
+        \tl_if_empty:NF \g__tblr_tikz_after_code_tl
+          {
+            \tl_use:N \g__tblr_tikz_after_code_tl
+            \tl_gclear:N \g__tblr_tikz_after_code_tl
+          }
       }
   }
 
