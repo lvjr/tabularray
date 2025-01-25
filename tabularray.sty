@@ -1824,6 +1824,16 @@
       }
   }
 
+\NewExpandableDocumentCommand \ExpTblrChildId {m}
+  {
+    \use:c { l__tblr_child_id_#1_tl }
+  }
+
+\NewExpandableDocumentCommand \ExpTblrChildClass {m}
+  {
+    \use:c { l__tblr_child_class_#1_clist }
+  }
+
 %%% --------------------------------------------------------
 %%> \section{New Content Commands}
 %%% --------------------------------------------------------
