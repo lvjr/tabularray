@@ -1,0 +1,57 @@
+\documentclass{article}
+
+\input{regression-test}
+\geometry{a6paper,margin=15mm}
+
+\UseTblrLibrary{tikz}
+\usetikzlibrary{patterns}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\START
+\hrule\bigskip
+
+\BEGINTEST{longtblr tikz: one page}
+\begin{tblrtikzbelow}
+  \fill[pattern color=lightgray,pattern=crosshatch]
+    (table.north east) rectangle (table.south west);
+  \fill[yellow7] (3-1.north west) rectangle (3-1.south east);
+  \fill[red7] (3-3.north west) rectangle (3-3.south east);
+  \fill[purple7] (3-5.north west) rectangle (3-5.south east);
+  \fill[teal7] (4-2.north west) rectangle (4-2.south east);
+  \fill[brown7] (4-4.north west) rectangle (4-4.south east);
+\end{tblrtikzbelow}%
+\begin{tblrtikzabove}
+  \draw[brown7,ultra thick] (7-2.north west) -- (7-2.south east)
+                     (7-2.south west) -- (7-2.north east);
+  \draw[yellow7,ultra thick] (7-4.north west) -- (7-4.south east)
+                     (7-4.south west) -- (7-4.north east);
+  \draw[purple7,ultra thick] (8-1.north west) -- (8-1.south east)
+                     (8-1.south west) -- (8-1.north east);
+  \draw[cyan3,ultra thick] (8-3.north west) -- (8-3.south east)
+                     (8-3.south west) -- (8-3.north east);
+  \draw[teal7,ultra thick] (8-5.north west) -- (8-5.south east)
+                     (8-5.south west) -- (8-5.north east);
+  \draw[color=white,thick]
+       (h5-|v1) -- (h5-|v2) -- (h6-|v2)
+    -- (h6-|v3) -- (h7-|v3) -- (h7-|v4)
+    -- (h5-|v4) -- (h5-|v5) -- (h6-|v5)
+    -- (h6-|v6) -- (h5-|v6);
+\end{tblrtikzabove}%
+\begin{longtblr}[
+  caption = Long Table Tikz 
+]{hlines={wd=4pt},vlines={wd=3pt},colspec={XXXXX}}
+  1-1 & 1-2 & 1-3 & 1-4 & 1-5 \\
+  2-1 & 2-2 & 2-3 & 2-4 & 2-5 \\
+  3-1 & 3-2 & 3-3 & 3-4 & 3-5 \\
+  4-1 & 4-2 & 4-3 & 4-4 & 4-5 \\
+  5-1 & 5-2 & 5-3 & 5-4 & 5-5 \\
+  6-1 & 6-2 & 6-3 & 6-4 & 6-5 \\
+  7-1 & 7-2 & 7-3 & 7-4 & 7-5 \\
+  8-1 & 8-2 & 8-3 & 8-4 & 8-5 \\
+  9-1 & 9-2 & 9-3 & 9-4 & 9-5 \\
+\end{longtblr}
+\ENDTEST
+
+\end{document}

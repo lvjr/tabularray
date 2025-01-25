@@ -68,6 +68,7 @@
 | `library-018` | `tikz` library for corner nodes (#29) |
 | `library-019` | load libraries in external files (#532) |
 | `library-020` | `functional` library: evaluate inner specs (#106, #270) |
+| `library-021` | `tikz` library: long table (#29) |
 
 # Test files for long tables
 
