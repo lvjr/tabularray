@@ -6717,7 +6717,9 @@
         \hrule height ~ 0pt
         \box_use:N \l__tblr_table_foot_box
       }
+    \__tblr_hook_use:n { private/output/before }
     \__tblr_halign_whole:Nn \l__tblr_table_box {#1}
+    \__tblr_hook_use:n { private/output/after }
   }
 \cs_generate_variant:Nn \__tblr_build_page_table:nnn { nee }
 
