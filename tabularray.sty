@@ -93,7 +93,8 @@
 
 %% Add missing function variants for texlive 2022. They can be removed in 2026.
 \cs_generate_variant:Nn \clist_gput_right:Nn { ce }
-\cs_generate_variant:Nn \clist_set:Nn { Ne }
+\cs_generate_variant:Nn \clist_put_right:Nn { ce }
+\cs_generate_variant:Nn \clist_set:Nn { Ne, ce }
 \cs_generate_variant:Nn \keyval_parse:NNn { NNV }
 \cs_generate_variant:Nn \msg_error:nnn { nnV }
 \cs_generate_variant:Nn \msg_error:nnnn { nnV }
@@ -344,7 +345,7 @@
   {
     \keys_set:nn { tabularray / #1 } {#2}
   }
-\cs_generate_variant:Nn \__tblr_keys_set:nn { nV, nv }
+\cs_generate_variant:Nn \__tblr_keys_set:nn { nV, nv, ne }
 
 \cs_set_eq:NN \SetTblrKeys \__tblr_keys_set:nn
 
@@ -1688,6 +1689,140 @@
 \ProvideDocumentCommand \SetRow     { o m } {}
 \ProvideDocumentCommand \SetColumns { o m } {}
 \ProvideDocumentCommand \SetColumn  { o m } {}
+
+%%% --------------------------------------------------------
+%%> \section{Child Ids and Child Classes}
+%%% --------------------------------------------------------
+
+\NewTblrTableCommand \SetChild [1]
+  {
+    \__tblr_keys_set:nn { child / index } {#1}
+  }
+
+\__tblr_keys_define:nn { child / index }
+  {
+    id  .code:n = \__tblr_child_add_id:n {#1},
+    idh .code:n = \__tblr_child_add_idh:n {#1},
+    idv .code:n = \__tblr_child_add_idv:n {#1},
+    id* .meta:n = { id = #1, idh = #1, idv = #1 },
+    class  .code:n = \__tblr_child_add_class:n {#1},
+    classh .code:n = \__tblr_child_add_classh:n {#1},
+    classv .code:n = \__tblr_child_add_classv:n {#1},
+    class* .meta:n = { class = #1, classh = #1, classv = #1 }
+  }
+
+\clist_new:N \l__tblr_child_id_clist
+\clist_new:N \l__tblr_child_class_clist
+
+\cs_new_protected:Npn \__tblr_child_add_id:n #1
+  {
+    \clist_if_in:NnF \l__tblr_child_id_clist {#1}
+      {
+        \clist_put_right:Nn \l__tblr_child_id_clist {#1}
+        \tl_clear_new:c { l__tblr_child_id_#1_tl }
+      }
+    \tl_set:ce { l__tblr_child_id_#1_tl }
+      { { \int_use:N \c@rownum } { \int_use:N \c@colnum } }
+  }
+\cs_new_protected:Npn \__tblr_child_add_idh:n #1
+  {
+    \clist_if_in:NnF \l__tblr_child_id_clist {#1h}
+      {
+        \clist_put_right:Nn \l__tblr_child_id_clist {#1h}
+        \tl_clear_new:c { l__tblr_child_id_#1h_tl }
+      }
+    \tl_set:ce { l__tblr_child_id_#1h_tl } { \int_use:N \c@rownum }
+  }
+\cs_new_protected:Npn \__tblr_child_add_idv:n #1
+  {
+    \clist_if_in:NnF \l__tblr_child_id_clist {#1v}
+      {
+        \clist_put_right:Nn \l__tblr_child_id_clist {#1v}
+        \tl_clear_new:c { l__tblr_child_id_#1v_tl }
+      }
+    \tl_set:ce { l__tblr_child_id_#1v_tl } { \int_use:N \c@colnum }
+  }
+
+\cs_new_protected:Npn \__tblr_child_add_class:n #1
+  {
+    \clist_if_in:NnTF \l__tblr_child_class_clist {#1}
+      {
+        \clist_put_right:ce { l__tblr_child_class_#1_clist }
+          { { \int_use:N \c@rownum } { \int_use:N \c@colnum } }
+      }
+      {
+        \clist_put_right:Nn \l__tblr_child_class_clist {#1}
+        \clist_clear_new:c { l__tblr_child_class_#1_clist }
+        \clist_set:ce { l__tblr_child_class_#1_clist }
+          { { \int_use:N \c@rownum } { \int_use:N \c@colnum } }
+      }
+  }
+\cs_new_protected:Npn \__tblr_child_add_classh:n #1
+  {
+    \clist_if_in:NnTF \l__tblr_child_class_clist {#1h}
+      {
+        \clist_put_right:ce { l__tblr_child_class_#1h_clist }
+          { \int_use:N \c@rownum }
+      }
+      {
+        \clist_put_right:Nn \l__tblr_child_class_clist {#1h}
+        \clist_clear_new:c { l__tblr_child_class_#1h_clist }
+        \clist_set:ce { l__tblr_child_class_#1h_clist }
+          { \int_use:N \c@rownum }
+      }
+  }
+\cs_new_protected:Npn \__tblr_child_add_classv:n #1
+  {
+    \clist_if_in:NnTF \l__tblr_child_class_clist {#1v}
+      {
+        \clist_put_right:ce { l__tblr_child_class_#1v_clist }
+          { \int_use:N \c@colnum }
+      }
+      {
+        \clist_put_right:Nn \l__tblr_child_class_clist {#1v}
+        \clist_clear_new:c { l__tblr_child_class_#1v_clist }
+        \clist_set:ce { l__tblr_child_class_#1v_clist }
+          { \int_use:N \c@colnum }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_child_split_table_before:
+  {
+    \clist_clear:N \l__tblr_child_id_clist
+    \clist_clear:N \l__tblr_child_class_clist
+  }
+
+\cs_new_protected:Npn \__tblr_child_split_table_after:
+  {
+    \clist_map_inline:Nn \l__tblr_child_id_clist
+      {
+        \exp_args:Nne
+        \NewTblrChildIndexer {##1}
+          {
+            \tl_set:Nn \exp_not:N \lTblrChildIndexTl
+              { \use:c { l__tblr_child_id_##1_tl } }
+          }
+      }
+    \clist_map_inline:Nn \l__tblr_child_class_clist
+      {
+        \exp_args:Nne
+        \NewTblrChildSelector {##1}
+          {
+            \clist_set:Nn \exp_not:N \lTblrChildClist
+              { \use:c { l__tblr_child_class_##1_clist } }
+          }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_child_extract_index_command:N #1
+  {
+    \tl_if_head_eq_meaning:VNT #1 \SetChild
+      {
+        \tl_set:Ne #1 { \tl_tail:N #1 }
+        \__tblr_keys_set:ne { child / index } { \tl_head:N #1 }
+        \tl_set:Ne #1 { \tl_tail:N #1 }
+      }
+  }
 
 %%% --------------------------------------------------------
 %%> \section{New Content Commands}
@@ -3394,12 +3529,14 @@
 %% #1: table content
 \cs_new_protected:Npn \__tblr_split_table:n #1
   {
+    \__tblr_child_split_table_before:
     \tl_set:Nn \l__tblr_body_tl {#1}
     \__tblr_modify_table_body:
     \int_zero:N \c@rowcount
     \int_zero:N \c@colcount
     \__tblr_split_table_to_lines:NN \l__tblr_body_tl \l__tblr_lines_seq
     \__tblr_split_lines_to_cells:N \l__tblr_lines_seq
+    \__tblr_child_split_table_after:
   }
 
 \tl_new:N \l__tblr_expand_tl
@@ -3616,6 +3753,9 @@
 
 \cs_new_protected:Npn \__tblr_extract_table_commands:N #1
   {
+    % We need to execute \SetChild commands before parsing inner specs,
+    % but execute other table commands after parsing inner specs.
+    \__tblr_child_extract_index_command:N #1
     \tl_clear:N \l__tblr_saved_table_commands_before_cell_text_tl
     \tl_clear:N \l__tblr_saved_cell_text_after_table_commands_tl
     \exp_last_unbraced:NV \__tblr_extract_table_commands_next: #1 \q_stop

@@ -1,0 +1,74 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\usepackage{xcolor}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{child ids and child classes} % issue #381
+
+\begin{tblr}{
+  hline{1,Z},
+  cell{Foo,foo,Qux,qux} = {cmd=\fbox},
+  row{Barh,barh,Quxh,quxh} = {bg=azure7},
+  column{Bazv,bazv,Quxv,quxv} = {fg=red3}
+}
+  1 & 2 & 3 & \SetChild{id=Foo} 4 & 5 & 6 & 7 & 8 \\
+  2 & 2 & \SetChild{idh=Bar} 3 & 4 & 5 & 6 & 7 & 8 \\
+  3 & \SetChild{idv=Baz} 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+  \SetChild{id*=Qux} 4 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+  5 & 2 & 3 & 4 & \SetChild{class=foo}5 & 6 & 7 & 8 \\
+  6 & 2 & 3 & 4 & 5 & \SetChild{classh=bar}6 & 7 & 8 \\
+  7 & 2 & 3 & 4 & 5 & 6 & \SetChild{classv=baz}7 & 8 \\
+  8 & 2 & 3 & 4 & 5 & 6 & 7 & \SetChild{class*=qux} 8 \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{duplicate child ids} % issue #381
+\begin{tblr}{
+  hline{1,Z},
+  cell{Foo,Qux} = {cmd=\fbox},
+  row{Barh,Quxh} = {bg=azure7},
+  column{Bazv,Quxv} = {fg=red3}
+}
+  1 & 2 & 3 & \SetChild{id=Foo} 4 & 5 & 6 & 7 & 8 \\
+  2 & 2 & \SetChild{idh=Bar} 3 & 4 & 5 & 6 & 7 & 8 \\
+  3 & \SetChild{idv=Baz} 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+  \SetChild{id*=Qux} 4 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+  5 & 2 & 3 & 4 & \SetChild{id*=Foo}5 & 6 & 7 & 8 \\
+  6 & 2 & 3 & 4 & 5 & \SetChild{idh=Bar}6 & 7 & 8 \\
+  7 & 2 & 3 & 4 & 5 & 6 & \SetChild{idv=Baz}7 & 8 \\
+  8 & 2 & 3 & 4 & 5 & 6 & 7 & \SetChild{id=Qux} 8 \\
+\end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+\BEGINTEST{duplicate child classes} % issue #381
+\begin{tblr}{
+  hline{1,Z},
+  cell{foo,qux} = {cmd=\fbox},
+  row{barh,quxh} = {bg=azure7},
+  column{bazv,quxv} = {fg=red3}
+}
+  1 & 2 & 3 & \SetChild{class*=foo} 4 & 5 & 6 & 7 & 8 \\
+  2 & 2 & \SetChild{classh=bar} 3 & 4 & 5 & 6 & 7 & 8 \\
+  3 & \SetChild{classv=baz} 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+  \SetChild{class=qux} 4 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+  5 & 2 & 3 & 4 & \SetChild{class=foo}5 & 6 & 7 & 8 \\
+  6 & 2 & 3 & 4 & 5 & \SetChild{classh=bar}6 & 7 & 8 \\
+  7 & 2 & 3 & 4 & 5 & 6 & \SetChild{classv=baz}7 & 8 \\
+  8 & 2 & 3 & 4 & 5 & 6 & 7 & \SetChild{class*=qux} 8 \\
+\end{tblr}
+\ENDTEST
+
+\end{document}

@@ -32,6 +32,7 @@
 | `extra-002` | `odd`/`even`/`every` selectors and `U-Z` indexes (#576) |
 | `extra-003` | mix child selectors with child indexes (#577) |
 | `extra-004` | indexers and selectors for child tuples (#381) |
+| `extra-005` | ids and classes in `\SetChild` command (#381) |
 
 # Test files for hlines and vlines
 

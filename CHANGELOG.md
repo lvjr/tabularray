@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Add `\lTblrDefaultHruleWidthDim` and `\lTblrDefaultVruleWidthDim` ([#102], [#527])
 - Add `\lTblrDefaultHruleColorTl` and `\lTblrDefaultVruleColorTl` ([#172])
 - Allow mixing child selectors and child indexes ([#577])
+- Add `\SetChild` commands for setting ids and classes ([#381])
 - Add child selector `every` ([#576])
 - Add benchmark tests and publish results to `gh-pages` branch ([#480])
 - Add new chapter "Experimental Interfaces" in the manual
@@ -359,6 +360,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#282]: https://github.com/lvjr/tabularray/issues/282
 [#303]: https://github.com/lvjr/tabularray/issues/303
 [#305]: https://github.com/lvjr/tabularray/issues/305
+[#381]: https://github.com/lvjr/tabularray/issues/381
 [#385]: https://github.com/lvjr/tabularray/pull/385
 [#421]: https://github.com/lvjr/tabularray/issues/421
 [#443]: https://github.com/lvjr/tabularray/pull/443
