@@ -8564,7 +8564,7 @@
             \end{tikzpicture}
           }
       }
-    \AddToTblrHook { cell/after } [ tblrlibtikz ]
+    \cs_new_protected:Npn \__tblr_tikz_enable_cell_node:
       {
         \__tblr_get_cell_background_width:NNN
             \c@rownum \c@colnum \l__tblr_cell_inner_wd_dim
@@ -8583,22 +8583,24 @@
                 \dim_add:Nn \l__tblr_cell_hanchor_dim
                   {
                     \__tblr_spec_item:ne { vline }
-                      { [ \int_eval:n { \c@colnum + ##1 } ] / @vline-width }
+                      { [ \int_eval:n { \c@colnum + ####1 } ] / @vline-width }
                     +
                     \__tblr_data_item:nen { column }
-                      { \int_eval:n { \c@colnum + ##1 } } { @col-width }
+                      { \int_eval:n { \c@colnum + ####1 } } { @col-width }
                     +
                     \__tblr_data_item:nen { column }
-                      { \int_eval:n { \c@colnum + ##1 } } { leftsep }
+                      { \int_eval:n { \c@colnum + ####1 } } { leftsep }
                     +
                     \__tblr_data_item:nen { column }
-                      { \int_eval:n { \c@colnum + ##1 } } { rightsep }
+                      { \int_eval:n { \c@colnum + ####1 } } { rightsep }
                   }
               }
           }
         \__tblr_tikz_make_cell_node:
         \box_use:N \l__tblr_tikz_node_box
-
+      }
+    \cs_new_protected:Npn \__tblr_tikz_enable_table_node:
+      {
         \int_compare:nNnT { \c@rownum } = { \c@rowcount }
           {
             \int_compare:nNnT { \c@colnum } = { \c@colcount }
@@ -8617,7 +8619,7 @@
           }
       }
     \tl_new:N \l__tblr_tikz_corner_node_code_tl
-    \cs_new_protected:Npn \__tblr_tikz_make_corner_nodes:
+    \cs_new_protected:Npn \__tblr_tikz_make_corner_node:
       {
         \tl_set:Nn \l__tblr_tikz_corner_node_code_tl
           { \coordinate (h1) at ($(table.north~west)!0.5!(1-1.north~west)$); }
@@ -8661,9 +8663,8 @@
           }
       }
     \tl_const:Nn \c__tblr_portrait_long_tl { long }
-    \AddToTblrHook { private/output/before } [ tblrlibtikz ]
+    \cs_new_protected:Npn \__tblr_tikz_enable_corner_node:
       {
-        \noindent
         \bool_lazy_or:nnT
           { ! \tl_if_eq_p:NN \lTblrPortraitTypeTl \c__tblr_portrait_long_tl }
           {
@@ -8672,7 +8673,7 @@
               { \int_compare_p:nNn { \lTblrRowLastInt } = { \c@rowcount } }
           }
           {
-            \__tblr_tikz_make_corner_nodes:
+            \__tblr_tikz_make_corner_node:
             \begin{tikzpicture}
               [
                 remember ~ picture, overlay,
@@ -8681,7 +8682,27 @@
               \tl_use:N \l__tblr_tikz_corner_node_code_tl
             \end{tikzpicture}
           }
-        \tl_use:N \g__tblr_tikz_below_code_tl
+      }
+    \AddToTblrHook { cell/after } [ tblrlibtikz ]
+      {
+        \bool_lazy_and:nnF
+          { \tl_if_empty_p:N \g__tblr_tikz_below_code_tl }
+          { \tl_if_empty_p:N \g__tblr_tikz_above_code_tl }
+          {
+            \__tblr_tikz_enable_cell_node:
+            \__tblr_tikz_enable_table_node:
+          }
+      }
+    \AddToTblrHook { private/output/before } [ tblrlibtikz ]
+      {
+        \bool_lazy_and:nnF
+          { \tl_if_empty_p:N \g__tblr_tikz_below_code_tl }
+          { \tl_if_empty_p:N \g__tblr_tikz_above_code_tl }
+          {
+            \__tblr_tikz_enable_corner_node:
+            \noindent
+            \tl_use:N \g__tblr_tikz_below_code_tl
+          }
       }
     \AddToTblrHook { private/output/after } [ tblrlibtikz ]
       {
