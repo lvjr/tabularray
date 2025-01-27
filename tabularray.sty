@@ -4104,8 +4104,8 @@
 
 \__tblr_keys_define:nn { table / outer }
   {
-    long    .code:n = \__tblr_outer_gput_spec:nn { long } { true },
-    tall    .code:n = \__tblr_outer_gput_spec:nn { tall } { true },
+    long    .code:n = \__tblr_outer_gput_spec:nn { portrait } { long },
+    tall    .code:n = \__tblr_outer_gput_spec:nn { portrait } { tall },
     halign  .code:n = \__tblr_outer_gput_spec:nn { halign } {#1},
     baseline .code:n = \__tblr_outer_gput_spec:nn { baseline } {#1},
     l       .meta:n = { halign = l },
@@ -6292,28 +6292,31 @@
     \__tblr_build_table_head_foot:
   }
 
-\tl_new:N \l__tblr_row_head_tl
-\tl_new:N \l__tblr_row_foot_tl
+\int_new:N \lTblrRowHeadInt
+\int_new:N \lTblrRowFootInt
 \box_new:N \l__tblr_row_head_box
 \box_new:N \l__tblr_row_foot_box
 \dim_new:N \l__tblr_row_head_foot_dim
 
 \cs_new_protected:Npn \__tblr_build_row_head_foot:
   {
-    %% \l__tblr_row_head_tl and \l__tblr_row_foot_tl may be empty
-    \tl_set:Ne \l__tblr_row_head_tl { \__tblr_prop_item:ne { inner } { rowhead } }
-    \int_compare:nNnTF { \l__tblr_row_head_tl + 0 } > { 0 }
+    %% \lTblrRowHeadInt could not be empty, so we append '+ 0'.
+    \int_set:Nn \lTblrRowHeadInt
+      { \__tblr_prop_item:ne { inner } { rowhead } + 0 }
+    \int_compare:nNnTF { \lTblrRowHeadInt } > { 0 }
       {
-        \__tblr_build_one_table:nnNN {1} { \l__tblr_row_head_tl }
+        \__tblr_build_one_table:nnNN {1} { \lTblrRowHeadInt }
           \c_true_bool \c_true_bool
       }
       { \__tblr_build_one_hline:n {1} }
     \box_set_eq:NN \l__tblr_row_head_box \l__tblr_table_box
-    \tl_set:Ne \l__tblr_row_foot_tl { \__tblr_prop_item:ne { inner } { rowfoot } }
-    \int_compare:nNnTF { \l__tblr_row_foot_tl + 0 } > { 0 }
+    %% \lTblrRowFootInt could not be empty, so we append '+ 0'.
+    \int_set:Nn \lTblrRowFootInt
+      { \__tblr_prop_item:ne { inner } { rowfoot } + 0 }
+    \int_compare:nNnTF { \lTblrRowFootInt } > { 0 }
       {
         \__tblr_build_one_table:nnNN
-          { \c@rowcount - \l__tblr_row_foot_tl + 1 } { \c@rowcount }
+          { \c@rowcount - \lTblrRowFootInt + 1 } { \c@rowcount }
           \c_true_bool \c_true_bool
       }
       { \__tblr_build_one_hline:n { \int_eval:n { \c@rowcount + 1 } } }
@@ -6483,18 +6486,25 @@
       }
   }
 
+\tl_new:N \lTblrPortraitTypeTl
+
 \cs_new_protected:Npn \__tblr_build_whole:
   {
     \__tblr_hook_use:n { table/before }
-    \tl_if_eq:enTF { \__tblr_spec_item:nn { outer } { long } } { true }
-      { \__tblr_build_long_table:e { \__tblr_spec_item:nn { outer } { halign } } }
+    \tl_set:Ne \lTblrPortraitTypeTl
+      { \__tblr_spec_item:nn { outer } { portrait } }
+    \tl_if_eq:NnTF \lTblrPortraitTypeTl { long }
       {
-        \tl_if_eq:enTF { \__tblr_spec_item:nn { outer } { tall } } { true }
+        \__tblr_build_long_table:e { \__tblr_spec_item:nn { outer } { halign } }
+      }
+      {
+        \tl_if_eq:NnTF \lTblrPortraitTypeTl { tall }
           {
             \__tblr_build_tall_table:e
               { \__tblr_spec_item:nn { outer } { baseline } }
           }
           {
+            \tl_set:Nn \lTblrPortraitTypeTl { short }
             \__tblr_build_short_table:e
               { \__tblr_spec_item:nn { outer } { baseline } }
           }
@@ -6507,7 +6517,7 @@
 \int_new:N \l__tblr_long_to_int
 \int_new:N \l__tblr_curr_i_int
 \int_new:N \l__tblr_prev_i_int
-\int_new:N \l__tblr_table_page_int
+\int_new:N \lTblrTablePageInt
 \bool_new:N \l__tblr_page_break_curr_bool
 \bool_new:N \l__tblr_page_break_prev_bool
 
@@ -6530,12 +6540,12 @@
     \hrule height ~ 0pt
     \nobreak % prevent page break after \hrule (see issue #42)
     \LogTblrTracing { page }
-    \int_set:Nn \l__tblr_table_page_int {1}
+    \int_set:Nn \lTblrTablePageInt {1}
     \__tblr_build_head_foot:
     \dim_set:Nn \l__tblr_remain_height_dim
       { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
-    \int_set:Nn \l__tblr_long_from_int { \l__tblr_row_head_tl + 1 }
-    \int_set:Nn \l__tblr_long_to_int { \c@rowcount - ( \l__tblr_row_foot_tl + 0 ) }
+    \int_set:Nn \l__tblr_long_from_int { \lTblrRowHeadInt + 1 }
+    \int_set:Nn \l__tblr_long_to_int { \c@rowcount - \lTblrRowFootInt }
     \int_set:Nn \l__tblr_curr_i_int { \l__tblr_long_from_int - 1 }
     \int_do_while:nNnn { \l__tblr_curr_i_int } < { \l__tblr_long_to_int }
       {
@@ -6573,7 +6583,7 @@
                 \__tblr_build_page_table:nee {#1}
                   { \int_use:N \l__tblr_long_from_int }
                   { \int_use:N \l__tblr_prev_i_int }
-                \int_incr:N \l__tblr_table_page_int
+                \int_incr:N \lTblrTablePageInt
                 \int_set:Nn \l__tblr_long_from_int { \l__tblr_prev_i_int + 1 }
                 \TblrNewPage
               }
@@ -6589,7 +6599,7 @@
                 \__tblr_build_page_table:nee {#1}
                   { \int_use:N \l__tblr_long_from_int }
                   { \int_use:N \l__tblr_curr_i_int }
-                \int_incr:N \l__tblr_table_page_int
+                \int_incr:N \lTblrTablePageInt
                 \TblrNewPage
                 \hbox{}\kern-\topskip\nobreak
                 \noindent
@@ -6601,7 +6611,7 @@
               { \dim_add:Nn \l__tblr_remain_height_dim { -\l_tmpa_dim } }
           }
       }
-    \int_compare:nNnTF { \l__tblr_table_page_int } = {1}
+    \int_compare:nNnTF { \lTblrTablePageInt } = {1}
       {
         \box_set_eq:NN \l__tblr_table_head_box \l__tblr_table_firsthead_box
         \box_set_eq:NN \l__tblr_table_foot_box \l__tblr_table_lastfoot_box
@@ -6670,7 +6680,7 @@
 %% #1: remain dimension; #2: row dimension; #3: break page or not
 \cs_new_protected:Npn \__tblr_check_table_page_break:NNN #1 #2 #3
   {
-    \int_compare:nNnTF { \l__tblr_table_page_int } = {1}
+    \int_compare:nNnTF { \lTblrTablePageInt } = {1}
       {
         \dim_set:Nn \l__tblr_table_head_body_foot_dim
           {
@@ -6704,10 +6714,14 @@
   }
 
 \box_new:N \l__tblr_table_box
+\int_new:N \lTblrRowFirstInt
+\int_new:N \lTblrRowLastInt
 
 %% #1: table alignment; #2: row from; #3: row to
 \cs_new_protected:Npn \__tblr_build_page_table:nnn #1 #2 #3
   {
+    \int_set:Nn \lTblrRowFirstInt {#2}
+    \int_set:Nn \lTblrRowLastInt {#3}
     \__tblr_build_one_table:nnNN {#2} {#3} \c_false_bool \c_false_bool
     \vbox_set:Nn \l__tblr_table_box
       {
