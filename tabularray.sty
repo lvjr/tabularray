@@ -1311,7 +1311,7 @@
       { \int_eval:n { \int_max:nn { \lTblrChildTotalInt + 1 - #1 } { 1 } } }
   }
 
-\NewChildSelector { odd } [1] [1]
+\NewTblrChildSelector { odd } [1] [1]
   {
     \int_if_odd:nTF {#1}
       {
@@ -1324,7 +1324,7 @@
       }
   }
 
-\NewChildSelector { even } [1] [2]
+\NewTblrChildSelector { even } [1] [2]
   {
     \int_if_even:nTF {#1}
       {
@@ -1338,7 +1338,7 @@
   }
 
 %% #1: step; #2: start index; #3: end index
-\NewChildSelector { every } [3] [1]
+\NewTblrChildSelector { every } [3] [1]
   {
     \clist_set:Ne \lTblrChildClist
       {
@@ -1870,7 +1870,7 @@
 %%> \section{New Dash Styles}
 %%% --------------------------------------------------------
 
-%% \NewDashStyle commands
+%% \NewTblrDashStyle commands
 
 \dim_new:N \lTblrDefaultHruleWidthDim
 \dim_new:N \lTblrDefaultVruleWidthDim
@@ -1885,7 +1885,7 @@
 \prop_gset_from_keyval:Nn \g__tblr_defined_vdash_styles_prop
   { solid = \vrule width \lTblrDefaultVruleWidthDim }
 
-\NewDocumentCommand \NewDashStyle { m m }
+\NewDocumentCommand \NewTblrDashStyle { m m }
   {
     \seq_set_split:Nnn \l_tmpa_seq { ~ } {#2}
     \tl_set:Ne \l__tblr_a_tl { \seq_item:Nn \l_tmpa_seq {1} }
@@ -1901,6 +1901,7 @@
           }
       }
   }
+\cs_set_eq:NN \NewDashStyle \NewTblrDashStyle
 
 \cs_new_protected:Npn \__tblr_dash_style_make_boxes:nnn #1 #2 #3
   {
@@ -1948,8 +1949,8 @@
     \tl_if_empty:NF \l_tmpa_tl { \tl_set_eq:NN #1 \l_tmpa_tl }
   }
 
-\NewDashStyle {dashed} {on ~ 2pt ~ off ~ 2pt}
-\NewDashStyle {dotted} {on ~ 0.4pt ~ off ~ 1pt}
+\NewTblrDashStyle {dashed} {on ~ 2pt ~ off ~ 2pt}
+\NewTblrDashStyle {dotted} {on ~ 0.4pt ~ off ~ 1pt}
 
 %%% --------------------------------------------------------
 %%> \section{Set Hlines and Vlines}
@@ -3278,25 +3279,28 @@
 \msg_new:nnn { tabularray } { used-colrow-type }
   { #1 ~ type ~ name ~ #2 ~ has ~ been ~ used! }
 
-\NewDocumentCommand \NewColumnType { m O{0} o m }
+\NewDocumentCommand \NewTblrColumnType { m O{0} o m }
   {
     \tl_gset:Nn \g__tblr_column_or_row_tl { Column }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
   }
+\cs_set_eq:NN \NewColumnType \NewTblrColumnType
 
-\NewDocumentCommand \NewRowType { m O{0} o m }
+\NewDocumentCommand \NewTblrRowType { m O{0} o m }
   {
     \tl_gset:Nn \g__tblr_column_or_row_tl { Row }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
   }
+\cs_set_eq:NN \NewRowType \NewTblrRowType
 
-\NewDocumentCommand \NewColumnRowType { m O{0} o m }
+\NewDocumentCommand \NewTblrColumnRowType { m O{0} o m }
   {
     \tl_gset:Nn \g__tblr_column_or_row_tl { Column }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
     \tl_gset:Nn \g__tblr_column_or_row_tl { Row }
     \__tblr_new_column_or_row_type:nnnn {#1} {#2} {#3} {#4}
   }
+\cs_set_eq:NN \NewColumnRowType \NewTblrColumnRowType
 
 \cs_new_protected:Npn \__tblr_new_column_or_row_type:nnnn #1 #2 #3 #4
   {
@@ -3321,30 +3325,30 @@
       }
   }
 
-\NewColumnRowType { l } { Q[l] }
-\NewColumnRowType { c } { Q[c] }
-\NewColumnRowType { r } { Q[r] }
-\NewColumnRowType { j } { Q[j] }
+\NewTblrColumnRowType { l } { Q[l] }
+\NewTblrColumnRowType { c } { Q[c] }
+\NewTblrColumnRowType { r } { Q[r] }
+\NewTblrColumnRowType { j } { Q[j] }
 
-\NewColumnType { t } [1] { Q[t,wd=#1] }
-\NewColumnType { p } [1] { Q[p,wd=#1] }
-\NewColumnType { m } [1] { Q[m,wd=#1] }
-\NewColumnType { b } [1] { Q[b,wd=#1] }
-\NewColumnType { h } [1] { Q[h,wd=#1] }
-\NewColumnType { f } [1] { Q[f,wd=#1] }
+\NewTblrColumnType { t } [1] { Q[t,wd=#1] }
+\NewTblrColumnType { p } [1] { Q[p,wd=#1] }
+\NewTblrColumnType { m } [1] { Q[m,wd=#1] }
+\NewTblrColumnType { b } [1] { Q[b,wd=#1] }
+\NewTblrColumnType { h } [1] { Q[h,wd=#1] }
+\NewTblrColumnType { f } [1] { Q[f,wd=#1] }
 
-\NewRowType { t } [1] { Q[t,ht=#1] }
-\NewRowType { p } [1] { Q[p,ht=#1] }
-\NewRowType { m } [1] { Q[m,ht=#1] }
-\NewRowType { b } [1] { Q[b,ht=#1] }
-\NewRowType { h } [1] { Q[h,ht=#1] }
-\NewRowType { f } [1] { Q[f,ht=#1] }
+\NewTblrRowType { t } [1] { Q[t,ht=#1] }
+\NewTblrRowType { p } [1] { Q[p,ht=#1] }
+\NewTblrRowType { m } [1] { Q[m,ht=#1] }
+\NewTblrRowType { b } [1] { Q[b,ht=#1] }
+\NewTblrRowType { h } [1] { Q[h,ht=#1] }
+\NewTblrRowType { f } [1] { Q[f,ht=#1] }
 
-\NewColumnRowType { X } [1][] { Q[co=1,#1] }
+\NewTblrColumnRowType { X } [1][] { Q[co=1,#1] }
 
-\NewColumnRowType { ! } [1] { |[text={#1}] }
-\NewColumnRowType { @ } [1] { <[0pt]{} |[text={#1}] >[0pt]{} }
-\NewColumnRowType { * } [2] { \prg_replicate:nn {#1} {#2} }
+\NewTblrColumnRowType { ! } [1] { |[text={#1}] }
+\NewTblrColumnRowType { @ } [1] { <[0pt]{} |[text={#1}] >[0pt]{} }
+\NewTblrColumnRowType { * } [2] { \prg_replicate:nn {#1} {#2} }
 
 \cs_new_protected:Npn \__tblr_parse_colrow_spec:nn #1 #2
   {
@@ -8393,8 +8397,8 @@
 \NewTblrLibrary { siunitx }
   {
     \RequirePackage { siunitx }
-    \NewColumnType { S } [1] [] { Q[si = {##1}, c] }
-    \NewColumnType { s } [1] [] { Q[si = {##1}, c, cmd = \TblrUnit] }
+    \NewTblrColumnType { S } [1] [] { Q[si = {##1}, c] }
+    \NewTblrColumnType { s } [1] [] { Q[si = {##1}, c, cmd = \TblrUnit] }
     \__tblr_data_new_key:nnn { cell } { si } { str }
     \__tblr_keys_define:nn { column / inner }
       {
