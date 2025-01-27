@@ -1275,8 +1275,8 @@
   }
 
 \int_new:N \lTblrChildTotalInt
-\int_new:N \lTblrChildTotalHInt
-\int_new:N \lTblrChildTotalVInt
+\int_new:N \lTblrChildHtotalInt
+\int_new:N \lTblrChildVtotalInt
 \tl_new:N \lTblrChildIndexTl % may be <i> or {<i>}{<j>}
 \clist_new:N \lTblrChildClist
 
@@ -1471,8 +1471,8 @@
     \seq_map_inline:Nn \l__child_spec_seq
       {
         \clist_clear:N \lTblrChildClist
-        \int_set:Nn \lTblrChildTotalHInt {#2}
-        \int_set:Nn \lTblrChildTotalVInt {#3}
+        \int_set:Nn \lTblrChildHtotalInt {#2}
+        \int_set:Nn \lTblrChildVtotalInt {#3}
         \tl_if_head_is_group:nTF {##1}
           {
             \__tblr_child_split_item:n {##1}
