@@ -8660,29 +8660,38 @@
               (v1-|{$(1-\int_use:N\c@colcount-single)!0.5!(table.south~east)$});
           }
       }
+    \tl_const:Nn \c__tblr_portrait_long_tl { long }
     \AddToTblrHook { private/output/before } [ tblrlibtikz ]
       {
-        \__tblr_tikz_make_corner_nodes:
-        \begin{tikzpicture}
-          [
-            remember ~ picture, overlay,
-            name ~ prefix = tblr \g__tblr_name_str -
-          ]
-          \tl_use:N \l__tblr_tikz_corner_node_code_tl
-        \end{tikzpicture}
-        \tl_if_empty:NF \g__tblr_tikz_below_code_tl
+        \noindent
+        \bool_lazy_or:nnT
+          { ! \tl_if_eq_p:NN \lTblrPortraitTypeTl \c__tblr_portrait_long_tl }
           {
-            \tl_use:N \g__tblr_tikz_below_code_tl
-            \tl_gclear:N \g__tblr_tikz_below_code_tl
+            \bool_lazy_and_p:nn
+              { \int_compare_p:nNn { \lTblrRowFirstInt } = {1} }
+              { \int_compare_p:nNn { \lTblrRowLastInt } = { \c@rowcount } }
           }
+          {
+            \__tblr_tikz_make_corner_nodes:
+            \begin{tikzpicture}
+              [
+                remember ~ picture, overlay,
+                name ~ prefix = tblr \g__tblr_name_str -
+              ]
+              \tl_use:N \l__tblr_tikz_corner_node_code_tl
+            \end{tikzpicture}
+          }
+        \tl_use:N \g__tblr_tikz_below_code_tl
       }
     \AddToTblrHook { private/output/after } [ tblrlibtikz ]
       {
-        \tl_if_empty:NF \g__tblr_tikz_above_code_tl
-          {
-            \tl_use:N \g__tblr_tikz_above_code_tl
-            \tl_gclear:N \g__tblr_tikz_above_code_tl
-          }
+        \tl_use:N \g__tblr_tikz_above_code_tl
+      }
+    \AddToTblrHook { table/after } [ tblrlibtikz ]
+      {
+        %% We clear them here since they are used several times in longtblr
+        \tl_gclear:N \g__tblr_tikz_below_code_tl
+        \tl_gclear:N \g__tblr_tikz_above_code_tl
       }
   }
 
