@@ -9,6 +9,7 @@
 \begin{document}
 
 \chapter{Use Some Libraries}
+\label{chap:lib}
 
 A \PP{tabularray} library could be loaded by \CC{\UseTblrLibrary} command.
 From version 2025A, an external library \fakeverb{foo} could also be loaded
@@ -612,8 +613,8 @@ Also you must use \K{l}, \K{c} or \K{r} to set horizontal alignment for non-nume
 
 Both \Q{S} and \Q{s} columns are supported. In fact, These two columns have been defined as follows:
 \begin{codehigh}
-\NewColumnType{S}[1][]{Q[si={#1},c]}
-\NewColumnType{s}[1][]{Q[si={#1},c,cmd=\TblrUnit]}
+\NewTblrColumnType{S}[1][]{Q[si={#1},c]}
+\NewTblrColumnType{s}[1][]{Q[si={#1},c,cmd=\TblrUnit]}
 \end{codehigh}
 You don't need to and are not allowed to define them again.
 
@@ -623,8 +624,6 @@ With this \textcolor{red3}{experimental} \LL{tikz} library%
 \footnote{The author thanks \href{https://github.com/jasperhabicht}{Jasper Habicht}
 for his contributions to this library.},
 you can draw \PP{tikz} pictures below or above \PP{tabularray} short or tall tables.
-Support for long tables is rather complicated hence is limited at this time.
-If a long table has only one page the \PP{tikz} drawing works well.
 Note that this library depends on and loads \PP{hook} library.
 
 To draw below/above a \PP{tabularray} table,
@@ -684,6 +683,98 @@ The second example below demonstrates corner nodes:
 
 By \PP{tikz} intersection syntax, \fakeverb{h<i>-|v<j>} is
 the instersection point of \KK{horder{<i>}} and \KK{vborder{<j>}}.
+
+It is rather complicated to add support for drawing \PP{tikz} pictures on long tables.
+At present, the supprot is limited: \underline{only} cell nodes are available for multi-page long tables.
+In writng drawing code,
+users are responsible for making sure the elements to draw are actually in current page table.
+These public variables (which are described in Chapter \ref{chap:exp})
+might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt}, \CC{\lTblrTablePageInt},
+\CC{\lTblrRowFirstInt}, \CC{\lTblrRowLastInt}. Here is an example:
+
+\ExplSyntaxOn
+\cs_generate_variant:Nn \clist_map_inline:nn {e}
+\cs_new_protected:Npn \mymagic #1
+  {
+    \clist_map_inline:en {\ExpTblrChildClass {#1}}
+      {
+        \bool_lazy_and:nnT
+          { \int_compare_p:n {\lTblrRowFirstInt <= \use_i:nn ##1} }
+          { \int_compare_p:n {\lTblrRowLastInt >= \use_i:nn ##1} }
+          { \exp_args:Noo \mymagicfill {\use_i:nn ##1} {\use_ii:nn ##1} }
+      }
+  }
+\ExplSyntaxOff
+\newcommand\mymagicfill[2]{
+  \fill[teal7] (#1-#2.north west) rectangle (#1-#2.south east);
+}
+\begin{tblrtikzbelow}
+  \mymagic{magic}
+\end{tblrtikzbelow}%
+\begin{longtblr}[
+  caption = Long Table Tikz
+]{
+  rowhead=1, rowfoot=1,
+  hlines={wd=4pt},vlines={wd=3pt},colspec={*{5}{X[r]}}
+}
+  Head1 & Head2 & Head3 & Head4 & Head5 \\
+    2-1 &   2-2 & \SetChild{class=magic}2-3 & 2-4 & 2-5 \\
+    3-1 &   3-2 &   3-3 &   3-4 &   3-5 \\
+    4-1 &   4-2 &   4-3 & \SetChild{class=magic}4-4 &4-5 \\
+    5-1 &   5-2 &   5-3 &   5-4 &   5-5 \\
+    6-1 &   6-2 &   6-3 &   6-4 &   6-5 \\
+    7-1 &   \SetChild{class=magic}7-2 & 7-3 & 7-4 & 7-5 \\
+    8-1 &   8-2 &   8-3 &   8-4 & \SetChild{class=magic}8-5 \\
+    9-1 &   9-2 &   9-3 &   9-4 &   9-5 \\
+   10-1 &  10-2 & \SetChild{class=magic}10-3 &  10-4 &  10-5 \\
+   11-1 &  11-2 &  11-3 &  11-4 &  11-5 \\
+   \SetChild{class=magic}12-1 & 12-2 & 12-3 & 12-4 & 12-5 \\
+   13-1 &  13-2 &  13-3 &  13-4 &  13-5 \\
+  Foot1 & Foot2 & Foot3 & Foot4 & Foot5 \\
+\end{longtblr}
+
+\begin{codehigh}
+\ExplSyntaxOn
+\cs_generate_variant:Nn \clist_map_inline:nn {e}
+\cs_new_protected:Npn \mymagic #1
+  {
+    \clist_map_inline:en {\ExpTblrChildClass {#1}}
+      {
+        \bool_lazy_and:nnT
+          { \int_compare_p:n {\lTblrRowFirstInt <= \use_i:nn ##1} }
+          { \int_compare_p:n {\lTblrRowLastInt >= \use_i:nn ##1} }
+          { \exp_args:Noo \mymagicfill {\use_i:nn ##1} {\use_ii:nn ##1} }
+      }
+  }
+\ExplSyntaxOff
+\newcommand\mymagicfill[2]{
+  \fill[teal7] (#1-#2.north west) rectangle (#1-#2.south east);
+}
+\begin{tblrtikzbelow}
+  \mymagic{magic}
+\end{tblrtikzbelow}%
+\begin{longtblr}[
+  caption = Long Table Tikz
+]{
+  rowhead=1, rowfoot=1,
+  hlines={wd=4pt},vlines={wd=3pt},colspec={*{5}{X[r]}}
+}
+  Head1 & Head2 & Head3 & Head4 & Head5 \\
+    2-1 &   2-2 & \SetChild{class=magic}2-3 & 2-4 & 2-5 \\
+    3-1 &   3-2 &   3-3 &   3-4 &   3-5 \\
+    4-1 &   4-2 &   4-3 & \SetChild{class=magic}4-4 &4-5 \\
+    5-1 &   5-2 &   5-3 &   5-4 &   5-5 \\
+    6-1 &   6-2 &   6-3 &   6-4 &   6-5 \\
+    7-1 &   \SetChild{class=magic}7-2 & 7-3 & 7-4 & 7-5 \\
+    8-1 &   8-2 &   8-3 &   8-4 & \SetChild{class=magic}8-5 \\
+    9-1 &   9-2 &   9-3 &   9-4 &   9-5 \\
+   10-1 &  10-2 & \SetChild{class=magic}10-3 &  10-4 &  10-5 \\
+   11-1 &  11-2 &  11-3 &  11-4 &  11-5 \\
+   \SetChild{class=magic}12-1 & 12-2 & 12-3 & 12-4 & 12-5 \\
+   13-1 &  13-2 &  13-3 &  13-4 &  13-5 \\
+  Foot1 & Foot2 & Foot3 & Foot4 & Foot5 \\
+\end{longtblr}
+\end{codehigh}
 
 \section{Library \texttt{varwidth}}
 

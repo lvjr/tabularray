@@ -69,6 +69,7 @@
 \NewDocumentCommand\NN{m}{\texttt{\fakeverb{#1}}} % tikz node
 \NewDocumentCommand\KP{m}{\texttt{\fakeverb{#1}}} % key path
 \NewDocumentCommand\HP{m}{\texttt{\fakeverb{#1}}} % hook path
+\NewDocumentCommand\CI{m}{\texttt{\fakeverb{#1}}} % child indexer
 \NewDocumentCommand\CS{m}{\texttt{\fakeverb{#1}}} % child selector
 \NewDocumentCommand\CO{m}{\texttt{\fakeverb{#1}}} % counter
 \NewDocumentCommand\EN{m}{\texttt{\fakeverb{#1}}} % element name
@@ -94,11 +95,8 @@
 
 \newcommand{\mywarning}[1]{%
   \begin{tcolorbox}
-  The interfaces in this #1 should be seen as
-  \textcolor{red3}{\bfseries experimental}
-  and are likely to change in future releases, if necessary.
-  Don’t use them in important documents.
-  \end{tcolorbox}
+  #1
+  \end{tcolorbox}%
 }
 
 %\renewcommand*{\thefootnote}{*}

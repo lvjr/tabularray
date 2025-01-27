@@ -318,12 +318,12 @@ To change the width, we have to first put all column specifications into \KV{col
 \end{tblr}
 \end{demohigh}
 
-You can define new column types with \CC{\NewColumnType} command.
+You can define new column types with \CC{\NewTblrColumnType} command.
 For example, in \PP{tabularray} package,
 \Q{b} and \Q{X} columns are defined as special \Q{Q} columns:
 \begin{codehigh}
-\NewColumnType{b}[1]{Q[b,wd=#1]}
-\NewColumnType{X}[1][]{Q[co=1,#1]}
+\NewTblrColumnType{b}[1]{Q[b,wd=#1]}
+\NewTblrColumnType{X}[1][]{Q[co=1,#1]}
 \end{codehigh}
 
 \section{Row Types}

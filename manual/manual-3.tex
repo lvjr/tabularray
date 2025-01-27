@@ -392,46 +392,69 @@ The following example demonstrates how to define a new table command:
 \end{tblr}
 \end{demohigh}
 
-\section{Odd and Even Selectors}
+\section{Child Indexers and Selectors}
+
+From version 2025A, child indexer \CI{Z} accepts an optional argument for making a negative index.
+
+\begin{demohigh}
+\begin{tblr}{
+  cell{1}{2-Z[2]} = {red9},
+  cell{2}{3-Z[3]} = {green9},
+  cell{3}{Z[6]-Z[4]} = {blue9}
+}
+  A & B & C & D & E & F & G & H & I \\
+  A & B & C & D & E & F & G & H & I \\
+  A & B & C & D & E & F & G & H & I
+\end{tblr}
+\end{demohigh}
 
 From version 2022A, child selectors \CS{odd} and \CS{even} accept an optional argument,
 in which you can specify the start index and the end index of the children.
 
 \begin{demohigh}
 \begin{tblr}{
-  cell{odd}{1} = {red9},
-  cell{odd[4]}{2} = {green9},
-  cell{odd[3-X]}{3} = {blue9},
+  cell{1}{odd} = {yellow9},
+  cell{2}{odd[5]} = {purple9},
+  cell{3}{odd[4]} = {cyan9}
 }
-  Head   & Head    & Head   \\
-  Talk A & Place A & Date A \\
-  Talk B & Place B & Date B \\
-  Talk C & Place C & Date C \\
-  Talk D & Place D & Date D \\
-  Talk E & Place E & Date E \\
-  Talk F & Place F & Date F \\
-  Talk G & Place G & Date G \\
-  Talk H & Place H & Date H \\
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J
 \end{tblr}
 \end{demohigh}
 
 \begin{demohigh}
 \begin{tblr}{
-  cell{even}{1} = {yellow9},
-  cell{even[4]}{2} = {cyan9},
-  cell{even[3-X]}{3} = {purple9},
+  cell{1}{even} = {red9},
+  cell{2}{even[4]} = {green9},
+  cell{3}{even[3]} = {blue9}
 }
-  Head   & Head    & Head   \\
-  Talk A & Place A & Date A \\
-  Talk B & Place B & Date B \\
-  Talk C & Place C & Date C \\
-  Talk D & Place D & Date D \\
-  Talk E & Place E & Date E \\
-  Talk F & Place F & Date F \\
-  Talk G & Place G & Date G \\
-  Talk H & Place H & Date H \\
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J \\
 \end{tblr}
 \end{demohigh}
+
+From version 2025A, the support for end index of child selectors \CS{odd} and \CS{even} is removed.
+Instead you can use the more general \CS{every} selector.
+
+\begin{demohigh}
+\begin{tblr}{
+  cell{1}{every{2}{-2}} = {yellow9},
+  cell{2}{every[2]{2}{-2}} = {purple9},
+  cell{3}{every[3]{-9}{-2}} = {cyan9}
+}
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J
+\end{tblr}
+\end{demohigh}
+
+The interface of \CS{every} selector is \fakeverb{every[<step>]{<start>}{<end>}},
+where \fakeverb{<start>} and \fakeverb{<end>} are postive or negative indexes.
+and they can not be child indexers such as \CI{U} or \CI{Z}.
+
+More child indexers and selectors can be defined by users. See Chapter \ref{chap:exp}.
 
 \section{Counters and Lengths}
 

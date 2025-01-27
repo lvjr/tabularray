@@ -59,6 +59,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 ## Deprecated
 
 - Deprecate `\DefTblrTemplate` in favor of `\DeclareTblrTemplate` ([#563])
+- Deprecate `\NewColumnType` in favor of `\NewTblrColumnType` ([#421])
+- Deprecate `\NewRowType` in favor of `\NewTblrRowType` ([#421])
+- Deprecate `\NewColumnRowType` in favor of `\NewTblrColumnRowType` ([#421])
+- Deprecate `\NewDashStyle` in favor of `\NewTblrDashStyle` ([#421])
 - Deprecate `\NewTableCommand` in favor of `\NewTblrTableCommand` ([#421])
 - Deprecate `\NewContentCommand` in favor of `\NewTblrContentCommand` ([#421])
 - Deprecate `\g_tblr_level_int` in favor of `\gTblrLevelInt` ([#527])

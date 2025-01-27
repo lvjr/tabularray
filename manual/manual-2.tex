@@ -119,8 +119,6 @@ Another pair of braces before will select segments in all hlines/vlines.
 \end{demohigh}
 
 The above example can be simplified with \CS{odd} and \CS{even} values.
-(More child selectors can be defined with \CC{\NewChildSelector} command.
-Advanced users could read the source code for this.)
 
 \begin{demohigh}
 \begin{tblr}{
@@ -736,15 +734,15 @@ The \PP{tabularray} package has only one type of primitive column: the \Q{Q} col
 Other types of columns are defined as \Q{Q} columns with some keys.
 
 \begin{codehigh}
-\NewColumnType{l}{Q[l]}
-\NewColumnType{c}{Q[c]}
-\NewColumnType{r}{Q[r]}
-\NewColumnType{t}[1]{Q[t,wd=#1]}
-\NewColumnType{m}[1]{Q[m,wd=#1]}
-\NewColumnType{b}[1]{Q[b,wd=#1]}
-\NewColumnType{h}[1]{Q[h,wd=#1]}
-\NewColumnType{f}[1]{Q[f,wd=#1]}
-\NewColumnType{X}[1][]{Q[co=1,#1]}
+\NewTblrColumnType{l}{Q[l]}
+\NewTblrColumnType{c}{Q[c]}
+\NewTblrColumnType{r}{Q[r]}
+\NewTblrColumnType{t}[1]{Q[t,wd=#1]}
+\NewTblrColumnType{m}[1]{Q[m,wd=#1]}
+\NewTblrColumnType{b}[1]{Q[b,wd=#1]}
+\NewTblrColumnType{h}[1]{Q[h,wd=#1]}
+\NewTblrColumnType{f}[1]{Q[f,wd=#1]}
+\NewTblrColumnType{X}[1][]{Q[co=1,#1]}
 \end{codehigh}
 
 \begin{demohigh}
@@ -755,7 +753,7 @@ Other types of columns are defined as \Q{Q} columns with some keys.
 \end{tblr}
 \end{demohigh}
 
-Any new column type must be defined with \CC{\NewColumnType} command.
+Any new column type must be defined with \CC{\NewTblrColumnType} command.
 It can have an optional argument when it's defined.
 
 \subsection{Row Types}
@@ -764,14 +762,14 @@ The \PP{tabularray} package has only one type of primitive row: the \Q{Q} row.
 Other types of rows are defined as \Q{Q} rows with some keys.
 
 \begin{codehigh}
-\NewRowType{l}{Q[l]}
-\NewRowType{c}{Q[c]}
-\NewRowType{r}{Q[r]}
-\NewRowType{t}[1]{Q[t,ht=#1]}
-\NewRowType{m}[1]{Q[m,ht=#1]}
-\NewRowType{b}[1]{Q[b,ht=#1]}
-\NewRowType{h}[1]{Q[h,ht=#1]}
-\NewRowType{f}[1]{Q[f,ht=#1]}
+\NewTblrRowType{l}{Q[l]}
+\NewTblrRowType{c}{Q[c]}
+\NewTblrRowType{r}{Q[r]}
+\NewTblrRowType{t}[1]{Q[t,ht=#1]}
+\NewTblrRowType{m}[1]{Q[m,ht=#1]}
+\NewTblrRowType{b}[1]{Q[b,ht=#1]}
+\NewTblrRowType{h}[1]{Q[h,ht=#1]}
+\NewTblrRowType{f}[1]{Q[f,ht=#1]}
 \end{codehigh}
 
 \begin{demohigh}
@@ -782,7 +780,7 @@ Other types of rows are defined as \Q{Q} rows with some keys.
 \end{tblr}
 \end{demohigh}
 
-Any new row type must be defined with \CC{\NewRowType} command.
+Any new row type must be defined with \CC{\NewTblrRowType} command.
 It can have an optional argument when it's defined.
 
 \end{document}

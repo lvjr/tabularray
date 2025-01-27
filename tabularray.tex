@@ -69,6 +69,7 @@
 \NewDocumentCommand\NN{m}{\texttt{\fakeverb{#1}}} % tikz node
 \NewDocumentCommand\KP{m}{\texttt{\fakeverb{#1}}} % key path
 \NewDocumentCommand\HP{m}{\texttt{\fakeverb{#1}}} % hook path
+\NewDocumentCommand\CI{m}{\texttt{\fakeverb{#1}}} % child indexer
 \NewDocumentCommand\CS{m}{\texttt{\fakeverb{#1}}} % child selector
 \NewDocumentCommand\CO{m}{\texttt{\fakeverb{#1}}} % counter
 \NewDocumentCommand\EN{m}{\texttt{\fakeverb{#1}}} % element name
@@ -94,11 +95,8 @@
 
 \newcommand{\mywarning}[1]{%
   \begin{tcolorbox}
-  The interfaces in this #1 should be seen as
-  \textcolor{red3}{\bfseries experimental}
-  and are likely to change in future releases, if necessary.
-  Don’t use them in important documents.
-  \end{tcolorbox}
+  #1
+  \end{tcolorbox}%
 }
 
 %\renewcommand*{\thefootnote}{*}
@@ -501,12 +499,12 @@ To change the width, we have to first put all column specifications into \KV{col
 \end{tblr}
 \end{demohigh}
 
-You can define new column types with \CC{\NewColumnType} command.
+You can define new column types with \CC{\NewTblrColumnType} command.
 For example, in \PP{tabularray} package,
 \Q{b} and \Q{X} columns are defined as special \Q{Q} columns:
 \begin{codehigh}
-\NewColumnType{b}[1]{Q[b,wd=#1]}
-\NewColumnType{X}[1][]{Q[co=1,#1]}
+\NewTblrColumnType{b}[1]{Q[b,wd=#1]}
+\NewTblrColumnType{X}[1][]{Q[co=1,#1]}
 \end{codehigh}
 
 \section{Row Types}
@@ -720,8 +718,6 @@ Another pair of braces before will select segments in all hlines/vlines.
 \end{demohigh}
 
 The above example can be simplified with \CS{odd} and \CS{even} values.
-(More child selectors can be defined with \CC{\NewChildSelector} command.
-Advanced users could read the source code for this.)
 
 \begin{demohigh}
 \begin{tblr}{
@@ -1337,15 +1333,15 @@ The \PP{tabularray} package has only one type of primitive column: the \Q{Q} col
 Other types of columns are defined as \Q{Q} columns with some keys.
 
 \begin{codehigh}
-\NewColumnType{l}{Q[l]}
-\NewColumnType{c}{Q[c]}
-\NewColumnType{r}{Q[r]}
-\NewColumnType{t}[1]{Q[t,wd=#1]}
-\NewColumnType{m}[1]{Q[m,wd=#1]}
-\NewColumnType{b}[1]{Q[b,wd=#1]}
-\NewColumnType{h}[1]{Q[h,wd=#1]}
-\NewColumnType{f}[1]{Q[f,wd=#1]}
-\NewColumnType{X}[1][]{Q[co=1,#1]}
+\NewTblrColumnType{l}{Q[l]}
+\NewTblrColumnType{c}{Q[c]}
+\NewTblrColumnType{r}{Q[r]}
+\NewTblrColumnType{t}[1]{Q[t,wd=#1]}
+\NewTblrColumnType{m}[1]{Q[m,wd=#1]}
+\NewTblrColumnType{b}[1]{Q[b,wd=#1]}
+\NewTblrColumnType{h}[1]{Q[h,wd=#1]}
+\NewTblrColumnType{f}[1]{Q[f,wd=#1]}
+\NewTblrColumnType{X}[1][]{Q[co=1,#1]}
 \end{codehigh}
 
 \begin{demohigh}
@@ -1356,7 +1352,7 @@ Other types of columns are defined as \Q{Q} columns with some keys.
 \end{tblr}
 \end{demohigh}
 
-Any new column type must be defined with \CC{\NewColumnType} command.
+Any new column type must be defined with \CC{\NewTblrColumnType} command.
 It can have an optional argument when it's defined.
 
 \subsection{Row Types}
@@ -1365,14 +1361,14 @@ The \PP{tabularray} package has only one type of primitive row: the \Q{Q} row.
 Other types of rows are defined as \Q{Q} rows with some keys.
 
 \begin{codehigh}
-\NewRowType{l}{Q[l]}
-\NewRowType{c}{Q[c]}
-\NewRowType{r}{Q[r]}
-\NewRowType{t}[1]{Q[t,ht=#1]}
-\NewRowType{m}[1]{Q[m,ht=#1]}
-\NewRowType{b}[1]{Q[b,ht=#1]}
-\NewRowType{h}[1]{Q[h,ht=#1]}
-\NewRowType{f}[1]{Q[f,ht=#1]}
+\NewTblrRowType{l}{Q[l]}
+\NewTblrRowType{c}{Q[c]}
+\NewTblrRowType{r}{Q[r]}
+\NewTblrRowType{t}[1]{Q[t,ht=#1]}
+\NewTblrRowType{m}[1]{Q[m,ht=#1]}
+\NewTblrRowType{b}[1]{Q[b,ht=#1]}
+\NewTblrRowType{h}[1]{Q[h,ht=#1]}
+\NewTblrRowType{f}[1]{Q[f,ht=#1]}
 \end{codehigh}
 
 \begin{demohigh}
@@ -1383,7 +1379,7 @@ Other types of rows are defined as \Q{Q} rows with some keys.
 \end{tblr}
 \end{demohigh}
 
-Any new row type must be defined with \CC{\NewRowType} command.
+Any new row type must be defined with \CC{\NewTblrRowType} command.
 It can have an optional argument when it's defined.
 
 \chapter{Extra Interfaces}
@@ -1770,46 +1766,69 @@ The following example demonstrates how to define a new table command:
 \end{tblr}
 \end{demohigh}
 
-\section{Odd and Even Selectors}
+\section{Child Indexers and Selectors}
+
+From version 2025A, child indexer \CI{Z} accepts an optional argument for making a negative index.
+
+\begin{demohigh}
+\begin{tblr}{
+  cell{1}{2-Z[2]} = {red9},
+  cell{2}{3-Z[3]} = {green9},
+  cell{3}{Z[6]-Z[4]} = {blue9}
+}
+  A & B & C & D & E & F & G & H & I \\
+  A & B & C & D & E & F & G & H & I \\
+  A & B & C & D & E & F & G & H & I
+\end{tblr}
+\end{demohigh}
 
 From version 2022A, child selectors \CS{odd} and \CS{even} accept an optional argument,
 in which you can specify the start index and the end index of the children.
 
 \begin{demohigh}
 \begin{tblr}{
-  cell{odd}{1} = {red9},
-  cell{odd[4]}{2} = {green9},
-  cell{odd[3-X]}{3} = {blue9},
+  cell{1}{odd} = {yellow9},
+  cell{2}{odd[5]} = {purple9},
+  cell{3}{odd[4]} = {cyan9}
 }
-  Head   & Head    & Head   \\
-  Talk A & Place A & Date A \\
-  Talk B & Place B & Date B \\
-  Talk C & Place C & Date C \\
-  Talk D & Place D & Date D \\
-  Talk E & Place E & Date E \\
-  Talk F & Place F & Date F \\
-  Talk G & Place G & Date G \\
-  Talk H & Place H & Date H \\
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J
 \end{tblr}
 \end{demohigh}
 
 \begin{demohigh}
 \begin{tblr}{
-  cell{even}{1} = {yellow9},
-  cell{even[4]}{2} = {cyan9},
-  cell{even[3-X]}{3} = {purple9},
+  cell{1}{even} = {red9},
+  cell{2}{even[4]} = {green9},
+  cell{3}{even[3]} = {blue9}
 }
-  Head   & Head    & Head   \\
-  Talk A & Place A & Date A \\
-  Talk B & Place B & Date B \\
-  Talk C & Place C & Date C \\
-  Talk D & Place D & Date D \\
-  Talk E & Place E & Date E \\
-  Talk F & Place F & Date F \\
-  Talk G & Place G & Date G \\
-  Talk H & Place H & Date H \\
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J \\
 \end{tblr}
 \end{demohigh}
+
+From version 2025A, the support for end index of child selectors \CS{odd} and \CS{even} is removed.
+Instead you can use the more general \CS{every} selector.
+
+\begin{demohigh}
+\begin{tblr}{
+  cell{1}{every{2}{-2}} = {yellow9},
+  cell{2}{every[2]{2}{-2}} = {purple9},
+  cell{3}{every[3]{-9}{-2}} = {cyan9}
+}
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J \\
+  A & B & C & D & E & F & G & H & I & J
+\end{tblr}
+\end{demohigh}
+
+The interface of \CS{every} selector is \fakeverb{every[<step>]{<start>}{<end>}},
+where \fakeverb{<start>} and \fakeverb{<end>} are postive or negative indexes.
+and they can not be child indexers such as \CI{U} or \CI{Z}.
+
+More child indexers and selectors can be defined by users. See Chapter \ref{chap:exp}.
 
 \section{Counters and Lengths}
 
@@ -2445,6 +2464,7 @@ TEXT\begin{talltblr}[
 \end{demohigh}
 
 \chapter{Use Some Libraries}
+\label{chap:lib}
 
 A \PP{tabularray} library could be loaded by \CC{\UseTblrLibrary} command.
 From version 2025A, an external library \fakeverb{foo} could also be loaded
@@ -3048,8 +3068,8 @@ Also you must use \K{l}, \K{c} or \K{r} to set horizontal alignment for non-nume
 
 Both \Q{S} and \Q{s} columns are supported. In fact, These two columns have been defined as follows:
 \begin{codehigh}
-\NewColumnType{S}[1][]{Q[si={#1},c]}
-\NewColumnType{s}[1][]{Q[si={#1},c,cmd=\TblrUnit]}
+\NewTblrColumnType{S}[1][]{Q[si={#1},c]}
+\NewTblrColumnType{s}[1][]{Q[si={#1},c,cmd=\TblrUnit]}
 \end{codehigh}
 You don't need to and are not allowed to define them again.
 
@@ -3059,8 +3079,6 @@ With this \textcolor{red3}{experimental} \LL{tikz} library%
 \footnote{The author thanks \href{https://github.com/jasperhabicht}{Jasper Habicht}
 for his contributions to this library.},
 you can draw \PP{tikz} pictures below or above \PP{tabularray} short or tall tables.
-Support for long tables is rather complicated hence is limited at this time.
-If a long table has only one page the \PP{tikz} drawing works well.
 Note that this library depends on and loads \PP{hook} library.
 
 To draw below/above a \PP{tabularray} table,
@@ -3120,6 +3138,98 @@ The second example below demonstrates corner nodes:
 
 By \PP{tikz} intersection syntax, \fakeverb{h<i>-|v<j>} is
 the instersection point of \KK{horder{<i>}} and \KK{vborder{<j>}}.
+
+It is rather complicated to add support for drawing \PP{tikz} pictures on long tables.
+At present, the supprot is limited: \underline{only} cell nodes are available for multi-page long tables.
+In writng drawing code,
+users are responsible for making sure the elements to draw are actually in current page table.
+These public variables (which are described in Chapter \ref{chap:exp})
+might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt}, \CC{\lTblrTablePageInt},
+\CC{\lTblrRowFirstInt}, \CC{\lTblrRowLastInt}. Here is an example:
+
+\ExplSyntaxOn
+\cs_generate_variant:Nn \clist_map_inline:nn {e}
+\cs_new_protected:Npn \mymagic #1
+  {
+    \clist_map_inline:en {\ExpTblrChildClass {#1}}
+      {
+        \bool_lazy_and:nnT
+          { \int_compare_p:n {\lTblrRowFirstInt <= \use_i:nn ##1} }
+          { \int_compare_p:n {\lTblrRowLastInt >= \use_i:nn ##1} }
+          { \exp_args:Noo \mymagicfill {\use_i:nn ##1} {\use_ii:nn ##1} }
+      }
+  }
+\ExplSyntaxOff
+\newcommand\mymagicfill[2]{
+  \fill[teal7] (#1-#2.north west) rectangle (#1-#2.south east);
+}
+\begin{tblrtikzbelow}
+  \mymagic{magic}
+\end{tblrtikzbelow}%
+\begin{longtblr}[
+  caption = Long Table Tikz
+]{
+  rowhead=1, rowfoot=1,
+  hlines={wd=4pt},vlines={wd=3pt},colspec={*{5}{X[r]}}
+}
+  Head1 & Head2 & Head3 & Head4 & Head5 \\
+    2-1 &   2-2 & \SetChild{class=magic}2-3 & 2-4 & 2-5 \\
+    3-1 &   3-2 &   3-3 &   3-4 &   3-5 \\
+    4-1 &   4-2 &   4-3 & \SetChild{class=magic}4-4 &4-5 \\
+    5-1 &   5-2 &   5-3 &   5-4 &   5-5 \\
+    6-1 &   6-2 &   6-3 &   6-4 &   6-5 \\
+    7-1 &   \SetChild{class=magic}7-2 & 7-3 & 7-4 & 7-5 \\
+    8-1 &   8-2 &   8-3 &   8-4 & \SetChild{class=magic}8-5 \\
+    9-1 &   9-2 &   9-3 &   9-4 &   9-5 \\
+   10-1 &  10-2 & \SetChild{class=magic}10-3 &  10-4 &  10-5 \\
+   11-1 &  11-2 &  11-3 &  11-4 &  11-5 \\
+   \SetChild{class=magic}12-1 & 12-2 & 12-3 & 12-4 & 12-5 \\
+   13-1 &  13-2 &  13-3 &  13-4 &  13-5 \\
+  Foot1 & Foot2 & Foot3 & Foot4 & Foot5 \\
+\end{longtblr}
+
+\begin{codehigh}
+\ExplSyntaxOn
+\cs_generate_variant:Nn \clist_map_inline:nn {e}
+\cs_new_protected:Npn \mymagic #1
+  {
+    \clist_map_inline:en {\ExpTblrChildClass {#1}}
+      {
+        \bool_lazy_and:nnT
+          { \int_compare_p:n {\lTblrRowFirstInt <= \use_i:nn ##1} }
+          { \int_compare_p:n {\lTblrRowLastInt >= \use_i:nn ##1} }
+          { \exp_args:Noo \mymagicfill {\use_i:nn ##1} {\use_ii:nn ##1} }
+      }
+  }
+\ExplSyntaxOff
+\newcommand\mymagicfill[2]{
+  \fill[teal7] (#1-#2.north west) rectangle (#1-#2.south east);
+}
+\begin{tblrtikzbelow}
+  \mymagic{magic}
+\end{tblrtikzbelow}%
+\begin{longtblr}[
+  caption = Long Table Tikz
+]{
+  rowhead=1, rowfoot=1,
+  hlines={wd=4pt},vlines={wd=3pt},colspec={*{5}{X[r]}}
+}
+  Head1 & Head2 & Head3 & Head4 & Head5 \\
+    2-1 &   2-2 & \SetChild{class=magic}2-3 & 2-4 & 2-5 \\
+    3-1 &   3-2 &   3-3 &   3-4 &   3-5 \\
+    4-1 &   4-2 &   4-3 & \SetChild{class=magic}4-4 &4-5 \\
+    5-1 &   5-2 &   5-3 &   5-4 &   5-5 \\
+    6-1 &   6-2 &   6-3 &   6-4 &   6-5 \\
+    7-1 &   \SetChild{class=magic}7-2 & 7-3 & 7-4 & 7-5 \\
+    8-1 &   8-2 &   8-3 &   8-4 & \SetChild{class=magic}8-5 \\
+    9-1 &   9-2 &   9-3 &   9-4 &   9-5 \\
+   10-1 &  10-2 & \SetChild{class=magic}10-3 &  10-4 &  10-5 \\
+   11-1 &  11-2 &  11-3 &  11-4 &  11-5 \\
+   \SetChild{class=magic}12-1 & 12-2 & 12-3 & 12-4 & 12-5 \\
+   13-1 &  13-2 &  13-3 &  13-4 &  13-5 \\
+  Foot1 & Foot2 & Foot3 & Foot4 & Foot5 \\
+\end{longtblr}
+\end{codehigh}
 
 \section{Library \texttt{varwidth}}
 
@@ -3305,7 +3415,9 @@ Therefore putting more than one blank line at any of these positions may cause w
 \chapter{Experimental Interfaces}
 \label{chap:exp}
 
-\mywarning{chapter}
+\mywarning{The interfaces in this chapter
+(and other undocumented public interfaces even if mentioned in the changelog) should be seen as \textcolor{red3}{\bfseries experimental}
+and are likely to change in future releases, if necessary. Don’t use them in important documents.}
 
 \section{Experimental Public Key Paths}
 
@@ -3369,6 +3481,20 @@ This variable is always available throughout the whole typesetting process of ta
 \end{itemize}
 You need to make sure \KV{measure=vstore} to make \CC{\lTblrMeasuringBool} correct.
 
+This variable is available before building every table:
+\begin{itemize}[nosep]
+  \item \CC{\lTblrPortraitTypeTl}: table type (\VV{short}, \VV{tall} or \VV{long}).
+\end{itemize}
+
+These variables are updated in building long tables:
+\begin{itemize}[nosep]
+  \item \CC{\lTblrRowHeadInt}: total number of head rows.
+  \item \CC{\lTblrRowFootInt}: total number of foot rows.
+  \item \CC{\lTblrTablePageInt}: index number of current page table.
+  \item \CC{\lTblrRowFirstInt}: first row numer in row body of current page table.
+  \item \CC{\lTblrRowLastInt}: last row numer in row body of curent page table.
+\end{itemize}
+
 These variables are updated by default before building every cell:
 \begin{itemize}[nosep]
   \item \CC{\lTblrCellRowSpanInt}: how many rows are spanned by current cell.
@@ -3397,6 +3523,141 @@ In the above, \TT{BorderStyle}, \TT{BorderWidth}, \TT{BorderColor} are similar t
 \K{border-style}, \K{border-width}, \K{border-color} in HTML/CSS, respectively.
 \TT{BorderStyle} and \TT{BorderColor} are empty by default.
 
+\section{New Child Indexers and Selectors}
+
+\subsection{One dimensional indexers and selectors}
+
+You can define new child indexers with \CC{\NewTblrChildIndexer} command.
+As an example, the following is the simplified definition of \CI{Z} indexer:
+\begin{codehigh}
+\ExplSyntaxOn
+\NewTblrChildIndexer {Z} [1] [1]
+  {
+    \tl_set:Ne \lTblrChildIndexTl { \int_eval:n {\lTblrChildTotalInt + 1 - #1} {1} }
+  }
+\ExplSyntaxOff
+\end{codehigh}
+In the definition, you can use \CC{\lTblrChildTotalInt} which is the total number of children.
+And you only need to store the result index \fakeverb{<i>} in \CC{\lTblrChildIndexTl}.
+The name of an indexer \underline{MUST} consist of letters and start with an uppercase letter.
+
+You can define new child selectors with \CC{\NewTblrChildSelector} command.
+As an example, the following is the simplified definition of \CI{odd} selector:
+\begin{codehigh}
+\ExplSyntaxOn
+\NewTblrChildSelector {odd} [1] [1]
+  {
+    \clist_set:Ne \lTblrChildClist { {#1} {2} {\int_use:N \lTblrChildTotalInt} }
+  }
+\ExplSyntaxOff
+\end{codehigh}
+In the definition, you can use \CC{\lTblrChildTotalInt} which is the total number of children.
+And you only need to store the result indexes in \CC{\lTblrChildClist}.
+When some indexes form an arithmetic sequence,
+you can simplify them as \fakeverb{{<start>}{<step>}{<end>}}.
+The name of a selector \underline{MUST} consist of letters and start with a lowercase letter.
+
+\subsection{Two dimensional indexers and selectors}
+
+When selecting cells, you may need two dimensional indexers and selectors.
+You can also define new two dimensional child indexers with \CC{\NewTblrChildIndexer} command,
+and two dimensional child selectors with \CC{\NewTblrChildSelector} command.
+
+In the definitions, you can use \CC{\lTblrChildHtotalInt}
+which is the total number of horizontal children (rows), and \CC{\lTblrChildVtotalInt}
+which is the total number of vertical children (columns).
+
+You also need to store the result index \fakeverb{{<i>}{<j>}} in \CC{\lTblrChildIndexTl}
+in defining two dimensional child indexers.
+Similarly you also need to store the result indexes in \CC{\lTblrChildClist}
+in defining two dimensional child selectors.
+
+\subsection{Child ids and classes}
+
+When the table is long, it is clumsy to select children with indexes, positive or negative.
+In version 2025A, \PP{tabularray} borrows ideas of ids and classes from HTML/CSS.
+With table command \CC{\SetChild}, you can mark a hborder/vborder/row/column/cell with
+an id or class, and use it in inner specifications.
+
+The \CC{\SetChild} command accepts a key-value input:
+\begin{spectblr}[
+  caption = {Key-value input in \fakeverb{\\SetChild} command} %FIXME
+]{}
+  Input & Description \\
+  \KV{id=Hello}  & create a child indexer \TT{Hello} which is an index \TT{{<i>}{<j>}} \\
+  \KV{idh=Hello} & create a child indexer \TT{Helloh} which is an horizontal index \TT{<i>} \\
+  \KV{idv=Hello} & create a child indexer \TT{Hellov} which is an vertical index  \TT{<j>} \\
+  \KV{id*=Hello} & create all of the above three child indexers \\
+  \KV{class=world}  & create a child selector \TT{world} which is a list of indexes \TT{{<i>}{<j>}} \\
+  \KV{classh=world} & create a child selector \TT{worldh} which is a list of horizontal indexes \TT{<i>} \\
+  \KV{classv=world} & create a child selector \TT{worldv} which is a list of vertical indexes \TT{<j>} \\
+  \KV{class*=world} & create all of the above three child selectors
+\end{spectblr}
+
+The following is an example of child ids
+(every id name must start with uppercase letter since it creates a child indexer):
+
+\begin{demohigh}
+\begin{tblr}{
+  hline{1,Z},
+  row{Barh,Quxh} = {bg=azure7},
+  column{Bazv,Quxv} = {fg=red3},
+  cell{Foo,Qux} = {cmd=\fbox}
+}
+  1 & 2 & 3 & \SetChild{id=Foo}  4 & 5 & 6 & 7 & 8 \\
+  2 & 2 & \SetChild{idh=Bar} 3 & 4 & 5 & 6 & 7 & 8 \\
+  3 & \SetChild{idv=Baz} 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+  \SetChild{id*=Qux} 4 & 2 & 3 & 4 & 5 & 6 & 7 & 8
+\end{tblr}
+\end{demohigh}
+
+The following is an example of child classes
+(every class name must start with lowercase letter since it creates a child selector):
+
+\begin{demohigh}
+\begin{tblr}{
+  hline{1,Z},
+  row{fooh} = {bg=azure7},
+  column{barv} = {fg=red3},
+  cell{baz} = {cmd=\fbox}
+}
+  1 & 2 & \SetChild{classh=foo} 3 & 4 & 5 & 6 & 7 \\
+  2 & \SetChild{classv=bar} 2 & 3 & 4 & 5 & 6 & 7 \\
+  \SetChild{class=baz} 3  & 2 & 3 & 4 & 5 & 6 & 7 \\
+  4 & 2 & 3 & 4 & \SetChild{class=baz}  5 & 6 & 7 \\
+  5 & 2 & 3 & 4 & 5 & \SetChild{classh=foo} 6 & 7 \\
+  6 & 2 & 3 & 4 & 5 & 6 & \SetChild{classv=bar} 7
+\end{tblr}
+\end{demohigh}
+
+Since \CC{\SetChild} commands need to be extracted first
+before parsing inner specifications, they \underline{MUST} be put
+at the beginning of cells, before other table commands such as \CC{\hline}.
+Therefore it conflicts with syntaxes \fakeverb{\\\\*} and \fakeverb{\\\\[<dimen>]}.
+But we can replace \fakeverb{\\\\*} with \fakeverb{\\\\\nopagebreak},
+and replace \fakeverb{\\\\[<dimen>]} with \fakeverb{\\\\\SetRow{belowsep+=<dimen>}},
+so that \CC{\SetChild} can be inserted in the middle:
+\begin{demohigh}
+\begin{tblr}{
+  cell{Foo,Bar,Baz,Qux} = {cmd=\fbox}
+}
+\SetChild{id=Foo}\hline
+  1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+\SetChild{id=Bar}\nopagebreak\hline
+  2 & 2 & 3 & 4 & 5 & 6 & 7 \\
+\SetChild{id=Baz}\SetRow{belowsep+=5pt}\hline
+  3 & 2 & 3 & 4 & 5 & 6 & 7 \\
+\SetChild{id=Qux}\hline
+\end{tblr}
+\end{demohigh}
+
+Only one \CC{\SetChild} command in each cell is supported.
+But you can create multiple ids or classes with single \CC{\SetChild} command.
+
+In drawing \PP{tikz} pictures on tables (see Chapter~\ref{chap:lib}),
+you may want to get the value of a child id or class with \CC{\ExpTblrChildId} or \CC{\ExpTblrChildClass}.
+These two commands are fully expandable.
+
 \chapter{History and Future}
 
 \section{The Future}
@@ -3415,7 +3676,7 @@ and put it into the folder of your TeX documents:\newline
 The change log of \PP{tabularray} package will be updated on the wiki page:\newline
 \centerline{\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}}
 
-When \PP{tabularray} makes breaking changes in a new release,
+When \PP{tabularray} makes some breaking changes of \underline{stable public} interfaces in a new release,
 you will be able to roll back to previous release to make your existing documents unaffected.
 
 Normally you don't know when there will be a new breaking release.
@@ -3431,6 +3692,10 @@ In version 2025A, there were several important changes:
   \item Inner key \KK{verb} (deprecated before) was removed;
         it is better to use \CC{\fakeverb} command.
   \item \CC{\DefTblrTemplate} was deprecated in favor of \CC{\DeclareTblrTemplate}.
+  \item \CC{\NewColumnType} was deprecated in favor of \CC{\NewTblrColumnType}.
+  \item \CC{\NewRowType} was deprecated in favor of \CC{\NewTblrRowType}.
+  \item \CC{\NewColumnRowType} was deprecated in favor of \CC{\NewTblrColumnRowType}.
+  \item \CC{\NewDashStyle} was deprecated in favor of \CC{\NewTblrDashStyle}.
   \item \CC{\NewTableCommand} was deprecated in favor of \CC{\NewTblrTableCommand}.
  %\item \CC{\NewContentCommand} was deprecated in favor of \CC{\NewTblrContentCommand}.
   \item \CC{\tablewidth} was deprecated in favor of \CC{\lTblrTableWidthDim}.
