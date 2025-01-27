@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737950194330,
+  "lastUpdate": 1737950726760,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -5292,6 +5292,48 @@ window.BENCHMARK_DATA = {
             "value": 0.27578131260113,
             "unit": "ratio",
             "extra": "current time : previous time = 1.5623550415039 : 5.6651954650879"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "2ec238425eab59682790c22841975da1b1a03c58",
+          "message": "disable corner nodes for multipage long tables (#29)",
+          "timestamp": "2025-01-27T12:02:39+08:00",
+          "tree_id": "1c75737ee5520729fead8a96eedb8829c1e2d486",
+          "url": "https://github.com/lvjr/tabularray/commit/2ec238425eab59682790c22841975da1b1a03c58"
+        },
+        "date": 1737950725766,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.21062994221878,
+            "unit": "ratio",
+            "extra": "current time : previous time = 0.98104858398438 : 4.6576881408691"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.21236235382077,
+            "unit": "ratio",
+            "extra": "current time : previous time = 0.99683380126953 : 4.6940231323242"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.27331290774684,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.5391502380371 : 5.6314582824707"
           }
         ]
       }
