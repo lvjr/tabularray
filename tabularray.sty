@@ -9,7 +9,7 @@
 %%% ----------------------------------------------------------------------------
 
 %%% --------------------------------------------------------
-%%> \section{Scratch Variables and Function Variants}
+%%> \section{Scratch variables and function variants}
 %%% --------------------------------------------------------
 
 %% \DeclareRelease and \DeclareCurrentRelease are added in LaTeX 2018-04-01
@@ -331,7 +331,7 @@
 \prg_generate_conditional_variant:Nnn \__tblr_if_negative_value:n { V } { TF }
 
 %%% --------------------------------------------------------
-%%> \section{Declare and Set tabularray Keys}
+%%> \section{Declare and set tabularray keys}
 %%% --------------------------------------------------------
 
 \cs_new_protected:Npn \__tblr_keys_define:nn #1 #2
@@ -403,7 +403,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Create and Use tabularray Hooks}
+%%> \section{Create and use tabularray hooks}
 %%% --------------------------------------------------------
 
 \cs_new_protected:Npn \__tblr_hook_new:n #1
@@ -436,7 +436,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Data Structures Based on Property Lists}
+%%> \section{Data structures based on property lists}
 %%% --------------------------------------------------------
 
 \int_new:N \gTblrLevelInt % store table nesting level
@@ -563,7 +563,7 @@
 \cs_generate_variant:Nn \__tblr_gadd_dimen_value:Nnn { cnn }
 
 %%% --------------------------------------------------------
-%%> \section{Data Structures Based on Token Lists}
+%%> \section{Data structures based on token lists}
 %%% --------------------------------------------------------
 
 \cs_new_protected:Npn \__tblr_clear_spec_lists:
@@ -645,7 +645,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Data Structures Based on Integer Arrays}
+%%> \section{Data structures based on integer arrays}
 %%% --------------------------------------------------------
 
 \msg_new:nnn { tabularray } { intarray-beyond-bound }
@@ -1045,7 +1045,7 @@
 \cs_generate_variant:Nn \__tblr_array_gadd_value:Nnn { cnn }
 
 %%% --------------------------------------------------------
-%%> \section{Switch between Different Data Structures}
+%%> \section{Switch between different data structures}
 %%% --------------------------------------------------------
 
 \cs_set_eq:NN \__tblr_prop_new:N \prop_new:N
@@ -1188,7 +1188,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Child Indexers and Child Selectors}
+%%> \section{Child indexers and child selectors}
 %%% --------------------------------------------------------
 
 \clist_new:N \lTblrUsedChildIndexerClist
@@ -1597,7 +1597,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{New Table Commands}
+%%> \section{New table commands}
 %%% --------------------------------------------------------
 
 %% We need some commands to modify table/row/column/cell specifications.
@@ -1688,7 +1688,7 @@
 \ProvideDocumentCommand \SetColumn  { o m } {}
 
 %%% --------------------------------------------------------
-%%> \section{Child Ids and Child Classes}
+%%> \section{Child ids and child classes}
 %%% --------------------------------------------------------
 
 \NewTblrTableCommand \SetChild [1]
@@ -1832,7 +1832,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{New Content Commands}
+%%> \section{New content commands}
 %%% --------------------------------------------------------
 
 %% We need to emulate or fix some commands such as \diagbox in other packages
@@ -1867,7 +1867,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{New Dash Styles}
+%%> \section{New dash styles}
 %%% --------------------------------------------------------
 
 %% \NewTblrDashStyle commands
@@ -1953,7 +1953,7 @@
 \NewTblrDashStyle {dotted} {on ~ 0.4pt ~ off ~ 1pt}
 
 %%% --------------------------------------------------------
-%%> \section{Set Hlines and Vlines}
+%%> \section{Set hlines and vlines}
 %%% --------------------------------------------------------
 
 \quark_new:N \q__tblr_dash
@@ -2402,7 +2402,7 @@
   }
 
 %%% --------------------------------------------------------
-%%>  \section{Set Hborders and Vborders}
+%%>  \section{Set hborders and vborders}
 %%% --------------------------------------------------------
 
 %% Hborder holds keys not related to a specified hline
@@ -2502,7 +2502,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Set Cells}
+%%> \section{Set cells}
 %%% --------------------------------------------------------
 
 %% \SetCells command for setting every cell in the table
@@ -2779,7 +2779,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Set Columns and Rows}
+%%> \section{Set columns and rows}
 %%% --------------------------------------------------------
 
 %% \SetColumns command for setting every column in the table
@@ -3127,7 +3127,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Column Types and Row Types}
+%%> \section{Column types and row types}
 %%% --------------------------------------------------------
 
 %% Some primitive column/row types
@@ -3420,7 +3420,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Set Environments and New Environments}
+%%> \section{Set environments and new environments}
 %%% --------------------------------------------------------
 
 \tl_new:N \l__tblr_initial_tblr_outer_tl
@@ -3530,7 +3530,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Split Table Contents}
+%%> \section{Split table contents}
 %%% --------------------------------------------------------
 
 \tl_new:N \l__tblr_body_tl
@@ -3754,7 +3754,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Extract Table Commands from Cell Text}
+%%> \section{Extract table commands from cell text}
 %%% --------------------------------------------------------
 
 %% Extract table commands defined with \NewTblrTableCommand from cell text
@@ -3859,7 +3859,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Initialize Table Inner Specifications}
+%%> \section{Initialize table inner specifications}
 %%% --------------------------------------------------------
 
 \prop_new:N \g__tblr_initial_table_prop
@@ -3969,7 +3969,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Parse Table Inner Specifications}
+%%> \section{Parse table inner specifications}
 %%% --------------------------------------------------------
 
 %% We must define these keys to make \__tblr_keys_if_exist work
@@ -4064,7 +4064,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Initialize and Parse Table Outer Specifications}
+%%> \section{Initialize and parse table outer specifications}
 %%% --------------------------------------------------------
 
 \msg_new:nnn { tabularray } { used-theme-name }
@@ -4187,7 +4187,7 @@
 \cs_generate_variant:Nn \__tblr_outer_gput_more:nn { Vn }
 
 %%% --------------------------------------------------------
-%%> \section{Typeset and Calculate Sizes}
+%%> \section{Typeset and calculate sizes}
 %%% --------------------------------------------------------
 
 %% Calculate the width and height for every cell and border
@@ -4949,7 +4949,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Calculate and Adjust Extendable Columns}
+%%> \section{Calculate and adjust extendable columns}
 %%% --------------------------------------------------------
 
 %% Compute column widths when there are some extendable columns
@@ -5124,7 +5124,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Calculate and Adjust Multispan Cells}
+%%> \section{Calculate and adjust multispan cells}
 %%% --------------------------------------------------------
 
 %% Compute and adjust widths when there are some span cells.
@@ -5556,7 +5556,7 @@
 \cs_generate_variant:Nn \__tblr_calc_span_widths:nnN { ee }
 
 %%% --------------------------------------------------------
-%%> \section{Header and Footer Styles}
+%%> \section{Header and footer styles}
 %%% --------------------------------------------------------
 
 \prop_new:N \l__tblr_element_styles_prop
@@ -5640,7 +5640,7 @@
 \cs_generate_variant:Nn \__tblr_element_unknown_key:nn { Vn }
 
 %%% --------------------------------------------------------
-%%> \section{Helper Functions for Templates}
+%%> \section{Helper functions for templates}
 %%% --------------------------------------------------------
 
 \tl_new:N \l__tblr_template_name_tl
@@ -5804,7 +5804,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Table Continuation Templates}
+%%> \section{Table continuation templates}
 %%% --------------------------------------------------------
 
 \tl_if_exist:NF \tblrcontfootname
@@ -5872,7 +5872,7 @@
 \SetTblrTemplate { conthead } { normal }
 
 %%% --------------------------------------------------------
-%%> \section{Table Caption Templates}
+%%> \section{Table caption templates}
 %%% --------------------------------------------------------
 
 \tl_new:N \l__tblr_caption_short_tl
@@ -6041,7 +6041,7 @@
 \SetTblrTemplate { capcont} { normal }
 
 %%% --------------------------------------------------------
-%%> \section{Table Notes Templates}
+%%> \section{Table notes templates}
 %%% --------------------------------------------------------
 
 %% By default the targets generated by \hypertarget are too low
@@ -6168,7 +6168,7 @@
 \SetTblrTemplate { note } { normal }
 
 %%% --------------------------------------------------------
-%%> \section{Table Remarks Templates}
+%%> \section{Table remarks templates}
 %%% --------------------------------------------------------
 
 \DeclareTblrTemplate { remark-tag } { empty } { }
@@ -6232,7 +6232,7 @@
 \SetTblrTemplate { remark } { normal }
 
 %%% --------------------------------------------------------
-%%> \section{Header and Footer Templates}
+%%> \section{Header and footer templates}
 %%% --------------------------------------------------------
 
 \tl_new:N \g__tblr_template_firsthead_default_tl
@@ -6282,7 +6282,7 @@
 \SetTblrTemplate { foot } { normal }
 
 %%% --------------------------------------------------------
-%%> \section{Build the Whole Table}
+%%> \section{Build the whole table}
 %%% --------------------------------------------------------
 
 \cs_new:Npn \__tblr_box_height:N #1
@@ -7104,7 +7104,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Build Table Components}
+%%> \section{Build table components}
 %%% --------------------------------------------------------
 
 \dim_new:N \l__tblr_col_o_wd_dim
@@ -7773,7 +7773,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Tracing Tabularray}
+%%> \section{Tracing tabularray}
 %%% --------------------------------------------------------
 
 \NewDocumentCommand \SetTblrTracing { m }
@@ -8006,7 +8006,7 @@
   }
 
 %%% --------------------------------------------------------
-%%> \section{Tabularray Libraries}
+%%> \section{Tabularray libraries}
 %%% --------------------------------------------------------
 
 %% \NewTblrLibrary and \UseTblrLibrary commands
