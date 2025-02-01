@@ -685,12 +685,12 @@ By \PP{tikz} intersection syntax, \fakeverb{h<i>-|v<j>} is
 the instersection point of \KK{horder{<i>}} and \KK{vborder{<j>}}.
 
 It is rather complicated to add support for drawing \PP{tikz} pictures on long tables.
-At present, the supprot is limited: \underline{only} cell nodes are available for multi-page long tables.
+At present, the support is limited: \emph{only} cell nodes are available for multi-page long tables.
 In writng drawing code,
 users are responsible for making sure the elements to draw are actually in current page table.
-These public variables (which are described in Chapter \ref{chap:exp})
-might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt}, \CC{\lTblrTablePageInt},
-\CC{\lTblrRowFirstInt}, \CC{\lTblrRowLastInt}. Here is an example:
+These public variables might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt},
+\CC{\lTblrTablePageInt}, \CC{\lTblrRowFirstInt}, \CC{\lTblrRowLastInt}
+(they are described in Chapter \ref{chap:exp}). Here is an example:
 
 \ExplSyntaxOn
 \cs_generate_variant:Nn \clist_map_inline:nn {e}
@@ -706,7 +706,7 @@ might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt}, \CC{\lTblrTab
   }
 \ExplSyntaxOff
 \newcommand\mymagicfill[2]{
-  \fill[teal7] (#1-#2.north west) rectangle (#1-#2.south east);
+  \fill[teal7,rounded corners=8pt] (#1-#2.north west) rectangle (#1-#2.south east);
 }
 \begin{tblrtikzbelow}
   \mymagic{magic}
@@ -748,7 +748,7 @@ might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt}, \CC{\lTblrTab
   }
 \ExplSyntaxOff
 \newcommand\mymagicfill[2]{
-  \fill[teal7] (#1-#2.north west) rectangle (#1-#2.south east);
+  \fill[teal7,rounded corners=8pt] (#1-#2.north west) rectangle (#1-#2.south east);
 }
 \begin{tblrtikzbelow}
   \mymagic{magic}

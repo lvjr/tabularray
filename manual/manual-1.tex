@@ -16,7 +16,7 @@ environments. You may read web pages on LaTeX tables on
 \href{https://www.learnlatex.org/en/lesson-08}{LearnLaTeX} and
 \href{https://www.overleaf.com/learn/latex/Tables}{Overleaf} first.
 
-\section{Vertical Space}
+\section{Vertical space}
 
 After loading \PP{tabularray} package in the preamble,
 we can use \EE{tblr} environments to typeset tabulars and arrays.
@@ -88,7 +88,7 @@ $\begin{tblr}{rrr}
 
 Note that you can use \EE{tblr} in both text and math modes.
 
-\section{Multiline Cells}
+\section{Multiline cells}
 
 It's quite easy to write multiline cells without fixing the column width in \EE{tblr} environments:
 just enclose the cell text with braces and use \CC{\\\\} to break lines:
@@ -103,7 +103,7 @@ just enclose the cell text with braces and use \CC{\\\\} to break lines:
 \end{tblr}
 \end{demohigh}
 
-\section{Cell Alignment}
+\section{Cell alignment}
 
 From time to time,
 you may want to specify the horizontal and vertical alignment of cells at the same time.
@@ -135,7 +135,7 @@ which will align cell text at the head and the foot, respectively:
 \end{tblr}
 \end{demohigh}
 
-\section{Multirow Cells}
+\section{Multirow cells}
 
 The above \K{h} and \K{f} alignments are necessary
 when we write multirow cells with \CC{\SetCell} command in \PP{tabularray}.
@@ -218,7 +218,7 @@ therefore it always avoids vertical overflow:
 If you want to distribute extra vertical space evenly to two rows,
 you may use \K{vspan} option described in Chapter \ref{chap:extra}.
 
-\section{Multi Rows and Columns}
+\section{Multi rows and columns}
 
 It was a hard job to typeset cells with multiple rows and multiple columns. For example:
 
@@ -282,7 +282,7 @@ which will help us to locate cells when the tables are rather complex:
 \end{tblr}
 \end{demohigh}
 
-\section{Column Types}
+\section{Column types}
 
 \PP{Tabularray} package supports all normal column types, as well as
 the extendable \Q{X} column type,
@@ -326,7 +326,7 @@ For example, in \PP{tabularray} package,
 \NewTblrColumnType{X}[1][]{Q[co=1,#1]}
 \end{codehigh}
 
-\section{Row Types}
+\section{Row types}
 
 Now that we have column types and \K{colspec} option,
 you may ask for row types and \K{rowspec} option.
@@ -348,7 +348,7 @@ and vertical alignment in \K{rowspec}, respectively.
 Inside \K{rowspec}, \Q{|} is the hline type.
 Therefore we need not to write \CC{\hline} command, which makes table code cleaner.
 
-\section{Hlines and Vlines}
+\section{Hlines and vlines}
 
 Hlines and vlines have been improved too. You can specify the widths and styles of them:
 
@@ -364,7 +364,7 @@ Seven & Eight &  Nine \\
 \end{tblr}
 \end{demohigh}
 
-\section{Colorful Tables}
+\section{Colorful tables}
 
 To add colors to your tables, you need to load \PP{xcolor} package first.
 \PP{Tabularray} package will also load

@@ -79,16 +79,16 @@
 \NewTblrEnviron{newtblr}
 \SetTblrOuter[newtblr]{long}
 \SetTblrInner[newtblr]{
-  hlines = {white}, column{1,2} = {co=1}, colsep = 5pt,
-  row{odd} = {brown8}, row{even} = {gray8},
+  hlines = {gray3}, column{1,2} = {co=1}, colsep = 5pt,
+  row{2-Z} = {brown8},
   row{1} = {fg=white, bg=purple2, font=\bfseries\sffamily},
 }
 
 \NewTblrEnviron{spectblr}
 \SetTblrOuter[spectblr]{long}
 \SetTblrInner[spectblr]{
-  hlines = {white}, column{2} = {co=1}, colsep = 5pt,
-  row{odd} = {brown8}, row{even} = {gray8},
+  hlines = {gray3}, column{2} = {co=1}, colsep = 5pt,
+  row{2-Z} = {brown8},
   row{1} = {fg=white, bg=purple2, font=\bfseries\sffamily},
   rowhead = 1,
 }
@@ -197,7 +197,7 @@ environments. You may read web pages on LaTeX tables on
 \href{https://www.learnlatex.org/en/lesson-08}{LearnLaTeX} and
 \href{https://www.overleaf.com/learn/latex/Tables}{Overleaf} first.
 
-\section{Vertical Space}
+\section{Vertical space}
 
 After loading \PP{tabularray} package in the preamble,
 we can use \EE{tblr} environments to typeset tabulars and arrays.
@@ -269,7 +269,7 @@ $\begin{tblr}{rrr}
 
 Note that you can use \EE{tblr} in both text and math modes.
 
-\section{Multiline Cells}
+\section{Multiline cells}
 
 It's quite easy to write multiline cells without fixing the column width in \EE{tblr} environments:
 just enclose the cell text with braces and use \CC{\\\\} to break lines:
@@ -284,7 +284,7 @@ just enclose the cell text with braces and use \CC{\\\\} to break lines:
 \end{tblr}
 \end{demohigh}
 
-\section{Cell Alignment}
+\section{Cell alignment}
 
 From time to time,
 you may want to specify the horizontal and vertical alignment of cells at the same time.
@@ -316,7 +316,7 @@ which will align cell text at the head and the foot, respectively:
 \end{tblr}
 \end{demohigh}
 
-\section{Multirow Cells}
+\section{Multirow cells}
 
 The above \K{h} and \K{f} alignments are necessary
 when we write multirow cells with \CC{\SetCell} command in \PP{tabularray}.
@@ -399,7 +399,7 @@ therefore it always avoids vertical overflow:
 If you want to distribute extra vertical space evenly to two rows,
 you may use \K{vspan} option described in Chapter \ref{chap:extra}.
 
-\section{Multi Rows and Columns}
+\section{Multi rows and columns}
 
 It was a hard job to typeset cells with multiple rows and multiple columns. For example:
 
@@ -463,7 +463,7 @@ which will help us to locate cells when the tables are rather complex:
 \end{tblr}
 \end{demohigh}
 
-\section{Column Types}
+\section{Column types}
 
 \PP{Tabularray} package supports all normal column types, as well as
 the extendable \Q{X} column type,
@@ -507,7 +507,7 @@ For example, in \PP{tabularray} package,
 \NewTblrColumnType{X}[1][]{Q[co=1,#1]}
 \end{codehigh}
 
-\section{Row Types}
+\section{Row types}
 
 Now that we have column types and \K{colspec} option,
 you may ask for row types and \K{rowspec} option.
@@ -529,7 +529,7 @@ and vertical alignment in \K{rowspec}, respectively.
 Inside \K{rowspec}, \Q{|} is the hline type.
 Therefore we need not to write \CC{\hline} command, which makes table code cleaner.
 
-\section{Hlines and Vlines}
+\section{Hlines and vlines}
 
 Hlines and vlines have been improved too. You can specify the widths and styles of them:
 
@@ -545,7 +545,7 @@ Seven & Eight &  Nine \\
 \end{tblr}
 \end{demohigh}
 
-\section{Colorful Tables}
+\section{Colorful tables}
 
 To add colors to your tables, you need to load \PP{xcolor} package first.
 \PP{Tabularray} package will also load
@@ -610,7 +610,7 @@ Hlines and vlines can also have colors:
 \chapter{Basic Interfaces}
 \label{chap:basic}
 
-\section{Old and New Interfaces}
+\section{Old and new interfaces}
 
 With \PP{tabularray} package, you can change the styles of tables via old interfaces or new interfaces.
 
@@ -641,7 +641,7 @@ hence totally separating the styles and the contents of tables.
   \CC{\SetColumn}                              & \K{column}, \K{colspec} \\
 \end{newtblr}
 
-\section{Hlines and Vlines}\label{sec:hlines-vlines}
+\section{Hlines and vlines}\label{sec:hlines-vlines}
 
 All available keys for hlines and vlines are described in Table \ref{key:hline} and Table \ref{key:vline}.
 
@@ -677,7 +677,7 @@ All available keys for hlines and vlines are described in Table \ref{key:hline} 
   \K{belowpos}         & crossing or trimming position at the below side & \V{0} \\
 \end{spectblr}
 
-\subsection{Hlines and Vlines in New Interfaces}
+\subsection{Hlines and vlines in new interfaces}
 
 Options \K{hlines} and \K{vlines} are for setting all hlines and vlines, respectively.
 With empty value, all hlines/vlines will be solid.
@@ -858,7 +858,7 @@ for only the leftmost/rightmost column:
 \end{tblr}
 \end{demohigh}
 
-\subsection{Hlines and Vlines in Old Interfaces}
+\subsection{Hlines and vlines in old interfaces}
 
 The \CC{\hline} command has an optional argument which accepts key-value options.
 The available keys are described in Table \ref{key:hline}.
@@ -937,7 +937,7 @@ The usages of table commands \CC{\vline}, \CC{\rline}, \CC{\SetVline}, \CC{\SetV
 are similar to those of \CC{\hline}, \CC{\cline}, \CC{\SetHline}, \CC{\SetHlines}, respectively.
 But normally you don't need to use them.
 
-\section{Hborders and Vborders}
+\section{Hborders and vborders}
 
 Options \KK{hborder{i}} and \KK{vborder{j}} are similar to \KK{hline{i}} and \KK{vline{j}},
 respectively, but they hold border specifications not related to one specific hline and vline.
@@ -973,7 +973,7 @@ is the same as table option \KV{hborder{i}={<specs>}},
 and table command \CC{\vborder{<specs>}} at the beginning of column \V{j}
 is the same as table option \KV{vborder{j}={<specs>}}.
 
-\section{Cells and Spancells}
+\section{Cells and spancells}
 
 All available keys for cells are described in Table \ref{key:cell} and Table \ref{key:cellspan}.
 
@@ -1011,7 +1011,7 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
   \K{c} & number of columns the cell spans & 1 \\
 \end{spectblr}
 
-\subsection{Cells and Spancells in New Interfaces}
+\subsection{Cells and spancells in new interfaces}
 
 Option \K{cells} is for setting all cells.
 \nopagebreak
@@ -1054,7 +1054,25 @@ where \V{i} stands for the row numbers and \V{j} stands for the column numbers.
 \end{tblr}
 \end{demohigh}
 
-\subsection{Cells and Spancells in Old Interfaces}
+From version 2025A, you can select cells with a list of two dimensional indexes:
+\begin{demohigh}
+\begin{tblr}{
+  cell{{2}{6},{7}{3}} = {bg=blue7},
+  cell{{1}{1}-{4}{4},{5}{8}-{8}{5}} = {bg=red7}
+}
+  1	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  2	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  3	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  4	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  5	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  6	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  7	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  8	& 2	& 3	& 4	& 5	& 6	& 7 & 8
+\end{tblr}
+\end{demohigh}
+In this example, \TT{-} characters are used for diagonal selection.
+
+\subsection{Cells and spancells in old interfaces}
 
 The \CC{\SetCell} command has a mandatory argument for setting the styles of current cell.
 The available keys are described in Table \ref{key:cell}.
@@ -1110,7 +1128,7 @@ and column \V{j} is the same as table option \KV{cell{i}{j}={<span>}{<styles>}}.
 Also, table command \CC{\SetCells[<span>]{<styles>}} at the beginning of some cell
 is the same as table option \KV{cells={<span>}{<styles>}}.
 
-\section{Rows and Columns}
+\section{Rows and columns}
 
 All available keys for rows and columns are described in Table \ref{key:row} and Table \ref{key:column}.
 
@@ -1177,7 +1195,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{appto} & append text to every cell (like \V{<} specifier in \K{colspec}) & \None \\
 \end{spectblr}
 
-\subsection{Rows and Columns in New Interfaces}
+\subsection{Rows and columns in new interfaces}
 
 Options \K{rows} and \K{columns} are for setting all rows and columns, respectively.
 \nopagebreak
@@ -1269,7 +1287,7 @@ The following example shows that we can replace \CC{\\\\[dimen]} with \K{belowse
 \end{tblr}
 \end{demohigh}
 
-\subsection{Rows and Columns in Old Interfaces}
+\subsection{Rows and columns in old interfaces}
 
 The \CC{\SetRow} command has a mandatory argument for setting the styles of current row.
 The available keys are described in Table \ref{key:row}.
@@ -1296,12 +1314,12 @@ The usages of table commands \CC{\SetColumn} and \CC{\SetColumns}
 are similar to those of \CC{\SetRow} and \CC{\SetRows}, respectively.
 But normally you don't need to use them.
 
-\section{Colspec and Rowspec}
+\section{Colspec and rowspec}
 
 Options \K{colspec}/\K{rowspec} are for setting column/row specifications
 with column/row type specifiers.
 
-\subsection{Colspec and Width}
+\subsection{Colspec and width}
 
 Option \K{width} is for setting the width of the table with extendable columns.
 The following example demonstrates the usage of \K{width} option.
@@ -1327,7 +1345,7 @@ The following example demonstrates the usages of \KK{$} and \KK{$$} keys:
 \end{tblr}
 \end{demohigh}
 
-\subsection{Column Types}
+\subsection{Column types}
 
 The \PP{tabularray} package has only one type of primitive column: the \Q{Q} column.
 Other types of columns are defined as \Q{Q} columns with some keys.
@@ -1355,7 +1373,7 @@ Other types of columns are defined as \Q{Q} columns with some keys.
 Any new column type must be defined with \CC{\NewTblrColumnType} command.
 It can have an optional argument when it's defined.
 
-\subsection{Row Types}
+\subsection{Row types}
 
 The \PP{tabularray} package has only one type of primitive row: the \Q{Q} row.
 Other types of rows are defined as \Q{Q} rows with some keys.
@@ -1402,7 +1420,7 @@ of \EE{tblr} environment, most of which are used for long tables (see Chapter \r
 You can use \CC{\SetTblrInner} and \CC{\SetTblrOuter} commands
 to set default inner and outer specifications of tables, respectively (see Section \ref{sec:default}).
 
-\section{Inner Specifications}
+\section{Inner specifications}
 
 In addition to new interfaces in Chapter \ref{chap:basic},
 there are several inner specifications which are described in Table~\ref{key:inner}.
@@ -1426,7 +1444,7 @@ there are several inner specifications which are described in Table~\ref{key:inn
   \K{baseline} & set the baseline of the table & \V{m} \\
 \end{spectblr}
 
-\subsection{Space between Double Rules}
+\subsection{Space between double rules}
 
 The following example shows that we can replace \CC{\doublerulesep} parameter with \K{rulesep} key.
 \nopagebreak
@@ -1440,7 +1458,7 @@ The following example shows that we can replace \CC{\doublerulesep} parameter wi
 \end{tblr}
 \end{demohigh}
 
-\subsection{Minimal Strut for Cell Text}
+\subsection{Minimal strut for cell text}
 
 The following example shows that we can replace \CC{\arraystretch} parameter with \K{stretch} key.
 
@@ -1462,7 +1480,7 @@ By replacing stretch with row heights, we can get perfect vertical centering for
 \end{tblr}
 \end{demohigh}
 
-\subsection{Rowseps and Colseps for All}
+\subsection{Rowseps and colseps for all}
 
 The following example uses \K{rowsep} and \K{colsep} keys to set padding for all rows and columns.
 \nopagebreak
@@ -1475,7 +1493,7 @@ The following example uses \K{rowsep} and \K{colsep} keys to set padding for all
 \end{tblr}
 \end{demohigh}
 
-\subsection{Hspan and Vspan Algorithms}
+\subsection{Hspan and vspan algorithms}
 
 With \KV{hspan=default} or \KV{hspan=even},
 \PP{tabularray} package will compute column widths from span widths.
@@ -1540,7 +1558,7 @@ The following examples show the results from different \K{vspan} values.
 \end{tblr}
 \end{demohigh}
 
-\subsection{Set Baseline for the Table}
+\subsection{Set baseline for the table}
 
 With \K{baseline} key, you can set baseline for the table.
 All possible values for \K{baseline} are as follows:
@@ -1579,7 +1597,7 @@ The differences between \V{b} and \V{B} are similar to \V{t} and \V{T}.
 In fact, these two values \V{T} and \V{B} are better replacements
 for currently obsolete \CC{\firsthline} and \CC{\lasthline} commands.
 
-\section{Outer Specifications}
+\section{Outer specifications}
 
 Except for specifications to be introduced in Chapter \ref{chap:long},
 there are several other outer specifications which are described in Table~\ref{key:outer}.
@@ -1596,7 +1614,7 @@ there are several other outer specifications which are described in Table~\ref{k
   \K{expand+} & like \K{expand} but appends to previous values & \None \\
 \end{spectblr}
 
-\subsection{Set Baseline in Another Way}
+\subsection{Set baseline in another way}
 
 You may notice that you can write \K{baseline} option as either an inner or an outer specification.
 It is true that either way would do the job. But there is a small difference:
@@ -1611,7 +1629,7 @@ Baseline\begin{tblr}[m]{hlines}
 \end{tblr}Baseline
 \end{demohigh}
 
-\subsection{Long and Tall Tables}
+\subsection{Long and tall tables}
 
 You can change a table to long table by passing outer specification \K{long},
 or change it to tall table by passing outer specification \K{tall} (see Chapter~\ref{chap:long}).
@@ -1625,7 +1643,7 @@ Therefore the following two tables are the same:
 \end{tblr}
 \end{codehigh}
 
-\subsection{Expand Macros First}
+\subsection{Expand macros first}
 
 In contrast to traditional \EE{tabular} environment, \PP{tabularray} environments
 need to see every \TT{&} and \TT{\\\\} when splitting the table body.
@@ -1678,7 +1696,7 @@ and use option \KV{expand=\expanded} to do exhaustive expansions.
 
 Note that you need to protect fragile commands (if any) inside them with \CC{\unexpanded} command.
 
-\section{Default Specifications}%
+\section{Default specifications}%
 \label{sec:default}
 
 \PP{Tabularray} package provides \CC{\SetTblrInner} and \CC{\SetTblrOuter} commands
@@ -1705,7 +1723,7 @@ created afterwards.
 \SetTblrInner[tblr,longtblr]{rowsep=0pt}
 \end{codehigh}
 
-\section{New Tabularray Environments}
+\section{New tabularray environments}
 
 You can define new \PP{tabularray} environments using \CC{\NewTblrEnviron} command:
 
@@ -1720,7 +1738,7 @@ Text \begin{mytblr}{cccc}
 \end{mytblr} Text
 \end{demohigh}
 
-\section{New General Environments}
+\section{New general environments}
 
 With \V{+b} argument type of \CC{\NewDocumentEnvironment} command,
 you can also define a new general environment based on \EE{tblr} environment
@@ -1750,7 +1768,7 @@ you can also define a new general environment based on \EE{tblr} environment
 \end{fancytblr}
 \end{demohigh}
 
-\section{New Table Commands}
+\section{New table commands}
 
 All commands which change the specifications of tables \textcolor{red3}{must} be defined with \CC{\NewTblrTableCommand}.
 The following example demonstrates how to define a new table command:
@@ -1766,7 +1784,7 @@ The following example demonstrates how to define a new table command:
 \end{tblr}
 \end{demohigh}
 
-\section{Child Indexers and Selectors}
+\section{Child indexers and selectors}
 
 From version 2025A, child indexer \CI{Z} accepts an optional argument for making a negative index.
 
@@ -1783,7 +1801,7 @@ From version 2025A, child indexer \CI{Z} accepts an optional argument for making
 \end{demohigh}
 
 From version 2022A, child selectors \CS{odd} and \CS{even} accept an optional argument,
-in which you can specify the start index and the end index of the children.
+in which you can specify the start index of the children.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -1809,8 +1827,8 @@ in which you can specify the start index and the end index of the children.
 \end{tblr}
 \end{demohigh}
 
-From version 2025A, the support for end index of child selectors \CS{odd} and \CS{even} is removed.
-Instead you can use the more general \CS{every} selector.
+From version 2025A, there is a new child selector \CS{every}
+for selecting indexes in an arithmetic sequence.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -1830,7 +1848,7 @@ and they can not be child indexers such as \CI{U} or \CI{Z}.
 
 More child indexers and selectors can be defined by users. See Chapter \ref{chap:exp}.
 
-\section{Counters and Lengths}
+\section{Counters and lengths}
 
 Counters \CO{rownum}, \CO{colnum}, \CO{rowcount}, \CO{colcount} can be used in cell text:
 \nopagebreak
@@ -1849,7 +1867,7 @@ Counters \CO{rownum}, \CO{colnum}, \CO{rowcount}, \CO{colcount} can be used in c
 
 Also, lengths \CC{\leftsep}, \CC{\rightsep}, \CC{\abovesep}, \CC{\belowsep} can be used in cell text.
 
-\section{Tracing Tabularray}
+\section{Tracing tabularray}
 
 To trace internal data behind \EE{tblr} environment, you can use \CC{\SetTblrTracing} command.
 For example, \CC{\SetTblrTracing{all}} will turn on all tracings,
@@ -1860,7 +1878,7 @@ All tracing messages will be written to the log files.
 \chapter{Use Long Tables}
 \label{chap:long}
 
-\section{A Simple Example}
+\section{A simple example}
 
 To make a decent long table with header and footer, it is better to separate header/footer as
 \underline{table head/foot} (which includes caption, footnotes, continuation text)
@@ -2185,9 +2203,9 @@ and set the \EN{caption-tag} and \EN{caption-sep} elements (see below) to empty.
 Therefore \KV{caption=text,entry=none,label=none} is similar to \CC{\caption*{text}}
 in \PP{longtable}, except for the counter.
 
-\section{Customize Templates}
+\section{Customize templates}
 
-\subsection{Overview of Templates}
+\subsection{Overview of templates}
 
 The template system for table heads and table foots in \PP{tabularray} is largely inspired
 by \PP{beamer}, \PP{caption} and \PP{longtable} packages. For elements in Table \ref{tblr:element},
@@ -2234,7 +2252,7 @@ Normally there isn't any \TT{-} in the name of a main element.
 For each of the above elements, two templates \TN{normal} and \TN{empty} are always defined.
 You can select one of them with \CC{\SetTblrTemplate} command.
 
-\subsection{Continuation Templates}
+\subsection{Continuation templates}
 
 Let us have a look at the code for defining templates of continuation text first:%
 \footnote{To tell the truth, the default \texttt{conthead-text} and \texttt{contfoot-text}
@@ -2273,7 +2291,7 @@ But you can also handle user settings such as horizontal alignment here.
 \DeclareTblrTemplate{conthead}{default}{\UseTblrTemplate{conthead-text}{default}}
 \end{codehigh}
 
-\subsection{Caption Templates}
+\subsection{Caption templates}
 
 Normally a caption consists of three parts, and their templates are defined with the follow code:
 
@@ -2309,7 +2327,7 @@ The \EN{capcont} template will be used in \EN{middlehead} and \EN{lasthead} temp
 }
 \end{codehigh}
 
-\subsection{Note and Remark Templates}
+\subsection{Note and remark templates}
 
 The templates for table notes can be defined like this:
 
@@ -2354,7 +2372,7 @@ The definition of remark templates are similar to note templates.
 }
 \end{codehigh}
 
-\subsection{Head and Foot Templates}
+\subsection{Head and foot templates}
 
 The templates for table heads and foots are defined as including other templates:
 
@@ -2384,7 +2402,7 @@ If you only want to show table caption in the first page, you may change the def
 }
 \end{codehigh}
 
-\section{Change Styles}
+\section{Change styles}
 
 All available keys for template elements are described in Table \ref{key:element}.
 
@@ -2418,7 +2436,7 @@ beside including template code of the \EN{element}, the foreground color and fon
 of the \EN{element} will be set up automatically.
 In contrast, \CC{\ExpTblrTemplate{element}{default}} will only include template code.
 
-\section{Define Themes}
+\section{Define themes}
 
 You may define your own themes for table heads and foots with \CC{\NewTblrTheme} command.
 a theme consists of some template and style settings. For example:
@@ -2436,13 +2454,13 @@ a theme consists of some template and style settings. For example:
 After defining the theme \V{fancy}, you can use it
 by writing \KV{theme=fancy} in the optional argument of \EE{longtblr} environment.
 
-\section{Control Page Breaks}
+\section{Control page breaks}
 
 Just like \PP{longtable} package, inside \EE{longtblr} environment,
 you can use \CC{\\\\*} or \CC{\nopagebreak} to prohibit a page break,
 and use \CC{\pagebreak} to force a page break.
 
-\section{Floatable Tall Tables}
+\section{Floatable tall tables}
 
 There is also a \EE{talltblr} environment as an alternative to \EE{threeparttable} environment.
 It can not cross multiple pages, but it can be put inside \EE{table} environment.
@@ -3140,12 +3158,12 @@ By \PP{tikz} intersection syntax, \fakeverb{h<i>-|v<j>} is
 the instersection point of \KK{horder{<i>}} and \KK{vborder{<j>}}.
 
 It is rather complicated to add support for drawing \PP{tikz} pictures on long tables.
-At present, the supprot is limited: \underline{only} cell nodes are available for multi-page long tables.
+At present, the support is limited: \emph{only} cell nodes are available for multi-page long tables.
 In writng drawing code,
 users are responsible for making sure the elements to draw are actually in current page table.
-These public variables (which are described in Chapter \ref{chap:exp})
-might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt}, \CC{\lTblrTablePageInt},
-\CC{\lTblrRowFirstInt}, \CC{\lTblrRowLastInt}. Here is an example:
+These public variables might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt},
+\CC{\lTblrTablePageInt}, \CC{\lTblrRowFirstInt}, \CC{\lTblrRowLastInt}
+(they are described in Chapter \ref{chap:exp}). Here is an example:
 
 \ExplSyntaxOn
 \cs_generate_variant:Nn \clist_map_inline:nn {e}
@@ -3161,7 +3179,7 @@ might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt}, \CC{\lTblrTab
   }
 \ExplSyntaxOff
 \newcommand\mymagicfill[2]{
-  \fill[teal7] (#1-#2.north west) rectangle (#1-#2.south east);
+  \fill[teal7,rounded corners=8pt] (#1-#2.north west) rectangle (#1-#2.south east);
 }
 \begin{tblrtikzbelow}
   \mymagic{magic}
@@ -3203,7 +3221,7 @@ might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt}, \CC{\lTblrTab
   }
 \ExplSyntaxOff
 \newcommand\mymagicfill[2]{
-  \fill[teal7] (#1-#2.north west) rectangle (#1-#2.south east);
+  \fill[teal7,rounded corners=8pt] (#1-#2.north west) rectangle (#1-#2.south east);
 }
 \begin{tblrtikzbelow}
   \mymagic{magic}
@@ -3307,7 +3325,7 @@ to make \CC{\zref} and \EE{longtblr} work together.
 
 \chapter{Tips and Tricks}
 
-\section{Default Rule Width and Color}
+\section{Default rule widths and colors}
 
 From version 2025A, default hrule and vrule widths are stored in variables
 \CC{\lTblrDefaultHruleWidthDim} and \CC{\lTblrDefaultVruleWidthDim} respectively,
@@ -3315,13 +3333,13 @@ and default hrule and vrule colors are stored in variables \CC{\lTblrDefaultHrul
 and \CC{\lTblrDefaultVruleColorTl} respectively. Here is an example:
 
 \begin{demohigh}
-\setlength\lTblrDefaultHruleWidthDim{3pt}%
+\setlength\lTblrDefaultHruleWidthDim{1pt}%
 \setlength\lTblrDefaultVruleWidthDim{2pt}%
-\renewcommand\lTblrDefaultHruleColorTl{blue3}%
-\renewcommand\lTblrDefaultVruleColorTl{red3}%
+\renewcommand\lTblrDefaultHruleColorTl{blue5}%
+\renewcommand\lTblrDefaultVruleColorTl{red5}%
 \begin{tblr}{
-  hlines, hline{2} = {wd=1pt, fg=cyan3},
-  vlines, vline{2} = {wd=1pt, fg=green3}
+  hlines, hline{2} = {wd=2pt, fg=cyan5},
+  vlines, vline{2} = {wd=1pt, fg=green5}
 }
   Alpha   & Beta  & Gamma  \\
   Epsilon & Zeta  & Eta    \\
@@ -3329,7 +3347,7 @@ and \CC{\lTblrDefaultVruleColorTl} respectively. Here is an example:
 \end{tblr}
 \end{demohigh}
 
-\section{Control Horizontal Alignment}
+\section{Control horizontal alignment}
 
 You can control horizontal alignment of cells in \texttt{tabularray} with
 \href{https://www.ctan.org/pkg/ragged2e}{\texttt{ragged2e}} package,
@@ -3345,7 +3363,7 @@ by redefining some of the following commands:
 Please read the documentation of \texttt{ragged2e} package for more details of
 their alignment commands.
 
-\section{Use Safe Verbatim Commands}%
+\section{Use safe verbatim commands}%
 \label{sec:fakeverb}
 
 Due to the limitations of TeX,
@@ -3375,7 +3393,7 @@ Please read the documentation of \PP{codehigh} package for more details of
 \href{https://www.ctan.org/pkg/fvextra}{\PP{fvextra}} package is similar to
 \CC{\fakeverb} command, but with \CC{\EscVerb} you need to escape every control word.}
 
-\section{Blank Lines around Cells}
+\section{Blank lines around cells}
 
 In \PP{tabularray} tables, there could be a blank line before a cell, after a cell,
 or between table commands and cell text. Here is an example:
@@ -3419,7 +3437,7 @@ Therefore putting more than one blank line at any of these positions may cause w
 (and other undocumented public interfaces even if mentioned in the changelog) should be seen as \textcolor{red3}{\bfseries experimental}
 and are likely to change in future releases, if necessary. Don’t use them in important documents.}
 
-\section{Experimental Public Key Paths}
+\section{Experimental public key paths}
 
 In version 2025A, all \PP{tabularray} key paths were cleaned up as follows:
 \begin{itemize}[nosep]
@@ -3445,7 +3463,7 @@ The key paths are quite long, therefore \PP{tabularray} provides two shortcut co
 \SetTblrKeys{<path>}{<keyvals>} = \SetKeys[tabularray/<path>]{<keyvals>}
 \end{codehigh}
 
-\section{Experimental Public Hook Names}
+\section{Experimental public hook names}
 
 All experimental public \PP{tabularray} hook names provided by \LL{hook} library are as follows:
 \begin{itemize}[nosep]
@@ -3473,7 +3491,7 @@ The hook names are quite long, therefore \PP{tabularray} provides two shortcut c
 \AddToTblrHookNext{<name>}{<code>} = \AddToHookNext{tabularray/<name>}{<code>}
 \end{codehigh}
 
-\section{Experimental Public Variables}
+\section{Experimental public variables}
 
 This variable is always available throughout the whole typesetting process of tables:
 \begin{itemize}[nosep]
@@ -3491,8 +3509,8 @@ These variables are updated in building long tables:
   \item \CC{\lTblrRowHeadInt}: total number of head rows.
   \item \CC{\lTblrRowFootInt}: total number of foot rows.
   \item \CC{\lTblrTablePageInt}: index number of current page table.
-  \item \CC{\lTblrRowFirstInt}: first row numer in row body of current page table.
-  \item \CC{\lTblrRowLastInt}: last row numer in row body of curent page table.
+  \item \CC{\lTblrRowFirstInt}: first row number in row body of current page table.
+  \item \CC{\lTblrRowLastInt}: last row number in row body of curent page table.
 \end{itemize}
 
 These variables are updated by default before building every cell:
@@ -3523,7 +3541,7 @@ In the above, \TT{BorderStyle}, \TT{BorderWidth}, \TT{BorderColor} are similar t
 \K{border-style}, \K{border-width}, \K{border-color} in HTML/CSS, respectively.
 \TT{BorderStyle} and \TT{BorderColor} are empty by default.
 
-\section{New Child Indexers and Selectors}
+\section{New child indexers and selectors}
 
 \subsection{One dimensional indexers and selectors}
 
@@ -3585,8 +3603,8 @@ The \CC{\SetChild} command accepts a key-value input:
 ]{}
   Input & Description \\
   \KV{id=Hello}  & create a child indexer \TT{Hello} which is an index \TT{{<i>}{<j>}} \\
-  \KV{idh=Hello} & create a child indexer \TT{Helloh} which is an horizontal index \TT{<i>} \\
-  \KV{idv=Hello} & create a child indexer \TT{Hellov} which is an vertical index  \TT{<j>} \\
+  \KV{idh=Hello} & create a child indexer \TT{Helloh} which is a horizontal index \TT{<i>} \\
+  \KV{idv=Hello} & create a child indexer \TT{Hellov} which is a vertical index  \TT{<j>} \\
   \KV{id*=Hello} & create all of the above three child indexers \\
   \KV{class=world}  & create a child selector \TT{world} which is a list of indexes \TT{{<i>}{<j>}} \\
   \KV{classh=world} & create a child selector \TT{worldh} which is a list of horizontal indexes \TT{<i>} \\
@@ -3631,11 +3649,11 @@ The following is an example of child classes
 \end{demohigh}
 
 Since \CC{\SetChild} commands need to be extracted first
-before parsing inner specifications, they \underline{MUST} be put
+before parsing inner specifications, they \emph{must} be put
 at the beginning of cells, before other table commands such as \CC{\hline}.
-Therefore it conflicts with syntaxes \fakeverb{\\\\*} and \fakeverb{\\\\[<dimen>]}.
-But we can replace \fakeverb{\\\\*} with \fakeverb{\\\\\nopagebreak},
-and replace \fakeverb{\\\\[<dimen>]} with \fakeverb{\\\\\SetRow{belowsep+=<dimen>}},
+Therefore it conflicts with syntaxes \fakeverb{\\\\[<dimen>]} and \fakeverb{\\\\*}.
+They can be replaced with \fakeverb{\\\\\SetRow{belowsep+=<dimen>}}
+and \fakeverb{\\\\\nopagebreak} respectively,
 so that \CC{\SetChild} can be inserted in the middle:
 \begin{demohigh}
 \begin{tblr}{
@@ -3660,7 +3678,7 @@ These two commands are fully expandable.
 
 \chapter{History and Future}
 
-\section{The Future}
+\section{The future}
 
 As a policy, \PP{tabularray} can support at most four TeX Live releases with latest updates.
 For example, \PP{tabularray} releases published in \the\year{} could be used in TeX Live
@@ -3671,12 +3689,12 @@ in the repository. To test it, you only need to download the following \FF{tabul
 and put it into the folder of your TeX documents:\newline
 \centerline{\url{https://github.com/lvjr/tabularray/raw/main/tabularray.sty}}
 
-\section{The History}
+\section{The history}
 
 The change log of \PP{tabularray} package will be updated on the wiki page:\newline
 \centerline{\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}}
 
-When \PP{tabularray} makes some breaking changes of \underline{stable public} interfaces in a new release,
+When \PP{tabularray} makes some breaking changes of \emph{stable public} interfaces in a new release,
 you will be able to roll back to previous release to make your existing documents unaffected.
 
 Normally you don't know when there will be a new breaking release.
@@ -3691,11 +3709,14 @@ In version 2025A, there were several important changes:
 \begin{itemize}[nosep]
   \item Inner key \KK{verb} (deprecated before) was removed;
         it is better to use \CC{\fakeverb} command.
+  \item Support for end index in \CS{odd} and \CS{even} selectors was removed;
+        it is better to use \CS{every} selector.
   \item \CC{\DefTblrTemplate} was deprecated in favor of \CC{\DeclareTblrTemplate}.
   \item \CC{\NewColumnType} was deprecated in favor of \CC{\NewTblrColumnType}.
   \item \CC{\NewRowType} was deprecated in favor of \CC{\NewTblrRowType}.
   \item \CC{\NewColumnRowType} was deprecated in favor of \CC{\NewTblrColumnRowType}.
   \item \CC{\NewDashStyle} was deprecated in favor of \CC{\NewTblrDashStyle}.
+  \item \CC{\NewChildSelector} was deprecated in favor of \CC{\NewTblrChildSelector}.
   \item \CC{\NewTableCommand} was deprecated in favor of \CC{\NewTblrTableCommand}.
  %\item \CC{\NewContentCommand} was deprecated in favor of \CC{\NewTblrContentCommand}.
   \item \CC{\tablewidth} was deprecated in favor of \CC{\lTblrTableWidthDim}.

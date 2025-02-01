@@ -10,7 +10,7 @@
 
 \chapter{History and Future}
 
-\section{The Future}
+\section{The future}
 
 As a policy, \PP{tabularray} can support at most four TeX Live releases with latest updates.
 For example, \PP{tabularray} releases published in \the\year{} could be used in TeX Live
@@ -21,12 +21,12 @@ in the repository. To test it, you only need to download the following \FF{tabul
 and put it into the folder of your TeX documents:\newline
 \centerline{\url{https://github.com/lvjr/tabularray/raw/main/tabularray.sty}}
 
-\section{The History}
+\section{The history}
 
 The change log of \PP{tabularray} package will be updated on the wiki page:\newline
 \centerline{\url{https://github.com/lvjr/tabularray/wiki/ChangeLog}}
 
-When \PP{tabularray} makes some breaking changes of \underline{stable public} interfaces in a new release,
+When \PP{tabularray} makes some breaking changes of \emph{stable public} interfaces in a new release,
 you will be able to roll back to previous release to make your existing documents unaffected.
 
 Normally you don't know when there will be a new breaking release.
@@ -41,11 +41,14 @@ In version 2025A, there were several important changes:
 \begin{itemize}[nosep]
   \item Inner key \KK{verb} (deprecated before) was removed;
         it is better to use \CC{\fakeverb} command.
+  \item Support for end index in \CS{odd} and \CS{even} selectors was removed;
+        it is better to use \CS{every} selector.
   \item \CC{\DefTblrTemplate} was deprecated in favor of \CC{\DeclareTblrTemplate}.
   \item \CC{\NewColumnType} was deprecated in favor of \CC{\NewTblrColumnType}.
   \item \CC{\NewRowType} was deprecated in favor of \CC{\NewTblrRowType}.
   \item \CC{\NewColumnRowType} was deprecated in favor of \CC{\NewTblrColumnRowType}.
   \item \CC{\NewDashStyle} was deprecated in favor of \CC{\NewTblrDashStyle}.
+  \item \CC{\NewChildSelector} was deprecated in favor of \CC{\NewTblrChildSelector}.
   \item \CC{\NewTableCommand} was deprecated in favor of \CC{\NewTblrTableCommand}.
  %\item \CC{\NewContentCommand} was deprecated in favor of \CC{\NewTblrContentCommand}.
   \item \CC{\tablewidth} was deprecated in favor of \CC{\lTblrTableWidthDim}.

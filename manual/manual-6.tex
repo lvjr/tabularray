@@ -10,7 +10,7 @@
 
 \chapter{Tips and Tricks}
 
-\section{Default Rule Width and Color}
+\section{Default rule widths and colors}
 
 From version 2025A, default hrule and vrule widths are stored in variables
 \CC{\lTblrDefaultHruleWidthDim} and \CC{\lTblrDefaultVruleWidthDim} respectively,
@@ -18,13 +18,13 @@ and default hrule and vrule colors are stored in variables \CC{\lTblrDefaultHrul
 and \CC{\lTblrDefaultVruleColorTl} respectively. Here is an example:
 
 \begin{demohigh}
-\setlength\lTblrDefaultHruleWidthDim{3pt}%
+\setlength\lTblrDefaultHruleWidthDim{1pt}%
 \setlength\lTblrDefaultVruleWidthDim{2pt}%
-\renewcommand\lTblrDefaultHruleColorTl{blue3}%
-\renewcommand\lTblrDefaultVruleColorTl{red3}%
+\renewcommand\lTblrDefaultHruleColorTl{blue5}%
+\renewcommand\lTblrDefaultVruleColorTl{red5}%
 \begin{tblr}{
-  hlines, hline{2} = {wd=1pt, fg=cyan3},
-  vlines, vline{2} = {wd=1pt, fg=green3}
+  hlines, hline{2} = {wd=2pt, fg=cyan5},
+  vlines, vline{2} = {wd=1pt, fg=green5}
 }
   Alpha   & Beta  & Gamma  \\
   Epsilon & Zeta  & Eta    \\
@@ -32,7 +32,7 @@ and \CC{\lTblrDefaultVruleColorTl} respectively. Here is an example:
 \end{tblr}
 \end{demohigh}
 
-\section{Control Horizontal Alignment}
+\section{Control horizontal alignment}
 
 You can control horizontal alignment of cells in \texttt{tabularray} with
 \href{https://www.ctan.org/pkg/ragged2e}{\texttt{ragged2e}} package,
@@ -48,7 +48,7 @@ by redefining some of the following commands:
 Please read the documentation of \texttt{ragged2e} package for more details of
 their alignment commands.
 
-\section{Use Safe Verbatim Commands}%
+\section{Use safe verbatim commands}%
 \label{sec:fakeverb}
 
 Due to the limitations of TeX,
@@ -78,7 +78,7 @@ Please read the documentation of \PP{codehigh} package for more details of
 \href{https://www.ctan.org/pkg/fvextra}{\PP{fvextra}} package is similar to
 \CC{\fakeverb} command, but with \CC{\EscVerb} you need to escape every control word.}
 
-\section{Blank Lines around Cells}
+\section{Blank lines around cells}
 
 In \PP{tabularray} tables, there could be a blank line before a cell, after a cell,
 or between table commands and cell text. Here is an example:

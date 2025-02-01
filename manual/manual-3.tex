@@ -28,7 +28,7 @@ of \EE{tblr} environment, most of which are used for long tables (see Chapter \r
 You can use \CC{\SetTblrInner} and \CC{\SetTblrOuter} commands
 to set default inner and outer specifications of tables, respectively (see Section \ref{sec:default}).
 
-\section{Inner Specifications}
+\section{Inner specifications}
 
 In addition to new interfaces in Chapter \ref{chap:basic},
 there are several inner specifications which are described in Table~\ref{key:inner}.
@@ -52,7 +52,7 @@ there are several inner specifications which are described in Table~\ref{key:inn
   \K{baseline} & set the baseline of the table & \V{m} \\
 \end{spectblr}
 
-\subsection{Space between Double Rules}
+\subsection{Space between double rules}
 
 The following example shows that we can replace \CC{\doublerulesep} parameter with \K{rulesep} key.
 \nopagebreak
@@ -66,7 +66,7 @@ The following example shows that we can replace \CC{\doublerulesep} parameter wi
 \end{tblr}
 \end{demohigh}
 
-\subsection{Minimal Strut for Cell Text}
+\subsection{Minimal strut for cell text}
 
 The following example shows that we can replace \CC{\arraystretch} parameter with \K{stretch} key.
 
@@ -88,7 +88,7 @@ By replacing stretch with row heights, we can get perfect vertical centering for
 \end{tblr}
 \end{demohigh}
 
-\subsection{Rowseps and Colseps for All}
+\subsection{Rowseps and colseps for all}
 
 The following example uses \K{rowsep} and \K{colsep} keys to set padding for all rows and columns.
 \nopagebreak
@@ -101,7 +101,7 @@ The following example uses \K{rowsep} and \K{colsep} keys to set padding for all
 \end{tblr}
 \end{demohigh}
 
-\subsection{Hspan and Vspan Algorithms}
+\subsection{Hspan and vspan algorithms}
 
 With \KV{hspan=default} or \KV{hspan=even},
 \PP{tabularray} package will compute column widths from span widths.
@@ -166,7 +166,7 @@ The following examples show the results from different \K{vspan} values.
 \end{tblr}
 \end{demohigh}
 
-\subsection{Set Baseline for the Table}
+\subsection{Set baseline for the table}
 
 With \K{baseline} key, you can set baseline for the table.
 All possible values for \K{baseline} are as follows:
@@ -205,7 +205,7 @@ The differences between \V{b} and \V{B} are similar to \V{t} and \V{T}.
 In fact, these two values \V{T} and \V{B} are better replacements
 for currently obsolete \CC{\firsthline} and \CC{\lasthline} commands.
 
-\section{Outer Specifications}
+\section{Outer specifications}
 
 Except for specifications to be introduced in Chapter \ref{chap:long},
 there are several other outer specifications which are described in Table~\ref{key:outer}.
@@ -222,7 +222,7 @@ there are several other outer specifications which are described in Table~\ref{k
   \K{expand+} & like \K{expand} but appends to previous values & \None \\
 \end{spectblr}
 
-\subsection{Set Baseline in Another Way}
+\subsection{Set baseline in another way}
 
 You may notice that you can write \K{baseline} option as either an inner or an outer specification.
 It is true that either way would do the job. But there is a small difference:
@@ -237,7 +237,7 @@ Baseline\begin{tblr}[m]{hlines}
 \end{tblr}Baseline
 \end{demohigh}
 
-\subsection{Long and Tall Tables}
+\subsection{Long and tall tables}
 
 You can change a table to long table by passing outer specification \K{long},
 or change it to tall table by passing outer specification \K{tall} (see Chapter~\ref{chap:long}).
@@ -251,7 +251,7 @@ Therefore the following two tables are the same:
 \end{tblr}
 \end{codehigh}
 
-\subsection{Expand Macros First}
+\subsection{Expand macros first}
 
 In contrast to traditional \EE{tabular} environment, \PP{tabularray} environments
 need to see every \TT{&} and \TT{\\\\} when splitting the table body.
@@ -304,7 +304,7 @@ and use option \KV{expand=\expanded} to do exhaustive expansions.
 
 Note that you need to protect fragile commands (if any) inside them with \CC{\unexpanded} command.
 
-\section{Default Specifications}%
+\section{Default specifications}%
 \label{sec:default}
 
 \PP{Tabularray} package provides \CC{\SetTblrInner} and \CC{\SetTblrOuter} commands
@@ -331,7 +331,7 @@ created afterwards.
 \SetTblrInner[tblr,longtblr]{rowsep=0pt}
 \end{codehigh}
 
-\section{New Tabularray Environments}
+\section{New tabularray environments}
 
 You can define new \PP{tabularray} environments using \CC{\NewTblrEnviron} command:
 
@@ -346,7 +346,7 @@ Text \begin{mytblr}{cccc}
 \end{mytblr} Text
 \end{demohigh}
 
-\section{New General Environments}
+\section{New general environments}
 
 With \V{+b} argument type of \CC{\NewDocumentEnvironment} command,
 you can also define a new general environment based on \EE{tblr} environment
@@ -376,7 +376,7 @@ you can also define a new general environment based on \EE{tblr} environment
 \end{fancytblr}
 \end{demohigh}
 
-\section{New Table Commands}
+\section{New table commands}
 
 All commands which change the specifications of tables \textcolor{red3}{must} be defined with \CC{\NewTblrTableCommand}.
 The following example demonstrates how to define a new table command:
@@ -392,7 +392,7 @@ The following example demonstrates how to define a new table command:
 \end{tblr}
 \end{demohigh}
 
-\section{Child Indexers and Selectors}
+\section{Child indexers and selectors}
 
 From version 2025A, child indexer \CI{Z} accepts an optional argument for making a negative index.
 
@@ -409,7 +409,7 @@ From version 2025A, child indexer \CI{Z} accepts an optional argument for making
 \end{demohigh}
 
 From version 2022A, child selectors \CS{odd} and \CS{even} accept an optional argument,
-in which you can specify the start index and the end index of the children.
+in which you can specify the start index of the children.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -435,8 +435,8 @@ in which you can specify the start index and the end index of the children.
 \end{tblr}
 \end{demohigh}
 
-From version 2025A, the support for end index of child selectors \CS{odd} and \CS{even} is removed.
-Instead you can use the more general \CS{every} selector.
+From version 2025A, there is a new child selector \CS{every}
+for selecting indexes in an arithmetic sequence.
 
 \begin{demohigh}
 \begin{tblr}{
@@ -456,7 +456,7 @@ and they can not be child indexers such as \CI{U} or \CI{Z}.
 
 More child indexers and selectors can be defined by users. See Chapter \ref{chap:exp}.
 
-\section{Counters and Lengths}
+\section{Counters and lengths}
 
 Counters \CO{rownum}, \CO{colnum}, \CO{rowcount}, \CO{colcount} can be used in cell text:
 \nopagebreak
@@ -475,7 +475,7 @@ Counters \CO{rownum}, \CO{colnum}, \CO{rowcount}, \CO{colcount} can be used in c
 
 Also, lengths \CC{\leftsep}, \CC{\rightsep}, \CC{\abovesep}, \CC{\belowsep} can be used in cell text.
 
-\section{Tracing Tabularray}
+\section{Tracing tabularray}
 
 To trace internal data behind \EE{tblr} environment, you can use \CC{\SetTblrTracing} command.
 For example, \CC{\SetTblrTracing{all}} will turn on all tracings,

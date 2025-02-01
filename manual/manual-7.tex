@@ -15,7 +15,7 @@
 (and other undocumented public interfaces even if mentioned in the changelog) should be seen as \textcolor{red3}{\bfseries experimental}
 and are likely to change in future releases, if necessary. Don’t use them in important documents.}
 
-\section{Experimental Public Key Paths}
+\section{Experimental public key paths}
 
 In version 2025A, all \PP{tabularray} key paths were cleaned up as follows:
 \begin{itemize}[nosep]
@@ -41,7 +41,7 @@ The key paths are quite long, therefore \PP{tabularray} provides two shortcut co
 \SetTblrKeys{<path>}{<keyvals>} = \SetKeys[tabularray/<path>]{<keyvals>}
 \end{codehigh}
 
-\section{Experimental Public Hook Names}
+\section{Experimental public hook names}
 
 All experimental public \PP{tabularray} hook names provided by \LL{hook} library are as follows:
 \begin{itemize}[nosep]
@@ -69,7 +69,7 @@ The hook names are quite long, therefore \PP{tabularray} provides two shortcut c
 \AddToTblrHookNext{<name>}{<code>} = \AddToHookNext{tabularray/<name>}{<code>}
 \end{codehigh}
 
-\section{Experimental Public Variables}
+\section{Experimental public variables}
 
 This variable is always available throughout the whole typesetting process of tables:
 \begin{itemize}[nosep]
@@ -87,8 +87,8 @@ These variables are updated in building long tables:
   \item \CC{\lTblrRowHeadInt}: total number of head rows.
   \item \CC{\lTblrRowFootInt}: total number of foot rows.
   \item \CC{\lTblrTablePageInt}: index number of current page table.
-  \item \CC{\lTblrRowFirstInt}: first row numer in row body of current page table.
-  \item \CC{\lTblrRowLastInt}: last row numer in row body of curent page table.
+  \item \CC{\lTblrRowFirstInt}: first row number in row body of current page table.
+  \item \CC{\lTblrRowLastInt}: last row number in row body of curent page table.
 \end{itemize}
 
 These variables are updated by default before building every cell:
@@ -119,7 +119,7 @@ In the above, \TT{BorderStyle}, \TT{BorderWidth}, \TT{BorderColor} are similar t
 \K{border-style}, \K{border-width}, \K{border-color} in HTML/CSS, respectively.
 \TT{BorderStyle} and \TT{BorderColor} are empty by default.
 
-\section{New Child Indexers and Selectors}
+\section{New child indexers and selectors}
 
 \subsection{One dimensional indexers and selectors}
 
@@ -181,8 +181,8 @@ The \CC{\SetChild} command accepts a key-value input:
 ]{}
   Input & Description \\
   \KV{id=Hello}  & create a child indexer \TT{Hello} which is an index \TT{{<i>}{<j>}} \\
-  \KV{idh=Hello} & create a child indexer \TT{Helloh} which is an horizontal index \TT{<i>} \\
-  \KV{idv=Hello} & create a child indexer \TT{Hellov} which is an vertical index  \TT{<j>} \\
+  \KV{idh=Hello} & create a child indexer \TT{Helloh} which is a horizontal index \TT{<i>} \\
+  \KV{idv=Hello} & create a child indexer \TT{Hellov} which is a vertical index  \TT{<j>} \\
   \KV{id*=Hello} & create all of the above three child indexers \\
   \KV{class=world}  & create a child selector \TT{world} which is a list of indexes \TT{{<i>}{<j>}} \\
   \KV{classh=world} & create a child selector \TT{worldh} which is a list of horizontal indexes \TT{<i>} \\
@@ -227,11 +227,11 @@ The following is an example of child classes
 \end{demohigh}
 
 Since \CC{\SetChild} commands need to be extracted first
-before parsing inner specifications, they \underline{MUST} be put
+before parsing inner specifications, they \emph{must} be put
 at the beginning of cells, before other table commands such as \CC{\hline}.
-Therefore it conflicts with syntaxes \fakeverb{\\\\*} and \fakeverb{\\\\[<dimen>]}.
-But we can replace \fakeverb{\\\\*} with \fakeverb{\\\\\nopagebreak},
-and replace \fakeverb{\\\\[<dimen>]} with \fakeverb{\\\\\SetRow{belowsep+=<dimen>}},
+Therefore it conflicts with syntaxes \fakeverb{\\\\[<dimen>]} and \fakeverb{\\\\*}.
+They can be replaced with \fakeverb{\\\\\SetRow{belowsep+=<dimen>}}
+and \fakeverb{\\\\\nopagebreak} respectively,
 so that \CC{\SetChild} can be inserted in the middle:
 \begin{demohigh}
 \begin{tblr}{

@@ -5,9 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 
 ## Added
 
+- Allow rollback to version 2024 by `\usepackage{tabularray}[=v2024]`
 - Load `tabularray` libraries in external files ([#532])
 - Evaluate inner specifications with `functional` library ([#270])
-- Add `tikz` library for drawing on short or tall tables ([#29], [#552])
+- Add `tikz` library for drawing below or above tables ([#29], [#552])
   - Create table node `table` for each table
   - Create cell nodes `<i>-<j>` for each cell
   - Create corner nodes `h<i>` for each hborder
@@ -18,9 +19,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Add `\DeclareTblrKeys` and `\SetTblrKeys` commands ([#547])
 - Add `\lTblrDefaultHruleWidthDim` and `\lTblrDefaultVruleWidthDim` ([#102], [#527])
 - Add `\lTblrDefaultHruleColorTl` and `\lTblrDefaultVruleColorTl` ([#172])
-- Allow mixing child selectors and child indexes ([#577])
+- Add experimental public variable `\lTblrPortraitTypeTl` ([#29], [#197])
+- Add experimental public variable `\lTblrRowHeadInt` ([#29], [#197])
+- Add experimental public variable `\lTblrRowFootInt` ([#29], [#197])
+- Add experimental public variable `\lTblrTablePageInt` ([#29], [#197])
+- Add experimental public variable `\lTblrRowFirstInt` ([#29], [#197])
+- Add experimental public variable `\lTblrRowLastInt` ([#29], [#197])
+- Add `\NewTblrChildIndexer` for selecting a child index ([#578])
+- Allow mixing child indexes, indexers, and selectors ([#577])
+- Add support for selecting cells with two dimensional indexes ([#381])
+- Add support for two dimensional indexers and selectors ([#381])
+- Add `\lTblrChildIndexTl` for child indexers ([#578])
+- Add `\lTblrChildHtotalInt` and `\lTblrChildVtotalInt` for indexers and selectors ([#381])
 - Add `\SetChild` commands for setting ids and classes ([#381])
-- Add child selector `every` ([#576])
+- Add `\ExpTblrChildId` for expanding index from an id ([#381])
+- Add `\ExpTblrChildClass` for expanding indexes from a class ([#381])
+- Add child selector `every` for selecting indexes in an arithmetic sequence ([#576])
 - Add benchmark tests and publish results to `gh-pages` branch ([#480])
 - Add new chapter "Experimental Interfaces" in the manual
 - Document how to use color models with `functional` library ([#106])
@@ -29,7 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 
 ## Changed
 
-- Support old TeX Live releases published in previous three years
+- Support old TeX Live releases published within previous three years only
 - Use linked property lists to make `tabularray` run much faster ([#541])
 - Avoid using `l3regex` to make `tabularray` run much faster ([#553])
 - Recognize spaces between `\\` and `*` or `[<length>]` ([#526])
@@ -43,8 +57,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Rename all key paths and add `tabularray` prefix to them ([#547])
 - Raise an error for using an undefined template in `\SetTblrTemplate` ([#517])
 - Replace `x`-type expansions with `e`-type expansions ([#560])
-- Make `odd`/`even` selector accept only start index ([#580])
-- Ensure the converted index of `U`/`V`/`W`/`X`/`Y`/`Z` is positive ([#385, #578])
+- Make local definitions for child selectors ([#381])
+- Make indexer `Z` accept an optional argument for a negative index ([#509], [#578])
+- Ensure the converted index of `U`/`V`/`W`/`X`/`Y`/`Z` is positive ([#385], [#578])
+- Load `ninecolors` with `package/xcolor/after` hook ([#490])
 - Rename `\l_tblr_childs_clist` as `\lTblrChildClist` ([#249], [#527])
 - Rename `\l_tblr_childs_total_tl` as `\lTblrChildTotalInt` ([#249], [#527])
 - Rename `\lTblrCellRowSpanTl` as `\lTblrCellRowSpanInt` ([#527])
@@ -62,11 +78,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Deprecate `\NewColumnType` in favor of `\NewTblrColumnType` ([#421])
 - Deprecate `\NewRowType` in favor of `\NewTblrRowType` ([#421])
 - Deprecate `\NewColumnRowType` in favor of `\NewTblrColumnRowType` ([#421])
-- Deprecate `\NewDashStyle` in favor of `\NewTblrDashStyle` ([#421])
 - Deprecate `\NewTableCommand` in favor of `\NewTblrTableCommand` ([#421])
 - Deprecate `\NewContentCommand` in favor of `\NewTblrContentCommand` ([#421])
-- Deprecate `\g_tblr_level_int` in favor of `\gTblrLevelInt` ([#527])
+- Deprecate `\NewDashStyle` in favor of `\NewTblrDashStyle` ([#421])
+- Deprecate `\NewChildSelector` in favor of `\NewTblrChildSelector` ([#579])
 - Deprecate `\tablewidth` in favor of `\lTblrTableWidthDim` ([#527])
+- Deprecate `\g_tblr_level_int` in favor of `\gTblrLevelInt` ([#527])
 
 ## Fixed
 
@@ -83,6 +100,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 ## Removed
 
 - Drop support for TeX Live 2020 and 2021
+- Drop support for end index in `odd` and `even` selectors ([#580])
 - Remove deprecated inner key `verb` ([#530])
 - Remove undocumented `\rulewidth` ([#102], [#527])
 
@@ -174,7 +192,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 
 ## Added
 
-- Allow to rollback to version 2021 by `\usepackage{tabularray}[=v2021]` (#28)
+- Allow rollback to version 2021 by `\usepackage{tabularray}[=v2021]` (#28)
 - Add `longtabs` and `talltabs` environments in `booktabs` library (#170)
 - Add `stretch=-1` option for removing vertical space around lists (#99)
 - Add an optional argument to `odd` and `even` selectors (#105)
@@ -372,10 +390,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#469]: https://github.com/lvjr/tabularray/issues/469
 [#476]: https://github.com/lvjr/tabularray/issues/476
 [#480]: https://github.com/lvjr/tabularray/issues/480
+[#490]: https://github.com/lvjr/tabularray/issues/490
 [#491]: https://github.com/lvjr/tabularray/issues/491
 [#492]: https://github.com/lvjr/tabularray/issues/492
 [#497]: https://github.com/lvjr/tabularray/pull/497
 [#501]: https://github.com/lvjr/tabularray/issues/501
+[#509]: https://github.com/lvjr/tabularray/pull/509
 [#517]: https://github.com/lvjr/tabularray/pull/517
 [#526]: https://github.com/lvjr/tabularray/issues/526
 [#527]: https://github.com/lvjr/tabularray/issues/527
@@ -394,6 +414,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#576]: https://github.com/lvjr/tabularray/issues/576
 [#577]: https://github.com/lvjr/tabularray/issues/577
 [#578]: https://github.com/lvjr/tabularray/issues/578
+[#579]: https://github.com/lvjr/tabularray/issues/579
 [#580]: https://github.com/lvjr/tabularray/issues/580
 
 [Unreleased]: https://github.com/lvjr/tabularray/compare/2024A...HEAD

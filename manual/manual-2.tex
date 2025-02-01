@@ -11,7 +11,7 @@
 \chapter{Basic Interfaces}
 \label{chap:basic}
 
-\section{Old and New Interfaces}
+\section{Old and new interfaces}
 
 With \PP{tabularray} package, you can change the styles of tables via old interfaces or new interfaces.
 
@@ -42,7 +42,7 @@ hence totally separating the styles and the contents of tables.
   \CC{\SetColumn}                              & \K{column}, \K{colspec} \\
 \end{newtblr}
 
-\section{Hlines and Vlines}\label{sec:hlines-vlines}
+\section{Hlines and vlines}\label{sec:hlines-vlines}
 
 All available keys for hlines and vlines are described in Table \ref{key:hline} and Table \ref{key:vline}.
 
@@ -78,7 +78,7 @@ All available keys for hlines and vlines are described in Table \ref{key:hline} 
   \K{belowpos}         & crossing or trimming position at the below side & \V{0} \\
 \end{spectblr}
 
-\subsection{Hlines and Vlines in New Interfaces}
+\subsection{Hlines and vlines in new interfaces}
 
 Options \K{hlines} and \K{vlines} are for setting all hlines and vlines, respectively.
 With empty value, all hlines/vlines will be solid.
@@ -259,7 +259,7 @@ for only the leftmost/rightmost column:
 \end{tblr}
 \end{demohigh}
 
-\subsection{Hlines and Vlines in Old Interfaces}
+\subsection{Hlines and vlines in old interfaces}
 
 The \CC{\hline} command has an optional argument which accepts key-value options.
 The available keys are described in Table \ref{key:hline}.
@@ -338,7 +338,7 @@ The usages of table commands \CC{\vline}, \CC{\rline}, \CC{\SetVline}, \CC{\SetV
 are similar to those of \CC{\hline}, \CC{\cline}, \CC{\SetHline}, \CC{\SetHlines}, respectively.
 But normally you don't need to use them.
 
-\section{Hborders and Vborders}
+\section{Hborders and vborders}
 
 Options \KK{hborder{i}} and \KK{vborder{j}} are similar to \KK{hline{i}} and \KK{vline{j}},
 respectively, but they hold border specifications not related to one specific hline and vline.
@@ -374,7 +374,7 @@ is the same as table option \KV{hborder{i}={<specs>}},
 and table command \CC{\vborder{<specs>}} at the beginning of column \V{j}
 is the same as table option \KV{vborder{j}={<specs>}}.
 
-\section{Cells and Spancells}
+\section{Cells and spancells}
 
 All available keys for cells are described in Table \ref{key:cell} and Table \ref{key:cellspan}.
 
@@ -412,7 +412,7 @@ All available keys for cells are described in Table \ref{key:cell} and Table \re
   \K{c} & number of columns the cell spans & 1 \\
 \end{spectblr}
 
-\subsection{Cells and Spancells in New Interfaces}
+\subsection{Cells and spancells in new interfaces}
 
 Option \K{cells} is for setting all cells.
 \nopagebreak
@@ -455,7 +455,25 @@ where \V{i} stands for the row numbers and \V{j} stands for the column numbers.
 \end{tblr}
 \end{demohigh}
 
-\subsection{Cells and Spancells in Old Interfaces}
+From version 2025A, you can select cells with a list of two dimensional indexes:
+\begin{demohigh}
+\begin{tblr}{
+  cell{{2}{6},{7}{3}} = {bg=blue7},
+  cell{{1}{1}-{4}{4},{5}{8}-{8}{5}} = {bg=red7}
+}
+  1	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  2	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  3	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  4	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  5	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  6	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  7	& 2	& 3	& 4	& 5	& 6	& 7 & 8 \\
+  8	& 2	& 3	& 4	& 5	& 6	& 7 & 8
+\end{tblr}
+\end{demohigh}
+In this example, \TT{-} characters are used for diagonal selection.
+
+\subsection{Cells and spancells in old interfaces}
 
 The \CC{\SetCell} command has a mandatory argument for setting the styles of current cell.
 The available keys are described in Table \ref{key:cell}.
@@ -511,7 +529,7 @@ and column \V{j} is the same as table option \KV{cell{i}{j}={<span>}{<styles>}}.
 Also, table command \CC{\SetCells[<span>]{<styles>}} at the beginning of some cell
 is the same as table option \KV{cells={<span>}{<styles>}}.
 
-\section{Rows and Columns}
+\section{Rows and columns}
 
 All available keys for rows and columns are described in Table \ref{key:row} and Table \ref{key:column}.
 
@@ -578,7 +596,7 @@ All available keys for rows and columns are described in Table \ref{key:row} and
   \K{appto} & append text to every cell (like \V{<} specifier in \K{colspec}) & \None \\
 \end{spectblr}
 
-\subsection{Rows and Columns in New Interfaces}
+\subsection{Rows and columns in new interfaces}
 
 Options \K{rows} and \K{columns} are for setting all rows and columns, respectively.
 \nopagebreak
@@ -670,7 +688,7 @@ The following example shows that we can replace \CC{\\\\[dimen]} with \K{belowse
 \end{tblr}
 \end{demohigh}
 
-\subsection{Rows and Columns in Old Interfaces}
+\subsection{Rows and columns in old interfaces}
 
 The \CC{\SetRow} command has a mandatory argument for setting the styles of current row.
 The available keys are described in Table \ref{key:row}.
@@ -697,12 +715,12 @@ The usages of table commands \CC{\SetColumn} and \CC{\SetColumns}
 are similar to those of \CC{\SetRow} and \CC{\SetRows}, respectively.
 But normally you don't need to use them.
 
-\section{Colspec and Rowspec}
+\section{Colspec and rowspec}
 
 Options \K{colspec}/\K{rowspec} are for setting column/row specifications
 with column/row type specifiers.
 
-\subsection{Colspec and Width}
+\subsection{Colspec and width}
 
 Option \K{width} is for setting the width of the table with extendable columns.
 The following example demonstrates the usage of \K{width} option.
@@ -728,7 +746,7 @@ The following example demonstrates the usages of \KK{$} and \KK{$$} keys:
 \end{tblr}
 \end{demohigh}
 
-\subsection{Column Types}
+\subsection{Column types}
 
 The \PP{tabularray} package has only one type of primitive column: the \Q{Q} column.
 Other types of columns are defined as \Q{Q} columns with some keys.
@@ -756,7 +774,7 @@ Other types of columns are defined as \Q{Q} columns with some keys.
 Any new column type must be defined with \CC{\NewTblrColumnType} command.
 It can have an optional argument when it's defined.
 
-\subsection{Row Types}
+\subsection{Row types}
 
 The \PP{tabularray} package has only one type of primitive row: the \Q{Q} row.
 Other types of rows are defined as \Q{Q} rows with some keys.

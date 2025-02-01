@@ -11,7 +11,7 @@
 \chapter{Use Long Tables}
 \label{chap:long}
 
-\section{A Simple Example}
+\section{A simple example}
 
 To make a decent long table with header and footer, it is better to separate header/footer as
 \underline{table head/foot} (which includes caption, footnotes, continuation text)
@@ -336,9 +336,9 @@ and set the \EN{caption-tag} and \EN{caption-sep} elements (see below) to empty.
 Therefore \KV{caption=text,entry=none,label=none} is similar to \CC{\caption*{text}}
 in \PP{longtable}, except for the counter.
 
-\section{Customize Templates}
+\section{Customize templates}
 
-\subsection{Overview of Templates}
+\subsection{Overview of templates}
 
 The template system for table heads and table foots in \PP{tabularray} is largely inspired
 by \PP{beamer}, \PP{caption} and \PP{longtable} packages. For elements in Table \ref{tblr:element},
@@ -385,7 +385,7 @@ Normally there isn't any \TT{-} in the name of a main element.
 For each of the above elements, two templates \TN{normal} and \TN{empty} are always defined.
 You can select one of them with \CC{\SetTblrTemplate} command.
 
-\subsection{Continuation Templates}
+\subsection{Continuation templates}
 
 Let us have a look at the code for defining templates of continuation text first:%
 \footnote{To tell the truth, the default \texttt{conthead-text} and \texttt{contfoot-text}
@@ -424,7 +424,7 @@ But you can also handle user settings such as horizontal alignment here.
 \DeclareTblrTemplate{conthead}{default}{\UseTblrTemplate{conthead-text}{default}}
 \end{codehigh}
 
-\subsection{Caption Templates}
+\subsection{Caption templates}
 
 Normally a caption consists of three parts, and their templates are defined with the follow code:
 
@@ -460,7 +460,7 @@ The \EN{capcont} template will be used in \EN{middlehead} and \EN{lasthead} temp
 }
 \end{codehigh}
 
-\subsection{Note and Remark Templates}
+\subsection{Note and remark templates}
 
 The templates for table notes can be defined like this:
 
@@ -505,7 +505,7 @@ The definition of remark templates are similar to note templates.
 }
 \end{codehigh}
 
-\subsection{Head and Foot Templates}
+\subsection{Head and foot templates}
 
 The templates for table heads and foots are defined as including other templates:
 
@@ -535,7 +535,7 @@ If you only want to show table caption in the first page, you may change the def
 }
 \end{codehigh}
 
-\section{Change Styles}
+\section{Change styles}
 
 All available keys for template elements are described in Table \ref{key:element}.
 
@@ -569,7 +569,7 @@ beside including template code of the \EN{element}, the foreground color and fon
 of the \EN{element} will be set up automatically.
 In contrast, \CC{\ExpTblrTemplate{element}{default}} will only include template code.
 
-\section{Define Themes}
+\section{Define themes}
 
 You may define your own themes for table heads and foots with \CC{\NewTblrTheme} command.
 a theme consists of some template and style settings. For example:
@@ -587,13 +587,13 @@ a theme consists of some template and style settings. For example:
 After defining the theme \V{fancy}, you can use it
 by writing \KV{theme=fancy} in the optional argument of \EE{longtblr} environment.
 
-\section{Control Page Breaks}
+\section{Control page breaks}
 
 Just like \PP{longtable} package, inside \EE{longtblr} environment,
 you can use \CC{\\\\*} or \CC{\nopagebreak} to prohibit a page break,
 and use \CC{\pagebreak} to force a page break.
 
-\section{Floatable Tall Tables}
+\section{Floatable tall tables}
 
 There is also a \EE{talltblr} environment as an alternative to \EE{threeparttable} environment.
 It can not cross multiple pages, but it can be put inside \EE{table} environment.
