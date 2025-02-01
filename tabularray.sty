@@ -336,14 +336,14 @@
 
 \cs_new_protected:Npn \__tblr_keys_define:nn #1 #2
   {
-    \keys_define:nn { tabularray / #1 } {#2}
+    \keys_define:nn { tabularray/#1 } {#2}
   }
 
 \cs_set_eq:NN \DeclareTblrKeys \__tblr_keys_define:nn
 
 \cs_new_protected:Npn \__tblr_keys_set:nn #1 #2
   {
-    \keys_set:nn { tabularray / #1 } {#2}
+    \keys_set:nn { tabularray/#1 } {#2}
   }
 \cs_generate_variant:Nn \__tblr_keys_set:nn { nV, nv, ne }
 
@@ -351,12 +351,12 @@
 
 \cs_new_protected:Npn \__tblr_keys_set_groups:nnn #1 #2 #3
   {
-    \keys_set_groups:nnn { tabularray / #1 } {#2} {#3}
+    \keys_set_groups:nnn { tabularray/#1 } {#2} {#3}
   }
 
 \prg_set_conditional:Npnn \__tblr_keys_if_exist:nn #1 #2 { p, T, F, TF }
   {
-    \keys_if_exist:nnTF { tabularray / #1 } { #2 }
+    \keys_if_exist:nnTF { tabularray/#1 } { #2 }
       { \prg_return_true: } { \prg_return_false: }
   }
 \prg_generate_conditional_variant:Nnn \__tblr_keys_if_exist:nn { nV } { TF }
@@ -1694,10 +1694,10 @@
 
 \NewTblrTableCommand \SetChild [1]
   {
-    \__tblr_keys_set:nn { child / index } {#1}
+    \__tblr_keys_set:nn { child/index } {#1}
   }
 
-\__tblr_keys_define:nn { child / index }
+\__tblr_keys_define:nn { child/index }
   {
     id  .code:n = \__tblr_child_add_id:n {#1},
     idh .code:n = \__tblr_child_add_idh:n {#1},
@@ -1817,7 +1817,7 @@
     \tl_if_head_eq_meaning:VNT #1 \SetChild
       {
         \tl_set:Ne #1 { \tl_tail:N #1 }
-        \__tblr_keys_set:ne { child / index } { \tl_head:N #1 }
+        \__tblr_keys_set:ne { child/index } { \tl_head:N #1 }
         \tl_set:Ne #1 { \tl_tail:N #1 }
       }
   }
@@ -2020,13 +2020,13 @@
 \cs_new_protected:Npn \tblr_set_hline:nnn #1 #2 #3
   {
     \group_begin:
-    \__tblr_keys_set_groups:nnn { hline / inner } { text } {#3}
+    \__tblr_keys_set_groups:nnn { hline/inner } { text } {#3}
     % true if "text=" is set
     \tl_if_eq:NNF \l__tblr_hline_dash_tl \q__tblr_text
       {
         \__tblr_set_hline_num:n {#1}
         \tl_clear:N \l__tblr_hline_dash_tl
-        \__tblr_keys_set:nn { hline / inner } { dash = solid, #3 }
+        \__tblr_keys_set:nn { hline/inner } { dash = solid, #3 }
         \__tblr_set_hline_cmd:n {#2}
       }
     \group_end:
@@ -2096,7 +2096,7 @@
     \tl_set_eq:NN \l__tblr_hline_num_tl \l__tblr_hline_count_tl
   }
 
-\__tblr_keys_define:nn { hline / inner }
+\__tblr_keys_define:nn { hline/inner }
   {
     dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \q__tblr_dash #1 },
     text .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \q__tblr_text #1 },
@@ -2263,13 +2263,13 @@
 \cs_new_protected:Npn \tblr_set_vline:nnn #1 #2 #3
   {
     \group_begin:
-    \__tblr_keys_set_groups:nnn { vline / inner } { text } {#3}
+    \__tblr_keys_set_groups:nnn { vline/inner } { text } {#3}
     % true if "text=" is set
     \tl_if_eq:NNF \l__tblr_vline_dash_tl \q__tblr_text
       {
         \__tblr_set_vline_num:n {#1}
         \tl_clear:N \l__tblr_vline_dash_tl
-        \__tblr_keys_set:nn { vline / inner } { dash = solid, #3 }
+        \__tblr_keys_set:nn { vline/inner } { dash = solid, #3 }
         \__tblr_set_vline_cmd:n {#2}
       }
     \group_end:
@@ -2339,7 +2339,7 @@
     \tl_set_eq:NN \l__tblr_vline_num_tl \l__tblr_vline_count_tl
   }
 
-\__tblr_keys_define:nn { vline / inner }
+\__tblr_keys_define:nn { vline/inner }
   {
     dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \q__tblr_dash #1 },
     text .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \q__tblr_text #1 },
@@ -2411,7 +2411,7 @@
 
 \cs_new_protected:Npn \tblr_set_hborder:n #1
   {
-    \__tblr_keys_set:nn { hborder / inner } {#1}
+    \__tblr_keys_set:nn { hborder/inner } {#1}
   }
 
 \cs_new_protected:Npn \tblr_set_hborder:nn #1 #2
@@ -2434,7 +2434,7 @@
   }
 \cs_generate_variant:Nn \__tblr_set_hborder_aux:nn { Vn }
 
-\__tblr_keys_define:nn { hborder / inner }
+\__tblr_keys_define:nn { hborder/inner }
   {
     abovespace .code:n = \__tblr_row_gput_above:ne
                           { belowsep } { \dim_eval:n {#1} },
@@ -2468,7 +2468,7 @@
 
 \cs_new_protected:Npn \tblr_set_vborder:n #1
   {
-    \__tblr_keys_set:nn { vborder / inner } {#1}
+    \__tblr_keys_set:nn { vborder/inner } {#1}
   }
 
 \cs_new_protected:Npn \tblr_set_vborder:nn #1 #2
@@ -2491,7 +2491,7 @@
   }
 \cs_generate_variant:Nn \__tblr_set_vborder_aux:nn { Vn }
 
-\__tblr_keys_define:nn { vborder / inner }
+\__tblr_keys_define:nn { vborder/inner }
   {
     leftspace .code:n = \__tblr_column_gput_left:ne
                           { rightsep } { \dim_eval:n {#1} },
@@ -2551,8 +2551,8 @@
   {
     \tl_set:Nn \l__tblr_row_span_num_tl { 1 }
     \tl_set:Nn \l__tblr_col_span_num_tl { 1 }
-    \__tblr_keys_set:nn { cell / outer } { #1 }
-    \__tblr_keys_set:nn { cell / inner } { #2 }
+    \__tblr_keys_set:nn { cell/outer } { #1 }
+    \__tblr_keys_set:nn { cell/inner } { #2 }
     \__tblr_set_span_spec:VV \l__tblr_row_span_num_tl \l__tblr_col_span_num_tl
   }
 \cs_generate_variant:Nn \tblr_set_cell:nn { nV }
@@ -2608,13 +2608,13 @@
   }
 \cs_generate_variant:Nn \__tblr_set_cell_aux:nn { Vn }
 
-\__tblr_keys_define:nn { cell / outer }
+\__tblr_keys_define:nn { cell/outer }
   {
     r .tl_set:N = \l__tblr_row_span_num_tl,
     c .tl_set:N = \l__tblr_col_span_num_tl,
   }
 
-\__tblr_keys_define:nn { cell / inner }
+\__tblr_keys_define:nn { cell/inner }
   {
     halign  .code:n = \__tblr_cell_gput:nn { halign } {#1},
     valign  .code:n = \__tblr_cell_gput:nn { valign } {#1},
@@ -2819,7 +2819,7 @@
 
 \cs_new_protected:Npn \tblr_set_column:nn #1 #2
   {
-    \__tblr_keys_set:nn { column / inner } {#2}
+    \__tblr_keys_set:nn { column/inner } {#2}
   }
 
 \cs_new_protected:Npn \tblr_set_column:nnn #1 #2 #3
@@ -2845,7 +2845,7 @@
   }
 \cs_generate_variant:Nn \__tblr_set_column_aux:nn { Vn }
 
-\__tblr_keys_define:nn { column / inner }
+\__tblr_keys_define:nn { column/inner }
   {
     halign    .code:n = \__tblr_column_gput_cell:nn { halign } {#1},
     valign    .code:n = \__tblr_column_gput_cell:nn { valign } {#1},
@@ -2985,7 +2985,7 @@
 
 \cs_new_protected:Npn \tblr_set_row:nn #1 #2
   {
-    \__tblr_keys_set:nn { row / inner } {#2}
+    \__tblr_keys_set:nn { row/inner } {#2}
   }
 
 \cs_new_protected:Npn \tblr_set_row:nnn #1 #2 #3
@@ -3011,7 +3011,7 @@
   }
 \cs_generate_variant:Nn \__tblr_set_row_aux:nn { Vn }
 
-\__tblr_keys_define:nn { row / inner }
+\__tblr_keys_define:nn { row/inner }
   {
     halign    .code:n = \__tblr_row_gput_cell:nn { halign } {#1},
     valign    .code:n = \__tblr_row_gput_cell:nn { valign } {#1},
@@ -3138,7 +3138,7 @@
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_Column_type_ Q } { O{} }
   {
-    \__tblr_keys_set:nn { column / inner } { #1 }
+    \__tblr_keys_set:nn { column/inner } { #1 }
     \int_incr:N \c@colnum
     \__tblr_execute_colrow_spec_next:N
   }
@@ -3150,7 +3150,7 @@
 
 \exp_args:Nc \NewDocumentCommand { tblr_primitive_Row_type_ Q } { O{} }
   {
-    \__tblr_keys_set:nn { row / inner } { #1 }
+    \__tblr_keys_set:nn { row/inner } { #1 }
     \int_incr:N \c@rownum
     \__tblr_execute_colrow_spec_next:N
   }
@@ -3965,7 +3965,7 @@
         \__tblr_spec_gput:nen { vline }
           { [\int_eval:n { \c@colcount + 1}] / ##1 } {##2}
       }
-    \__tblr_keys_set:nv { table / inner }
+    \__tblr_keys_set:nv { table/inner }
       { l__tblr_default_ \l__tblr_env_name_tl _inner_tl }
   }
 
@@ -3974,7 +3974,7 @@
 %%% --------------------------------------------------------
 
 %% We must define these keys to make \__tblr_keys_if_exist work
-\__tblr_keys_define:nn { table / inner }
+\__tblr_keys_define:nn { table/inner }
   {
     column  .code:n = ,
     row     .code:n = ,
@@ -3987,7 +3987,7 @@
 
 \str_new:N \g__tblr_name_str
 
-\__tblr_keys_define:nn { table / inner }
+\__tblr_keys_define:nn { table/inner }
   {
     name .code:n = \__tblr_keys_gput:nn { name } {#1},
     colspec .code:n = \__tblr_parse_colrow_spec:nn { Column } {#1},
@@ -4021,7 +4021,7 @@
 \cs_new_protected:Npn \__tblr_table_special_key:nn #1 #2
   {
     \__tblr_key_split_name_args:n {#1}
-    \__tblr_keys_if_exist:nVTF { table / inner } \l__tblr_key_split_name_str
+    \__tblr_keys_if_exist:nVTF { table/inner } \l__tblr_key_split_name_str
       {
         \use:c { __tblr_set_ \l__tblr_key_split_name_str _aux:Vn }
           \l__tblr_key_split_args_tl {#2}
@@ -4039,8 +4039,8 @@
 \cs_new_protected:Npn \__tblr_parse_table_spec:n #1
   {
     \__tblr_keyval_extract_first_name:n {#1}
-    \__tblr_keys_if_exist:nVTF { table / inner } \l__tblr_key_split_name_str
-      { \__tblr_keys_set:nn { table / inner } {#1} }
+    \__tblr_keys_if_exist:nVTF { table/inner } \l__tblr_key_split_name_str
+      { \__tblr_keys_set:nn { table/inner } {#1} }
       { \__tblr_parse_colrow_spec:nn { Column } {#1} }
     \str_gset:Ne \g__tblr_name_str { \__tblr_prop_item:ne { inner } { name } }
     \str_if_empty:NT \g__tblr_name_str
@@ -4053,7 +4053,7 @@
   }
 \cs_generate_variant:Nn \__tblr_keys_gput:nn { ne }
 
-\__tblr_keys_define:nn { table / delimiter }
+\__tblr_keys_define:nn { table/delimiter }
   {
     left .code:n  = \__tblr_keys_gput:nn { delim-left } { \left #1 },
     right .code:n = \__tblr_keys_gput:nn { delim-right } { \right #1 }
@@ -4061,7 +4061,7 @@
 
 \cs_new_protected:Npn \__tblr_set_delimiter:n #1
   {
-    \__tblr_keys_set:nn { table / delimiter } {#1}
+    \__tblr_keys_set:nn { table/delimiter } {#1}
   }
 
 %%% --------------------------------------------------------
@@ -4090,24 +4090,24 @@
 
 \cs_new_protected:Npn \__tblr_init_table_outer_spec:
   {
-    \__tblr_keys_set:nv { table / outer }
+    \__tblr_keys_set:nv { table/outer }
       { l__tblr_default_ \l__tblr_env_name_tl _outer_tl }
   }
 
 \cs_new_protected:Npn \__tblr_parse_table_option:n #1
   {
-    \__tblr_keys_set:nn { table / outer } {#1}
+    \__tblr_keys_set:nn { table/outer } {#1}
   }
 
 %% We must define these keys to make \__tblr_keys_if_exist work
-\__tblr_keys_define:nn { table / outer }
+\__tblr_keys_define:nn { table/outer }
   {
     note   .code:n = ,
     remark .code:n = ,
     more   .code:n =
   }
 
-\__tblr_keys_define:nn { table / outer }
+\__tblr_keys_define:nn { table/outer }
   {
     long    .code:n = \__tblr_outer_gput_spec:nn { portrait } { long },
     tall    .code:n = \__tblr_outer_gput_spec:nn { portrait } { tall },
@@ -4154,7 +4154,7 @@
 \cs_new_protected:Npn \__tblr_table_option_key:nn #1 #2
   {
     \__tblr_key_split_name_args:n {#1}
-    \__tblr_keys_if_exist:nVTF { table / outer } \l__tblr_key_split_name_str
+    \__tblr_keys_if_exist:nVTF { table/outer } \l__tblr_key_split_name_str
       {
         % remove a pair of outer braces
         \tl_set:Ne \l__tblr_key_split_args_tl
@@ -5591,11 +5591,11 @@
 \NewDocumentCommand \SetTblrStyle { m +m }
   {
     \tl_set:Nn \l__tblr_element_styles_tl {#2}
-    \__tblr_keys_set:nn { template / element } {#1}
+    \__tblr_keys_set:nn { template/element } {#1}
     \ignorespaces
   }
 
-\__tblr_keys_define:nn { template / element }
+\__tblr_keys_define:nn { template/element }
   {
     head    .meta:n = { firsthead, middlehead, lasthead },
     foot    .meta:n = { firstfoot, middlefoot, lastfoot },
@@ -5605,11 +5605,11 @@
 \cs_new_protected:Npn \__tblr_set_element_styles:n #1
   {
     \tl_set:Nn \l__tblr_element_name_tl {#1}
-    \__tblr_keys_set:nV { template / style } \l__tblr_element_styles_tl
+    \__tblr_keys_set:nV { template/style } \l__tblr_element_styles_tl
   }
 \cs_generate_variant:Nn \__tblr_set_element_styles:n { V }
 
-\__tblr_keys_define:nn { template / style }
+\__tblr_keys_define:nn { template/style }
   {
     halign  .code:n = \__tblr_element_gput_style:nn { halign } {#1},
     l       .meta:n = { halign = l },
@@ -5653,7 +5653,7 @@
 \tl_new:N \l__tblr_template_name_tl
 \tl_new:N \l__tblr_template_code_tl
 
-\__tblr_keys_define:nn { template / def }
+\__tblr_keys_define:nn { template/def }
   {
     unknown .code:n = \__tblr_def_template:V \l_keys_key_str,
   }
@@ -5665,7 +5665,7 @@
   {
     \tl_set:Nn \l__tblr_template_name_tl {#2}
     \tl_set:Nn \l__tblr_template_code_tl {#3}
-    \__tblr_keys_set:nn { template / def } {#1}
+    \__tblr_keys_set:nn { template/def } {#1}
     \ignorespaces
   }
 \cs_new_eq:NN \DefTblrTemplate \DeclareTblrTemplate
@@ -5679,7 +5679,7 @@
   }
 \cs_generate_variant:Nn \__tblr_def_template:n { V }
 
-\__tblr_keys_define:nn { template / set }
+\__tblr_keys_define:nn { template/set }
   {
     unknown .code:n = \__tblr_set_template:V \l_keys_key_str,
   }
@@ -5688,7 +5688,7 @@
 \NewDocumentCommand \SetTblrTemplate { m m }
   {
     \tl_set:Nn \l__tblr_template_name_tl {#2}
-    \__tblr_keys_set:nn { template / set } {#1}
+    \__tblr_keys_set:nn { template/set } {#1}
     \ignorespaces
   }
 
@@ -6249,13 +6249,13 @@
 \tl_new:N \g__tblr_template_middlefoot_default_tl
 \tl_new:N \g__tblr_template_lastfoot_default_tl
 
-\__tblr_keys_define:nn { template / def }
+\__tblr_keys_define:nn { template/def }
   {
     head .meta:n = { firsthead, middlehead, lasthead },
     foot .meta:n = { firstfoot, middlefoot, lastfoot },
   }
 
-\__tblr_keys_define:nn { template / set }
+\__tblr_keys_define:nn { template/set }
   {
     head .meta:n = { firsthead, middlehead, lasthead },
     foot .meta:n = { firstfoot, middlefoot, lastfoot },
@@ -7785,7 +7785,7 @@
 
 \NewDocumentCommand \SetTblrTracing { m }
   {
-    \__tblr_keys_set:nn { tracing / set } {#1}
+    \__tblr_keys_set:nn { tracing/set } {#1}
   }
 
 \bool_new:N \g__tblr_tracing_text_bool
@@ -7807,7 +7807,7 @@
 \bool_new:N \g__tblr_tracing_page_bool
 \bool_new:N \g__tblr_tracing_step_bool
 
-\__tblr_keys_define:nn { tracing / set }
+\__tblr_keys_define:nn { tracing/set }
   {
     +text .code:n = \bool_gset_true:N \g__tblr_tracing_text_bool,
     -text .code:n = \bool_gset_false:N \g__tblr_tracing_text_bool,
@@ -7895,10 +7895,10 @@
 
 \NewDocumentCommand \LogTblrTracing { m }
   {
-    \__tblr_keys_set:nn { tracing / log } {#1}
+    \__tblr_keys_set:nn { tracing/log } {#1}
   }
 
-\__tblr_keys_define:nn { tracing / log }
+\__tblr_keys_define:nn { tracing/log }
   {
     step .code:n = \__tblr_log_tracing_step:n {#1},
     unknown .code:n = \__tblr_log_tracing:N \l_keys_key_str
@@ -8254,7 +8254,7 @@
   {
     \RequirePackage { functional }
     %% Add outer specification "evaluate"
-    \__tblr_keys_define:nn { table / outer }
+    \__tblr_keys_define:nn { table/outer }
       { evaluate .code:n = \__tblr_outer_gput_spec:nn { evaluate } {##1} }
     \tl_new:N \l__tblr_evaluate_tl
     \cs_set_protected:Npn \__tblr_hook_split_before:
@@ -8296,7 +8296,7 @@
         \tl_set_eq:NN ##1 \g__tblr_functional_result_tl
       }
     %% Add inner specification "process"
-    \__tblr_keys_define:nn { table / inner }
+    \__tblr_keys_define:nn { table/inner }
       { process .code:n = \__tblr_keys_gput:nn { process } {##1} }
     \cs_set:Npn \__tblr_functional_calculation:
       {
@@ -8407,7 +8407,7 @@
     \NewTblrColumnType { S } [1] [] { Q[si = {##1}, c] }
     \NewTblrColumnType { s } [1] [] { Q[si = {##1}, c, cmd = \TblrUnit] }
     \__tblr_data_new_key:nnn { cell } { si } { str }
-    \__tblr_keys_define:nn { column / inner }
+    \__tblr_keys_define:nn { column/inner }
       {
         si .code:n = \__tblr_siunitx_setcolumn:n {##1}
       }
@@ -8440,9 +8440,9 @@
             \group_end:
           }
       }
-    \__tblr_keys_define:nn { cell / inner }   { guard .meta:n = { cmd = } }
-    \__tblr_keys_define:nn { row / inner }    { guard .meta:n = { cmd = } }
-    \__tblr_keys_define:nn { column / inner } { guard .meta:n = { cmd = } }
+    \__tblr_keys_define:nn { cell/inner }   { guard .meta:n = { cmd = } }
+    \__tblr_keys_define:nn { row/inner }    { guard .meta:n = { cmd = } }
+    \__tblr_keys_define:nn { column/inner } { guard .meta:n = { cmd = } }
   }
 
 %% Library tikz to add table nodes, cell nodes and corner nodes with tikz
@@ -8757,7 +8757,7 @@
   {
     \RequirePackage { varwidth }
     \tl_set:Nn \l__tblr_inner_spec_measure_tl { vbox }
-    \__tblr_keys_define:nn { table / inner }
+    \__tblr_keys_define:nn { table/inner }
       { measure .tl_set:N = \l__tblr_inner_spec_measure_tl }
   }
 
