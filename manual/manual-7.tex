@@ -19,16 +19,16 @@ and are likely to change in future releases, if necessary. Don’t use them in i
 
 In version 2025A, all \PP{tabularray} key paths were cleaned up as follows:
 \begin{itemize}[nosep]
-  \item \KP{tabularray/table/inner} (from \KP{tblr})
-  \item \KP{tabularray/table/outer} (from \KP{tblr-outer})
-  \item \KP{tabularray/column/inner} (from \KP{tblr-column})
-  \item \KP{tabularray/row/inner} (from \KP{tblr-row})
-  \item \KP{tabularray/cell/inner} (from \KP{tblr-cell-spec})
-  \item \KP{tabularray/cell/outer} (from \KP{tblr-cell-span})
-  \item \KP{tabularray/hline/inner} (from \KP{tblr-hline})
-  \item \KP{tabularray/vline/inner} (from \KP{tblr-vline})
-  \item \KP{tabularray/hborder/inner} (from \KP{tblr-hborder})
-  \item \KP{tabularray/vborder/inner} (from \KP{tblr-vborder})
+  \item \KP{tabularray/table/inner} (from \KP{tblr}): for inner specifications.
+  \item \KP{tabularray/table/outer} (from \KP{tblr-outer}): for outer specifications.
+  \item \KP{tabularray/column/inner} (from \KP{tblr-column}): for column specifications.
+  \item \KP{tabularray/row/inner} (from \KP{tblr-row}): for row specifications.
+  \item \KP{tabularray/cell/inner} (from \KP{tblr-cell-spec}): for cell specifications.
+  \item \KP{tabularray/cell/outer} (from \KP{tblr-cell-span}): for cell spanning specifications.
+  \item \KP{tabularray/hline/inner} (from \KP{tblr-hline}): for hline specifications.
+  \item \KP{tabularray/vline/inner} (from \KP{tblr-vline}): for vline specifications.
+  \item \KP{tabularray/hborder/inner} (from \KP{tblr-hborder}) for hborder specifications.
+  \item \KP{tabularray/vborder/inner} (from \KP{tblr-vborder}) for vborder specifications.
 \end{itemize}
 An advanced user or package writer can use \CC{\DeclareKeys} and \CC{\SetKeys} commands
 (provided by LaTeX format) to declare new keys and apply key-value lists, respectively.
@@ -45,14 +45,14 @@ The key paths are quite long, therefore \PP{tabularray} provides two shortcut co
 
 All experimental public \PP{tabularray} hook names provided by \LL{hook} library are as follows:
 \begin{itemize}[nosep]
-  \item \HP{tabularray/trial/before}
-  \item \HP{tabularray/trial/after}
-  \item \HP{tabularray/table/before}
-  \item \HP{tabularray/table/after}
-  \item \HP{tabularray/row/before}
-  \item \HP{tabularray/row/after}
-  \item \HP{tabularray/cell/before}
-  \item \HP{tabularray/cell/after}
+  \item \HP{tabularray/trial/before}: hook before trial typesetting.
+  \item \HP{tabularray/trial/after}: hook after trial typesetting.
+  \item \HP{tabularray/table/before}: hook before building the whole table.
+  \item \HP{tabularray/table/after}: hook after building the whole table.
+  \item \HP{tabularray/row/before}: hook before typesetting a table row.
+  \item \HP{tabularray/row/after}: hook after typesetting a table row.
+  \item \HP{tabularray/cell/before}: hook before typesetting a table cell.
+  \item \HP{tabularray/cell/after}: hook after typesetting a table cell.
 \end{itemize}
 An advanced user or package writer can use \CC{\AddToHook} and \CC{\AddToHookNext} commands
 (provided by LaTeX format) to inject code to \PP{tabularray} tables.
