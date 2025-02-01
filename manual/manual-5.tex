@@ -121,7 +121,7 @@ command, which is simpler than the \verb!booktabs! usage
 \end{tblr}
 \end{demohigh}
 
-From version 2021N (2021-09-01), you can set trimming positions of
+From version 2021N, you can set trimming positions of
 \CC{\cmidrule} and \CC{\cmidrulemore}, using newly introduced trimming
 options (\K{leftpos}, \K{rightpos}, \K{endpos}, \K{l}, \K{r},
 and \K{lr}) (see Section~\ref{sec:hlines-vlines}).
@@ -203,7 +203,7 @@ and the other half to \K{abovesep} of current row.
 \end{booktabs}
 \end{demohigh}
 
-From version 2022A (2022-03-01), there is a \EE{longtabs} environment
+From version 2022A, there is a \EE{longtabs} environment
 for writing long \PP{booktabs} tables,
 and a \EE{talltabs} environment for writing tall \PP{booktabs} tables.
 
@@ -531,12 +531,12 @@ We can also use color series of \PP{xcolor} package to color table rows:
 
 This library is \emph{experimental}.
 It will also load \LL{varwidth} library and set \KV{measure=vstore} as default.
-See Chapter \ref{chap:exp} for more details of the library.
+See Section~\ref{sect:hook} for more details of the library.
 
 \section{Library \texttt{html}}
 
 This library is \emph{experimental}.
-See Chapter \ref{chap:exp} for more details of the library.
+See Section~\ref{sect:pubvar} for more details of the library.
 
 \section{Library \texttt{nameref}}
 
@@ -575,7 +575,7 @@ and defines \Q{S} column as \Q{Q} column with \K{si} key.
 
 Note that you need to use one pairs of curly braces to guard non-numeric cells%
 \footnote{Before version 2025A, three pairs of braces are needed.}.
-But it is cumbersome to enclose each cell with braces. From version 2022B (2022-06-01)
+But it is cumbersome to enclose each cell with braces. From version 2022B
 a new key \K{guard} is provided for cells and rows. With \K{guard} key the previous example
 can be largely simplified.
 
@@ -619,6 +619,7 @@ Both \Q{S} and \Q{s} columns are supported. In fact, These two columns have been
 You don't need to and are not allowed to define them again.
 
 \section{Library \texttt{tikz}}
+\label{sect:tikz}
 
 With this \emph{experimental} \LL{tikz} library,%
 \footnote{The author thanks \href{https://github.com/jasperhabicht}{Jasper Habicht}
@@ -692,7 +693,7 @@ In writng drawing code,
 users are responsible for making sure the elements to draw are actually in current page table.
 These public variables might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt},
 \CC{\lTblrTablePageInt}, \CC{\lTblrRowFirstInt}, \CC{\lTblrRowLastInt}
-(they are described in Chapter \ref{chap:exp}). Here is an example:
+(they are described in Section~\ref{sect:pubvar}). Here is an example:
 
 \ExplSyntaxOn
 \cs_generate_variant:Nn \clist_map_inline:nn {e}
@@ -801,7 +802,7 @@ so that it will use \CC{\vbox} to measure cell widths.
 \end{tblr}
 \end{demohigh}
 
-From version 2022A (2022-03-01), you can remove extra space above and below lists,
+From version 2022A, you can remove extra space above and below lists,
 by adding option \KV{stretch=-1}.
 The following example also needs \PP{enumitem} package and its \K{nosep} option:
 

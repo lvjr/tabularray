@@ -42,6 +42,7 @@ The key paths are quite long, therefore \PP{tabularray} provides two shortcut co
 \end{codehigh}
 
 \section{Experimental public hook names}
+\label{sect:hook}
 
 All experimental public \PP{tabularray} hook names provided by \LL{hook} library are as follows:
 \begin{itemize}[nosep]
@@ -70,6 +71,7 @@ The hook names are quite long, therefore \PP{tabularray} provides two shortcut c
 \end{codehigh}
 
 \section{Experimental public variables}
+\label{sect:pubvar}
 
 This variable is always available throughout the whole typesetting process of tables:
 \begin{itemize}[nosep]
@@ -120,6 +122,7 @@ In the above, \TT{BorderStyle}, \TT{BorderWidth}, \TT{BorderColor} are similar t
 \TT{BorderStyle} and \TT{BorderColor} are empty by default.
 
 \section{New child indexers and selectors}
+\label{sect:newchild}
 
 \subsection{One dimensional indexers and selectors}
 
@@ -248,7 +251,7 @@ so that \CC{\SetChild} can be inserted in the middle:
 Only one \CC{\SetChild} command in each cell is supported.
 But you can create multiple ids or classes with single \CC{\SetChild} command.
 
-In drawing \PP{tikz} pictures on tables (see Chapter~\ref{chap:lib}),
+In drawing \PP{tikz} pictures on tables (see Section~\ref{sect:tikz}),
 you may want to get the value of a child id or class with \CC{\ExpTblrChildId} or \CC{\ExpTblrChildClass}.
 These two commands are fully expandable.
 
