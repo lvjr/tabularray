@@ -889,7 +889,8 @@
         \tl_new:c { g__tblr_data_ \tl_to_str:n {#1} _to_int_tl }
         \tl_gset:ce { g__tblr_data_ \tl_to_str:n {#1} _to_int_tl }
           { \int_use:N \g__tblr_data_str_value_count_int }
-        \tl_new:c { g__tblr_data_ \int_use:N \g__tblr_data_str_value_count_int _to_str_tl }
+        \tl_new:c
+          { g__tblr_data_ \int_use:N \g__tblr_data_str_value_count_int _to_str_tl }
         \tl_gset:cn
           { g__tblr_data_ \int_use:N \g__tblr_data_str_value_count_int _to_str_tl }
           { \exp_not:n {#1} }
@@ -4222,7 +4223,10 @@
       {
         \cs_set_eq:NN \__tblr_process_stretch: \prg_do_nothing:
         \fp_compare:nNnTF \l__tblr_stretch_fp < \c_zero_fp
-          { \cs_set_eq:NN \__tblr_leave_vmode: \@setminipage } % for lists (see issue #99)
+          {
+            % for lists (see issue #99)
+            \cs_set_eq:NN \__tblr_leave_vmode: \@setminipage
+          }
           { \cs_set_eq:NN \__tblr_leave_vmode: \mode_leave_vertical: }
       }
   }
@@ -5020,7 +5024,10 @@
         \tl_set:Ne \l__tblr_c_tl
           { \__tblr_data_item:nen { column } { \l__tblr_j_tl } { rightsep } }
         \dim_set:Nn \l__tblr_column_target_dim
-          { \l__tblr_column_target_dim - \l__tblr_a_tl - \l__tblr_b_tl - \l__tblr_c_tl }
+          {
+            \l__tblr_column_target_dim
+            - \l__tblr_a_tl - \l__tblr_b_tl - \l__tblr_c_tl
+          }
       }
     \tl_set:Ne \l__tblr_a_tl
       {
