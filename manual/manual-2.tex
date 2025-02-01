@@ -17,8 +17,8 @@ With \PP{tabularray} package, you can change the styles of tables via old interf
 
 The old interfaces consist of some table commands inside the table contents.
 Same as \EE{tabular} and \EE{array} environments,
-all table commands \textcolor{red3}{must} be put at the beginning of the cell text.
-Also, new table commands \textcolor{red3}{must} be defined with \CC{\NewTblrTableCommand}.
+all table commands \emph{must} be put at the beginning of the cell text.
+Also, new table commands \emph{must} be defined with \CC{\NewTblrTableCommand}.
 
 The new interfaces consist of some options inside the mandatory argument,
 hence totally separating the styles and the contents of tables.
@@ -145,7 +145,7 @@ Another pair of braces before will draw more hlines/vlines (in which \V{-} stand
 \end{tblr}
 \end{demohigh}
 
-Note that you \underline{must} use indexes in order: first 1, then 2, etc.
+Note that you \emph{must} use indexes in order: first 1, then 2, etc.
 
 Options \KK{hline{i}} and \KK{vline{j}} are for setting some hlines and vlines, respectively.
 Their values are the same as options \K{hlines} and \K{vlines}:
@@ -658,7 +658,7 @@ $\begin{tblr}{
 \hline
 \end{tblr}$
 \end{demohigh}
-Note that you \textcolor{red3}{cannot} write multiline math directly (such as \TT{\alpha\ \\\\ \beta})
+Note that you \emph{can not} write multiline math directly (such as \TT{\alpha\ \\\\ \beta})
 in any math-mode cell.
 
 The following example demonstrates the usages of

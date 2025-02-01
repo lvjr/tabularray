@@ -12,7 +12,7 @@
 \label{chap:exp}
 
 \mywarning{The interfaces in this chapter
-(and other undocumented public interfaces even if mentioned in the changelog) should be seen as \textcolor{red3}{\bfseries experimental}
+(and other undocumented public interfaces even if mentioned in the changelog) should be seen as \emph{experimental}
 and are likely to change in future releases, if necessary. Don’t use them in important documents.}
 
 \section{Experimental public key paths}
@@ -125,7 +125,7 @@ In the above, \TT{BorderStyle}, \TT{BorderWidth}, \TT{BorderColor} are similar t
 
 You can define new child indexers with \CC{\NewTblrChildIndexer} command.
 As an example, the following is the simplified definition of \CI{Z} indexer:
-\begin{codehigh}
+\begin{codehigh}[language=latex/latex3]
 \ExplSyntaxOn
 \NewTblrChildIndexer {Z} [1] [1]
   {
@@ -135,11 +135,11 @@ As an example, the following is the simplified definition of \CI{Z} indexer:
 \end{codehigh}
 In the definition, you can use \CC{\lTblrChildTotalInt} which is the total number of children.
 And you only need to store the result index \fakeverb{<i>} in \CC{\lTblrChildIndexTl}.
-The name of an indexer \underline{MUST} consist of letters and start with an uppercase letter.
+The name of an indexer \emph{must} consist of letters and start with an uppercase letter.
 
 You can define new child selectors with \CC{\NewTblrChildSelector} command.
 As an example, the following is the simplified definition of \CI{odd} selector:
-\begin{codehigh}
+\begin{codehigh}[language=latex/latex3]
 \ExplSyntaxOn
 \NewTblrChildSelector {odd} [1] [1]
   {
@@ -151,7 +151,7 @@ In the definition, you can use \CC{\lTblrChildTotalInt} which is the total numbe
 And you only need to store the result indexes in \CC{\lTblrChildClist}.
 When some indexes form an arithmetic sequence,
 you can simplify them as \fakeverb{{<start>}{<step>}{<end>}}.
-The name of a selector \underline{MUST} consist of letters and start with a lowercase letter.
+The name of a selector \emph{must} consist of letters and start with a lowercase letter.
 
 \subsection{Two dimensional indexers and selectors}
 
@@ -175,7 +175,7 @@ In version 2025A, \PP{tabularray} borrows ideas of ids and classes from HTML/CSS
 With table command \CC{\SetChild}, you can mark a hborder/vborder/row/column/cell with
 an id or class, and use it in inner specifications.
 
-The \CC{\SetChild} command accepts a key-value input:
+The \CC{\SetChild} command accepts key-value input:
 \begin{spectblr}[
   caption = {Key-value input in \fakeverb{\\SetChild} command} %FIXME
 ]{}
@@ -234,16 +234,14 @@ They can be replaced with \fakeverb{\\\\\SetRow{belowsep+=<dimen>}}
 and \fakeverb{\\\\\nopagebreak} respectively,
 so that \CC{\SetChild} can be inserted in the middle:
 \begin{demohigh}
-\begin{tblr}{
-  cell{Foo,Bar,Baz,Qux} = {cmd=\fbox}
-}
-\SetChild{id=Foo}\hline
+\begin{tblr}{cell{Foo,Bar} = {fg=red3}}
+\hline
   1 & 2 & 3 & 4 & 5 & 6 & 7 \\
-\SetChild{id=Bar}\nopagebreak\hline
+\SetChild{id=Foo}\SetRow{belowsep+=5pt}\hline
   2 & 2 & 3 & 4 & 5 & 6 & 7 \\
-\SetChild{id=Baz}\SetRow{belowsep+=5pt}\hline
+\SetChild{id=Bar}\nopagebreak\hline
   3 & 2 & 3 & 4 & 5 & 6 & 7 \\
-\SetChild{id=Qux}\hline
+\hline
 \end{tblr}
 \end{demohigh}
 
