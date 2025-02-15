@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Add experimental public variable `\lTblrTablePageInt` ([#29], [#197])
 - Add experimental public variable `\lTblrRowFirstInt` ([#29], [#197])
 - Add experimental public variable `\lTblrRowLastInt` ([#29], [#197])
+- Add experimental public variable `\lTblrCellBreakBool` ([#442])
 - Add `\NewTblrChildIndexer` for selecting a child index ([#578])
 - Allow mixing child indexes, indexers, and selectors ([#577])
 - Add support for selecting cells with two dimensional indexes ([#381])
@@ -49,14 +50,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Recognize spaces between `\\` and `*` or `[<length>]` ([#526])
 - Keep braces when splitting table body to cells ([#501])
 - Keep braces when extracting table commands from cells ([#501])
-- Optimize internal structure of child index lists ([#575])
 - Make `measure` setting apply to subtables in `varwidth` library
 - Set `measure=vbox` as default in `varwidth` library ([#540])
 - Make `hook` library depend on `varwidth` library ([#179])
 - Set `measure=vstore` as default in `hook` library ([#179])
+- Forbid page breaks in the middle of multirow cells ([#442])
 - Rename all key paths and add `tabularray` prefix to them ([#547])
 - Raise an error for using an undefined template in `\SetTblrTemplate` ([#517])
 - Replace `x`-type expansions with `e`-type expansions ([#560])
+- Optimize internal structure of child index lists ([#575])
 - Make local definitions for child selectors ([#381])
 - Make indexer `Z` accept an optional argument for a negative index ([#509], [#578])
 - Ensure the converted index of `U`/`V`/`W`/`X`/`Y`/`Z` is positive ([#385], [#578])
@@ -385,6 +387,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#381]: https://github.com/lvjr/tabularray/issues/381
 [#385]: https://github.com/lvjr/tabularray/pull/385
 [#421]: https://github.com/lvjr/tabularray/issues/421
+[#442]: https://github.com/lvjr/tabularray/issues/442
 [#443]: https://github.com/lvjr/tabularray/pull/443
 [#445]: https://github.com/lvjr/tabularray/issues/445
 [#469]: https://github.com/lvjr/tabularray/issues/469

@@ -85,6 +85,7 @@
 | `long-008` | long tables and first and last hlines in subtables |
 | `long-009` | long tables and positive `\parskip` |
 | `long-010` | long tables and `label=none` option |
+| `long-011` | forbid page breaks inside multirow cells (#442) |
 
 # Test files for rows and columns
 

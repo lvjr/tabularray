@@ -2701,6 +2701,9 @@
   }
 \cs_generate_variant:Nn \__tblr_cell_unknown_key:n { V }
 
+%% Whether to allow page breaks in the middle of multirow cells
+\bool_new:N \lTblrCellBreakBool
+
 \cs_new_protected:Npn \__tblr_set_span_spec:nn #1 #2
   {
     \int_compare:nNnT { #1 } > { 1 }
@@ -2718,6 +2721,12 @@
     \int_step_variable:nnNn
       { \int_use:N \c@rownum } { \int_eval:n { \c@rownum + #1 - 1 } } \l__tblr_i_tl
       {
+        \bool_lazy_and:nnT
+          { ! \lTblrCellBreakBool }
+          { \int_compare_p:nNn {\l__tblr_i_tl} > {\c@rownum} }
+          {
+            \__tblr_spec_gput:nen {hline} { [\l__tblr_i_tl] / @pagebreak } {-1}
+          }
         \int_step_variable:nnNn
           { \int_use:N \c@colnum } { \int_eval:n { \c@colnum + #2 - 1 } }
           \l__tblr_j_tl

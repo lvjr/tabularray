@@ -1,0 +1,54 @@
+%  -*- coding: utf-8 -*-
+\documentclass[12pt]{article}
+
+\input{regression-test}
+\geometry{a6paper,margin=15mm}
+
+\begin{document}
+
+\START
+
+\BEGINTEST{forbid page breaks in the middle of multirow cells} % issue #442
+\begin{longtblr}[caption=Title]{
+  hlines,
+  colspec = {Q[1cm]Q[1cm]Q[1cm]Q[1cm]},
+  rows = {ht=1.2cm},
+  cell{6}{1} = {r=3}{}
+}
+   1 &  1  &  1  &  1 \\
+   2 &  2  &  2  &  2 \\
+   3 &  3  &  3  &  3 \\
+   4 &  4  &  4  &  4 \\
+   5 &  5  &  5  &  5 \\
+   6 &  6  &  6  &  6 \\
+   7 &  7  &  7  &  7 \\
+   8 &  8  &  8  &  8 \\
+   9 &  9  &  9  &  9 \\
+   0 &  0  &  0  &  0
+\end{longtblr}
+\ENDTEST
+
+\UseName{bool_set_true:N}\lTblrCellBreakBool
+\newpage
+
+\BEGINTEST{allow page breaks in the middle of multirow cells} % issue #442
+\begin{longtblr}[caption=Title]{
+  hlines,
+  colspec = {Q[1cm]Q[1cm]Q[1cm]Q[1cm]},
+  rows = {ht=1.2cm},
+  cell{6}{1} = {r=3}{}
+}
+   1 &  1  &  1  &  1 \\
+   2 &  2  &  2  &  2 \\
+   3 &  3  &  3  &  3 \\
+   4 &  4  &  4  &  4 \\
+   5 &  5  &  5  &  5 \\
+   6 &  6  &  6  &  6 \\
+   7 &  7  &  7  &  7 \\
+   8 &  8  &  8  &  8 \\
+   9 &  9  &  9  &  9 \\
+   0 &  0  &  0  &  0
+\end{longtblr}
+\ENDTEST
+
+\end{document}
