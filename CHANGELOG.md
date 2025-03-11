@@ -1,7 +1,7 @@
 All notable changes to this package will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com).
 
-# [Unreleased]
+# [v2025A] - 2025-03-11
 
 ## Added
 
