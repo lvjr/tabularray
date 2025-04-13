@@ -3,7 +3,6 @@
 ```
 Caption     : Typeset tabulars and arrays with LaTeX3
 Author      : Jianrui Lyu <tolvjr@163.com>
-Collaborator: Yukai Chou <muzimuzhi@gmail.com>
 CTAN Page   : https://ctan.org/pkg/tabularray
 Repository  : https://github.com/lvjr/tabularray
 Repository  : https://bitbucket.org/lvjr/tabularray
@@ -32,12 +31,13 @@ and put it into the folder of your TeX documents.
 If you want to make a contribution to `tabularray` package, you can get necessary informations from [CONTRIBUTING.md](https://github.com/lvjr/tabularray/blob/main/CONTRIBUTING.md) file.
 The following are all contributors to the package:
 
-  - [dbitouze](https://github.com/lvjr/tabularray/commits?author=dbitouze) (Denis Bitouzé)
-  - [IsaacOscar](https://github.com/lvjr/tabularray/commits?author=IsaacOscar) (Isaac Oscar Gariano)
-  - [jasperhabicht](https://github.com/lvjr/tabularray/commits?author=jasperhabicht) (Jasper Habicht)
-  - [krlmlr](https://github.com/lvjr/tabularray/commits?author=krlmlr) (Kirill Müller)
-  - [mbertucci47](https://github.com/lvjr/tabularray/commits?author=mbertucci47) (Matthew Bertucci)
-  - [pkl97](https://github.com/lvjr/tabularray/commits?author=pkl97)
-  - [qinglee](https://github.com/lvjr/tabularray/commits?author=qinglee) (Qing Lee)
-  - [SainoNamkho](https://github.com/lvjr/tabularray/commits?author=SainoNamkho)
-  - [Yodude2002](https://github.com/lvjr/tabularray/commits?author=Yodude2002)
+- [dbitouze](https://github.com/lvjr/tabularray/commits?author=dbitouze) (Denis Bitouzé)
+- [IsaacOscar](https://github.com/lvjr/tabularray/commits?author=IsaacOscar) (Isaac Oscar Gariano)
+- [jasperhabicht](https://github.com/lvjr/tabularray/commits?author=jasperhabicht) (Jasper Habicht)
+- [krlmlr](https://github.com/lvjr/tabularray/commits?author=krlmlr) (Kirill Müller)
+- [mbertucci47](https://github.com/lvjr/tabularray/commits?author=mbertucci47) (Matthew Bertucci)
+- [muzimuzhi](https://github.com/lvjr/tabularray/commits?author=muzimuzhi) (Yukai Chou)
+- [pkl97](https://github.com/lvjr/tabularray/commits?author=pkl97)
+- [qinglee](https://github.com/lvjr/tabularray/commits?author=qinglee) (Qing Lee)
+- [SainoNamkho](https://github.com/lvjr/tabularray/commits?author=SainoNamkho)
+- [Yodude2002](https://github.com/lvjr/tabularray/commits?author=Yodude2002)
