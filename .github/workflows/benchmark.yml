@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install TeX Live
-      uses: teatimeguest/setup-texlive-action@v3
+      uses: TeX-Live/setup-texlive-action@v3
       with:
         version: ${{matrix.version}}
         package-file: .github/workflows/texlive-package.txt
