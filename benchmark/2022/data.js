@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745240625215,
+  "lastUpdate": 1751854445047,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2022": [
@@ -6048,6 +6048,48 @@ window.BENCHMARK_DATA = {
             "value": 0.37755958118664,
             "unit": "ratio",
             "extra": "current time : previous time = 2.1665344238281 : 5.7382583618164"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "45ba8853b252cea3de92734836077bcc57f9c591",
+          "message": "Merge pull request #608 from muzimuzhi/reroute-action\n\nUpdate action `teatimeguest/setup-texlive-action@v3`",
+          "timestamp": "2025-07-07T10:10:47+08:00",
+          "tree_id": "74e5f3497123e4e2f987dc3405f7315af18c5a66",
+          "url": "https://github.com/lvjr/tabularray/commit/45ba8853b252cea3de92734836077bcc57f9c591"
+        },
+        "date": 1751854444342,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.347452252133,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.6822547912598 : 4.8416862487793"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.35600136306648,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.7016983032227 : 4.7800331115723"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.38086569363329,
+            "unit": "ratio",
+            "extra": "current time : previous time = 2.1772155761719 : 5.7164916992188"
           }
         ]
       }
