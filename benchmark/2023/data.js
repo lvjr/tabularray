@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745240637507,
+  "lastUpdate": 1751854428654,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2023": [
@@ -6132,6 +6132,48 @@ window.BENCHMARK_DATA = {
             "value": 0.2761611218328,
             "unit": "ratio",
             "extra": "current time : previous time = 1.5322494506836 : 5.5483894348145"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "45ba8853b252cea3de92734836077bcc57f9c591",
+          "message": "Merge pull request #608 from muzimuzhi/reroute-action\n\nUpdate action `teatimeguest/setup-texlive-action@v3`",
+          "timestamp": "2025-07-07T10:10:47+08:00",
+          "tree_id": "74e5f3497123e4e2f987dc3405f7315af18c5a66",
+          "url": "https://github.com/lvjr/tabularray/commit/45ba8853b252cea3de92734836077bcc57f9c591"
+        },
+        "date": 1751854427626,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.21694260865666,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.0335807800293 : 4.7643051147461"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.22044983612719,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.0381469726562 : 4.7092208862305"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.28046727127048,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.5663185119629 : 5.5846748352051"
           }
         ]
       }
