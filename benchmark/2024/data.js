@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745240621844,
+  "lastUpdate": 1751854455130,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -6132,6 +6132,48 @@ window.BENCHMARK_DATA = {
             "value": 0.27297008183038,
             "unit": "ratio",
             "extra": "current time : previous time = 1.5282821655273 : 5.5987167358398"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "45ba8853b252cea3de92734836077bcc57f9c591",
+          "message": "Merge pull request #608 from muzimuzhi/reroute-action\n\nUpdate action `teatimeguest/setup-texlive-action@v3`",
+          "timestamp": "2025-07-07T10:10:47+08:00",
+          "tree_id": "74e5f3497123e4e2f987dc3405f7315af18c5a66",
+          "url": "https://github.com/lvjr/tabularray/commit/45ba8853b252cea3de92734836077bcc57f9c591"
+        },
+        "date": 1751854454715,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.21109408658861,
+            "unit": "ratio",
+            "extra": "current time : previous time = 0.95808792114258 : 4.5386772155762"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.21108530326303,
+            "unit": "ratio",
+            "extra": "current time : previous time = 0.98871994018555 : 4.6839828491211"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.27811697641612,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.5425071716309 : 5.5462532043457"
           }
         ]
       }
