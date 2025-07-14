@@ -1,0 +1,17 @@
+\documentclass{article}
+\usepackage{tabularray}
+\usepackage{tabularray-structure}
+\begin{document}
+\begin{tblr}{
+  hlines, vlines,
+  cell{1}{1} = {r=2}{},
+  cell{1}{2} = {c=2}{},
+  cell{1}{4} = {r=2,c=2}{},
+}
+  alpha  & beta & gamma & delta & epsilon \\
+  zeta   & eta  & theta & iota  & kappa   \\
+  lambda & mu   & nu    & xi    & omicron \\
+  pi     & rho  & sigma & tau   & upsilon \\
+  phi    & chi  & psi   & omega & alpha
+\end{tblr}
+\end{document}

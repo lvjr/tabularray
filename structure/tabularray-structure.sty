@@ -1,0 +1,155 @@
+
+\ProvidesExplPackage{tabularray-structure}{2025-07-14}{2025@}{tabularray structure}
+
+\RequirePackage{tabularray}
+\UseTblrLibrary{hook,html}
+
+\prg_generate_conditional_variant:Nnn \clist_if_in:nn { ee } { TF }
+
+\bool_new:N \l_struct_output_bool
+\bool_set_true:N \l_struct_output_bool
+
+\tl_new:N \l_struct_property_tl
+
+\AddToHook { tabularray/trial/before }
+  {
+    \bool_set_false:N \l_struct_output_bool
+  }
+\AddToHook { tabularray/trial/after }
+  {
+    \bool_set_true:N \l_struct_output_bool
+  }
+
+\AddToHook { tabularray/table/before }
+  {
+    \struct_begin:nn {table} { ~ border="1" }
+  }
+\AddToHook { tabularray/table/after }
+  {
+    \struct_end:n {table}
+  }
+
+\AddToHook { tabularray/row/before }
+  {
+    \struct_begin:nn {tr} {}
+  }
+\AddToHook { tabularray/row/after }
+  {
+    \struct_end:n {tr}
+  }
+
+\str_new:N \l_struct_current_str
+
+\AddToHook { tabularray/cell/before }
+  {
+    \bool_if:NF \lTblrCellOmittedBool
+      {
+        \tl_clear:N \l_struct_property_tl
+        \int_compare:nNnT \lTblrCellRowSpanInt > {1}
+          {
+            \tl_put_right:Ne \l_struct_property_tl
+              { ~ rowspan = "\int_use:N \lTblrCellRowSpanInt" }
+          }
+        \int_compare:nNnT \lTblrCellColSpanInt > {1}
+          {
+            \tl_put_right:Ne \l_struct_property_tl
+              { ~ colspan = "\int_use:N \lTblrCellColSpanInt" }
+          }
+        \clist_if_in:eeTF { \ExpTblrChildClass {rowheadh} } { \int_use:N \c@rownum }
+          {
+            \str_set:Nn \l_struct_current_str {th}
+            \tl_put_right:Nn \l_struct_property_tl { ~ scope="col" }
+          }
+          {
+            \clist_if_in:eeTF { \ExpTblrChildClass {colheadv} } { \int_use:N \c@colnum }
+              {
+                \str_set:Nn \l_struct_current_str {th}
+                \tl_put_right:Nn \l_struct_property_tl { ~ scope="row" }
+              }
+              {
+                \str_set:Nn \l_struct_current_str {td}
+              }
+          }
+          \struct_begin:VV \l_struct_current_str \l_struct_property_tl
+        \struct_text:e
+          { \__tblr_spec_item:ne { text } { [\the\c@rownum][\the\c@colnum] } }
+      }
+  }
+\AddToHook{ tabularray/cell/after }
+  {
+    \bool_if:NF \lTblrCellOmittedBool
+      {
+        \struct_end:V \l_struct_current_str
+      }
+  }
+
+\tl_new:N \g_struct_output_tl
+\int_new:N \g_struct_indent_int
+
+\cs_new_protected:Npn \struct_begin:nn #1 #2
+  {
+    \bool_if:NT \l_struct_output_bool
+      {
+        \tl_gput_right:Ne \g_struct_output_tl
+          {
+            \prg_replicate:nn { 2 * \g_struct_indent_int } {~}
+            <#1#2> ^^J
+          }
+        \int_gincr:N \g_struct_indent_int
+      }
+  }
+\cs_generate_variant:Nn \struct_begin:nn {nV,VV}
+
+\cs_new_protected:Npn \struct_end:n #1
+  {
+    \bool_if:NT \l_struct_output_bool
+      {
+        \int_gdecr:N \g_struct_indent_int
+        \tl_gput_right:Ne \g_struct_output_tl
+          {
+            \prg_replicate:nn { 2 * \g_struct_indent_int } {~}
+            </#1> ^^J
+          }
+      }
+  }
+\cs_generate_variant:Nn \struct_end:n {V}
+
+\cs_new_protected:Npn \struct_text:n #1
+  {
+    \bool_if:NT \l_struct_output_bool
+      {
+        \tl_gput_right:Ne \g_struct_output_tl
+          {
+            \prg_replicate:nn { 2 * \g_struct_indent_int } {~}
+            #1 ^^J
+          }
+      }
+  }
+\cs_generate_variant:Nn \struct_text:n {e}
+
+\iow_new:N \l_struct_output_stream
+
+\tl_const:Nn \c_struct_ouptut_head_tl
+  {
+    <!DOCTYPE~html>^^J
+    <html~lang="en">^^J
+    <head><meta~charset="utf-8"><title>tabularray~structure</title></head>^^J
+    <body>^^J
+  }
+
+\tl_const:Nn \c_struct_ouptut_tail_tl
+  {
+    </body>^^J
+    </html>^^J
+  }
+
+\cs_new_protected:Npn \struct_output:
+  {
+    \iow_open:Nn \l_struct_output_stream { \jobname.htm }
+    \tl_put_left:NV \g_struct_output_tl \c_struct_ouptut_head_tl
+    \tl_put_right:NV \g_struct_output_tl \c_struct_ouptut_tail_tl
+    \iow_now:NV \l_struct_output_stream \g_struct_output_tl
+    \iow_close:N \l_struct_output_stream
+  }
+
+\AtEndDocument { \struct_output: }
