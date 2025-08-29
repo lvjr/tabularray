@@ -1,6 +1,12 @@
 All notable changes to this package will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com).
 
+# [v2025B] - 2025-08-29
+
+## Fixed
+
+- Stop creating `intarray` data when using property lists ([#618])
+
 # [v2025A] - 2025-03-11
 
 ## Added
@@ -419,8 +425,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 [#578]: https://github.com/lvjr/tabularray/issues/578
 [#579]: https://github.com/lvjr/tabularray/issues/579
 [#580]: https://github.com/lvjr/tabularray/issues/580
+[#618]: https://github.com/lvjr/tabularray/issues/618
 
-[Unreleased]: https://github.com/lvjr/tabularray/compare/2024A...HEAD
+[Unreleased]: https://github.com/lvjr/tabularray/compare/2025B...HEAD
+[v2025B]: https://github.com/lvjr/tabularray/compare/2025A...2025B
 [v2025A]: https://github.com/lvjr/tabularray/compare/2024A...2025A
 [v2024A]: https://github.com/lvjr/tabularray/compare/2023A...2024A
 [v2023A]: https://github.com/lvjr/tabularray/compare/2022D...2023A

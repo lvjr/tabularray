@@ -1,7 +1,7 @@
 % -*- coding: utf-8 -*-
 % !TEX program = lualatex
 \documentclass[oneside]{book}
-\newcommand*{\myversion}{2025A}
+\newcommand*{\myversion}{2025B}
 \newcommand*{\mylpad}[1]{\ifnum#1<10 0\the#1\else\the#1\fi}
 
 \usepackage[a4paper,margin=2.5cm]{geometry}
@@ -27,7 +27,7 @@
 
 \usepackage{codehigh} % https://ctan.org/pkg/codehigh
 \usepackage{array,multirow,amsmath}
-\usepackage{chemmacros,environ}
+\usepackage{environ}
 \usepackage{enumitem}
 
 \usepackage[firstpage=true]{background}
@@ -161,9 +161,8 @@
   Version    & \myversion\ (\the\year-\mylpad\month-\mylpad\day) \\
   Code       & \url{https://github.com/lvjr/tabularray} \\
   Code       & \url{https://bitbucket.org/lvjr/tabularray} \\
-  Support    & \url{https://github.com/lvjr/tabularray/discussions} \\
-  Support    & \url{https://topanswers.xyz/tex} \\
   Issue      & \url{https://github.com/lvjr/tabularray/issues} \\
+  Discussion & \url{https://github.com/lvjr/tabularray/discussions} \\
 \end{tblr}
 
 \begin{codehigh}[boxsep=4mm]
@@ -793,17 +792,15 @@ Now we show the usage of \K{text} key by the following example%
   vlines, hlines,
   colspec = {lX[c]X[c]X[c]X[c]},
   vline{2} = {1}{text=\clap{:}},
-  vline{3} = {1}{text=\clap{\ch{+}}},
-  vline{4} = {1}{text=\clap{\ch{->}}},
-  vline{5} = {1}{text=\clap{\ch{+}}},
+  vline{3} = {1}{text=\clap{$+$}},
+  vline{4} = {1}{text=\clap{$\longrightarrow$}},
+  vline{5} = {1}{text=\clap{$+$}},
 }
-  Equation & \ch{CH4} & \ch{2 O2} & \ch{CO2} & \ch{2 H2O} \\
-  Initial  & $n_1$    & $n_2$     & 0        & 0 \\
-  Final    & $n_1-x$  & $n_2-2x$  & $x$      & $2x$ \\
+  Equation & $CH_4$  & $2O_2$   & $CO_2$ & $2H_2O$ \\
+  Initial  & $n_1$   & $n_2$    & $0$    & $0$ \\
+  Final    & $n_1-x$ & $n_2-2x$ & $x$    & $2x$
 \end{tblr}
 \end{demohigh}
-
-You need to load \PP{chemmacros} package for the \CC{\ch} command.
 
 The \K{leftpos} and \K{rightpos} keys specify crossing or trimming positions for hlines.
 The possible values for them are decimal numbers between \V{-1} and \V{1}.

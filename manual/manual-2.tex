@@ -192,17 +192,15 @@ Now we show the usage of \K{text} key by the following example%
   vlines, hlines,
   colspec = {lX[c]X[c]X[c]X[c]},
   vline{2} = {1}{text=\clap{:}},
-  vline{3} = {1}{text=\clap{\ch{+}}},
-  vline{4} = {1}{text=\clap{\ch{->}}},
-  vline{5} = {1}{text=\clap{\ch{+}}},
+  vline{3} = {1}{text=\clap{$+$}},
+  vline{4} = {1}{text=\clap{$\longrightarrow$}},
+  vline{5} = {1}{text=\clap{$+$}},
 }
-  Equation & \ch{CH4} & \ch{2 O2} & \ch{CO2} & \ch{2 H2O} \\
-  Initial  & $n_1$    & $n_2$     & 0        & 0 \\
-  Final    & $n_1-x$  & $n_2-2x$  & $x$      & $2x$ \\
+  Equation & $CH_4$  & $2O_2$   & $CO_2$ & $2H_2O$ \\
+  Initial  & $n_1$   & $n_2$    & $0$    & $0$ \\
+  Final    & $n_1-x$ & $n_2-2x$ & $x$    & $2x$
 \end{tblr}
 \end{demohigh}
-
-You need to load \PP{chemmacros} package for the \CC{\ch} command.
 
 The \K{leftpos} and \K{rightpos} keys specify crossing or trimming positions for hlines.
 The possible values for them are decimal numbers between \V{-1} and \V{1}.
