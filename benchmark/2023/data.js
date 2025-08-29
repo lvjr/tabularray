@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753318351014,
+  "lastUpdate": 1756465272596,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2023": [
@@ -6216,6 +6216,48 @@ window.BENCHMARK_DATA = {
             "value": 0.27437899565994,
             "unit": "ratio",
             "extra": "current time : previous time = 1.5427360534668 : 5.6226463317871"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "e4d1871d58bd96a00c22eb18ebbe7332ecfcc287",
+          "message": "stop creating intarray data when using property lists (#618)",
+          "timestamp": "2025-08-29T18:22:51+08:00",
+          "tree_id": "84e81ef2fd1837ebc72e051d3f9a501288421c53",
+          "url": "https://github.com/lvjr/tabularray/commit/e4d1871d58bd96a00c22eb18ebbe7332ecfcc287"
+        },
+        "date": 1756465271461,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.21362099490595,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.0199737548828 : 4.7746887207031"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.2143133674009,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.015739440918 : 4.7395057678223"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.27400361823767,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.529914855957 : 5.5835571289062"
           }
         ]
       }
