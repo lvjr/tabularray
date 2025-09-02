@@ -4712,10 +4712,14 @@
 %% or users may use it in the middle of the cell text,
 %% so we have redefine \color command and disable it before measuring cell.
 
+%% \mathcolor uses '\group_insert_after:N \use_none:n' to gobble \reset@color,
+%% so we need to insert a \scan_stop: for it. See issue #603
+
+\NewDocumentCommand \__tblr_fake_color_command:w { o m }
+  { \group_insert_after:N \scan_stop: }
+
 %% In order to correctly measure an enumerate environment,
 %% we need to enclose varwidth with NoHyper environment (see issue #196).
-
-\NewDocumentCommand \__tblr_fake_color_command:w { o m } { }
 
 \cs_new_protected:Npn \__tblr_get_cell_size_with_vbox:
   {
