@@ -35,10 +35,22 @@
 
 \AddToHook {package/xcolor/after} [tabularray] { \RequirePackage{ninecolors} }
 
+%% There is a hyperref bug that NoHyper environment could not be nested.
+%% See issue #620 and https://github.com/latex3/hyperref/issues/397
 \newenvironment{tblrNoHyper}{}{}
+\int_new:N \g__tblr_nohyper_int
 \AddToHook {package/hyperref/after} [tabularray]
-  { \renewenvironment{tblrNoHyper}{\NoHyper}{\endNoHyper} }
-
+  {
+    \renewenvironment{tblrNoHyper}
+      {
+        \int_compare:nNnT {\g__tblr_nohyper_int} = {0} {\begin{NoHyper}}
+        \int_gincr:N \g__tblr_nohyper_int
+      }
+      {
+        \int_gdecr:N \g__tblr_nohyper_int
+        \int_compare:nNnT {\g__tblr_nohyper_int} = {0} {\end{NoHyper}}
+      }
+  }
 \NewDocumentCommand \TblrParboxRestore { } { \@parboxrestore }
 
 \NewDocumentCommand \TblrAlignBoth { }
