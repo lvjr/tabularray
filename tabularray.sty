@@ -3737,6 +3737,7 @@
         { \int_compare_p:nNn {#1} = {\c@rowcount} }
         { \int_compare_p:nNn {\c@colnum} = {1} }
         { \tl_if_empty_p:N \l_tmpa_tl }
+        { \int_compare_p:nNn {\c@rowcount} > {1} } % at least one row (issue #326)
       }
       { \int_decr:N \c@rowcount }
       {
