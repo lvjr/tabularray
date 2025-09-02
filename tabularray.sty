@@ -3673,24 +3673,31 @@
   {
     \__tblr_seq_set_split_keep_braces_envs:NnV \l_tmpa_seq { \\ } #1
     \seq_clear:N #2
-    \seq_map_inline:Nn \l_tmpa_seq
+    \seq_pop_left:NNT \l_tmpa_seq \l__tblr_a_tl
       {
-        \tl_if_head_eq_meaning:nNTF {##1} *
+        %% skip detection for "*" and "[" for the 1st row (issue #598)
+        \seq_put_right:NV #2 \l__tblr_a_tl
+        %% apply normal detection for following rows
+        \seq_map_inline:Nn \l_tmpa_seq
           {
-            \tl_set:Nn \l__tblr_b_tl { \hborder { pagebreak = no } }
-            \tl_set:Ne \l__tblr_c_tl { \tl_tail:n {##1} }
-            \tl_trim_spaces:N \l__tblr_c_tl %% Ignore spaces between * and [dimen]
-            \tl_if_head_eq_meaning:VNT \l__tblr_c_tl [
+            \tl_if_head_eq_meaning:nNTF {##1} *
               {
-                \tl_put_right:Nn \l__tblr_b_tl { \RowBefore@AddBelowSep }
+                \tl_set:Nn \l__tblr_b_tl { \hborder { pagebreak = no } }
+                \tl_set:Ne \l__tblr_c_tl { \tl_tail:n {##1} }
+                %% Ignore spaces between * and [dimen]
+                \tl_trim_spaces:N \l__tblr_c_tl
+                \tl_if_head_eq_meaning:VNT \l__tblr_c_tl [
+                  {
+                    \tl_put_right:Nn \l__tblr_b_tl { \RowBefore@AddBelowSep }
+                  }
+                \tl_put_right:NV \l__tblr_b_tl \l__tblr_c_tl
+                \seq_put_right:NV #2 \l__tblr_b_tl
               }
-            \tl_put_right:NV \l__tblr_b_tl \l__tblr_c_tl
-            \seq_put_right:NV #2 \l__tblr_b_tl
-          }
-          {
-            \tl_if_head_eq_meaning:nNTF { ##1 } [
-              { \seq_put_right:Nn #2 { \RowBefore@AddBelowSep ##1 } }
-              { \seq_put_right:Nn #2 { ##1 } }
+              {
+                \tl_if_head_eq_meaning:nNTF { ##1 } [
+                  { \seq_put_right:Nn #2 { \RowBefore@AddBelowSep ##1 } }
+                  { \seq_put_right:Nn #2 { ##1 } }
+              }
           }
       }
     \int_set:Nn \c@rowcount { \seq_count:N #2 }
