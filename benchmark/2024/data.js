@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756786599846,
+  "lastUpdate": 1756787493295,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -6384,6 +6384,48 @@ window.BENCHMARK_DATA = {
             "value": 0.27716302572355,
             "unit": "ratio",
             "extra": "current time : previous time = 1.5780754089355 : 5.6936721801758"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "f4901dcdf7fe340175813cfdec3b5af9f70bf1d2",
+          "message": "Work around NoHyper bug in hyperref (#620, latex3/hyperref#397)",
+          "timestamp": "2025-09-02T12:29:06+08:00",
+          "tree_id": "1b8018913ae393c9ed3631e6c86d39add4f5ffe3",
+          "url": "https://github.com/lvjr/tabularray/commit/f4901dcdf7fe340175813cfdec3b5af9f70bf1d2"
+        },
+        "date": 1756787492211,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.21266281577667,
+            "unit": "ratio",
+            "extra": "current time : previous time = 0.98885726928711 : 4.6498832702637"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.21476003195428,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.0142402648926 : 4.7226676940918"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.27776902938143,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.5812873840332 : 5.692813873291"
           }
         ]
       }
