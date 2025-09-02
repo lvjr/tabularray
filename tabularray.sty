@@ -1371,7 +1371,7 @@
 \seq_new:N \l__child_spec_seq
 \tl_new:N \l__tblr_child_item_head_tl
 
-%% #1, str of child specifications; #2, total number of children.
+%% #1, tl of child specifications; #2, total number of children.
 %% The result will be put into \l__tblr_child_whole_clist
 \cs_new_protected:Npn \__tblr_child_parse:nn #1 #2
   {
@@ -1475,7 +1475,7 @@
 
 \clist_new:N \l__tblr_child_tuple_whole_clist
 
-%% #1, str of child tuple specifications; #2 and #3, total numbers of children.
+%% #1, tl of child tuple specifications; #2 and #3, total numbers of children.
 %% The result will be put into \l__tblr_child_tuple_whole_clist
 \cs_new_protected:Npn \__tblr_child_parse_tuple:nnn #1 #2 #3
   {
