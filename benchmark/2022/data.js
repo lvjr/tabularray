@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756816030408,
+  "lastUpdate": 1757251373354,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2022": [
@@ -6510,6 +6510,48 @@ window.BENCHMARK_DATA = {
             "value": 0.37768133452033,
             "unit": "ratio",
             "extra": "current time : previous time = 2.1750793457031 : 5.759033203125"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "69d32d1c1e7f5cc72251f58a24ad032cab1b6a71",
+          "message": "fix default horizontal alignment setting of longtblr (#611)",
+          "timestamp": "2025-09-07T21:19:57+08:00",
+          "tree_id": "e467bd779ac3b8579d8707c12fd6462c3745a8cb",
+          "url": "https://github.com/lvjr/tabularray/commit/69d32d1c1e7f5cc72251f58a24ad032cab1b6a71"
+        },
+        "date": 1757251372841,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.34489654539364,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.6769828796387 : 4.8622779846191"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.34786592675649,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.6770095825195 : 4.8208503723145"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.37770252103498,
+            "unit": "ratio",
+            "extra": "current time : previous time = 2.1864051818848 : 5.7886962890625"
           }
         ]
       }
