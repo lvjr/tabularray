@@ -3472,7 +3472,7 @@
 %% #1: env name
 \NewDocumentCommand \NewTblrEnviron { m }
   {
-    \NewDocumentEnvironment {#1} { O{c} m +b }
+    \NewDocumentEnvironment {#1} { O{} m +b }
       {
         \__tblr_environ_code:nnnn {#1} {##1} {##2} {##3}
       } { }
