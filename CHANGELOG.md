@@ -171,7 +171,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Make `\pagebreak` and `\nopagebreak` accept an optional argument (#259)
 - Restore table commands before building cells (#31)
 - Share `rownum` and `colnum` counters (#269, davidcarlisle/dpctex#33)
-- Replace TeXSE with TopAnswersTeX in support sites
 
 ## Fixed
 
@@ -179,8 +178,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Fix extra line breaks when cells begin or end with CJK punctuations (#145, #257)
 
 # [v2022B] - 2022-06-01
-
-**It is in Overleaf installation of [TeX Live 2022](https://www.overleaf.com/blog/tex-live-2022-now-available).**
 
 ## Added
 
@@ -313,8 +310,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com).
 - Fix empty table pages with only one row (#38)
 
 # [v2021L] - 2021-07-01
-
-**It is in Overleaf installation of [TeX Live 2021](https://www.overleaf.com/blog/tex-live-2021-now-available).**
 
 ## Added
 
