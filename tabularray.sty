@@ -4025,6 +4025,7 @@
     hspan .code:n = \__tblr_keys_gput:nn { hspan } {#1},
     vspan .code:n = \__tblr_keys_gput:nn { vspan } {#1},
     stretch .code:n = \__tblr_keys_gput:nn { stretch } {#1},
+    spread .code:n = \__tblr_keys_gput:nn { spread } {#1},
     columns .code:n = \__tblr_set_every_column_aux:n {#1},
     rows    .code:n = \__tblr_set_every_row_aux:n {#1},
     cells   .code:n = \__tblr_set_every_cell_aux:n {#1},
@@ -4993,6 +4994,7 @@
 
 \dim_new:N \l__tblr_column_target_dim
 \prop_new:N \l__tblr_column_coefficient_prop
+\prop_new:N \l__tblr_column_n_coefficient_prop
 \prop_new:N \l__tblr_column_natural_width_prop
 \prop_new:N \l__tblr_column_computed_width_prop
 
@@ -5023,6 +5025,7 @@
       { \dim_set_eq:NN \l__tblr_column_target_dim \linewidth }
       { \dim_set:Nn \l__tblr_column_target_dim { \l_tmpa_tl } }
     \prop_clear:N \l__tblr_column_coefficient_prop
+    \prop_clear:N \l__tblr_column_n_coefficient_prop
     \prop_clear:N \l__tblr_column_natural_width_prop
     \prop_clear:N \l__tblr_column_computed_width_prop
     \int_step_variable:nNn { \c@colcount } \l__tblr_j_tl
@@ -5085,7 +5088,12 @@
       { \dim_compare_p:nNn { \l__tblr_column_target_dim } > { \l__tblr_hfuzz_dim } }
       {
         \prop_if_empty:NTF \l__tblr_column_coefficient_prop
-          { \__tblr_adjust_extendable_column_width_negative: }
+          {
+            \str_if_eq:enTF
+              { \__tblr_prop_item:ne { inner } { spread } } { none }
+                { \dim_zero:N \l__tblr_column_target_dim }
+                { \__tblr_adjust_extendable_column_width_negative: }
+          }
           { \__tblr_adjust_extendable_column_width_once: }
       }
     \prop_map_inline:Nn \l__tblr_column_computed_width_prop
@@ -5136,6 +5144,7 @@
                 \dim_add:Nn \l__tblr_column_target_dim
                   { \l__tblr_a_tl + \l__tblr_c_tl - \l__tblr_b_tl }
                 \prop_remove:Nn \l__tblr_column_coefficient_prop { ##1 }
+                \prop_put:Nne \l__tblr_column_n_coefficient_prop { ##1 } { ##2 }
               }
               {
                 \__tblr_add_dimen_value:Nnn
@@ -5147,6 +5156,15 @@
   }
 
 \cs_new_protected:Npn \__tblr_adjust_extendable_column_width_negative:
+  {
+    \str_if_eq:enTF
+      { \__tblr_prop_item:ne { inner } { spread } } { coeff }
+        { \__tblr_adjust_extendable_column_width_coeff: }
+        { \__tblr_adjust_extendable_column_width_natural: }
+    \LogTblrTracing { target }
+  }
+
+\cs_new_protected:Npn \__tblr_adjust_extendable_column_width_natural:
   {
     \dim_zero:N \l_tmpa_dim
     \prop_map_inline:Nn \l__tblr_column_natural_width_prop
@@ -5160,7 +5178,25 @@
         \__tblr_add_dimen_value:Nnn
           \l__tblr_column_computed_width_prop { ##1 } { \l_tmpb_tl }
       }
-    \LogTblrTracing { target }
+  }
+
+\cs_new_protected:Npn \__tblr_adjust_extendable_column_width_coeff:
+  {
+    \dim_zero:N \l_tmpa_dim
+    \prop_map_inline:Nn \l__tblr_column_n_coefficient_prop
+      {
+        \dim_add:Nn \l_tmpa_dim { \dim_abs:n { ##2 pt } }
+      }
+    \tl_set:Ne \l__tblr_w_tl
+      { \dim_ratio:nn { \l__tblr_column_target_dim } { \l_tmpa_dim } }
+    \dim_zero:N \l__tblr_column_target_dim
+    \prop_map_inline:Nn \l__tblr_column_n_coefficient_prop
+      {
+        \tl_set:Ne \l__tblr_a_tl
+          { \dim_eval:n { \dim_abs:n { ##2 pt } * \l__tblr_w_tl } }
+        \__tblr_add_dimen_value:Nnn
+          \l__tblr_column_computed_width_prop { ##1 } { \l__tblr_a_tl }
+      }
   }
 
 %%% --------------------------------------------------------
