@@ -28,7 +28,7 @@ To make the upcoming releases more stable, you are very welcome to test the late
 To test it, you only need to download [`tabularray.sty`](https://github.com/lvjr/tabularray/raw/main/tabularray.sty)
 and put it into the folder of your TeX documents.
 
-If you want to make a contribution to `tabularray` package, you can get necessary informations from [CONTRIBUTING.md](https://github.com/lvjr/tabularray/blob/main/CONTRIBUTING.md) file.
+If you want to make a contribution to `tabularray` package, you can get necessary information from [CONTRIBUTING.md](https://github.com/lvjr/tabularray/blob/main/CONTRIBUTING.md) file.
 The following are all contributors to the package:
 
 - [dbitouze](https://github.com/lvjr/tabularray/commits?author=dbitouze) (Denis Bitouzé)

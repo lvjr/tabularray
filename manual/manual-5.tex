@@ -641,9 +641,9 @@ Inside \EE{tblrtikzbelow}/\EE{tblrtikzabove} environment, you can use these pred
   Node Name &  Node Description \\
   table node \NN{table}  & rectangle node for the whole table \\
   cell node \NN{<i>-<j>} & rectangle node for \KK{cell{<i>}{<j>}} \\
-  corner node \NN{h<i>}  & coordinate node at the instersection point
+  corner node \NN{h<i>}  & coordinate node at the intersection point
                            of \KK{hborder{<i>}} and \KK{vborder{1}} \\
-  corner node \NN{v<j>}  & coordinate node at the instersection point
+  corner node \NN{v<j>}  & coordinate node at the intersection point
                            of \KK{vborder{<j>}} and \KK{hborder{1}}
 \end{spectblr}
 
@@ -685,11 +685,11 @@ The second example below demonstrates corner nodes:
 \end{demohigh}
 
 By \PP{tikz} intersection syntax, \fakeverb{h<i>-|v<j>} is
-the instersection point of \KK{horder{<i>}} and \KK{vborder{<j>}}.
+the intersection point of \KK{hborder{<i>}} and \KK{vborder{<j>}}.
 
 It is rather complicated to add full support for drawing \PP{tikz} pictures on long tables.
 At present, the support is limited: only cell nodes are available for multi-page long tables.
-In writng drawing code,
+In writing drawing code,
 users are responsible for making sure the elements to draw are actually in current page table.
 These public variables might come in handy: \CC{\lTblrRowHeadInt}, \CC{\lTblrRowFootInt},
 \CC{\lTblrTablePageInt}, \CC{\lTblrRowFirstInt}, \CC{\lTblrRowLastInt}
