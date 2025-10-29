@@ -8031,8 +8031,11 @@
 
 \cs_new_protected:Npn \__tblr_log_tracing_page:
   {
-    \dim_log:N \pagegoal
-    \dim_log:N \pagetotal
+    \tl_log:e
+      {
+        \token_to_str:N \pagegoal = \dim_use:N \pagegoal , ~
+        \token_to_str:N \pagetotal = \dim_use:N \pagetotal
+      }
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_step:n #1
