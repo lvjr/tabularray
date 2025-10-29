@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761721865716,
+  "lastUpdate": 1761722498639,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -6720,6 +6720,48 @@ window.BENCHMARK_DATA = {
             "value": 0.27727732377848,
             "unit": "ratio",
             "extra": "current time : previous time = 1.5710639953613 : 5.6660385131836"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c0b31a462d8188639a0aa278aeb69aa1f053c2ec",
+          "message": "Merge pull request #626 from muzimuzhi/typos\n\nCorrect typos",
+          "timestamp": "2025-10-29T15:19:41+08:00",
+          "tree_id": "bc90bfba75d7e8d887a2d1859ae2910deca96fef",
+          "url": "https://github.com/lvjr/tabularray/commit/c0b31a462d8188639a0aa278aeb69aa1f053c2ec"
+        },
+        "date": 1761722497428,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.20843772845675,
+            "unit": "ratio",
+            "extra": "current time : previous time = 0.89620971679688 : 4.2996520996094"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.2100177004351,
+            "unit": "ratio",
+            "extra": "current time : previous time = 0.92379379272461 : 4.3986473083496"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.27304383325977,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.3828239440918 : 5.0644760131836"
           }
         ]
       }
