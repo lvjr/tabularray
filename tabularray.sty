@@ -6781,19 +6781,22 @@
   }
 \cs_generate_variant:Nn \__tblr_build_page_table:nnn { nee }
 
+\dim_new:N \l__tblr_cover_box_a_dim
+\dim_new:N \l__tblr_cover_box_b_dim
+
 %% To solve the problem of missing hlines of long tables in some PDF readers,
 %% We need to draw body rows before head rows (see issue #88).
 \cs_new_protected:Npn \__tblr_cover_two_vboxes:NN #1 #2
   {
-    \dim_set:Nn \l_tmpa_dim { \box_ht:N #1 + \box_dp:N #1 }
-    \dim_set:Nn \l_tmpb_dim { \box_ht:N #2 + \box_dp:N #2 }
-    \skip_vertical:N \l_tmpa_dim
+    \dim_set:Nn \l__tblr_cover_box_a_dim { \box_ht:N #1 + \box_dp:N #1 }
+    \dim_set:Nn \l__tblr_cover_box_b_dim { \box_ht:N #2 + \box_dp:N #2 }
+    \skip_vertical:N \l__tblr_cover_box_a_dim
     \hrule height ~ 0pt
     \box_use:N #2
-    \skip_vertical:n { - \l_tmpa_dim - \l_tmpb_dim }
+    \skip_vertical:n { - \l__tblr_cover_box_a_dim - \l__tblr_cover_box_b_dim }
     \hrule height ~ 0pt
     \box_use:N #1
-    \skip_vertical:N \l_tmpb_dim
+    \skip_vertical:N \l__tblr_cover_box_b_dim
     \hrule height ~ 0pt
   }
 
