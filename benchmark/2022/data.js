@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761720689885,
+  "lastUpdate": 1761721869930,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2022": [
@@ -6594,6 +6594,48 @@ window.BENCHMARK_DATA = {
             "value": 0.37956426837995,
             "unit": "ratio",
             "extra": "current time : previous time = 2.1711616516113 : 5.720142364502"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "1c8e0709136f84776c45fceb87a7aebef61f46c5",
+          "message": "run \"sudo apt-get update\" before installing poppler",
+          "timestamp": "2025-10-29T15:08:05+08:00",
+          "tree_id": "e9966bdb24198a743843b87df941e2f3dc02282f",
+          "url": "https://github.com/lvjr/tabularray/commit/1c8e0709136f84776c45fceb87a7aebef61f46c5"
+        },
+        "date": 1761721869420,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.34450385152292,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.6898422241211 : 4.9051475524902"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.34904576397907,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.6918754577637 : 4.8471450805664"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.38225352500858,
+            "unit": "ratio",
+            "extra": "current time : previous time = 2.2221183776855 : 5.8132057189941"
           }
         ]
       }
