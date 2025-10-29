@@ -6557,6 +6557,8 @@
   }
 
 \dim_new:N \l__tblr_remain_height_dim
+\dim_new:N \l__tblr_next_rows_dim
+\dim_new:N \l__tblr_page_overfill_dim
 \int_new:N \l__tblr_long_from_int
 \int_new:N \l__tblr_long_to_int
 \int_new:N \l__tblr_curr_i_int
@@ -6596,9 +6598,11 @@
         \int_set_eq:NN \l__tblr_prev_i_int \l__tblr_curr_i_int
         \__tblr_get_next_table_rows:NNNN
           \l__tblr_long_to_int \l__tblr_curr_i_int
-          \l_tmpa_dim \l__tblr_page_break_curr_bool
+          \l__tblr_next_rows_dim \l__tblr_page_break_curr_bool
         \__tblr_check_table_page_break:NNN
-          \l__tblr_remain_height_dim \l_tmpa_dim \l__tblr_page_break_prev_bool
+          \l__tblr_remain_height_dim
+          \l__tblr_next_rows_dim
+          \l__tblr_page_break_prev_bool
         \__tblr_do_if_tracing:nn { page } { \int_log:N \l__tblr_curr_i_int }
         \bool_if:NTF \l__tblr_page_break_prev_bool
           {
@@ -6611,16 +6615,16 @@
                 % In these cases, we will not typeset table in this page,
                 % but rather force a page break.
                 \group_begin:
-                  \dim_set:Nn \l_tmpb_dim
+                  \dim_set:Nn \l__tblr_page_overfill_dim
                     {
                       % Enough to overfill the page (including shrink).
-                      \pagegoal - \pagetotal + \l_tmpa_dim
+                      \pagegoal - \pagetotal + \l__tblr_next_rows_dim
                       + \__tblr_box_height:N \l__tblr_table_firsthead_box
                       + \__tblr_box_height:N \l__tblr_table_firstfoot_box
                     }
-                  \skip_vertical:n { \l_tmpb_dim }
+                  \skip_vertical:n { \l__tblr_page_overfill_dim }
                   \tex_penalty:D 9999
-                  \skip_vertical:n { -\l_tmpb_dim }
+                  \skip_vertical:n { -\l__tblr_page_overfill_dim }
                 \group_end:
               }
               {
@@ -6635,7 +6639,10 @@
             \noindent
             \LogTblrTracing { page }
             \dim_set:Nn \l__tblr_remain_height_dim
-              { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim - \l_tmpa_dim }
+              {
+                \pagegoal - \pagetotal
+                - \l__tblr_row_head_foot_dim - \l__tblr_next_rows_dim
+              }
           }
           {
             \bool_if:NTF \l__tblr_page_break_curr_bool
@@ -6652,7 +6659,9 @@
                   { \pagegoal - \pagetotal - \l__tblr_row_head_foot_dim }
                 \int_set:Nn \l__tblr_long_from_int { \l__tblr_curr_i_int + 1 }
               }
-              { \dim_add:Nn \l__tblr_remain_height_dim { -\l_tmpa_dim } }
+              {
+                \dim_add:Nn \l__tblr_remain_height_dim { -\l__tblr_next_rows_dim }
+              }
           }
       }
     \int_compare:nNnTF { \lTblrTablePageInt } = {1}
