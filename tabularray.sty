@@ -6614,18 +6614,16 @@
                 % or after adding rowhead or rowfoot of the table.
                 % In these cases, we will not typeset table in this page,
                 % but rather force a page break.
-                \group_begin:
-                  \dim_set:Nn \l__tblr_page_overfill_dim
-                    {
-                      % Enough to overfill the page (including shrink).
-                      \pagegoal - \pagetotal + \l__tblr_next_rows_dim
-                      + \__tblr_box_height:N \l__tblr_table_firsthead_box
-                      + \__tblr_box_height:N \l__tblr_table_firstfoot_box
-                    }
-                  \skip_vertical:n { \l__tblr_page_overfill_dim }
-                  \tex_penalty:D 9999
-                  \skip_vertical:n { -\l__tblr_page_overfill_dim }
-                \group_end:
+                \dim_set:Nn \l__tblr_page_overfill_dim
+                  {
+                    % Issue #361: enough to overfill the page (including shrink).
+                    \pagegoal - \pagetotal + \l__tblr_next_rows_dim
+                    + \__tblr_box_height:N \l__tblr_table_firsthead_box
+                    + \__tblr_box_height:N \l__tblr_table_firstfoot_box
+                  }
+                \skip_vertical:n { \l__tblr_page_overfill_dim }
+                \tex_penalty:D 9999
+                \skip_vertical:n { -\l__tblr_page_overfill_dim }
               }
               {
                 \__tblr_build_page_table:nee {#1}
