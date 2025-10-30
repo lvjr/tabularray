@@ -6616,10 +6616,8 @@
                 % but rather force a page break.
                 \dim_set:Nn \l__tblr_page_overfill_dim
                   {
-                    % Issue #361: enough to overfill the page (including shrink).
-                    \pagegoal - \pagetotal + \l__tblr_next_rows_dim
-                    + \__tblr_box_height:N \l__tblr_table_firsthead_box
-                    + \__tblr_box_height:N \l__tblr_table_firstfoot_box
+                    % Issue #361 and #536: overfill the page (including shrink).
+                    \pagegoal - \pagetotal + \pageshrink + 1sp
                   }
                 \skip_vertical:n { \l__tblr_page_overfill_dim }
                 \tex_penalty:D 9999
