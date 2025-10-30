@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761827660050,
+  "lastUpdate": 1761827845740,
   "repoUrl": "https://github.com/lvjr/tabularray",
   "entries": {
     "Tabularray Benchmark in TeX Live 2024": [
@@ -6930,6 +6930,48 @@ window.BENCHMARK_DATA = {
             "value": 0.28138110604383,
             "unit": "ratio",
             "extra": "current time : previous time = 1.6225891113281 : 5.7665176391602"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "committer": {
+            "email": "tolvjr@163.com",
+            "name": "lvjr",
+            "username": "lvjr"
+          },
+          "distinct": true,
+          "id": "c7afc1ca01bc750ef177ef5b820ad97d4d226e71",
+          "message": "fix unexpected new pages caused by \\pageshrink (#536)",
+          "timestamp": "2025-10-30T20:34:15+08:00",
+          "tree_id": "0b01c9210cbf021c03e1a25822ab901a4cb32a46",
+          "url": "https://github.com/lvjr/tabularray/commit/c7afc1ca01bc750ef177ef5b820ad97d4d226e71"
+        },
+        "date": 1761827844605,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "compile tabularray with pdflatex",
+            "value": 0.21119547957218,
+            "unit": "ratio",
+            "extra": "current time : previous time = 0.98579025268555 : 4.667667388916"
+          },
+          {
+            "name": "compile tabularray with xelatex",
+            "value": 0.21381472456075,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.0128288269043 : 4.736946105957"
+          },
+          {
+            "name": "compile tabularray with lualatex",
+            "value": 0.27790686741971,
+            "unit": "ratio",
+            "extra": "current time : previous time = 1.5785980224609 : 5.6803131103516"
           }
         ]
       }
