@@ -4,9 +4,7 @@ Don't change this file in any respect.
 TEST 1: longtblr tikz: multiple pages
 ============================================================
 [1
-]
-[2]
-[3]
+] [2] [3]
 ============================================================
 [4] (library-022.aux)
 LaTeX Warning: There were multiply-defined labels.
