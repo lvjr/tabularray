@@ -4,10 +4,8 @@ Don't change this file in any respect.
 TEST 1: testing long table
 ============================================================
 [1
-]
-[2]
+] [2]
 ============================================================
-[3]
-[4] (long-001.aux)
+[3] [4] (long-001.aux)
 Package rerunfilecheck Info: File `long-001.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
