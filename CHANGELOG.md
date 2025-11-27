@@ -1,6 +1,17 @@
 All notable changes to this package will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com).
 
+# [v2025C] - 2025-11-27
+
+## Fixed
+
+- Make sure there is at least one row in any table (#326)
+- Fix unexpected new pages caused by \pageshrink (#536)
+- Skip detection for `*` and `[` for the first row (#598)
+- Make `measure=vbox` work together with `\mathcolor` (#603)
+- Fix default horizontal alignment setting of `longtblr` (#611)
+- Work around `NoHyper` bug in `hyperref` for nested tables (#620, latex3/hyperref#397)
+
 # [v2025B] - 2025-08-29
 
 ## Fixed
