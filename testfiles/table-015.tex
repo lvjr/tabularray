@@ -1,0 +1,21 @@
+\documentclass{article}
+
+\input{regression-test}
+\geometry{a6paper,margin=15mm}
+\SetTblrTemplate{head,foot}{empty}
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{empty tables}% issue #326
+Short: \begin{tblr}{hlines,vlines}\end{tblr}
+
+Tall: \begin{talltblr}{hlines,vlines}\end{talltblr}
+
+Long: \begin{longtblr}{hlines,vlines}\end{longtblr}
+\ENDTEST
+
+\end{document}

@@ -1,0 +1,26 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\UseTblrLibrary{varwidth}
+\usepackage{xcolor}
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{measure=vbox and \mathcolor work together}% issue #603
+\begin{tblr}{colspec={cc},measure=hbox}
+	A &	B \\
+	$x$ & $\mathcolor{red}{x}$ \\
+\end{tblr}
+
+\begin{tblr}{colspec={cc},measure=vbox}
+	A &	B \\
+	$x$ & $\mathcolor{red}{x}$ \\
+\end{tblr}
+\ENDTEST
+
+\end{document}

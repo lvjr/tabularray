@@ -1,0 +1,37 @@
+\documentclass{article}
+
+\input{regression-test}
+\geometry{a6paper,margin=15mm}
+\SetTblrTemplate{head,foot}{empty}
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{set horizontal alignment of longtblr with \SetTblrOuter}% issue #611
+\SetTblrOuter[longtblr]{l}
+\begin{longtblr}{
+  colspec={lllll}, hlines
+}
+  1 & 2 & 3 & 4 & 5 \\
+  1 & 2 & 3 & 4 & 5
+\end{longtblr}
+\SetTblrOuter[longtblr]{c}
+\begin{longtblr}{
+  colspec={lllll}, hlines
+}
+  1 & 2 & 3 & 4 & 5 \\
+  1 & 2 & 3 & 4 & 5
+\end{longtblr}
+\SetTblrOuter[longtblr]{r}
+\begin{longtblr}{
+  colspec={lllll}, hlines
+}
+  1 & 2 & 3 & 4 & 5 \\
+  1 & 2 & 3 & 4 & 5
+\end{longtblr}
+\ENDTEST
+
+\end{document}

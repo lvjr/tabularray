@@ -1,0 +1,37 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\UseTblrLibrary{varwidth}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue}
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{hyperlinks and nested tblr tables}% issue #620
+\hyperlink{cmda}{a}
+
+\hyperlink{cmdaddindex}{addindex}
+
+\begin{tblr}{hlines}
+  A & B \\
+  \begin{tblr}{hlines}
+  C
+  \end{tblr} & D
+\end{tblr}
+
+\hyperlink{cmda}{a}
+
+\hyperlink{cmdaddindex}{addindex}
+
+\hypertarget{cmda}{The A command}
+
+\hypertarget{cmdaddindex}{The addindex command}
+\ENDTEST
+
+\end{document}

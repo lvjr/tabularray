@@ -1,0 +1,20 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{first cell starts with a square bracket}% issue #598
+\begin{tblr}{hlines}
+  [a]
+\end{tblr}
+\begin{tblr}{hlines}
+  *
+\end{tblr}
+\ENDTEST
+
+\end{document}

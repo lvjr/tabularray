@@ -70,6 +70,8 @@
 | `library-020` | `functional` library: evaluate inner specs (#106, #270) |
 | `library-021` | `tikz` library: onepage long table (#29) |
 | `library-022` | `tikz`: multipage table and `\ExpTblrChildClass` (#29, #381) |
+| `library-023` | hyperlinks and nested tblr tables (#620) |
+| `library-024` | `measure=vbox` and `\mathcolor` work together (#603) |
 
 # Test files for long tables
 
@@ -86,6 +88,7 @@
 | `long-009` | long tables and positive `\parskip` |
 | `long-010` | long tables and `label=none` option |
 | `long-011` | forbid page breaks inside multirow cells (#442) |
+| `long-012` | unexpected new page in long tabularray (#536) |
 
 # Test files for rows and columns
 
@@ -115,4 +118,6 @@
 | `table-012` | `tabularray` in `align` environment |
 | `table-013` | `\SetTblrInner` and `\SetTblrOuter` commands |
 | `table-014` | throw errors for unknown inner/outer key names (#574) |
-
+| `table-015` | empty tables (#326) |
+| `table-016` | first cell starts with a square bracket (#598) |
+| `table-017` | set horizontal alignment of longtblr with `\SetTblrOuter` (#611) |

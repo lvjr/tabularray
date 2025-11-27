@@ -1,0 +1,78 @@
+\documentclass{article}
+
+\input{regression-test}
+
+\NewTblrEnviron{MyTblr}
+\SetTblrInner[MyTblr]{rowhead=1, rowfoot=0, hlines, vlines}
+\SetTblrOuter[MyTblr]{long, label=none, entry=none}
+%
+\newcommand{\lineadatos}[1]{% linea, left aligned, with a full-size underline
+    \begingroup
+    \parindent=0pt\parskip=-3pt\baselineskip=1pt
+    \strut #1\par
+    \hrulefill\par
+    \endgroup
+    \nobreak\medskip
+}
+\newcommand{\lineatitle}[1]{%
+    \par\bigbreak\goodbreak
+    \textbf{#1}\par%
+    \nobreak\medskip\nobreak
+    }
+
+\begin{document}
+
+\hrule\bigskip
+
+\START
+
+\BEGINTEST{unexpected new page in long tabularray}% issue #536
+\lineatitle{Start}
+
+\vspace{1.5cm}
+
+\lineadatos{}
+\lineadatos{}
+\lineadatos{}
+\lineadatos{}
+\lineadatos{}
+\lineadatos{}
+\lineadatos{}
+\lineadatos{}
+\lineadatos{}
+\lineadatos{}
+\lineadatos{}
+\lineadatos{}
+
+\vspace{0.25cm}
+
+\lineatitle{} Education
+\begin{MyTblr}{X[1,l]*3{X[0.5,l]}}
+    {Degrees} & {School} & {Date} & mark (when available)\\
+    %% data starts here
+    {\strut \\ \strut \\ \strut \\ \strut}& & & \\
+    {\strut \\ \strut \\ \strut \\ \strut}& & & \\
+    {\strut \\ \strut \\ \strut \\ \strut}& & &
+\end{MyTblr}
+
+Additional info on Ph.D. thesis:
+\begin{MyTblr}{*{2}{X[1,l]}}
+    Title & Tutor/School \\
+    {\strut \\ \strut }& &
+\end{MyTblr}
+
+% this is exploding... I need to force it not to break!
+\lineatitle{} Language Proficiency
+\begin{MyTblr}[
+    note{*}={\textbf{B}= Basic, \textbf{M}= Moderate, \textbf{H}=High}
+    ]{Xllll}
+    {Language} & {Speaking\TblrNote{*}} & {Listening\TblrNote{*}} &
+    {Reading\TblrNote{*}} & {Writing\TblrNote{*}} \\
+    Italian  & H & H & H & H \\
+    Spanish  & H & H & H & H \\
+    English  & H & M & H & M \\
+    Frrench  & B & B & M & B \\
+\end{MyTblr}
+\ENDTEST
+
+\end{document}
