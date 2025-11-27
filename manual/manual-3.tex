@@ -46,6 +46,7 @@ there are several inner specifications which are described in Table~\ref{key:inn
   \K{leftsep} & set horizontal space to the left of every column & \V{6pt} \\
   \K{rightsep} & set horizontal space to the right of every column & \V{6pt} \\
   \K{colsep} & set horizontal space to both sides of every column & \V{6pt} \\
+  \K{spread} & extendable column spread algorithm: \V{default}, \V{coeff}, or \V{none} & \V{default} \\
   \K{hspan} & horizontal span algorithm: \V{default}, \V{even}, or \V{minimal} & \V{default} \\
   \K{vspan} & vertical span algorithm: \V{default} or \V{even} & \V{default} \\
   %\K{verb} & you need this key to use verb commands & \None \\
@@ -163,6 +164,48 @@ The following examples show the results from different \K{vspan} values.
   Row2 & \\
   Row3 & \\
   Row4 & Short text \\
+\end{tblr}
+\end{demohigh}
+
+\subsection{Spread algorithms for extendable columns}
+
+The algorithm specified by the \K{spread} key applies only
+if all of the following are true:
+\begin{itemize}
+  \item There is at least one extendable column (\V{X} column).
+  \item All extendable columns have negative coefficients.
+  \item The total natural width of \emph{all} columns
+    (including column separations and vlines) is less than the specified
+    width of the table (or \CC{\linewidth} if no \K{width} is specified).
+\end{itemize}
+
+With \KV{spread=default}, the remaining width is distributed
+among the extendable columns according to their natural widths:
+\begin{demohigh}
+\SetTblrInner{hlines, vlines, spread=default}
+\begin{tblr}{colspec={*{3}{X[-1]}}}
+ Short & Medium-sized & Long extendable column test 123
+\end{tblr}
+\end{demohigh}
+
+With \KV{spread=coeff}, the remaining width is distributed
+among the extendable columns according to their coefficients:
+\begin{demohigh}
+\SetTblrInner{hlines, vlines, spread=coeff}
+\begin{tblr}{colspec={*{3}{X[-1]}}}
+ Short & Medium-sized & Long extendable column test 123
+\end{tblr}
+\begin{tblr}{colspec={X[-1]X[-1]X[-2]}}
+ Short & Medium-sized & Long extendable column test 123
+\end{tblr}
+\end{demohigh}
+
+With \KV{spread=none}, the width of the table is reduced
+to match the natural column widths:
+\begin{demohigh}
+\SetTblrInner{hlines, vlines, spread=none}
+\begin{tblr}{colspec={*{3}{X[-1]}}}
+ Short & Medium-sized & Long extendable column test 123
 \end{tblr}
 \end{demohigh}
 
